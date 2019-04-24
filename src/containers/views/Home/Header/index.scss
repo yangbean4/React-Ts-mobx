@@ -1,0 +1,33 @@
+@import "_base.scss";
+
+.header {
+  display: flex;
+  padding: 0 15px 0 0;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  border-left: 1px solid $border-light-color;
+  box-shadow: $box-shadow-base;
+}
+
+.trigger {
+  padding: 0 24px;
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+  transition: color 0.3s;
+
+  &:hover {
+    color: $primary-color;
+  }
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  float: right;
+}
+
+.user {
+  margin-right: 10px;
+}

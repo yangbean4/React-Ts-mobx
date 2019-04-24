@@ -1,0 +1,25 @@
+@import "_base.scss";
+.formPid {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+
+  .cancelBtn {
+    position: absolute;
+    bottom: 40px;
+    left: 400px;
+  }
+
+  :global(.ant-form-item) {
+    width: 900px;
+    height: 70px;
+    margin-bottom: 0;
+    :global(.ant-form-item-control-wrapper) {
+      width: 280px;
+      height: auto;
+      :global(.ant-select) {
+        width: 280px;
+      }
+    }
+  }
+}

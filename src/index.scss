@@ -1,0 +1,41 @@
+@import "_base.scss";
+
+:global {
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+  }
+
+  #app {
+    width: 100%;
+    height: 100%;
+  }
+
+  svg,
+  svg path {
+    fill: currentcolor;
+  }
+
+  .center-table {
+    margin-top: 20px;
+    table td {
+      text-align: center;
+    }
+    .ant-table-thead {
+      height: 50px;
+      border-radius: 4px 4px 0px 0px;
+    }
+    .ant-table-thead > tr > th {
+      text-align: center;
+      background: rgba(234, 237, 255, 1);
+    }
+    .ant-table-tbody > tr > td {
+      word-wrap: break-word;
+      word-break: break-all;
+      //   white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}

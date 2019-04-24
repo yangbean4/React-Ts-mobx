@@ -1,0 +1,32 @@
+.box {
+  display: flex;
+  flex-direction: row;
+}
+.redio {
+  width: 16px;
+  margin: 0 10px;
+}
+
+.inputBox {
+  flex: 1;
+}
+.radio {
+  height: 40px;
+  line-height: 40px;
+  margin-bottom: 24.5px;
+}
+
+.errmsg {
+  color: #f5222d;
+  height: 16px;
+  line-height: 14px;
+}
+.dynamic {
+  width: 18px;
+  height: 18px;
+  color: #fff;
+  text-align: center;
+  line-height: 18px;
+  margin-right: 12px;
+  background: rgba(186, 193, 229, 1);
+}
