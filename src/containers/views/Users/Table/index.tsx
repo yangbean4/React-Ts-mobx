@@ -144,14 +144,22 @@ class UserTable extends ComponentExt<IProps> {
                         width={120}
                         render={(_, record) => (
                             <span>
-                                <a href="javascript:;" onClick={() => this.modifyUser(record)}>
-                                    <Icon type="form" />
-                                </a>
-                                <Divider type="vertical" />
+                                {
+                                    this.$checkAuth('Authorization-User Manage-Edit', [
+                                        (<a key='form' href="javascript:;" onClick={() => this.modifyUser(record)}>
+                                        <Icon type="form" />
+                                    </a>),
+                                        <Divider key='Divider' type="vertical" />
+                                ])
+                                }
 
-                                <a href="javascript:;" onClick={() => this.deleteModel(record)}>
-                                    <MyIcon type='iconshanchu' />
-                                </a>
+                                {
+                                    this.$checkAuth('Authorization-User Manage-Delete', (
+                                        <a href="javascript:;" onClick={() => this.deleteModel(record)}>
+                                            <MyIcon type='iconshanchu' />
+                                        </a>
+                                    ))
+                                }
                             </span>
                         )}
                     />

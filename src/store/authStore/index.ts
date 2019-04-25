@@ -1,12 +1,26 @@
-import { observable, action, runInAction } from 'mobx'
+import { observable, action, runInAction, computed } from 'mobx'
 
 import { StoreExt } from '@utils/reactExt'
 import { routerStore } from './../'
 import { setCookie, clearCookie } from '@utils/index'
 import { COOKIE_KEYS, LOCALSTORAGE_KEYS } from '@constants/index'
 
-// const formatArr = (arr:Array)
-// .reduce((a,b)=>a.concat(b,b.children),[])
+const getAuthTree = (permission: string[]) => {
+    const target = {}
+    const addAuth = (menu, pre?) => {
+        menu.forEach(item => {
+            const { name, children, id } = item
+            const key = pre ? `${pre}-${name}` : name
+            target[key] = permission.includes(id)
+            if (children) {
+                addAuth(children, key)
+            }
+        })
+        return target
+    }
+    return addAuth
+}
+
 
 export class AuthStore extends StoreExt {
     /**
@@ -28,6 +42,12 @@ export class AuthStore extends StoreExt {
     getCaptcha = (): void => {
         this.captcha += `?t=${+ new Date()}`
     }
+    @action
+    setUserInfo = (userInfo: IAuthStore.UserInfo) => {
+        runInAction('SET_USERINFO', () => {
+            this.userInfo = userInfo
+        })
+    }
 
     @action
     login = async (params: IAuthStore.LoginParams): Promise<any> => {
@@ -37,9 +57,12 @@ export class AuthStore extends StoreExt {
             ...data,
             token,
         }
-        runInAction('SET_USERINFO', () => {
-            this.userInfo = userInfo
-        })
+
+        const { permission, menu } = userInfo
+        const authTree = getAuthTree(permission)(menu || [])
+        localStorage.setItem(LOCALSTORAGE_KEYS.AUTHTARGET, JSON.stringify(authTree))
+
+        this.setUserInfo(userInfo)
         setCookie(COOKIE_KEYS.TOKEN, token)
         localStorage.setItem(LOCALSTORAGE_KEYS.USERINFO, JSON.stringify(userInfo))
         return res
@@ -81,7 +104,7 @@ export class AuthStore extends StoreExt {
             throw new Error('no local userinfo!!')
         }
         const userInfo: IAuthStore.UserInfo = JSON.parse(lcoalUserInfo)
-        this.userInfo = userInfo
+        this.setUserInfo(userInfo)
         if (!lcoalSidebar) {
             this.getSidebar()
         } else {

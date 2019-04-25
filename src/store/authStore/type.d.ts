@@ -15,6 +15,8 @@ export interface UserInfo {
     id: string | number
     menu: []
     token: string
+    permission?: string[]
+    authTree?:{}
 }
 
 export interface Sidebar {

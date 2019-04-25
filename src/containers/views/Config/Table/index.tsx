@@ -8,7 +8,6 @@ import { ComponentExt } from '@utils/reactExt'
 import MyIcon from '@components/Icon'
 import UseModal from './useModel'
 import { useType } from './useType'
-import { identifier } from '@babel/types';
 
 interface IStoreProps {
     getConfigLoading?: boolean
@@ -156,9 +155,13 @@ class ConfigTable extends ComponentExt<IProps> {
                     onCancel={this.hideConfigModalsVisible}
                     onOk={this.handelOk}
                 />
-                <Button type="primary" onClick={() => this.viewModel('add')}>
-                    add config
-                </Button>
+                {
+                    this.$checkAuth('Config Manage-Config Manage-Add', (
+                        <Button type="primary" onClick={() => this.viewModel('add')}>
+                            add config
+                    </Button>
+                    ))
+                }
                 <Table<IConfigStore.IConfig>
                     className="center-table"
                     style={{ width: '100%' }}
@@ -214,19 +217,32 @@ class ConfigTable extends ComponentExt<IProps> {
                         width={120}
                         render={(_, record) => (
                             <span>
-                                <a href="javascript:;" onClick={() => this.viewModel('edit', record)}>
-                                    <Icon type="form" />
-                                </a>
-                                <Divider type="vertical" />
+                                {
+                                    this.$checkAuth('Config Manage-Config Manage-Edit', [
+                                        <a href="javascript:;" key='btn-edit' onClick={() => this.viewModel('edit', record)}>
+                                            <Icon type="form" />
+                                        </a>,
+                                        <Divider key='Divider1' type="vertical" />
+                                    ])
+                                }
 
-                                <a href="javascript:;" onClick={() => this.viewModel('copy', record)}>
-                                    <MyIcon type="iconfuzhi" />
-                                </a>
-                                <Divider type="vertical" />
 
-                                <a href="javascript:;" onClick={() => this.viewModel('delete', record)}>
-                                    <MyIcon type='iconshanchu' />
-                                </a>
+                                {
+                                    this.$checkAuth('Config Manage-Config Manage-Add', [
+                                        <a href="javascript:;" key='copy' onClick={() => this.viewModel('copy', record)}>
+                                            <MyIcon type="iconfuzhi" />
+                                        </a>,
+                                        <Divider key='Divider2' type="vertical" />
+                                    ])
+                                }
+                                {
+                                    this.$checkAuth('Config Manage-Config Manage-Delete', (
+                                        <a href="javascript:;" onClick={() => this.viewModel('delete', record)}>
+                                            <MyIcon type='iconshanchu' />
+                                        </a>
+                                    ))
+                                }
+
                             </span>
                         )}
                     />

@@ -10,7 +10,6 @@ import AddConfigItem from './addConfigItem'
 import { camelCase, getEventTargetDom, getGuId, typeOf } from '@utils/index'
 import ChoseSelectModal from './choseSelectModal/index'
 import EditRedioModal from './editRedioModal/index'
-import { elementType } from 'prop-types';
 
 const FormItem = Form.Item
 

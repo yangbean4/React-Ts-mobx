@@ -2,6 +2,7 @@ import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { Button } from 'antd'
 import Search from './Search'
+import { ComponentExt } from '@utils/reactExt'
 
 interface IStoreProps {
     routerStore?: RouterStore
@@ -16,7 +17,7 @@ interface IStoreProps {
     }
 )
 @observer
-class Header extends React.Component<IStoreProps> {
+class Header extends ComponentExt<IStoreProps> {
 
     addUser = () => {
         this.props.routerStore.push('/users/add')
@@ -26,9 +27,13 @@ class Header extends React.Component<IStoreProps> {
         return (
             <div>
                 <Search />
-                <Button type="primary" onClick={this.addUser}>
-                    add user
+                {
+                    this.$checkAuth('Authorization-User Manage-Add', (
+                        <Button type="primary" onClick={this.addUser}>
+                            add user
                 </Button>
+                    ))
+                }
             </div>
         )
     }

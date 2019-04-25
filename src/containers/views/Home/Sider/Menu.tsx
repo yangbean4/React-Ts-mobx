@@ -3,7 +3,7 @@ import { observer, inject } from 'mobx-react'
 import { computed } from 'mobx'
 import { Menu } from 'antd'
 import pathToRegexp from 'path-to-regexp'
-
+import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import menu, { IMenu, IMenuInTree, templateId, logId, logMenu } from '../menu&router'
 import { arrayToTree, queryArray } from '@utils/index'
@@ -37,7 +37,7 @@ interface IStoreProps {
     }
 )
 @observer
-class SiderMenu extends React.Component<IStoreProps> {
+class SiderMenu extends ComponentExt<IStoreProps> {
     // 打开的菜单层级记录
     private levelMap: NumberObject = {}
 
@@ -148,24 +148,28 @@ class SiderMenu extends React.Component<IStoreProps> {
                     this.levelMap[item.id] = item.pid
                 }
                 return (
-                    <SubMenu
-                        key={String(item.id)}
-                        title={
-                            <span>
-                                {item.icon && <Icon className={this.props.sideBarCollapsed ? styles.sideBarIcon : styles.menuIcon} type={item.icon} />}
-                                <span>{item.title}</span>
-                            </span>
-                        }
-                    >
-                        {this.getMenus(item.children)}
-                    </SubMenu>
+                    this.$checkAuth(item.authName, (
+                        <SubMenu
+                            key={String(item.id)}
+                            title={
+                                <span>
+                                    {item.icon && <Icon className={this.props.sideBarCollapsed ? styles.sideBarIcon : styles.menuIcon} type={item.icon} />}
+                                    <span>{item.title}</span>
+                                </span>
+                            }
+                        >
+                            {this.getMenus(item.children)}
+                        </SubMenu>)
+                    )
                 )
             }
-            return (
+
+            return (this.$checkAuth(item.authName, (
                 <Menu.Item key={String(item.id)}>
                     {item.icon && <Icon className={this.props.sideBarCollapsed ? styles.sideBarIcon : styles.menuIcon} type={item.icon} />}
                     <span>{item.title}</span>
                 </Menu.Item>
+            ))
             )
         })
     }

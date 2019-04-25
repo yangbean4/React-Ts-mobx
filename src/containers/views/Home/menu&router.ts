@@ -33,6 +33,7 @@ export interface IMenu {
     icon?: string
     component?: AsynchronousComponentKeys
     exact?: boolean
+    authName?: string
 }
 
 export interface IMenuInTree extends IMenu {
@@ -49,6 +50,7 @@ export const menu: IMenu[] = [
         id: 1,
         title: 'Config Manage',
         icon: 'iconconfigpeizhi',
+        authName: 'Config Manage'
     },
     {
         pid: 1,
@@ -56,13 +58,15 @@ export const menu: IMenu[] = [
         title: 'Config Manage',
         path: '/config',
         component: 'Config',
-        exact: true
+        exact: true,
+        authName: 'Config Manage-Config Manage'
     },
     {
         pid: 1,
         id: templateId,
         title: 'Template Manage',
         // icon: 'iconmobanguanli',
+        authName: 'Config Manage-Template Manage'
     },
     {
         id: 20,
@@ -98,6 +102,7 @@ export const menu: IMenu[] = [
         id: 3,
         title: 'Authorization',
         icon: 'iconjiaoseshezhi',
+        authName: 'Authorization',
     },
     {
         id: 31,
@@ -105,7 +110,8 @@ export const menu: IMenu[] = [
         path: '/users',
         title: 'User Manage',
         component: 'Users',
-        exact: true
+        exact: true,
+        authName: 'Authorization-User Manage'
     },
     {
         id: 32,
@@ -113,7 +119,8 @@ export const menu: IMenu[] = [
         path: '/role',
         title: 'Roles Manage',
         component: 'Role',
-        exact: true
+        exact: true,
+        authName: 'Authorization-Role Manage'
     },
     {
         id: 33,
@@ -121,13 +128,15 @@ export const menu: IMenu[] = [
         path: '/permission',
         title: 'Permission Manage',
         component: 'Permission',
-        exact: true
+        exact: true,
+        authName: "Authorization-Permission Mamage"
     },
     {
         id: 4,
         title: 'Log',
         icon: 'iconlog',
-        exact: true
+        exact: true,
+        authName: 'Log'
     },
     {
         id: 41,
