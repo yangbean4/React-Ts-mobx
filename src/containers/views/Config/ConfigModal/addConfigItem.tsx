@@ -7,7 +7,7 @@ import { value_typeOption } from '../as.config'
 import { conItem } from './type'
 import { SketchPicker } from 'react-color'
 import InputGroup from './InputGroup/index'
-
+import { _nameCase } from '@utils/index'
 const FormItem = Form.Item
 const RadioGroup = Radio.Group;
 const span = 2
@@ -70,7 +70,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
           this.toggleLoading()
           try {
             const dd = config.value_type === '2' ? values.defaul.map(ele => !!ele) : values.defaul
-            onOk({ ...config, ...values, defaul: dd })
+            onOk({ ...config, key: _nameCase(config.key), ...values, defaul: dd })
           } catch (err) { }
           this.toggleLoading()
         }

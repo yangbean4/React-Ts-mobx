@@ -22,6 +22,9 @@
   :global(.ant-menu-sub) {
     box-shadow: unset !important;
   }
+  :global(ul ul > li) {
+    padding-left: 60px !important;
+  }
 }
 
 .sideBarIcon {

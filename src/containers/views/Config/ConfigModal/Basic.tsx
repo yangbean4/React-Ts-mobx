@@ -53,8 +53,6 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   @observable
   private thisConfigList: conItem[]
 
-  private addItemIdArr: string[] = []
-
   private nowHandelConfig: conItem = {}
 
   private nowHandelConfigIndex: number
@@ -97,7 +95,15 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   @action
   toggleWork = () => {
-    this.showWork = !this.showWork
+    if (this.showWork) {
+      const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList)).filter(ele => !ele.isEdit)
+      runInAction('UP_THIS_CONFIG_LIST', () => {
+        this.thisConfigList = arr
+      })
+    }
+    runInAction('CHANGE_WORK_BTN', () => {
+      this.showWork = !this.showWork
+    })
   }
 
   @computed
@@ -194,16 +200,11 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           addId: id,
           isEdit: true
         }
-        this.nowHandelConfig = addItem
-        this.addItemIdArr.push(id)
         this.handelUpdateList(index + 1, undefined, addItem)
+        break
       }
       case 'acc': {
         this.handelUpdateList(index)
-        if (config.addId) {
-          const index = this.addItemIdArr.findIndex(item => item === config.addId)
-          this.addItemIdArr.splice(index, 1)
-        }
         break
       }
       case 'add': {
@@ -217,9 +218,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           addId: id,
           isEdit: true
         }
-        this.nowHandelConfig = addItem
-        this.addItemIdArr.push(id)
         this.handelUpdateList(index + 1, undefined, addItem)
+        break
       }
     }
   }
@@ -228,7 +228,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     const index = this.useConfigList.findIndex(ele => ele.addId === config.addId);
     const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
     arr[index] = {
-      ...this.nowHandelConfig,
+      ...arr[index],
       ...config,
       isEdit: false
     }

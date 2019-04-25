@@ -19,8 +19,8 @@ class Header extends React.Component {
         return (
             <div>
                 <Search />
-                <Button type="primary" onClick={this.toggleCustomModalVisible}>
-                    add custom
+                <Button icon='plus' type="primary" onClick={this.toggleCustomModalVisible}>
+                    Add
                 </Button>
                 <CustomModal visible={this.userModalVisible} onCancel={this.toggleCustomModalVisible} />
             </div>

@@ -157,8 +157,8 @@ class ConfigTable extends ComponentExt<IProps> {
                 />
                 {
                     this.$checkAuth('Config Manage-Config Manage-Add', (
-                        <Button type="primary" onClick={() => this.viewModel('add')}>
-                            add config
+                        <Button icon='plus' type="primary" onClick={() => this.viewModel('add')}>
+                            add
                     </Button>
                     ))
                 }

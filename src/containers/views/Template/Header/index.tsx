@@ -32,8 +32,8 @@ class Header extends React.Component<IStoreProps> {
         return (
             <div>
                 <Search />
-                <Button type="primary" onClick={this.toggleCustomModalVisible}>
-                    add template
+                <Button icon='plus' type="primary" onClick={this.toggleCustomModalVisible}>
+                    Add
                 </Button>
                 <CustomModal visible={this.userModalVisible} onCancel={this.toggleCustomModalVisible} />
             </div>

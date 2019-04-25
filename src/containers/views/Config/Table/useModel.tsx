@@ -20,7 +20,7 @@ const layout = {
 }
 
 interface IStoreProps {
-  allConfig?: IConfigStore.IConfig[]
+  allConfig?: string[]
   getAllConfig?: () => Promise<any>
 }
 
@@ -123,11 +123,12 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                     })(
                       <Select
                         allowClear
+                        showSearch
                         className={styles.minInput}
                         key='select'>
                         {this.props.allConfig.map(c => (
-                          <Select.Option value={c.pkg_name} key={c.pkg_name}>
-                            {c.pkg_name}
+                          <Select.Option value={c} key={c}>
+                            {c}
                           </Select.Option>
                         ))}
                       </Select>

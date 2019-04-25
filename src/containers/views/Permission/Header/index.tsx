@@ -26,8 +26,8 @@ class Header extends React.Component<IStoreProps> {
         return (
             <div>
                 <Search />
-                <Button type="primary" onClick={this.addPermission}>
-                    add permission
+                <Button icon='plus' type="primary" onClick={this.addPermission}>
+                    Add 
                 </Button>
             </div>
         )

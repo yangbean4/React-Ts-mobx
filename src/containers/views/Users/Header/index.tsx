@@ -29,8 +29,8 @@ class Header extends ComponentExt<IStoreProps> {
                 <Search />
                 {
                     this.$checkAuth('Authorization-User Manage-Add', (
-                        <Button type="primary" onClick={this.addUser}>
-                            add user
+                        <Button icon='plus' type="primary" onClick={this.addUser}>
+                            add
                 </Button>
                     ))
                 }

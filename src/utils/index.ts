@@ -262,6 +262,11 @@ export function camelCase(str: string): string {
     return name.charAt(0).toUpperCase() + name.slice(1)
 }
 
+export function _nameCase(str: string): string {
+    // Support: IE9-11+
+    return str.replace(/ /g, '_').toLowerCase()
+}
+
 
 
 //处理兼容问题，Safari中没有e.path

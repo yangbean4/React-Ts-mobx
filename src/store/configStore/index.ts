@@ -24,7 +24,7 @@ export class ConfigStore extends StoreExt {
     pageSize: number = 10
 
     @observable
-    allConfig: IConfigStore.IConfig[] = []
+    allConfig: string[] = []
     /**
      * users total
      *
@@ -47,7 +47,7 @@ export class ConfigStore extends StoreExt {
             this.clearConfigAll()
             const res = await this.api.config.fullConfig()
             runInAction('aet_all_roleList', () => {
-                this.allConfig = res.data
+                this.allConfig = Object.values(res.data)
             })
         } catch (err) { }
     }
