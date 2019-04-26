@@ -131,17 +131,17 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                         ]
                     })(<Input disabled={!this.typeIsAdd} />)}
                 </FormItem>
-                {this.typeIsAdd && (
-                    <FormItem {...formItemLayout} label="password">
+                {
+                    <FormItem {...formItemLayout} label="Password">
                         {getFieldDecorator('pwd', {
                             rules: [
                                 {
-                                    required: true, message: "Required"
+                                    required: this.typeIsAdd, message: "Required"
                                 }
                             ]
                         })(<Input />)}
                     </FormItem>
-                )}
+                }
                 <FormItem {...formItemLayout} label="Owner">
                     {getFieldDecorator('owner', {
                         initialValue: owner,

@@ -144,7 +144,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           this.toggleLoading()
           try {
             const dataArr = this.useConfigList.map(ele => {
-              let tt = { [ele.key]: values[ele.key] }
+              const key = ele.key.toLowerCase()
+              let tt = { [key]: values[ele.key] }
               if (ele.value_type === '4') {
                 let vv;
                 const value = values[ele.key];
@@ -157,7 +158,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                     vv = [value || '']
                   }
                 }
-                tt = { [ele.key]: vv }
+                tt = { [key]: vv }
               }
               if (ele.addId) {
                 tt = { ...tt, ...ele }
