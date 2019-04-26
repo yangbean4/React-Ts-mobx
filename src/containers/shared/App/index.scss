@@ -9,6 +9,16 @@
   min-height: 100%;
   flex-direction: column;
   :global(section.ant-layout) {
-    overflow-x: unset;
+    overflow-x: unset !important;
+  }
+
+  :global(.minInput) {
+    width: max-content;
+    :global(.ant-form-item-control) {
+      width: 180px !important;
+    }
+  }
+  :global(.addbtn-mb20) {
+    margin-bottom: 20px;
   }
 }

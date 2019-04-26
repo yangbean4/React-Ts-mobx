@@ -26,8 +26,8 @@ interface IStoreProps {
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { getConfigsList, changeFilter ,filters} = store.configStore
-    return { getConfigsList, changeFilter,filters }
+    const { getConfigsList, changeFilter, filters } = store.configStore
+    return { getConfigsList, changeFilter, filters }
   }
 )
 @observer
@@ -91,6 +91,9 @@ class ConfigSearch extends ComponentExt<IStoreProps & FormComponentProps> {
           </Col>
           <Col span={3} offset={1}>
             <Button type="primary" htmlType="submit">Search</Button>
+          </Col>
+          <Col span={3} offset={1}>
+            <span id='insertBeforeConfigSearch'></span>
           </Col>
         </Row>
       </Form>

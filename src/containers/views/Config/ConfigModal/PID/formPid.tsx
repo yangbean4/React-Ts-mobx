@@ -121,7 +121,7 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
     const { getFieldDecorator } = form
     return (
       <div className={styles.formPid}>
-        <FormItem {...layout} label='PID Type'>
+        <FormItem className={styles.minitem} {...layout} label='PID Type'>
           {getFieldDecorator('pid_type', {
             initialValue: this.getValue('pid_type') || this.pid_type,
             rules: [
@@ -146,7 +146,7 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
           )}
         </FormItem>
 
-        <FormItem {...layout} label='PID'>
+        <FormItem {...layout} className={styles.minitem} label='PID'>
           {getFieldDecorator('placement_id', {
             initialValue: this.getValue('placement_id'),
             rules: [

@@ -5,7 +5,7 @@ import { Form, Input, Row, Col, Button } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import { camelCase } from '@utils/index'
-
+import * as style from './index.scss'
 const FormItem = Form.Item
 
 const span = 7
@@ -75,14 +75,14 @@ class TemplateSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             {
               this.searchList.map(item => (
                 <Col span={item.includes('name') ? 8 : span} key={item}>
-                  <FormItem key={item} label={camelCase(item)}>
+                  <FormItem key={item} className={item.includes('name') ? '' : 'minInput'} label={camelCase(item)}>
                     {getFieldDecorator(item)(<Input />)}
                   </FormItem>
                 </Col>
               ))
             }
 
-            <Col span={1}>
+            <Col span={2} offset={1}>
               <Button type="primary" htmlType="submit">Search</Button>
             </Col>
           </Row>

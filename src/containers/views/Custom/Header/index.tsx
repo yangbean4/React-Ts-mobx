@@ -4,7 +4,7 @@ import { Button } from 'antd'
 import Search from './Search'
 import { observable, action } from 'mobx'
 import CustomModal from './../CustomModal'
-
+import PortalsBtn from '@components/portalsBtn'
 @observer
 class Header extends React.Component {
     @observable
@@ -19,9 +19,12 @@ class Header extends React.Component {
         return (
             <div>
                 <Search />
-                <Button icon='plus' type="primary" onClick={this.toggleCustomModalVisible}>
-                    Add
+                <PortalsBtn querySelector='#customAddBtn'>
+                    <Button icon='plus' type="primary" onClick={this.toggleCustomModalVisible}>
+                        Add
                 </Button>
+                </PortalsBtn>
+
                 <CustomModal visible={this.userModalVisible} onCancel={this.toggleCustomModalVisible} />
             </div>
         )

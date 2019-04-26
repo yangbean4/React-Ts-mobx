@@ -2,3 +2,4 @@
 // Please do not change this file!
 export const cancelBtn: string;
 export const formPid: string;
+export const minitem: string;

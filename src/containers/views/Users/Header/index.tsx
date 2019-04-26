@@ -3,6 +3,7 @@ import { observer, inject } from 'mobx-react'
 import { Button } from 'antd'
 import Search from './Search'
 import { ComponentExt } from '@utils/reactExt'
+import PortalsBtn from '@components/portalsBtn'
 
 interface IStoreProps {
     routerStore?: RouterStore
@@ -29,9 +30,12 @@ class Header extends ComponentExt<IStoreProps> {
                 <Search />
                 {
                     this.$checkAuth('Authorization-User Manage-Add', (
-                        <Button icon='plus' type="primary" onClick={this.addUser}>
-                            add
-                </Button>
+                        <PortalsBtn querySelector='#customAddBtn'>
+                            <Button icon='plus' type="primary" onClick={this.addUser}>
+                                add
+                        </Button>
+                        </PortalsBtn>
+
                     ))
                 }
             </div>

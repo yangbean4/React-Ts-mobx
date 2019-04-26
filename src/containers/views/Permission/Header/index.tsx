@@ -2,6 +2,7 @@ import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { Button } from 'antd'
 import Search from './Search'
+import PortalsBtn from '@components/portalsBtn'
 
 interface IStoreProps {
     routerStore?: RouterStore
@@ -26,9 +27,13 @@ class Header extends React.Component<IStoreProps> {
         return (
             <div>
                 <Search />
-                <Button icon='plus' type="primary" onClick={this.addPermission}>
-                    Add 
+                <PortalsBtn querySelector='#addPermissionBtn'>
+
+                    <Button icon='plus' type="primary" onClick={this.addPermission}>
+                        Add
                 </Button>
+                </PortalsBtn>
+
             </div>
         )
     }

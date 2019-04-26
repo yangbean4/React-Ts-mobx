@@ -11,6 +11,7 @@ export interface ILog {
   Object?: string
   operation?: string
   time?: string
+  add_time?: string
 }
 
 export interface SearchParams {

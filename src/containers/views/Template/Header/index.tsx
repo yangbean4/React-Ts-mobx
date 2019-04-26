@@ -5,6 +5,7 @@ import Search from './Search'
 import { observable, action } from 'mobx'
 import CustomModal from './../TemplateModal'
 
+
 interface IStoreProps {
     routerStore?: RouterStore
 }
@@ -32,9 +33,10 @@ class Header extends React.Component<IStoreProps> {
         return (
             <div>
                 <Search />
-                <Button icon='plus' type="primary" onClick={this.toggleCustomModalVisible}>
+                <Button className='addbtn-mb20' icon='plus' type="primary" onClick={this.toggleCustomModalVisible}>
                     Add
                 </Button>
+
                 <CustomModal visible={this.userModalVisible} onCancel={this.toggleCustomModalVisible} />
             </div>
         )

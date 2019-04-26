@@ -8,6 +8,7 @@ import { ComponentExt } from '@utils/reactExt'
 import MyIcon from '@components/Icon'
 import UseModal from './useModel'
 import { useType } from './useType'
+import PortalsBtn from '@components/portalsBtn'
 
 interface IStoreProps {
     getConfigLoading?: boolean
@@ -157,16 +158,19 @@ class ConfigTable extends ComponentExt<IProps> {
                 />
                 {
                     this.$checkAuth('Config Manage-Config Manage-Add', (
-                        <Button icon='plus' type="primary" onClick={() => this.viewModel('add')}>
-                            add
-                    </Button>
+                        <PortalsBtn querySelector='#insertBeforeConfigSearch'>
+                            <Button icon='plus' type="primary" onClick={() => this.viewModel('add')}>
+                                add
+                                </Button>
+                        </PortalsBtn>
+
                     ))
                 }
                 <Table<IConfigStore.IConfig>
                     className="center-table"
                     style={{ width: '100%' }}
                     bordered
-                    rowKey="pkg_name"
+                    rowKey={(row) => row.pkg_name + row.platform}
                     loading={getConfigLoading}
                     dataSource={configsList}
                     scroll={{

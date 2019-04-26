@@ -75,6 +75,9 @@ class RoleSearch extends ComponentExt<IStoreProps & FormComponentProps> {
           <Col span={3} offset={1}>
             <Button type="primary" htmlType="submit">Search</Button>
           </Col>
+          <Col span={3} offset={1}>
+            <span id='addRoleBtn'></span>
+          </Col>
         </Row>
       </Form>
     )

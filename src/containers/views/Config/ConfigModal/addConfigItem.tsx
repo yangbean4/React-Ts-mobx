@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { observable, action, runInAction } from 'mobx'
+import { observer } from 'mobx-react'
+import { observable, action, runInAction, when, autorun } from 'mobx'
 import { Form, Input, Row, Col, Button, Select, Radio } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
@@ -7,7 +8,7 @@ import { value_typeOption } from '../as.config'
 import { conItem } from './type'
 import { SketchPicker } from 'react-color'
 import InputGroup from './InputGroup/index'
-import { _nameCase } from '@utils/index'
+import { _nameCase, typeOf } from '@utils/index'
 const FormItem = Form.Item
 const RadioGroup = Radio.Group;
 const span = 2
@@ -21,12 +22,28 @@ const layout = {
 }
 interface IProps {
   config?: conItem
-  onOk?: (con: conItem) => void
+  onOk?: (con?: conItem) => void
   choseSelect?: (con: conItem) => void
   editRadio?: (con: conItem) => void
+  shouldSubmit?: boolean
 }
 
+@observer
 class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
+
+  constructor(props) {
+    super(props)
+    when(
+      // 一旦...
+      () => {
+        // 父组件要提交
+        return !!this.props.shouldSubmit
+      },
+      // ... 然后
+      () => this.submit()
+    );
+  }
+
   @observable
   private loading: boolean = false
 
@@ -66,14 +83,18 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
     const { onOk, form, config } = this.props
     form.validateFields(
       async (err, values): Promise<any> => {
+        let data = undefined
         if (!err) {
           this.toggleLoading()
           try {
-            const dd = config.value_type === '2' ? values.defaul.map(ele => !!ele) : values.defaul
-            onOk({ ...config, key: _nameCase(config.key), ...values, defaul: dd })
-          } catch (err) { }
+            const dd = values.value_type === '4' ? values.default.filter(ele => !!ele) : values.default
+            data = { ...config, ...values, default: dd }
+          } catch (err) {
+            console.log(err)
+          }
           this.toggleLoading()
         }
+        onOk(data)
       }
     )
   }
@@ -248,7 +269,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
         <Col span={span}>
           <FormItem {...layout}>
             {getFieldDecorator('value_type', {
-              initialValue: value_type,
+              initialValue: typeOf(value_type) === 'number' ? value_type.toString() : value_type,
               rules: [
                 {
                   required: true, message: "Required"

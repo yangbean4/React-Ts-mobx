@@ -207,7 +207,6 @@ class ConfigItem extends React.Component<IProps> {
       case '4': {
         Component = InputGroup
         let vv;
-        debugger
         if (Array.isArray(value)) {
           vv = value
         } else {

@@ -76,14 +76,14 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             </FormItem>
           </Col>
           <Col span={span}>
-            <FormItem label="Owner">
+            <FormItem label="Owner" className='minInput'>
               {getFieldDecorator('owner', {
                 initialValue: filters.owner
               })(<Input />)}
             </FormItem>
           </Col>
           <Col span={span}>
-            <FormItem label="Status">
+            <FormItem label="Status" className='minInput'>
               {getFieldDecorator('status', {
                 initialValue: filters.status
               })(
@@ -102,6 +102,9 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
           </Col>
           <Col span={3} offset={1}>
             <Button type="primary" htmlType="submit">Search</Button>
+          </Col>
+          <Col span={3} offset={1}>
+            <span id='customAddBtn'></span>
           </Col>
         </Row>
       </Form>

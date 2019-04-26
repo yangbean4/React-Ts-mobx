@@ -7,7 +7,7 @@ import { ComponentExt } from '@utils/reactExt'
 import ConfigItem from './configItem'
 import { conItem } from './type'
 import AddConfigItem from './addConfigItem'
-import { camelCase, getEventTargetDom, getGuId, typeOf } from '@utils/index'
+import { camelCase, getEventTargetDom, getGuId, typeOf, _nameCase } from '@utils/index'
 import ChoseSelectModal from './choseSelectModal/index'
 import EditRedioModal from './editRedioModal/index'
 
@@ -45,6 +45,7 @@ interface IProps extends IStoreProps {
 
 @observer
 class Basic extends ComponentExt<IProps & FormComponentProps> {
+
   @observable
   private loading: boolean = false
 
@@ -59,12 +60,19 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   private editRedioModaType: number = 0
 
+  private waitItemNum = 0
+
+
   @computed
   get usEeditData() {
     if (typeOf(this.props.editData) === 'array') {
       let target = {}
       this.props.editData.forEach(ele => {
-        target = { ...target, ...ele }
+        const tar = {}
+        Object.entries(ele).forEach(([key, value]) => {
+          tar[key.toLowerCase()] = value
+        })
+        target = { ...target, ...tar }
       })
       return target
     } else {
@@ -80,8 +88,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   private redioVisible: boolean = false
 
   @action
-  toggleLoading = () => {
-    this.loading = !this.loading
+  toggleLoading = (type?) => {
+    this.loading = type ? type : !this.loading
   }
   @action
   choseSelectModalSwitch = () => {
@@ -137,40 +145,56 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     if (e) {
       e.preventDefault()
     }
+    this.toggleLoading(true)
     const { onSubmit, form } = this.props
     form.validateFields(
       async (err, values): Promise<any> => {
         if (!err) {
-          this.toggleLoading()
-          try {
-            const dataArr = this.useConfigList.map(ele => {
-              const key = ele.key.toLowerCase()
-              let tt = { [key]: values[ele.key] }
-              if (ele.value_type === '4') {
-                let vv;
-                const value = values[ele.key];
-                if (Array.isArray(value)) {
-                  vv = value.filter(mn => !!mn)
-                } else {
-                  try {
-                    vv = JSON.parse(value)
-                  } catch (error) {
-                    vv = [value || '']
+          const waitItemNum = this.useConfigList.filter(ele => ele.isEdit).length
+          if (waitItemNum) {
+            console.log(waitItemNum);
+          } else {
+            try {
+
+              const dataArr = this.useConfigList.map(ele => {
+                const key = _nameCase(ele.key)
+                let tt = { [key]: values[ele.key] }
+                // 处理后端返回的默认值在直接保存时有坑的问题
+                if (ele.value_type === '4') {
+                  let vv;
+                  const value = values[ele.key];
+                  if (Array.isArray(value)) {
+                    vv = value.filter(mn => !!mn)
+                  } else {
+                    try {
+                      const v = JSON.parse(value)
+                      vv = Array.isArray(v) ? v : [v || '']
+                    } catch (error) {
+                      vv = [value || '']
+                    }
                   }
+                  tt = { [key]: vv }
                 }
-                tt = { [key]: vv }
-              }
-              if (ele.addId) {
-                tt = { ...tt, ...ele }
-              }
-              return tt;
-            })
-            onSubmit(dataArr)
-          } catch (error) {
-            console.log(error)
+
+                // 说明是新增加的
+                if (!this.usEeditData.hasOwnProperty(key)) {
+                  tt = { ...ele, ...tt }
+                  delete tt.addId
+                }
+                return tt;
+              })
+              onSubmit(dataArr)
+            } catch (error) {
+              console.log(error)
+            }
+            this.toggleLoading(false)
+
           }
-          this.toggleLoading()
+
+        } else {
+          this.toggleLoading(false)
         }
+
       }
     )
   }
@@ -225,17 +249,30 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     }
   }
 
-  addConfigItem = (config: conItem) => {
-    const index = this.useConfigList.findIndex(ele => ele.addId === config.addId);
-    const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
-    arr[index] = {
-      ...arr[index],
-      ...config,
-      isEdit: false
+  @action
+  addConfigItem = (config?: conItem) => {
+    if (config) {
+      const index = this.useConfigList.findIndex(ele => ele.addId === config.addId);
+      const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
+      arr[index] = {
+        ...arr[index],
+        ...config,
+        isEdit: false
+      }
+      runInAction('UP_THIS_CONFIG_LIST', () => {
+        this.thisConfigList = arr
+      })
+      if (this.loading) {
+        // 是本组件触发的自组件提交
+        if (! --this.waitItemNum) {
+          this.submit()
+        }
+      }
+    } else {
+      this.waitItemNum = 0
+      // addConfigItem组件提交过程中出问题了 结束提交过程
+      this.toggleLoading(false)
     }
-    runInAction('UP_THIS_CONFIG_LIST', () => {
-      this.thisConfigList = arr
-    })
   }
 
   addDragEvent = () => {
@@ -381,7 +418,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
               !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={index}>
                 <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
                   {getFieldDecorator(item.key, {
-                    initialValue: this.usEeditData[item.key] || item.default,
+                    initialValue: this.usEeditData[item.key.toLowerCase()] || item.default,
                     rules: [
                       {
                         required: true, message: "Required"
@@ -397,11 +434,11 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                   )}
                 </FormItem>
               </div>
-                : <AddConfigItem choseSelect={this.choseSelect} editRadio={this.editRadio} key={item.addId} config={item} onOk={this.addConfigItem} />
+                : <AddConfigItem shouldSubmit={this.loading} choseSelect={this.choseSelect} editRadio={this.editRadio} key={item.addId} config={item} onOk={this.addConfigItem} />
             ))
           }
 
-          <Button type="primary" className='submitBtn' htmlType="submit">Submit</Button>
+          <Button type="primary" loading={this.loading} className='submitBtn' htmlType="submit">Submit</Button>
           <Button className='cancelBtn' onClick={this.props.onCancel}>Cancel</Button>
         </Form>
         <Button className="workBtn" type="primary" onClick={this.toggleWork}>{this.showWork ? 'Cancel' : 'Edit Filed'}</Button>
