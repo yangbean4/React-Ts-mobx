@@ -383,7 +383,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                     initialValue: this.usEeditData[item.key] || item.default,
                     rules: [
                       {
-                        required: true
+                        required: true, message: "Required"
                       }
                     ]
                   })(

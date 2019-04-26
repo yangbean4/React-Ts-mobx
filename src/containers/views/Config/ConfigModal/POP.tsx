@@ -66,7 +66,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                       initialValue: unavaiab_marked_words_up,
                       rules: [
                         {
-                          required: true
+                          required: true, message: "Required"
                         }
                       ]
                     })(<Input placeholder='Oops ! Connection failed' />)}
@@ -78,7 +78,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                       initialValue: unavaiab_marked_words_down,
                       rules: [
                         {
-                          required: true
+                          required: true, message: "Required"
                         }
                       ]
                     })(<Input placeholder='Try later or download now' />)}
@@ -97,7 +97,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                           initialValue: unavaiab_marked_text,
                           rules: [
                             {
-                              required: true
+                              required: true, message: "Required"
                             }
                           ]
                         })(<Input placeholder='Download' />)}
@@ -126,7 +126,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                           initialValue: marked_text,
                           rules: [
                             {
-                              required: true
+                              required: true, message: "Required"
                             }
                           ]
                         })(<Input placeholder='Download' />)}
@@ -141,7 +141,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                       initialValue: marked_words_up,
                       rules: [
                         {
-                          required: true
+                          required: true, message: "Required"
                         }
                       ]
                     })(<Input placeholder='Win %s %s now!' />)}
@@ -153,7 +153,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                       initialValue: marked_words_down,
                       rules: [
                         {
-                          required: true
+                          required: true, message: "Required"
                         }
                       ]
                     })(<Input placeholder='Return to game for rewards?' />)}
@@ -166,7 +166,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                         initialValue: marked_button_up,
                         rules: [
                           {
-                            required: true
+                            required: true, message: "Required"
                           }
                         ]
                       })(<Input placeholder='Yes' />)}
@@ -178,7 +178,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                         initialValue: marked_button_down,
                         rules: [
                           {
-                            required: true
+                            required: true, message: "Required"
                           }
                         ]
                       })(<Input placeholder='Quit' />)}
@@ -205,7 +205,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                           initialValue: pl_text,
                           rules: [
                             {
-                              required: true
+                              required: true, message: "Required"
                             }
                           ]
                         })(<Input placeholder='Download' />)}

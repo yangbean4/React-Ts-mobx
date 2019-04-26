@@ -17,6 +17,9 @@ export class TemplatesStore extends StoreExt {
     template_pid: number
 
     @observable
+    template_pname: string
+
+    @observable
     templatesList: ITemplateStore.ITemplate[] = []
 
     @observable
@@ -135,9 +138,10 @@ export class TemplatesStore extends StoreExt {
     @action
     setTemplateType = (type: number) => {
         if (!isNaN(type)) {
-            const config = authStore.tmpSidebar.find(ele => ele.id === type).config
-            this.templateConfig = config
+            const SIDEBAR = authStore.tmpSidebar.find(ele => ele.id === type)
+            this.templateConfig = SIDEBAR.config
             this.template_pid = type
+            this.template_pname = SIDEBAR.primary_name
             this.getTemplates()
         }
         this.reset()

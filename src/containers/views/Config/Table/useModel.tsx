@@ -108,7 +108,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                 : this.typeIsAdd ? [getFieldDecorator('pkg_name', {
                   rules: [
                     {
-                      required: true
+                      required: true, message: "Required"
                     }
                   ]
                 })(<Input className={styles.minInput} key='input' />), <Icon onClick={this.toggleAddType} className={styles.workBtn} key="iconxia" type='iconxia' />]
@@ -117,7 +117,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                     getFieldDecorator('pkg_name', {
                       rules: [
                         {
-                          required: true
+                          required: true, message: "Required"
                         }
                       ]
                     })(
@@ -142,7 +142,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                 : getFieldDecorator('platform', {
                   rules: [
                     {
-                      required: true
+                      required: true, message: "Required"
                     }
                   ]
                 })(
@@ -165,7 +165,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
               type !== 'add' ? getFieldDecorator('id', {
                 rules: [
                   {
-                    required: true
+                    required: true, message: "Required"
                   }
                 ]
               })(
@@ -182,7 +182,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
               ) : getFieldDecorator('config_version', {
                 rules: [
                   {
-                    required: true
+                    required: true, message: "Required"
                   }
                 ]
               })(
@@ -196,7 +196,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
               {getFieldDecorator('copyTo', {
                 rules: [
                   {
-                    required: true
+                    required: true, message: "Required"
                   }
                 ]
               })(

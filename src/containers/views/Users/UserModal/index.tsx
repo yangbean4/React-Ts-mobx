@@ -126,7 +126,7 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                         initialValue: user_name,
                         rules: [
                             {
-                                required: true
+                                required: true, message: "Required"
                             }
                         ]
                     })(<Input disabled={!this.typeIsAdd} />)}
@@ -136,7 +136,7 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                         {getFieldDecorator('pwd', {
                             rules: [
                                 {
-                                    required: true
+                                    required: true, message: "Required"
                                 }
                             ]
                         })(<Input />)}
@@ -147,7 +147,7 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                         initialValue: owner,
                         rules: [
                             {
-                                required: true
+                                required: true, message: "Required"
                             }
                         ]
                     })(<Input disabled={!this.typeIsAdd} />)}
@@ -158,7 +158,7 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                         initialValue: roleValue,
                         rules: [
                             {
-                                required: true
+                                required: true, message: "Required"
                             }
                         ]
                     })(
@@ -180,7 +180,7 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                         initialValue: status,
                         rules: [
                             {
-                                required: true
+                                required: true, message: "Required"
                             }
                         ]
                     })(

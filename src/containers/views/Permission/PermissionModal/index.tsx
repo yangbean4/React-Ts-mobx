@@ -130,7 +130,7 @@ class PermissionModal extends ComponentExt<IProps & FormComponentProps> {
                         initialValue: name,
                         rules: [
                             {
-                                required: true
+                                required: true, message: "Required"
                             }
                         ]
                     })(<Input />)}
@@ -142,7 +142,7 @@ class PermissionModal extends ComponentExt<IProps & FormComponentProps> {
                         initialValue: pid,
                         rules: [
                             {
-                                required: true
+                                required: true, message: "Required"
                             }
                         ]
                     })(< TreeSelect
@@ -156,7 +156,7 @@ class PermissionModal extends ComponentExt<IProps & FormComponentProps> {
                         initialValue: level,
                         rules: [
                             {
-                                required: true
+                                required: true, message: "Required"
                             }
                         ]
                     })(<InputNumber />)}
@@ -167,7 +167,7 @@ class PermissionModal extends ComponentExt<IProps & FormComponentProps> {
                         initialValue: sort,
                         rules: [
                             {
-                                required: true
+                                required: true, message: "Required"
                             }
                         ]
                     })(<InputNumber />)}

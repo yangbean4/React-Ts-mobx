@@ -205,7 +205,7 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: primary_name,
                             rules: [
                                 {
-                                    required: true
+                                    required: true, message: "Required"
                                 }
                             ]
                         })(<Input disabled={!this.typeIsAdd} />)}
@@ -234,7 +234,7 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: status,
                             rules: [
                                 {
-                                    required: true
+                                    required: true, message: "Required"
                                 }
                             ]
                         })(

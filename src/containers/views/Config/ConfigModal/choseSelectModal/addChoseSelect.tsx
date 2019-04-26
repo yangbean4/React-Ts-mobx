@@ -224,7 +224,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
             {this.typeIsAdd ? [getFieldDecorator('pName', {
               rules: [
                 {
-                  required: true
+                  required: true, message: "Required"
                 }
               ]
             })(<Input className={styles.minInput} key='input' />), <Icon onClick={this.toggleAddType} className={styles.workBtn} key="iconxia" type='iconxia' />]
@@ -233,7 +233,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                 getFieldDecorator('pId', {
                   rules: [
                     {
-                      required: true
+                      required: true, message: "Required"
                     }
                   ]
                 })(

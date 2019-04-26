@@ -126,7 +126,7 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
             initialValue: this.getValue('pid_type') || this.pid_type,
             rules: [
               {
-                required: true
+                required: true, message: "Required"
               }
             ]
           })(
@@ -151,7 +151,7 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
             initialValue: this.getValue('placement_id'),
             rules: [
               {
-                required: true
+                required: true, message: "Required"
               }
             ]
           })(<Input placeholder='name' disabled={!this.isAdd} />)}

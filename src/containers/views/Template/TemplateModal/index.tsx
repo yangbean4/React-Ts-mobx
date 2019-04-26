@@ -27,6 +27,7 @@ interface IStoreProps {
     getTemplates?: () => Promise<any>
     getSidebar?: () => Promise<any>
     templateConfig?: TemplateConfig
+    template_pname?: string
     upTemplate?: (data) => Promise<any>
 }
 interface IProps extends IStoreProps {
@@ -38,8 +39,8 @@ interface IProps extends IStoreProps {
     (store: IStore): IStoreProps => {
         const { templateStore } = store
 
-        const { templateConfig, createTemplate, modifyTemplate, getTemplates, upTemplate } = templateStore
-        return { templateConfig, createTemplate, modifyTemplate, getTemplates, upTemplate }
+        const { templateConfig, createTemplate, modifyTemplate, getTemplates, upTemplate, template_pname } = templateStore
+        return { templateConfig, createTemplate, modifyTemplate, getTemplates, upTemplate, template_pname }
     }
 )
 
@@ -65,7 +66,8 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get title() {
-        return this.typeIsAdd ? 'Add Primary Template' : 'Edit Primary Template'
+        const template_pname = this.props.template_pname
+        return this.typeIsAdd ? `Add ${template_pname} Template` : `Edit ${template_pname} Template`
     }
     @computed
     get formCon() {
@@ -197,7 +199,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                                 initialValue: template_name,
                                 rules: [
                                     {
-                                        required: true
+                                        required: true, message: "Required"
                                     }
                                 ]
                             })(<Input disabled={!this.typeIsAdd} />)}
@@ -208,7 +210,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: version,
                             rules: [
                                 {
-                                    required: true
+                                    required: true, message: "Required"
                                 }
                             ]
                         })(<Input />)}
@@ -219,13 +221,12 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                                 {getFieldDecorator('_file', {
                                     rules: [
                                         {
-                                            required: true,
-                                            message: 'template is required'
+                                            required: true, message: "Required"
                                         }
                                     ]
                                 })(<Upload {...props}>
                                     <Button>
-                                        <Icon type="iconshangchuan1" /> Upload Privacy
+                                        <Icon type="iconshangchuan1" /> Upload Template
                                 </Button>
                                 </Upload>)}
                             </FormItem> : (

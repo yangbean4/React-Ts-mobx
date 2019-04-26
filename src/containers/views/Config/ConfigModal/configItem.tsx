@@ -207,11 +207,13 @@ class ConfigItem extends React.Component<IProps> {
       case '4': {
         Component = InputGroup
         let vv;
+        debugger
         if (Array.isArray(value)) {
           vv = value
         } else {
           try {
-            vv = JSON.parse(value)
+            const v = JSON.parse(value)
+            vv = Array.isArray(v) ? v : [v || '']
           } catch (error) {
             vv = [value || '']
           }

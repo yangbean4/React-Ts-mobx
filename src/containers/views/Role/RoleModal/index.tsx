@@ -136,7 +136,7 @@ class RoleModal extends ComponentExt<IProps & FormComponentProps> {
                         initialValue: role_name,
                         rules: [
                             {
-                                required: true
+                                required: true, message: "Required"
                             }
                         ]
                     })(<Input disabled={!this.typeIsAdd} />)}

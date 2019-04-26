@@ -23,6 +23,13 @@
     box-shadow: unset !important;
   }
   :global(ul ul > li) {
+    :global(div) {
+      padding-left: 0px !important;
+    }
+    :global(ul li) {
+      padding-left: 12px !important;
+    }
+
     padding-left: 60px !important;
   }
 }

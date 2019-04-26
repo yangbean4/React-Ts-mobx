@@ -239,7 +239,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
               initialValue: key,
               rules: [
                 {
-                  required: true
+                  required: true, message: "Required"
                 }
               ]
             })(<Input placeholder='name' />)}
@@ -251,7 +251,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
               initialValue: value_type,
               rules: [
                 {
-                  required: true
+                  required: true, message: "Required"
                 }
               ]
             })(

@@ -78,7 +78,7 @@ class Login extends React.Component<IStoreProps & FormComponentProps> {
                         {getFieldDecorator('userName', {
                             rules: [
                                 {
-                                    required: true
+                                    required: true, message: "Required"
                                 }
                             ]
                         })(
@@ -92,7 +92,7 @@ class Login extends React.Component<IStoreProps & FormComponentProps> {
                         {getFieldDecorator('password', {
                             rules: [
                                 {
-                                    required: true
+                                    required: true, message: "Required"
                                 }
                             ]
                         })(
