@@ -7,7 +7,8 @@
   align-items: center;
   // background: #f9f9f9;
   min-width: 1160px;
-
+  max-width: 1480px;
+  margin: 0 auto;
   & > div {
     display: flex;
     width: 100%;
@@ -25,6 +26,9 @@
       border-radius: $border-radius-lg;
       & :global(.ant-col) {
         width: unset;
+      }
+      & :global(.ant-col-offset-1) {
+        margin-left: 20px;
       }
       & :global(.ant-form-item-control) {
         width: 240px;
