@@ -2,17 +2,47 @@
 
 .content {
   display: flex;
-  padding: 15px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  // background: #f9f9f9;
+  overflow-x: scroll;
 
-  & > * {
+  & > div {
     display: flex;
     width: 100%;
-    padding: 15px;
+    min-width: 1160px;
+    padding: 20px;
     flex: 1;
-    background-color: white;
+    // background-color: $background-color-gray;
     overflow-y: auto;
+    // box-shadow: $box-shadow-base;
+    border-radius: $border-radius-lg;
+    & > div:first-of-type {
+      padding: 20px;
+      padding-bottom: 0;
+      background-color: $background-color-white;
+      box-shadow: $box-shadow-base;
+      border-radius: $border-radius-lg;
+      & :global(.ant-col) {
+        width: unset;
+      }
+      & :global(.ant-form-item-control) {
+        width: 240px;
+      }
+      & :global(label) {
+        margin: 0 10px 0 20px;
+        &::after {
+          display: none;
+        }
+      }
+    }
+    & > div:nth-of-type(2) {
+      padding: 26px 20px 0 20px;
+      margin-top: 20px;
+      background: $background-color-white;
+      box-shadow: $box-shadow-base;
+      border-radius: $border-radius-lg;
+    }
   }
 }
