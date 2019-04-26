@@ -102,7 +102,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
         ]}
       >
         <Form {...layout} >
-          <FormItem label="Primary Name">
+          <FormItem label="Pkg Name">
             {
               type !== 'add' ? <p>{targetConfig.pkg_name}</p>
                 : this.typeIsAdd ? [getFieldDecorator('pkg_name', {

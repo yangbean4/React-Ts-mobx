@@ -11,7 +11,7 @@ import InputGroup from './InputGroup/index'
 import { _nameCase, typeOf } from '@utils/index'
 const FormItem = Form.Item
 const RadioGroup = Radio.Group;
-const span = 2
+const span = 3
 const layout = {
   labelCol: {
     span: 1,
@@ -104,6 +104,9 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
     runInAction('CHANGE_VALUE_TYPE', () => {
       this.valueType = value
     })
+    this.props.form.setFieldsValue({
+      default: undefined
+    })
   }
 
   editRadio = () => {
@@ -141,7 +144,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
       case '2':
         const value = this.props.form.getFieldValue('default');
 
-        return (<Col span={span} key='default'>
+        return (<Col span={4} key='default'>
           <FormItem {...layout}>
             <div>
               {getFieldDecorator('default', {
@@ -186,7 +189,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
         </Col>)
 
       case '3'://select
-        return (<Col span={4} key='default'>
+        return (<Col span={7} key='default'>
           <FormItem {...layout} className='gouSelect'>
             <Button onDoubleClick={this.choseSelect} key='Button' type="dashed">edit Select</Button>
             {getFieldDecorator('default', {
@@ -254,7 +257,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
 
     return (
       <Row className='addConfigItem'>
-        <Col span={span} offset={2}>
+        <Col span={span} offset={3}>
           <FormItem {...layout}>
             {getFieldDecorator('key', {
               initialValue: key,

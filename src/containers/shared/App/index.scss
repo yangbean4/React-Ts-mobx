@@ -8,9 +8,6 @@
   overflow: auto;
   min-height: 100%;
   flex-direction: column;
-  :global(section.ant-layout) {
-    overflow-x: unset !important;
-  }
 
   :global(.minInput) {
     width: max-content;

@@ -207,7 +207,7 @@ class ConfigTable extends ComponentExt<IProps> {
                                         </span>)
                                     )}>
                                     <a href="javascript:;">
-                                        {_}
+                                        {!isNaN(Number(_)) && Number(_) > 10 ? _ : `0${_}`}
                                     </a>
                                 </Popover>
                             </span>

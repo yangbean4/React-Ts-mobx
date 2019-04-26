@@ -6,13 +6,15 @@
   justify-content: center;
   align-items: center;
   // background: #f9f9f9;
-  min-width: 1160px;
-  max-width: 1480px;
+  overflow-x: scroll;
   width: 100%;
-  margin: 0 auto;
   & > div {
-    display: flex;
+    min-width: 1160px;
+    max-width: 1480px;
     width: 100%;
+    margin: 0 auto;
+
+    display: flex;
     padding: 20px;
     flex: 1;
     // background-color: $background-color-gray;

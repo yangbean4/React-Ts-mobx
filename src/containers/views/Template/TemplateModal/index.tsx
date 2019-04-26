@@ -11,13 +11,13 @@ const FormItem = Form.Item
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 6 },
-        lg: { span: 6 }
+        sm: { span: 7 },
+        lg: { span: 7 }
     },
     wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 18 },
-        lg: { span: 18 }
+        sm: { span: 17 },
+        lg: { span: 17 }
     }
 }
 
@@ -67,7 +67,8 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
     @computed
     get title() {
         const template_pname = this.props.template_pname
-        return this.typeIsAdd ? `Add ${template_pname} Template` : `Edit ${template_pname} Template`
+        const str = (/ template$/).test(template_pname.toLowerCase()) ? template_pname : `${template_pname} Template`
+        return this.typeIsAdd ? `Add ${str}` : `Edit ${str}`
     }
     @computed
     get formCon() {
@@ -186,7 +187,9 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
             <Modal
                 title={this.title}
                 visible={visible}
+                width={500}
                 onOk={this.submit}
+                destroyOnClose
                 onCancel={this.onCancel}
                 footer={
                     <Button type="primary" loading={this.loading} onClick={this.submit} >Submit</Button>
