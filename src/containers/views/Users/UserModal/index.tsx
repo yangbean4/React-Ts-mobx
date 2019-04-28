@@ -120,84 +120,87 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
             }).filter(ele => ele !== undefined)
         }
         return (
-            <Form className={styles.userModal} onSubmit={this.submit}>
-                <FormItem {...formItemLayout} label="User Name">
-                    {getFieldDecorator('user_name', {
-                        initialValue: user_name,
-                        rules: [
-                            {
-                                required: true, message: "Required"
-                            }
-                        ]
-                    })(<Input disabled={!this.typeIsAdd} />)}
-                </FormItem>
-                {
-                    <FormItem {...formItemLayout} label="Password">
-                        {getFieldDecorator('pwd', {
+            <div className='sb-form'>
+                <Form className={styles.userModal} onSubmit={this.submit}>
+                    <FormItem {...formItemLayout} label="User Name">
+                        {getFieldDecorator('user_name', {
+                            initialValue: user_name,
                             rules: [
                                 {
-                                    required: this.typeIsAdd, message: "Required"
+                                    required: true, message: "Required"
                                 }
                             ]
-                        })(<Input />)}
+                        })(<Input disabled={!this.typeIsAdd} />)}
                     </FormItem>
-                }
-                <FormItem {...formItemLayout} label="Owner">
-                    {getFieldDecorator('owner', {
-                        initialValue: owner,
-                        rules: [
-                            {
-                                required: true, message: "Required"
-                            }
-                        ]
-                    })(<Input disabled={!this.typeIsAdd} />)}
-                </FormItem>
+                    {
+                        <FormItem {...formItemLayout} label="Password">
+                            {getFieldDecorator('pwd', {
+                                rules: [
+                                    {
+                                        required: this.typeIsAdd, message: "Required"
+                                    }
+                                ]
+                            })(<Input />)}
+                        </FormItem>
+                    }
+                    <FormItem {...formItemLayout} label="Owner">
+                        {getFieldDecorator('owner', {
+                            initialValue: owner,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(<Input disabled={!this.typeIsAdd} />)}
+                    </FormItem>
 
-                <FormItem {...formItemLayout} label="Role Name">
-                    {getFieldDecorator('role', {
-                        initialValue: roleValue,
-                        rules: [
-                            {
-                                required: true, message: "Required"
-                            }
-                        ]
-                    })(
-                        <Select
-                            allowClear
-                            showSearch
-                            mode='multiple'
-                        >
-                            {allRole.map(c => (
-                                <Select.Option key={c.id} value={c.id}>
-                                    {c.role_name}
-                                </Select.Option>
-                            ))}
-                        </Select>
-                    )}
-                </FormItem>
-                <FormItem {...formItemLayout} label="Status">
-                    {getFieldDecorator('status', {
-                        initialValue: status,
-                        rules: [
-                            {
-                                required: true, message: "Required"
-                            }
-                        ]
-                    })(
-                        <Radio.Group>
-                            {statusOption.map(c => (
-                                <Radio key={c.key} value={c.value}>
-                                    {c.key}
-                                </Radio>
-                            ))}
-                        </Radio.Group>
-                    )}
-                </FormItem>
-                <FormItem className={styles.btnBox}>
-                    <Button type="primary" loading={this.loading} htmlType="submit">Submit</Button>
-                    <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
-                </FormItem>
-            </Form>
+                    <FormItem {...formItemLayout} label="Role Name">
+                        {getFieldDecorator('role', {
+                            initialValue: roleValue,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(
+                            <Select
+                                allowClear
+                                showSearch
+                                mode='multiple'
+                            >
+                                {allRole.map(c => (
+                                    <Select.Option key={c.id} value={c.id}>
+                                        {c.role_name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        )}
+                    </FormItem>
+                    <FormItem {...formItemLayout} label="Status">
+                        {getFieldDecorator('status', {
+                            initialValue: status,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(
+                            <Radio.Group>
+                                {statusOption.map(c => (
+                                    <Radio key={c.key} value={c.value}>
+                                        {c.key}
+                                    </Radio>
+                                ))}
+                            </Radio.Group>
+                        )}
+                    </FormItem>
+                    <FormItem className={styles.btnBox}>
+                        <Button type="primary" loading={this.loading} htmlType="submit">Submit</Button>
+                        <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
+                    </FormItem>
+                </Form>
+
+            </div>
         )
     }
 }

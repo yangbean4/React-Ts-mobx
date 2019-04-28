@@ -124,34 +124,35 @@ class PermissionModal extends ComponentExt<IProps & FormComponentProps> {
             sort = 0
         } = permission || {}
         return (
-            <Form className={styles.permissionModal} onSubmit={this.submit}>
-                <FormItem {...formItemLayout} label="Permission Name">
-                    {getFieldDecorator('name', {
-                        initialValue: name,
-                        rules: [
-                            {
-                                required: true, message: "Required"
-                            }
-                        ]
-                    })(<Input />)}
-                    {/*  disabled={!this.typeIsAdd}  */}
-                </FormItem>
+            <div className='sb-form'>
+                <Form className={styles.permissionModal} onSubmit={this.submit}>
+                    <FormItem {...formItemLayout} label="Permission Name">
+                        {getFieldDecorator('name', {
+                            initialValue: name,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(<Input />)}
+                        {/*  disabled={!this.typeIsAdd}  */}
+                    </FormItem>
 
-                <FormItem {...formItemLayout} label="pid">
-                    {permissionTree && permissionTree.length ? getFieldDecorator('pid', {
-                        initialValue: pid,
-                        rules: [
-                            {
-                                required: true, message: "Required"
-                            }
-                        ]
-                    })(< TreeSelect
-                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                        treeDefaultExpandAll
-                    >{this.renderTreeNodes(permissionTree)} </TreeSelect>) : 'loading tree'}
-                </FormItem>
+                    <FormItem {...formItemLayout} label="pid">
+                        {permissionTree && permissionTree.length ? getFieldDecorator('pid', {
+                            initialValue: pid,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(< TreeSelect
+                            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                            treeDefaultExpandAll
+                        >{this.renderTreeNodes(permissionTree)} </TreeSelect>) : 'loading tree'}
+                    </FormItem>
 
-                {/* <FormItem {...formItemLayout} label="level">
+                    {/* <FormItem {...formItemLayout} label="level">
                     {getFieldDecorator('level', {
                         initialValue: level,
                         rules: [
@@ -162,28 +163,30 @@ class PermissionModal extends ComponentExt<IProps & FormComponentProps> {
                     })(<InputNumber />)}
                 </FormItem> */}
 
-                <FormItem {...formItemLayout} label="sort">
-                    {getFieldDecorator('sort', {
-                        initialValue: sort,
-                        rules: [
-                            {
-                                required: true, message: "Required"
-                            }
-                        ]
-                    })(<InputNumber />)}
-                </FormItem>
+                    <FormItem {...formItemLayout} label="sort">
+                        {getFieldDecorator('sort', {
+                            initialValue: sort,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(<InputNumber />)}
+                    </FormItem>
 
-                <FormItem {...formItemLayout} label="route">
-                    {getFieldDecorator('route', {
-                        initialValue: route,
-                    })(<Input />)}
-                </FormItem>
+                    <FormItem {...formItemLayout} label="route">
+                        {getFieldDecorator('route', {
+                            initialValue: route,
+                        })(<Input />)}
+                    </FormItem>
 
-                <FormItem className={styles.btnBox}>
-                    <Button type="primary" loading={this.loading} htmlType="submit">Submit</Button>
-                    <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
-                </FormItem>
-            </Form >
+                    <FormItem className={styles.btnBox}>
+                        <Button type="primary" loading={this.loading} htmlType="submit">Submit</Button>
+                        <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
+                    </FormItem>
+                </Form >
+
+            </div>
         )
     }
 }

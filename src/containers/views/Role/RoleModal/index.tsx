@@ -130,39 +130,41 @@ class RoleModal extends ComponentExt<IProps & FormComponentProps> {
         } = role || {}
         const arr = this.checkedKeys || permission.split(',').filter(ele => !!ele)
         return (
-            <Form className={styles.roleModal} onSubmit={this.submit}>
-                <FormItem {...formItemLayout} label="Role Name">
-                    {getFieldDecorator('role_name', {
-                        initialValue: role_name,
-                        rules: [
-                            {
-                                required: true, message: "Required"
-                            }
-                        ]
-                    })(<Input disabled={!this.typeIsAdd} />)}
-                </FormItem>
-                <FormItem {...formItemLayout} label='Authorization'>
-                    {permissionTree && permissionTree.length
-                        ? <Tree
-                            checkable
-                            defaultExpandAll
-                            checkedKeys={arr}
-                            onCheck={this.onCheck}
-                        >{this.renderTreeNodes(permissionTree)}</Tree>
-                        : 'loading tree'}
-                </FormItem>
+            <div className='sb-form'>
+                <Form className={styles.roleModal} onSubmit={this.submit}>
+                    <FormItem {...formItemLayout} label="Role Name">
+                        {getFieldDecorator('role_name', {
+                            initialValue: role_name,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(<Input disabled={!this.typeIsAdd} />)}
+                    </FormItem>
+                    <FormItem {...formItemLayout} label='Authorization'>
+                        {permissionTree && permissionTree.length
+                            ? <Tree
+                                checkable
+                                defaultExpandAll
+                                checkedKeys={arr}
+                                onCheck={this.onCheck}
+                            >{this.renderTreeNodes(permissionTree)}</Tree>
+                            : 'loading tree'}
+                    </FormItem>
 
-                <FormItem {...formItemLayout} label="Remarks">
-                    {getFieldDecorator('remarks', {
-                        initialValue: remarks,
-                    })(<Input.TextArea autosize />)}
-                </FormItem>
+                    <FormItem {...formItemLayout} label="Remarks">
+                        {getFieldDecorator('remarks', {
+                            initialValue: remarks,
+                        })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
+                    </FormItem>
 
-                <FormItem className={styles.btnBox}>
-                    <Button type="primary" loading={this.loading} htmlType="submit">Submit</Button>
-                    <Button className={styles.btn2} onClick={() => this.Cancel()} >Cancel</Button>
-                </FormItem>
-            </Form>
+                    <FormItem className={styles.btnBox}>
+                        <Button type="primary" loading={this.loading} htmlType="submit">Submit</Button>
+                        <Button className={styles.btn2} onClick={() => this.Cancel()} >Cancel</Button>
+                    </FormItem>
+                </Form>
+            </div>
         )
     }
 }
