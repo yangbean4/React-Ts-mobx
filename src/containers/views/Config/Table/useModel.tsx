@@ -60,21 +60,43 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
     this.typeIsAdd = !this.typeIsAdd
   }
   @action
-  toggleLoading = () => {
-    this.loading = !this.loading
+  toggleLoading = (type?) => {
+    this.loading = type === undefined ? !this.loading : type;
   }
 
   submit = (e?: React.FormEvent<any>): void => {
+    this.toggleLoading(true)
     if (e) {
       e.preventDefault()
     }
     const { form } = this.props
     form.validateFields(
       async (err, values): Promise<any> => {
-        if (!err) {
+        const cb = () => {
           this.props.onOk(values)
           this.props.form.resetFields()
+
         }
+        if (!err) {
+          if (this.props.type === 'copy' && values.copyTo === this.props.targetConfig.versionArr.find(ele => ele.id === values.id).version) {
+            this.$message.error(`${values.copyTo} is already exist!`)
+            this.toggleLoading(false)
+            return
+          }
+          if (this.props.type === 'add') {
+            try {
+              await this.api.config.checkConfig(values)
+              cb()
+            } catch (error) {
+              this.toggleLoading(false)
+            }
+          } else {
+            cb()
+          }
+
+        }
+
+        this.toggleLoading(false)
       }
     )
   }
@@ -96,7 +118,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
         visible={visible}
         onCancel={this.onCancel}
         footer={[
-          <Button key="submit" type="primary" onClick={this.submit}>
+          <Button key="submit" loading={this.loading} type="primary" onClick={this.submit}>
             Submit
           </Button>,
         ]}
@@ -196,7 +218,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
               {getFieldDecorator('copyTo', {
                 rules: [
                   {
-                    required: true, message: "Required"
+                    required: true, message: "Required",
                   }
                 ]
               })(
