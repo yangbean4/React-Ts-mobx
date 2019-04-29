@@ -185,7 +185,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                   delete mm.addId
                   delete mm.isEdit
                   tt = {
-                    [key]: [mm]
+                    [key]: mm
                   }
                 }
                 return tt
