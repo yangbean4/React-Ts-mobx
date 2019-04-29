@@ -6,7 +6,7 @@ import * as styles from './index.scss'
 import Icon from '@components/Icon'
 
 
-let id = 0;
+
 
 interface IProps {
   value?: string[]
@@ -16,7 +16,7 @@ interface IProps {
 class InputGroup extends ComponentExt<IProps & FormComponentProps> {
 
 
-
+  private id = 0;
 
 
 
@@ -39,7 +39,7 @@ class InputGroup extends ComponentExt<IProps & FormComponentProps> {
     const { form } = this.props;
     // can use data-binding to get
     const keys = form.getFieldValue('keys');
-    const nextKeys = keys.concat(id++);
+    const nextKeys = keys.concat(this.id++);
     // can use data-binding to set
     // important! notify form to detect changes
     form.setFieldsValue({
@@ -60,7 +60,7 @@ class InputGroup extends ComponentExt<IProps & FormComponentProps> {
 
     const { form, value } = this.props;
     arr = value.map(ele => {
-      const k = id++
+      const k = this.id++
       initialValueObj[k] = ele
       return k
     })
@@ -87,7 +87,7 @@ class InputGroup extends ComponentExt<IProps & FormComponentProps> {
     const keys = getFieldValue('keys');
     const formItems = keys.map((k, index) => (
       <div
-        key={k}
+        key={k.toString()}
       >
         {getFieldDecorator(`names[${k}]`, {
           initialValue: this.props.value[k],

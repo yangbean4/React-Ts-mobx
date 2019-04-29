@@ -165,7 +165,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
       <Form.Item
 
         required={false}
-        key={k}
+        key={k.toString()}
       >
         {getFieldDecorator(`names[${k}]`, {
           validateTrigger: ['onChange', 'onBlur'],
@@ -198,7 +198,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
             <RadioGroup>
               {
                 keys.map(k => (
-                  <Radio className={styles.radio} key={k} value={k} />
+                  <Radio className={styles.radio} key={k.toString()} value={k} />
                 ))
               }
             </RadioGroup>

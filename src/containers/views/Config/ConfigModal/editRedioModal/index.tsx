@@ -185,7 +185,7 @@ class EditRedioModal extends ComponentExt<IProps & FormComponentProps> {
     const formItems = keys.map((k, index) => (
       <Form.Item
         required={false}
-        key={k}
+        key={k.toString()}
       >
         {getFieldDecorator(`names[${k}]`, {
           validateTrigger: ['onChange', 'onBlur'],
@@ -216,7 +216,7 @@ class EditRedioModal extends ComponentExt<IProps & FormComponentProps> {
             <RadioGroup>
               {
                 keys.map(k => (
-                  <Radio className={styles.radio} key={k} value={k} />
+                  <Radio className={styles.radio} key={k.toString()} value={k} />
                 ))
               }
             </RadioGroup>

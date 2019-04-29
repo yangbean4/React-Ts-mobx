@@ -176,7 +176,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
           }
         }
 
-        return (<Col span={4} key='default'>
+        return (<Col span={6} key='default'>
           <FormItem {...layout}>
 
             {

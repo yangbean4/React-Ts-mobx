@@ -156,11 +156,11 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
             console.log(waitItemNum);
           } else {
             try {
-
-              const dataArr = this.useConfigList.map(ele => {
+              let last_id = 0
+              const dataArr = this.useConfigList.map((ele, index, array) => {
                 const key = _nameCase(ele.key)
                 const value = values[ele.key];
-
+                last_id = index === 0 ? 0 : array[index].id || last_id
                 let tt = { [key]: value }
                 // 处理后端返回的默认值在直接保存时有坑的问题
                 if (ele.value_type === '4') {
@@ -181,7 +181,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                 // 说明是新增加的
                 // if (!this.usEeditData.hasOwnProperty(key)) {
                 if (ele.addId || !this.usEeditData.hasOwnProperty(key)) {
-                  const mm = { ...ele, key, value: value || ele.default }
+                  const mm = { ...ele, key, value: value || ele.default, last_id }
                   delete mm.addId
                   delete mm.isEdit
                   tt = {
