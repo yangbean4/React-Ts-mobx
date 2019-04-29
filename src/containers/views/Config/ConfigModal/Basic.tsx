@@ -145,13 +145,13 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     if (e) {
       e.preventDefault()
     }
+    const waitItemNum = this.useConfigList.filter(ele => ele.isEdit).length
+    this.waitItemNum = waitItemNum
     this.toggleLoading(true)
     const { onSubmit, form } = this.props
     form.validateFields(
       async (err, values): Promise<any> => {
         if (!err) {
-          debugger
-          const waitItemNum = this.useConfigList.filter(ele => ele.isEdit).length
           if (waitItemNum) {
             console.log(waitItemNum);
           } else {
@@ -181,9 +181,12 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                 // 说明是新增加的
                 // if (!this.usEeditData.hasOwnProperty(key)) {
                 if (ele.addId || !this.usEeditData.hasOwnProperty(key)) {
-                  tt = { ...ele, key, value }
-                  delete tt.addId
-                  delete tt.isEdit
+                  const mm = { ...ele, key, value: value || ele.default }
+                  delete mm.addId
+                  delete mm.isEdit
+                  tt = {
+                    [key]: [mm]
+                  }
                 }
                 return tt
               })
@@ -267,6 +270,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       runInAction('UP_THIS_CONFIG_LIST', () => {
         this.thisConfigList = arr
       })
+
       if (this.loading) {
         // 是本组件触发的自组件提交
         if (! --this.waitItemNum) {
