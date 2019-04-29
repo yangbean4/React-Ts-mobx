@@ -150,6 +150,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     form.validateFields(
       async (err, values): Promise<any> => {
         if (!err) {
+          debugger
           const waitItemNum = this.useConfigList.filter(ele => ele.isEdit).length
           if (waitItemNum) {
             console.log(waitItemNum);
@@ -158,11 +159,12 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
               const dataArr = this.useConfigList.map(ele => {
                 const key = _nameCase(ele.key)
-                let tt = { [key]: values[ele.key] }
+                const value = values[ele.key];
+
+                let tt = { [key]: value }
                 // 处理后端返回的默认值在直接保存时有坑的问题
                 if (ele.value_type === '4') {
                   let vv;
-                  const value = values[ele.key];
                   if (Array.isArray(value)) {
                     vv = value.filter(mn => !!mn)
                   } else {
@@ -177,12 +179,15 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                 }
 
                 // 说明是新增加的
-                if (!this.usEeditData.hasOwnProperty(key)) {
-                  tt = { ...ele, ...tt }
+                // if (!this.usEeditData.hasOwnProperty(key)) {
+                if (ele.addId || !this.usEeditData.hasOwnProperty(key)) {
+                  tt = { ...ele, key, value }
                   delete tt.addId
+                  delete tt.isEdit
                 }
-                return tt;
+                return tt
               })
+              console.log(dataArr)
               onSubmit(dataArr)
             } catch (error) {
               console.log(error)

@@ -5,7 +5,7 @@ import { Form, Input, Button, message, Modal, Checkbox, Tree, Radio } from 'antd
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-import defaultOption from '../default.config'
+import { defaultOption, statusOption } from '../default.config'
 import { camelCase } from '@utils/index'
 const { TreeNode } = Tree
 const FormItem = Form.Item
@@ -22,16 +22,16 @@ const formItemLayout = {
         lg: { span: 18 }
     }
 }
-const statusOption = [
-    {
-        key: 'Disabled',
-        value: 0
-    },
-    {
-        key: 'Enable',
-        value: 1
-    }
-]
+// const statusOption = [
+//     {
+//         key: 'Disabled',
+//         value: 0
+//     },
+//     {
+//         key: 'Enable',
+//         value: 1
+//     }
+// ]
 
 interface IStoreProps {
     createCustom?: (custom: ICustomStore.ICustom) => Promise<any>

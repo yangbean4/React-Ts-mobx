@@ -6,6 +6,7 @@ import { FormComponentProps } from 'antd/lib/form'
 import { statusOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
+import { debuggerStatement } from '@babel/types';
 
 const FormItem = Form.Item
 
@@ -58,10 +59,10 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     componentWillMount() {
-        const { routerStore, user, getAllRoles } = this.props
+        const { routerStore, user = {}, getAllRoles } = this.props
         const routerId = routerStore.location.pathname.toString().split('/').pop()
         const Id = Number(routerId)
-        if (!isNaN(Id) && (!user.id || user.id !== Id)) {
+        if ((!isNaN(Id) && (!user.id || user.id !== Id))) {
             routerStore.push('/users')
         } else {
             getAllRoles()
@@ -97,7 +98,9 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                         }
                         message.success(data.message)
                         routerStore.push('/users')
-                    } catch (err) { }
+                    } catch (err) {
+                        console.log(err);
+                    }
                     this.toggleLoading()
                 }
             }
@@ -132,17 +135,15 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input disabled={!this.typeIsAdd} />)}
                     </FormItem>
-                    {
-                        <FormItem {...formItemLayout} label="Password">
-                            {getFieldDecorator('pwd', {
-                                rules: [
-                                    {
-                                        required: this.typeIsAdd, message: "Required"
-                                    }
-                                ]
-                            })(<Input />)}
-                        </FormItem>
-                    }
+                    <FormItem {...formItemLayout} label="Password">
+                        {getFieldDecorator('pwd', {
+                            rules: this.typeIsAdd ? [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ] : undefined
+                        })(<Input />)}
+                    </FormItem>
                     <FormItem {...formItemLayout} label="Owner">
                         {getFieldDecorator('owner', {
                             initialValue: owner,
@@ -166,6 +167,8 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                             <Select
                                 allowClear
                                 showSearch
+
+                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 mode='multiple'
                             >
                                 {allRole.map(c => (

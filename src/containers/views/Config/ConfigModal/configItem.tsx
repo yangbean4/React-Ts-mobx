@@ -176,6 +176,7 @@ class ConfigItem extends React.Component<IProps> {
           allowClear: true,
           showSearch: true,
           value: value,
+          filterOption: (input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0,
           onChange: (val) => this.triggerChange(val),
           dropdownRender,
         }

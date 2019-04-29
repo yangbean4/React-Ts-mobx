@@ -39,7 +39,7 @@ class PidTable extends React.Component<TableProps> {
         className="center-table"
         style={{ width: '100%' }}
         bordered
-        rowKey="placement_id"
+        rowKey={(row) => row.placement_id + row.pid_type}
         dataSource={useData}
         scroll={{ y: scrollY }}
       >

@@ -32,7 +32,7 @@ class Header extends ComponentExt<IStoreProps> {
                     this.$checkAuth('Authorization-User Manage-Add', (
                         <PortalsBtn querySelector='#customAddBtn'>
                             <Button icon='plus' type="primary" onClick={this.addUser}>
-                                add
+                                Add
                         </Button>
                         </PortalsBtn>
 

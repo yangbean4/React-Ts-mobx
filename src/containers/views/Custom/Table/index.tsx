@@ -5,8 +5,20 @@ import { inject, observer } from 'mobx-react'
 import { observable, action } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
-import MyIcon from '@components/Icon'
+// import { statusOption } from '../default.config'
 import CustomModal from '../CustomModal'
+
+const statusOption = [
+    {
+        key: 'Disabled',
+        value: 0
+    },
+    {
+        key: 'Enable',
+        value: 1
+    }
+]
+
 interface IStoreProps {
     getCustomsloading?: boolean
     customs?: ICustomStore.ICustom[]
@@ -134,6 +146,15 @@ class CustomTable extends ComponentExt<IProps> {
                     onChange={handleTableChange}
                 >
                     <Table.Column<ICustomStore.ICustom> key="primary_name" title="Primary Name" dataIndex="primary_name" width={200} />
+                    <Table.Column<ICustomStore.ICustom>
+                        key="status"
+                        title="Status"
+                        dataIndex="status"
+                        width={200}
+                        render={(_) => (
+                            statusOption.find(item => item.value === _).key
+                        )}
+                    />
                     <Table.Column<ICustomStore.ICustom>
                         key="action"
                         title="Operate"

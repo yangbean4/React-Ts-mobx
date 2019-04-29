@@ -6,7 +6,7 @@ import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import Icon from '@components/Icon'
-import defaultConfig from "@views/Custom/default.config";
+import { defaultOption } from "@views/Custom/default.config";
 const FormItem = Form.Item
 const RadioGroup = Radio.Group;
 
@@ -96,7 +96,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
             } = values;
             let addId = pId;
             if (pName) {
-              const res = await this.api.custom.createCustom({ primary_name: pName, config: defaultConfig })
+              const res = await this.api.custom.createCustom({ primary_name: pName, config: defaultOption })
               addId = res.data.id
               this.props.getSidebar()
             }
@@ -240,6 +240,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                   <Select
                     allowClear
                     showSearch
+                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     className={styles.minInput}
                     key='select'
                   >

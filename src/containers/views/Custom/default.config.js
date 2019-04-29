@@ -1,4 +1,4 @@
-export default {
+export const defaultOption = {
   "list_filed": {
     "template_name": 0,
     "version": 0,
@@ -18,3 +18,14 @@ export default {
     "template": 0
   }
 }
+
+export const statusOption = [
+  {
+    key: 'Disabled',
+    value: 0
+  },
+  {
+    key: 'Enable',
+    value: 1
+  }
+]

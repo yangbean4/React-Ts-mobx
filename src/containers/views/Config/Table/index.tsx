@@ -9,7 +9,7 @@ import MyIcon from '@components/Icon'
 import UseModal from './useModel'
 import { useType } from './useType'
 import PortalsBtn from '@components/portalsBtn'
-
+import { FormatNumber } from '@utils/transRender'
 interface IStoreProps {
     getConfigLoading?: boolean
     configsList?: IConfigStore.IConfig[]
@@ -160,7 +160,7 @@ class ConfigTable extends ComponentExt<IProps> {
                     this.$checkAuth('Config Manage-Config Manage-Add', (
                         <PortalsBtn querySelector='#insertBeforeConfigSearch'>
                             <Button icon='plus' type="primary" onClick={() => this.viewModel('add')}>
-                                add
+                                Add
                                 </Button>
                         </PortalsBtn>
 
@@ -207,7 +207,7 @@ class ConfigTable extends ComponentExt<IProps> {
                                         </span>)
                                     )}>
                                     <a href="javascript:;">
-                                        {!isNaN(Number(_)) && Number(_) > 10 ? _ : `0${_}`}
+                                        {FormatNumber(_)}
                                     </a>
                                 </Popover>
                             </span>

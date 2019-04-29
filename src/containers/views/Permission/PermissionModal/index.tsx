@@ -85,6 +85,7 @@ class PermissionModal extends ComponentExt<IProps & FormComponentProps> {
                     try {
                         let data = { message: '' }
                         delete values.level;
+                        values = { ...values, pid: values.pid || 0 }
                         if (this.typeIsAdd) {
                             data = await createPermission(values)
                         } else {
@@ -141,11 +142,6 @@ class PermissionModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem {...formItemLayout} label="pid">
                         {permissionTree && permissionTree.length ? getFieldDecorator('pid', {
                             initialValue: pid,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
                         })(< TreeSelect
                             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                             treeDefaultExpandAll

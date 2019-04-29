@@ -6,7 +6,7 @@ import { observable, action } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
 import MyIcon from '@components/Icon'
-
+import { null2Bar, FormatNumber } from '@utils/transRender'
 interface IStoreProps {
     getRolesloading?: boolean
     roles?: IRoleStore.IRole[]
@@ -132,7 +132,7 @@ class RoleTable extends ComponentExt<IProps> {
                             <span>
                                 <Popover placement="top" trigger="click" content={record.user_detail.map(item => (<span style={{ marginRight: '6px', marginLeft: '6px' }} key={item}>{item}</span>))}>
                                     <a href="javascript:;">
-                                        {_}
+                                        {FormatNumber(_)}
                                     </a>
                                 </Popover>
                             </span>
@@ -140,7 +140,7 @@ class RoleTable extends ComponentExt<IProps> {
                         )
                         }
                     />
-                    <Table.Column<IRoleStore.IRole > key="remarks" title="Remarks" dataIndex="remarks" width={100} />
+                    <Table.Column<IRoleStore.IRole> render={null2Bar} key="remarks" title="Remarks" dataIndex="remarks" width={100} />
                     <Table.Column<IRoleStore.IRole>
                         key="action"
                         title="Operate"

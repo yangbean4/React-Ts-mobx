@@ -146,6 +146,8 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                       <Select
                         allowClear
                         showSearch
+
+                        filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                         className={styles.minInput}
                         key='select'>
                         {this.props.allConfig.map(c => (
@@ -171,6 +173,8 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                   <Select
                     allowClear
                     showSearch
+
+                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                   >
                     {(statusOption).map(c => (
                       <Select.Option {...c}>
@@ -194,9 +198,10 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                 <Select
                   allowClear
                   showSearch
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {(targetConfig.versionArr || []).map(c => (
-                    <Select.Option key={c.id} value={c.id}>
+                    <Select.Option key={c.version} value={c.id}>
                       {c.version}
                     </Select.Option>
                   ))}

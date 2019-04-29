@@ -19,13 +19,13 @@ const layout = {
 }
 const userCategory = [{
   value: 1,
-  title: 'add'
+  title: 'Add'
 }, {
   value: 2,
-  title: 'edit'
+  title: 'Edit'
 }, {
   value: 3,
-  title: 'delete'
+  title: 'Delete'
 }]
 
 interface IStoreProps {
@@ -92,6 +92,8 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   allowClear
                   showSearch
+
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {userCategory.map(c => (
                     <Select.Option key={c.title} value={c.value}>

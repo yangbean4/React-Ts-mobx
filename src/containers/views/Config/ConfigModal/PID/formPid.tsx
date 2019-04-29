@@ -133,6 +133,8 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
             <Select
               allowClear
               showSearch
+
+              filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
               onChange={this.typeChange}
               disabled={!this.isAdd}
               placeholder='value type'
