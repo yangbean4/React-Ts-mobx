@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
-import { observable, action } from 'mobx'
+import { observable, action, autorun } from 'mobx'
 import { Form, Input, Select, Row, Col, Button, DatePicker } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import moment from 'moment';
@@ -31,14 +31,15 @@ const userCategory = [{
 
 interface IStoreProps {
   changeFilter?: (params: ILogsStore.SearchParams) => void
+  logType?: string
 }
 
 
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { changeFilter } = store.logsStore
-    return { changeFilter }
+    const { changeFilter, logType } = store.logsStore
+    return { changeFilter, logType }
   }
 )
 @observer
@@ -46,14 +47,32 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   @observable
   private loading: boolean = false
 
-
+  private logType: string
+  constructor(props) {
+    super(props)
+    autorun(
+      () => {
+        if (this.logType !== this.props.logType) {
+          if (this.logType) {
+            this.props.form.setFieldsValue({
+              datetime: this.defaultValue()
+            })
+          }
+          this.logType = this.props.logType
+          this.props.form.resetFields()
+          return true
+        }
+        return false
+      }
+    )
+  }
 
   @action
   toggleLoading = () => {
     this.loading = !this.loading
   }
   defaultValue = () => {
-    return [].map(val => moment(val, dateFormat))
+    return [new Date(), new Date(new Date().setDate(new Date().getDate() + 7))].map(val => moment(val, dateFormat))
   }
 
   submit = (e?: React.FormEvent<any>): void => {
@@ -96,7 +115,7 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   allowClear
                   showSearch
-                  getPopupContainer={trigger => trigger. parentElement}
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {userCategory.map(c => (
