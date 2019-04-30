@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, autorun } from 'mobx'
 import { Form, Input, Row, Col, Button } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
@@ -22,18 +22,35 @@ interface IStoreProps {
   changeFilter?: (params: ITemplateStore.SearchParams) => void
   changepage?: (page: number) => void
   templateConfig?: TemplateConfig
+  template_pid?: number
 }
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { getTemplates, changepage, changeFilter, templateConfig } = store.templateStore
-    return { getTemplates, changepage, changeFilter, templateConfig }
+    const { getTemplates, changepage, changeFilter, templateConfig, template_pid } = store.templateStore
+    return { getTemplates, changepage, changeFilter, templateConfig, template_pid }
   }
 )
 @observer
 class TemplateSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   @observable
   private loading: boolean = false
+
+  private template_pid: number
+
+  constructor(props) {
+    super(props)
+    autorun(
+      () => {
+        if (this.template_pid !== this.props.template_pid) {
+          this.template_pid = this.props.template_pid;
+          this.props.form.resetFields()
+          return true
+        }
+        return false
+      }
+    )
+  }
 
   @computed
   get searchList() {

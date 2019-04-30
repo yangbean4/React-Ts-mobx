@@ -31,6 +31,17 @@ interface IProps {
 @observer
 class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
 
+
+
+  @observable
+  private loading: boolean = false
+
+  @observable
+  private valueType: string
+
+  @observable
+  private pickerVisible: boolean = true
+
   constructor(props) {
     super(props)
     when(
@@ -43,15 +54,6 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
       () => this.submit()
     );
   }
-
-  @observable
-  private loading: boolean = false
-
-  @observable
-  private valueType: string
-
-  @observable
-  private pickerVisible: boolean = true
 
 
   @action
@@ -195,7 +197,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
             {getFieldDecorator('default', {
               initialValue: config.default,
             })(<Select
-              getPopupContainer={trigger => trigger. parentElement}
+              getPopupContainer={trigger => trigger.parentElement}
             >
               {
                 JSON.parse(option || '[]').map((c, i) => (
@@ -284,7 +286,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
               <Select
                 allowClear
                 showSearch
-                getPopupContainer={trigger => trigger. parentElement}
+                getPopupContainer={trigger => trigger.parentElement}
                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 onChange={this.typeChange}
                 placeholder='value type'
