@@ -194,7 +194,9 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
             <Button onDoubleClick={this.choseSelect} key='Button' type="dashed">edit Select</Button>
             {getFieldDecorator('default', {
               initialValue: config.default,
-            })(<Select>
+            })(<Select
+              getPopupContainer={trigger => trigger. parentElement}
+            >
               {
                 JSON.parse(option || '[]').map((c, i) => (
                   <Select.Option key={c.label} value={c.value}>
@@ -282,6 +284,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
               <Select
                 allowClear
                 showSearch
+                getPopupContainer={trigger => trigger. parentElement}
                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 onChange={this.typeChange}
                 placeholder='value type'

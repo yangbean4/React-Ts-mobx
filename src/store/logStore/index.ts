@@ -1,7 +1,7 @@
 import { observable, action, runInAction } from 'mobx'
 import { PaginationConfig } from 'antd/lib/pagination'
 import { StoreExt } from '@utils/reactExt'
-
+import { dateFormat } from '@utils/index'
 export class LogsStore extends StoreExt {
     @observable
     logsLoading: boolean = false
@@ -32,7 +32,9 @@ export class LogsStore extends StoreExt {
     total: number = 0
 
     @observable
-    filter: ILogsStore.SearchParams
+    filter: ILogsStore.SearchParams = {
+        datetime: [new Date(), new Date(new Date().setDate(new Date().getDate() + 7))].map(ele => dateFormat(ele, 'yyyy-MM-dd')).join(' - ')
+    }
 
     @action
     changepage = (page: number) => {

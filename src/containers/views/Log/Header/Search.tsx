@@ -3,9 +3,10 @@ import { inject, observer } from 'mobx-react'
 import { observable, action } from 'mobx'
 import { Form, Input, Select, Row, Col, Button, DatePicker } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
-
+import moment from 'moment';
 import { ComponentExt } from '@utils/reactExt'
 
+const dateFormat = 'YYYY-MM-DD'
 const FormItem = Form.Item
 const RangePicker = DatePicker.RangePicker
 const span = 6
@@ -51,6 +52,9 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   toggleLoading = () => {
     this.loading = !this.loading
   }
+  defaultValue = () => {
+    return [].map(val => moment(val, dateFormat))
+  }
 
   submit = (e?: React.FormEvent<any>): void => {
     if (e) {
@@ -92,7 +96,7 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   allowClear
                   showSearch
-
+                  getPopupContainer={trigger => trigger. parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {userCategory.map(c => (
@@ -118,7 +122,9 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
 
           <Col span={span}>
             <FormItem label="Time">
-              {getFieldDecorator('datetime')(<RangePicker format='YYYY-MM-DD' />)}
+              {getFieldDecorator('datetime', {
+                initialValue: this.defaultValue()
+              })(<RangePicker format={dateFormat} />)}
             </FormItem>
           </Col>
 

@@ -7,7 +7,7 @@ import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import menu, { IMenu, IMenuInTree, templateId, logId, logMenu } from '../menu&router'
 import { arrayToTree, queryArray } from '@utils/index'
-
+import { clearAuth } from '@utils/checkAuth'
 import Icon from '@components/Icon'
 
 const { SubMenu } = Menu
@@ -147,8 +147,10 @@ class SiderMenu extends ComponentExt<IStoreProps> {
                 if (item.pid) {
                     this.levelMap[item.id] = item.pid
                 }
+                const authArr = item.children.map(ele => ele.authName).filter(ele => !!ele);
+                const auth = authArr.length > 0 ? authArr.join('|') : item.authName
                 return (
-                    this.$checkAuth(item.authName, (
+                    this.$checkAuth(auth, (
                         <SubMenu
                             key={String(item.id)}
                             title={
@@ -163,7 +165,6 @@ class SiderMenu extends ComponentExt<IStoreProps> {
                     )
                 )
             }
-
             return (this.$checkAuth(item.authName, (
                 <Menu.Item key={String(item.id)}>
                     {item.icon && <Icon className={this.props.sideBarCollapsed ? styles.sideBarIcon : styles.menuIcon} type={item.icon} />}
@@ -172,6 +173,10 @@ class SiderMenu extends ComponentExt<IStoreProps> {
             ))
             )
         })
+    }
+
+    componentWillUnmount() {
+        clearAuth()
     }
 
     render() {

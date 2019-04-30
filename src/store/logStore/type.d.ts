@@ -19,4 +19,5 @@ export interface SearchParams {
   type?: string | number,
   operation?: string,
   time?: string[]
+  datetime: string
 }

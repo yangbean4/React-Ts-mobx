@@ -67,6 +67,7 @@ export class TemplatesStore extends StoreExt {
         this.pageSize = 10
         this.total = 0
         this.templatesList = []
+        this.filter = {}
     }
 
     @action
@@ -137,6 +138,7 @@ export class TemplatesStore extends StoreExt {
 
     @action
     setTemplateType = (type: number) => {
+        this.reset()
         if (!isNaN(type)) {
             const SIDEBAR = authStore.tmpSidebar.find(ele => ele.id === type)
             this.templateConfig = SIDEBAR.config
@@ -144,7 +146,6 @@ export class TemplatesStore extends StoreExt {
             this.template_pname = SIDEBAR.primary_name
             this.getTemplates()
         }
-        this.reset()
     }
 
     handleTableChange = (pagination: PaginationConfig) => {

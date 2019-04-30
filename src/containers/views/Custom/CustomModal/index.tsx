@@ -107,6 +107,7 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
                      * list_filed对应时个tree 所选项是checkedKeys 是一个 用.连接的obj 键的路径
                      * 所以用 arrToObj将对应的选择映射到对应的option的sub
                      */
+                    debugger
                     const pre: ICustomStore.ICustom = {
                         primary_name,
                         config: {
@@ -134,11 +135,13 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
         )
     }
 
-    getTrueKey = (obj: object) => {
+    getTrueKey = (obj: object, pre?) => {
         let arr: string[] = []
-        Object.entries(obj).forEach(([key, value]) => {
+        Object.entries(obj).forEach(([_key, value]) => {
+            const key = pre ? `${pre}.${_key}` : _key
+
             if (typeof value === 'object') {
-                const sub = this.getTrueKey(value)
+                const sub = this.getTrueKey(value, key)
                 if (sub.length === Object.keys(value).length) {
                     arr.push(key)
                 }
@@ -147,6 +150,11 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
                 arr.push(key)
             }
         })
+        return arr
+    }
+    getListTrueKey = (obj: object) => {
+        const arr = this.getTrueKey(obj)
+        this.checkedKeys = arr
         return arr
     }
     getCheckBoxOption = (obj: object) => {
@@ -185,7 +193,7 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
         const { getFieldDecorator } = form
         const {
             primary_name = '',
-            status = undefined,
+            status = 1,
             config = JSON.parse(JSON.stringify(defaultOption))
         } = custom || {}
         return (
@@ -221,7 +229,7 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
                                         : <Tree
                                             checkable
                                             defaultExpandAll
-                                            defaultCheckedKeys={this.getTrueKey(value)}
+                                            defaultCheckedKeys={this.getListTrueKey(value)}
                                             onCheck={this.onCheck}
                                         >{this.renderTreeNodes(value, '')}</Tree>
                                 }

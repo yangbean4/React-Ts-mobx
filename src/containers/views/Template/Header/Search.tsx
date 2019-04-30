@@ -5,7 +5,6 @@ import { Form, Input, Row, Col, Button } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import { camelCase } from '@utils/index'
-import * as style from './index.scss'
 const FormItem = Form.Item
 
 const span = 7
