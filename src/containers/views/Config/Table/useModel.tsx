@@ -78,7 +78,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
 
         }
         if (!err) {
-          if (this.props.type === 'copy' && values.copyTo === this.props.targetConfig.versionArr.find(ele => ele.id === values.id).version) {
+          if (this.props.type === 'copy' && this.props.targetConfig.versionArr.find(ele => ele.version === values.copyTo)) {
             this.$message.error(`${values.copyTo} is already exist!`)
             this.toggleLoading(false)
             return
@@ -146,7 +146,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                       <Select
                         allowClear
                         showSearch
-                        getPopupContainer={trigger => trigger. parentElement}
+                        getPopupContainer={trigger => trigger.parentElement}
                         filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                         className={styles.minInput}
                         key='select'>
@@ -173,7 +173,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                   <Select
                     allowClear
                     showSearch
-                    getPopupContainer={trigger => trigger. parentElement}
+                    getPopupContainer={trigger => trigger.parentElement}
                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                   >
                     {(statusOption).map(c => (
@@ -198,7 +198,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                 <Select
                   allowClear
                   showSearch
-                  getPopupContainer={trigger => trigger. parentElement}
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {(targetConfig.versionArr || []).map(c => (

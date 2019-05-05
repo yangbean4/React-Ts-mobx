@@ -162,7 +162,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
             beforeUpload: (file) => {
                 const isHtml = file.type === 'text/html';
                 if (!isHtml) {
-                    message.error('You can only upload html file!');
+                    message.error('Upload failed! The file must be in HTML format.');
                 }
                 const isLt2M = file.size / 1024 / 1024 < 2;
                 if (!isLt2M) {
