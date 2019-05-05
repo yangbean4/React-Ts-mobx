@@ -66,8 +66,9 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get title() {
-        const template_pname = this.props.template_pname
-        const str = (/ template$/).test(template_pname.toLowerCase()) ? template_pname : `${template_pname} Template`
+        // const template_pname = this.props.template_pname
+        // const str = (/ template$/).test(template_pname.toLowerCase()) ? template_pname : `${template_pname} Template`
+        const str = this.props.template_pname
         return this.typeIsAdd ? `Add ${str}` : `Edit ${str}`
     }
     @computed

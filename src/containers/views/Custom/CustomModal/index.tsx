@@ -5,7 +5,7 @@ import { Form, Input, Button, message, Modal, Checkbox, Tree, Radio } from 'antd
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-import { defaultOption, statusOption } from '../default.config'
+import { defaultOption, statusOption, disabled } from '../default.config'
 import { camelCase } from '@utils/index'
 const { TreeNode } = Tree
 const FormItem = Form.Item
@@ -80,14 +80,15 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
      * @target:要映射的目标
      */
     arrToObj = (arr: string[], target = {}) => {
-        const tar = { ...target }
+
+        const tar = JSON.parse(JSON.stringify({ ...target }).replace(/1/g, '0'))
         arr.forEach(str => {
             const ObjName = str.split('.')
             let j = tar
             while (ObjName.length > 1) {
                 j = tar[ObjName.shift()]
             }
-            j[ObjName[0]] = j[ObjName[0]] || 1
+            j[ObjName[0]] = 1
         })
         return tar
     }
@@ -114,7 +115,7 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
                         config: {
                             add_filed: this.arrToObj(config.add_filed, gjb.add_filed),
                             search_filed: this.arrToObj(config.search_filed, gjb.search_filed),
-                            list_filed: this.arrToObj(this.checkedKeys, gjb.list_filed),
+                            list_filed: this.arrToObj(config.list_filed, gjb.list_filed),
                         },
                         status
                     }
@@ -158,11 +159,12 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
         this.checkedKeys = arr
         return arr
     }
-    getCheckBoxOption = (obj: object) => {
-        return Object.entries(obj).map(([key]) => (
+    getCheckBoxOption = (obj: object, group: string) => {
+        return Object.entries(obj).map(([key, value]) => (
             {
                 label: camelCase(key),
-                value: key
+                value: key,
+                disabled: !!disabled[group][key]
             }
         ))
     }
@@ -178,11 +180,14 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
                 </TreeNode>
             );
         }
-        return <TreeNode title={camelCase(_key)} key={key} />
+        return <TreeNode title={camelCase(_key)} key={key} disabled={!!disabled.list_filed[key]} />
     })
 
     onCheck = (checkedKeys) => {
         this.checkedKeys = checkedKeys
+        this.props.form.setFieldsValue({
+            'config.list_filed': checkedKeys
+        })
     }
     onCancel = () => {
         this.props.onCancel()
@@ -224,16 +229,23 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
                             const value = config[key]
                             return <FormItem key={key} {...formItemLayout} label={camelCase(key)}>
                                 {
-                                    this.isEasyObj(value) ?
-                                        getFieldDecorator(`config.${key}`, {
-                                            initialValue: this.getTrueKey(value),
-                                        })(<Checkbox.Group options={this.getCheckBoxOption(value)} />)
-                                        : <Tree
-                                            checkable
-                                            defaultExpandAll
-                                            defaultCheckedKeys={this.getListTrueKey(value)}
-                                            onCheck={this.onCheck}
-                                        >{this.renderTreeNodes(value, '')}</Tree>
+
+                                    getFieldDecorator(`config.${key}`, {
+                                        initialValue: this.getTrueKey(value),
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
+                                    })(
+                                        this.isEasyObj(value) ?
+                                            <Checkbox.Group options={this.getCheckBoxOption(value, key)} />
+                                            : <Tree
+                                                checkable
+                                                defaultExpandAll
+                                                defaultCheckedKeys={this.getListTrueKey(value)}
+                                                onCheck={this.onCheck}
+                                            >{this.renderTreeNodes(value, '')}</Tree>)
                                 }
                             </FormItem>
                         })

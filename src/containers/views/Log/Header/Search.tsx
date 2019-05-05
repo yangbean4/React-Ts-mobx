@@ -72,7 +72,7 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
     this.loading = !this.loading
   }
   defaultValue = () => {
-    return [new Date(), new Date(new Date().setDate(new Date().getDate() + 7))].map(val => moment(val, dateFormat))
+    return [new Date(new Date().setDate(new Date().getDate() - 7)), new Date()].map(val => moment(val, dateFormat))
   }
 
   submit = (e?: React.FormEvent<any>): void => {

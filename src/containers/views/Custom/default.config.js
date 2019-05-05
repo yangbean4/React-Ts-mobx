@@ -1,21 +1,37 @@
 export const defaultOption = {
   "list_filed": {
-    "template_name": 0,
+    "template_name": 1,
     "version": 0,
-    "template_md5": 0,
+    "template_md5": 1,
     "operate": {
-      "edit": 0,
-      "delete": 0
+      "edit": 1,
+      "delete": 1
     }
   },
   "search_filed": {
-    "template_name": 0,
+    "template_name": 1,
     "version": 0,
     "template_md5": 0
   },
   "add_filed": {
-    "template_name": 0,
-    "template": 0
+    "template_name": 1,
+    "template": 1,
+    "version": 0,
+  }
+}
+export const disabled = {
+  "list_filed": {
+    "template_name": 1,
+  },
+  "search_filed": {
+    "template_name": 1,
+    "version": 0,
+    "template_md5": 0
+  },
+  "add_filed": {
+    "template_name": 1,
+    "template": 1,
+    "version": 0,
   }
 }
 

@@ -53,6 +53,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   @observable
   private showWork: boolean = false
+
   @observable
   private thisConfigList: conItem[]
 
@@ -431,32 +432,36 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         <Form className="dropZone" {...layout} onSubmit={this.submit}>
           {
             this.useConfigList.map((item, index, arr) => (
-              !item ? <div>{item}-{index}-{JSON.stringify(arr)}</div> :
-                !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
-                  <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
-                    {getFieldDecorator(item.key, {
-                      initialValue: this.usEeditData[_nameCase(item.key)] || item.default,
-                      rules: [
-                        {
-                          required: true, message: "Required"
-                        }
-                      ]
-                    })(
-                      <ConfigItem
-                        dataIndex={index}
-                        handel={this.handelAction}
-                        showWork={this.showWork}
-                        changeTemp={this.changeTemp}
-                        config={item} />
-                    )}
-                  </FormItem>
-                </div>
-                  : <AddConfigItem shouldSubmit={this.loading} choseSelect={this.choseSelect} editRadio={this.editRadio} key={item.addId} config={item} onOk={this.addConfigItem} />
+              // !item ? <div>{item}-{index}-{JSON.stringify(arr)}</div> :
+              !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
+                <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
+                  {getFieldDecorator(item.key, {
+                    initialValue: this.usEeditData[_nameCase(item.key)] || item.default,
+                    rules: [
+                      {
+                        required: true, message: "Required"
+                      }
+                    ]
+                  })(
+                    <ConfigItem
+                      dataIndex={index}
+                      handel={this.handelAction}
+                      showWork={this.showWork}
+                      changeTemp={this.changeTemp}
+                      config={item} />
+                  )}
+                </FormItem>
+              </div>
+                : <AddConfigItem shouldSubmit={this.loading} choseSelect={this.choseSelect} editRadio={this.editRadio} key={item.addId} config={item} onOk={this.addConfigItem} />
             ))
           }
 
           <Button type="primary" loading={this.loading} className='submitBtn' htmlType="submit">Submit</Button>
-          <Button className='cancelBtn' onClick={this.props.onCancel}>Cancel</Button>
+          {
+            // type有值说明不是Pid中的 
+            this.showWork && this.props.type ? <Button className="cancelBtn" onClick={this.toggleWork}>Cancel</Button>
+              : this.props.type === "basic1" ? null : <Button className='cancelBtn' onClick={this.props.onCancel}>Last Step</Button>
+          }
         </Form>
         <Button className="workBtn" type="primary" onClick={this.toggleWork}>{this.showWork ? 'Cancel' : 'Edit Filed'}</Button>
         <ChoseSelectModal

@@ -176,7 +176,7 @@ class PID extends ComponentExt<IProps> {
 
             <PidTable data={this.useData} onEdit={this.editPid} onDelete={this.deletePid} />
             <Button type="primary" className='submitBtn' onClick={this.submit}>Submit</Button>
-            <Button className='cancelBtn' onClick={this.props.onCancel}>Cancel</Button>
+            <Button className='cancelBtn' onClick={this.props.onCancel}>Last Step</Button>
           </div> : <div className="formBox">
               <FormPid data={this.GJB} onCancel={this.toggleIsTable} onSubmit={this.pidFormSubmit} />
             </div>

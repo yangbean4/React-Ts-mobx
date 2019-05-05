@@ -86,7 +86,7 @@ class ConfigTable extends ComponentExt<IProps> {
         const { id, copyTo, pkg_name } = data;
         switch (this.modelType) {
             case 'delete':
-                this.deleteConfig({ config_deploy_id: id, pkg_name: this.targetConfig.pkg_name || pkg_name })
+                this.deleteConfig({ config_deploy_id: id.join(','), pkg_name: this.targetConfig.pkg_name || pkg_name })
                 break;
             case 'copy':
                 this.setTargetConfig({ ...this.targetConfig, config_version: copyTo })
