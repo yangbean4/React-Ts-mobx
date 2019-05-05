@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
-import { observable, action, computed, runInAction, when } from 'mobx'
+import { observable, action, computed } from 'mobx'
 import { Input, Select, Radio, Divider, Icon } from 'antd'
 import { conItem } from './type'
 import { SketchPicker } from 'react-color'
@@ -36,6 +36,7 @@ interface optionSelectItem {
 interface IStoreProps {
   getTemplateSelect?: (pid: number, useCache?: boolean) => Promise<any>
   TemplatesTarget?: any
+  templateTree?: ICustomStore.ICustomTree[]
 }
 interface IProps extends IStoreProps {
   config?: conItem
@@ -50,9 +51,11 @@ interface IProps extends IStoreProps {
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { templateStore } = store
+    const { templateStore, customStore } = store
+    const { templateTree } = customStore
+
     const { getTemplateSelect, TemplatesTarget } = templateStore
-    return { getTemplateSelect, TemplatesTarget }
+    return { getTemplateSelect, TemplatesTarget, templateTree }
   }
 )
 
@@ -71,8 +74,23 @@ class ConfigItem extends React.Component<IProps> {
   }
 
   @computed
+  get firstTmpArr() {
+    return this.props.templateTree.reduce((a, b) => a.concat(b.children), []).filter(ele => !!ele)
+  }
+
+  @computed
+  get useSelectPid() {
+    if (this.props.value) {
+      const target = this.firstTmpArr.find(ele => ele.id === this.props.value) || {}
+      return target.pid
+    } else {
+      return this.props.config.template_pid
+    }
+  }
+
+  @computed
   get selectOptionList() {
-    return (this.props.TemplatesTarget[this.selectPid] || [])
+    return (this.props.TemplatesTarget[this.useSelectPid] || [])
   }
 
   @action
@@ -111,7 +129,7 @@ class ConfigItem extends React.Component<IProps> {
 
   componentWillMount() {
     if (this.selectPid) {
-      this.props.getTemplateSelect(this.selectPid, true)
+      this.props.getTemplateSelect(this.useSelectPid, true)
     }
   }
 
@@ -176,7 +194,7 @@ class ConfigItem extends React.Component<IProps> {
           allowClear: true,
           showSearch: true,
           value: value,
-          getPopupContainer: trigger => trigger. parentElement,
+          getPopupContainer: trigger => trigger.parentElement,
           filterOption: (input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0,
           onChange: (val) => this.triggerChange(val),
           dropdownRender,

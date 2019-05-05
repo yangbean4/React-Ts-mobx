@@ -431,29 +431,32 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       <div className='Basic'>
         <Form className="dropZone" {...layout} onSubmit={this.submit}>
           {
-            this.useConfigList.map((item, index, arr) => (
-              // !item ? <div>{item}-{index}-{JSON.stringify(arr)}</div> :
-              !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
-                <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
-                  {getFieldDecorator(item.key, {
-                    initialValue: this.usEeditData[_nameCase(item.key)] || item.default,
-                    rules: [
-                      {
-                        required: true, message: "Required"
-                      }
-                    ]
-                  })(
-                    <ConfigItem
-                      dataIndex={index}
-                      handel={this.handelAction}
-                      showWork={this.showWork}
-                      changeTemp={this.changeTemp}
-                      config={item} />
-                  )}
-                </FormItem>
-              </div>
-                : <AddConfigItem shouldSubmit={this.loading} choseSelect={this.choseSelect} editRadio={this.editRadio} key={item.addId} config={item} onOk={this.addConfigItem} />
-            ))
+            this.useConfigList.map((item, index, arr) => {
+              const _val = this.usEeditData[_nameCase(item.key)]
+              return (
+                // !item ? <div>{item}-{index}-{JSON.stringify(arr)}</div> :
+                !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
+                  <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
+                    {getFieldDecorator(item.key, {
+                      initialValue: _val === undefined ? item.default : _val,
+                      rules: [
+                        {
+                          required: true, message: "Required"
+                        }
+                      ]
+                    })(
+                      <ConfigItem
+                        dataIndex={index}
+                        handel={this.handelAction}
+                        showWork={this.showWork}
+                        changeTemp={this.changeTemp}
+                        config={item} />
+                    )}
+                  </FormItem>
+                </div>
+                  : <AddConfigItem shouldSubmit={this.loading} choseSelect={this.choseSelect} editRadio={this.editRadio} key={item.addId} config={item} onOk={this.addConfigItem} />
+              )
+            })
           }
 
           <Button type="primary" loading={this.loading} className='submitBtn' htmlType="submit">Submit</Button>
