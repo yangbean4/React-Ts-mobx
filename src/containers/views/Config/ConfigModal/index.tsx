@@ -145,6 +145,10 @@ class ConfigModal extends ComponentExt<IStoreProps> {
                 onCancel: this.onCancel,
                 onSubmit: this.onSubmit,
                 editData: this.editData[key],
+                // ----多传两个props
+                type: key.toLowerCase(),
+                activeKey: this.activeKey.toLowerCase(),
+                // ----用于拖动是判断是否是当前
                 addList: this.addConfigGroup[key],
             }
             return props

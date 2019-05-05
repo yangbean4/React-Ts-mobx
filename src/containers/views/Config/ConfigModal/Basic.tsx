@@ -32,6 +32,8 @@ interface IProps extends IStoreProps {
   onSubmit: (data) => void
   editData: any
   addList: conItem[]
+  type?: string
+  activeKey?: string
 }
 @inject(
   (store: IStore): IStoreProps => {
@@ -70,7 +72,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       this.props.editData.forEach(ele => {
         const tar = {}
         Object.entries(ele).forEach(([key, value]) => {
-          tar[key.toLowerCase()] = value
+          tar[_nameCase(key)] = value
         })
         target = { ...target, ...tar }
       })
@@ -180,7 +182,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
                 // 说明是新增加的
                 // if (!this.usEeditData.hasOwnProperty(key)) {
-                if (ele.addId || !this.usEeditData.hasOwnProperty(key)) {
+                if (ele.addId) {
                   const mm = { ...ele, key, value: value || ele.default, last_id }
                   delete mm.addId
                   delete mm.isEdit
@@ -319,8 +321,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       // 移动拖动的元素到所选择的放置目标节点
       const tar = getEventTargetDom(event, 'itemBox')
       if (tar) {
-        const tarIndex = tar.getAttribute('data-index')
-        const fromIndex = dragged.getAttribute('data-index')
+        const tarIndex = parseInt(tar.getAttribute('data-index'))
+        const fromIndex = parseInt(dragged.getAttribute('data-index'))
         if (tarIndex !== fromIndex) {
           this.handelUpdateList(fromIndex, tarIndex)
         } else {
@@ -335,6 +337,11 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
    */
   @action
   handelUpdateList = (fromIndex: number, tarIndex?: number, addCon?: conItem) => {
+    // 由于是keepLive组件 而拖动事件绑定在document上 需要判断当前组件是否是活动组件，
+    // 解决拖动1  而2动的bug
+    if (this.props.activeKey !== this.props.type) {
+      return;
+    }
     const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
     if (addCon !== undefined) {
       arr.splice(fromIndex, 0, addCon)
@@ -344,7 +351,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         arr.splice(tarIndex, 0, tar[0])
       }
     }
-
+    console.log(arr)
     runInAction('UP_THIS_CONFIG_LIST', () => {
       this.thisConfigList = arr
     })
@@ -423,27 +430,28 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       <div className='Basic'>
         <Form className="dropZone" {...layout} onSubmit={this.submit}>
           {
-            this.useConfigList.map((item, index) => (
-              !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={index}>
-                <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
-                  {getFieldDecorator(item.key, {
-                    initialValue: this.usEeditData[item.key.toLowerCase()] || item.default,
-                    rules: [
-                      {
-                        required: true, message: "Required"
-                      }
-                    ]
-                  })(
-                    <ConfigItem
-                      dataIndex={index}
-                      handel={this.handelAction}
-                      showWork={this.showWork}
-                      changeTemp={this.changeTemp}
-                      config={item} />
-                  )}
-                </FormItem>
-              </div>
-                : <AddConfigItem shouldSubmit={this.loading} choseSelect={this.choseSelect} editRadio={this.editRadio} key={item.addId} config={item} onOk={this.addConfigItem} />
+            this.useConfigList.map((item, index, arr) => (
+              !item ? <div>{item}-{index}-{JSON.stringify(arr)}</div> :
+                !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
+                  <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
+                    {getFieldDecorator(item.key, {
+                      initialValue: this.usEeditData[_nameCase(item.key)] || item.default,
+                      rules: [
+                        {
+                          required: true, message: "Required"
+                        }
+                      ]
+                    })(
+                      <ConfigItem
+                        dataIndex={index}
+                        handel={this.handelAction}
+                        showWork={this.showWork}
+                        changeTemp={this.changeTemp}
+                        config={item} />
+                    )}
+                  </FormItem>
+                </div>
+                  : <AddConfigItem shouldSubmit={this.loading} choseSelect={this.choseSelect} editRadio={this.editRadio} key={item.addId} config={item} onOk={this.addConfigItem} />
             ))
           }
 
@@ -467,7 +475,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
             option={option}
           /> : null
         }
-      </div>
+      </div >
 
     )
   }

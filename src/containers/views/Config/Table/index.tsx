@@ -197,14 +197,24 @@ class ConfigTable extends ComponentExt<IProps> {
                                     placement="top"
                                     trigger="click"
                                     content={record.versionArr.map(
-                                        item => (<span
-                                            style={{ marginRight: '6px', marginLeft: '6px' }}
-                                            onClick={() => this.handelEdit(record, item.id)}
-                                            key={item.id}>
-                                            <a href="javascript:;">
-                                                {item.version}
-                                            </a>
-                                        </span>)
+                                        item => {
+                                            return this.$checkAuth('Config Manage-Config Manage-Edit') ?
+                                                <span
+                                                    style={{ marginRight: '6px', marginLeft: '6px' }}
+                                                    onClick={() => this.handelEdit(record, item.id)}
+                                                    key={item.id}>
+                                                    <a href="javascript:;">
+                                                        {item.version}
+                                                    </a>
+                                                </span>
+                                                : <span
+                                                    style={{ marginRight: '6px', marginLeft: '6px' }}
+                                                    key={item.id}>
+                                                    <a href="javascript:;">
+                                                        {item.version}
+                                                    </a>
+                                                </span>
+                                        }
                                     )}>
                                     <a href="javascript:;">
                                         {FormatNumber(_)}

@@ -22,6 +22,8 @@ const formItemLayout = {
         lg: { span: 18 }
     }
 }
+
+const sortArr = ['add_filed', 'search_filed', 'list_filed']
 // const statusOption = [
 //     {
 //         key: 'Disabled',
@@ -107,7 +109,6 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
                      * list_filed对应时个tree 所选项是checkedKeys 是一个 用.连接的obj 键的路径
                      * 所以用 arrToObj将对应的选择映射到对应的option的sub
                      */
-                    debugger
                     const pre: ICustomStore.ICustom = {
                         primary_name,
                         config: {
@@ -219,7 +220,8 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
                         })(<Input disabled={!this.typeIsAdd} />)}
                     </FormItem>
                     {
-                        Object.entries(config).map(([key, value]) => {
+                        sortArr.map(key => {
+                            const value = config[key]
                             return <FormItem key={key} {...formItemLayout} label={camelCase(key)}>
                                 {
                                     this.isEasyObj(value) ?

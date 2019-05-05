@@ -6,7 +6,6 @@ import { FormComponentProps } from 'antd/lib/form'
 import { statusOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-import { debuggerStatement } from '@babel/types';
 
 const FormItem = Form.Item
 
@@ -167,7 +166,7 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                             <Select
                                 allowClear
                                 showSearch
-                                getPopupContainer={trigger => trigger. parentElement}
+                                getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 mode='multiple'
                             >
