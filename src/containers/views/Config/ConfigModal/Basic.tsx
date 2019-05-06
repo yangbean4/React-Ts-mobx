@@ -11,9 +11,10 @@ import { camelCase, getEventTargetDom, getGuId, typeOf, _nameCase } from '@utils
 import ChoseSelectModal from './choseSelectModal/index'
 import EditRedioModal from './editRedioModal/index'
 
-const isLikeArray = (res) => {
-  return Object.keys(res).every(key => !isNaN(Number(key)))
+const isLikeArray = (res: object) => {
+  return res && Object.keys(res).every(key => !isNaN(Number(key)))
 }
+
 const likeArray2obj = (res) => {
   let arr = {}
   Object.keys(res).forEach(ele => {
@@ -29,6 +30,20 @@ const objCaseName = (res) => {
   })
   return arr
 
+}
+
+const arrayMerge = (first, second) => {
+  let len = +second.length,
+    j = 0,
+    i = first.length;
+
+  for (; j < len; j++) {
+    first[i++] = second[j];
+  }
+
+  first.length = i;
+
+  return first;
 }
 
 
@@ -86,22 +101,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   private waitItemNum = 0
 
-
-  @computed
-  get usEeditData() {
-    let editData = this.props.editData
-    if (typeOf(editData) === 'array') {
-      editData = { ...editData }
-    }
-    if (isLikeArray(editData)) {
-      editData = likeArray2obj(editData)
-    }
-    return objCaseName(editData)
-  }
-
   @observable
   private modalVisible: boolean = false
-
 
   @observable
   private redioVisible: boolean = false
@@ -134,25 +135,56 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   }
 
   @computed
+  get useEditData() {
+    let editData = this.props.editData || {}
+    if (typeOf(editData) === 'array') {
+      editData = { ...editData }
+    }
+    if (isLikeArray(editData)) {
+      editData = likeArray2obj(editData)
+    }
+    return objCaseName(editData)
+  }
+  @computed
+  get haveUseEditData() {
+    return !!Object.keys(this.useEditData).length
+  }
+
+  @computed
   get editDataSortTarget() {
-    const targrt = {}
-    if (typeOf(this.props.editData) === 'array') {
-      const length = this.props.editData.length;
-      this.props.editData.forEach((ele, index) => {
+    const target = {}
+    const editData = this.props.editData
+    if (typeOf(editData) === 'array') {
+      const length = editData.length;
+      editData.forEach((ele, index) => {
         const key = Object.keys(ele)[0]
-        targrt[key] = length - index
+        target[key] = length - index
       })
     }
-    return targrt
+
+    if (isLikeArray(editData)) {
+      const keys = Object.keys(editData).map(key => Number(key))
+      const length = Math.max.apply(null, keys)
+
+      keys.forEach(index => {
+        const key = Object.keys(editData[index])[0]
+        target[key] = length - index
+      })
+
+    }
+    return target
+
   }
 
   @computed
   get configList(): conItem[] {
     const platform = (this.props.targetConfig || {}).platform === 'android' ? 2 : 1
-    return (JSON.parse(JSON.stringify(this.props.addList)) || [])
-      .filter(ele => ele.platform != platform)
+    const arr = (JSON.parse(JSON.stringify(this.props.addList)) || []);
+    const editDataSortTarget = this.editDataSortTarget
+    const fmt = this.haveUseEditData ? arr.filter(a => editDataSortTarget.hasOwnProperty(a.key)) : arr
+    return fmt.filter(ele => ele.platform != platform)
       .slice().sort((a, b) => a.sort - b.sort)
-      .slice().sort((a, b) => this.editDataSortTarget[b.key] - this.editDataSortTarget[a.key])
+      .slice().sort((a, b) => editDataSortTarget[b.key] - editDataSortTarget[a.key])
   }
 
   @computed
@@ -198,7 +230,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                 }
 
                 // 说明是新增加的
-                // if (!this.usEeditData.hasOwnProperty(key)) {
+                // if (!this.useEditData.hasOwnProperty(key)) {
                 if (ele.addId) {
                   const mm = { ...ele, key, value: value || ele.default, last_id }
                   delete mm.addId
@@ -448,7 +480,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         <Form className="dropZone" {...layout} onSubmit={this.submit}>
           {
             this.useConfigList.map((item, index, arr) => {
-              const _val = item.key ? this.usEeditData[_nameCase(item.key)] : undefined
+              const _val = item.key ? this.useEditData[_nameCase(item.key)] : undefined
               return (
                 !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
                   <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
