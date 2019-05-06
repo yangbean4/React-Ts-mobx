@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import { observable, action } from 'mobx'
-import { Form, Input, Row, Col, Button } from 'antd'
+import { Form, Input, Row, Col, Button, Icon } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 
@@ -91,6 +91,9 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                     <div className="top">
                       Adventure Capitalist
                     </div>
+                    <div className="star">
+                      <Icon type="star" /><Icon type="star" /><Icon type="star" /><Icon type="star" />
+                    </div>
                     <div className="bottom">
                       <Form.Item>
                         {getFieldDecorator('unavaiab_marked_text', {
@@ -119,6 +122,9 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                   <div className="fr">
                     <div className="top">
                       Adventure Capitalist
+                    </div>
+                    <div className="star">
+                      <Icon type="star" /><Icon type="star" /><Icon type="star" /><Icon type="star" />
                     </div>
                     <div className="bottom">
                       <Form.Item>
@@ -198,7 +204,11 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                   <div className="fr">
                     <div className="top">
                       Adventure
+                      <div className="star">
+                        <Icon type="star" /><Icon type="star" /><Icon type="star" /><Icon type="star" />
+                      </div>
                     </div>
+
                     <div className="bottom">
                       <Form.Item>
                         {getFieldDecorator('pl_text', {
