@@ -432,9 +432,9 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         <Form className="dropZone" {...layout} onSubmit={this.submit}>
           {
             this.useConfigList.map((item, index, arr) => {
-              const _val = this.usEeditData[_nameCase(item.key)]
+
+              const _val = item.key ? this.usEeditData[_nameCase(item.key)] : undefined
               return (
-                // !item ? <div>{item}-{index}-{JSON.stringify(arr)}</div> :
                 !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
                   <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
                     {getFieldDecorator(item.key, {
