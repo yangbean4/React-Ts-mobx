@@ -1,0 +1,23 @@
+@import "_base.scss";
+
+.myBread {
+  min-width: 1160px;
+  max-width: 1480px;
+  width: 100%;
+  margin: 0 auto;
+  height: 56px;
+  padding: 20px;
+  padding-bottom: 0;
+  :global(.ant-breadcrumb) {
+    font-size: 20px;
+    font-family: Montserrat-SemiBold;
+    font-weight: normal;
+    :global(span:first-child) {
+      :global(.ant-breadcrumb-link) {
+        cursor: pointer;
+        color: rgba(62, 54, 100, 1);
+        font-weight: 600;
+      }
+    }
+  }
+}

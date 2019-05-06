@@ -47,11 +47,17 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
   private addConfigGroup = {}
 
   @observable
-  private pid_type: number = 1
+  private pid_type: number
+
+
+  @computed
+  get usePid_type() {
+    return this.pid_type || this.usEeditData['pid_type'] || 1
+  }
 
   @computed
   get addList() {
-    const name = value_typeOption.find(ele => ele.value === this.pid_type).phpKey
+    const name = value_typeOption.find(ele => ele.value === this.usePid_type).phpKey
     return (this.addConfigGroup[name] || []).filter(ele => {
       return ele.key !== 'pid_type' && ele.key !== 'placement_id'
     })
@@ -123,7 +129,7 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
       <div className={styles.formPid}>
         <FormItem className={styles.minitem} {...layout} label='PID Type'>
           {getFieldDecorator('pid_type', {
-            initialValue: this.getValue('pid_type') || this.pid_type,
+            initialValue: this.getValue('pid_type') || this.usePid_type,
             rules: [
               {
                 required: true, message: "Required"
@@ -133,7 +139,7 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
             <Select
               allowClear
               showSearch
-              getPopupContainer={trigger => trigger. parentElement}
+              getPopupContainer={trigger => trigger.parentElement}
               filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
               onChange={this.typeChange}
               disabled={!this.isAdd}

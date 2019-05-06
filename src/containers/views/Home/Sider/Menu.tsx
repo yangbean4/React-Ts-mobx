@@ -5,7 +5,7 @@ import { Menu } from 'antd'
 import pathToRegexp from 'path-to-regexp'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-import menu, { IMenu, IMenuInTree, templateId, logId, logMenu } from '../menu&router'
+import menu, { router, IMenu, IMenuInTree, templateId, logId, logMenu } from '../menu&router'
 import { arrayToTree, queryArray } from '@utils/index'
 import { clearAuth } from '@utils/checkAuth'
 import Icon from '@components/Icon'
@@ -47,7 +47,7 @@ class SiderMenu extends ComponentExt<IStoreProps> {
     }
 
     @computed
-    get menuConfig() {
+    get addSideBar() {
         const merge = (pop, tmp) => {
             const addTmp: IMenu[] = tmp.map((item, index) => {
                 return {
@@ -69,7 +69,16 @@ class SiderMenu extends ComponentExt<IStoreProps> {
             }))
             return pop.concat(addTmp, addLog)
         }
-        return merge(menu, this.props.tmpSidebar)
+        return merge([], this.props.tmpSidebar)
+    }
+
+    @computed
+    get menuConfig() {
+        return [].concat.call(menu, this.addSideBar)
+    }
+    @computed
+    get routerConfig() {
+        return [].concat.call(router, this.addSideBar)
     }
 
     @computed

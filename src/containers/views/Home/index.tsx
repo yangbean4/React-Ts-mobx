@@ -8,6 +8,7 @@ import Error from '@components/Error'
 import { asynchronousComponents, router } from './menu&router'
 import Header from './Header'
 import Sider from './Sider'
+import Breadcrumb from './Breadcrumb'
 
 function Home() {
     return (
@@ -15,6 +16,7 @@ function Home() {
             <Sider />
             <Layout>
                 <Header />
+                <Breadcrumb />
                 <Layout.Content className={styles.content}>
                     <Router>
                         <Switch>

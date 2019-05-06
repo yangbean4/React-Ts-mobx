@@ -34,6 +34,7 @@ export interface IMenu {
     component?: AsynchronousComponentKeys
     exact?: boolean
     authName?: string
+    hasBread?: boolean
 }
 
 export interface IMenuInTree extends IMenu {
@@ -65,6 +66,7 @@ export const menu: IMenu[] = [
         pid: 1,
         id: templateId,
         title: 'Template Manage',
+        hasBread: false,
         // icon: 'iconmobanguanli',
         authName: 'Config Manage-Template Manage'
     },
@@ -142,12 +144,14 @@ export const menu: IMenu[] = [
         id: 41,
         pid: 4,
         title: 'Config Manage',
+        hasBread: false,
         // path: '/log-config',
         // component: 'Logs',
     },
     {
         id: 42,
         pid: 4,
+        hasBread: false,
         title: 'Authorization',
         // path: '/log-auth',
         // component: 'Logs',
@@ -164,6 +168,7 @@ export const logMenu: IMenu[] = [{
     id: logId,
     pid: 41,
     title: 'Template Manage',
+    hasBread: false,
     component: 'Logs',
 },
 {
@@ -199,6 +204,7 @@ const menuMap: IRouter[] = [...menu].map(ele => {
 const addRouter: IRouter[] = [
     {
         id: 10000,
+        pid: 11,
         path: '/config/edit/:id',
         title: 'Edit Config',
         component: 'ConfigModel',
@@ -206,6 +212,7 @@ const addRouter: IRouter[] = [
     },
     {
         id: 10000,
+        pid: 11,
         path: '/config/add',
         title: 'Edit Config',
         component: 'ConfigModel',
@@ -213,6 +220,7 @@ const addRouter: IRouter[] = [
     },
     {
         id: 3101,
+        pid: 31,
         path: '/users/add',
         title: 'Add User',
         component: 'UserModal',
@@ -220,6 +228,7 @@ const addRouter: IRouter[] = [
     },
     {
         id: 3102,
+        pid: 31,
         path: '/users/edit/:id',
         title: 'Edit User',
         component: 'UserModal',
@@ -227,6 +236,7 @@ const addRouter: IRouter[] = [
     },
     {
         id: 3201,
+        pid: 32,
         path: '/role/add',
         title: 'Add Role',
         component: 'RoleModal',
@@ -234,6 +244,7 @@ const addRouter: IRouter[] = [
     },
     {
         id: 3202,
+        pid: 32,
         path: '/role/edit/:id',
         title: 'Edit Role',
         component: 'RoleModal',
@@ -241,6 +252,7 @@ const addRouter: IRouter[] = [
     },
     {
         id: 3301,
+        pid: 33,
         path: '/permission/add',
         title: 'Add Permission',
         component: 'PermissionModal',
@@ -248,6 +260,7 @@ const addRouter: IRouter[] = [
     },
     {
         id: 3302,
+        pid: 33,
         path: '/permission/edit/:id',
         title: 'Edit Permission',
         component: 'PermissionModal',
