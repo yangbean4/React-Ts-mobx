@@ -32,21 +32,6 @@ const objCaseName = (res) => {
 
 }
 
-const arrayMerge = (first, second) => {
-  let len = +second.length,
-    j = 0,
-    i = first.length;
-
-  for (; j < len; j++) {
-    first[i++] = second[j];
-  }
-
-  first.length = i;
-
-  return first;
-}
-
-
 const FormItem = Form.Item
 
 const layout = {
@@ -158,7 +143,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       const length = editData.length;
       editData.forEach((ele, index) => {
         const key = Object.keys(ele)[0]
-        target[key] = length - index
+        target[_nameCase(key)] = length - index
       })
     }
 
@@ -168,7 +153,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
       keys.forEach(index => {
         const key = Object.keys(editData[index])[0]
-        target[key] = length - index
+        target[_nameCase(key)] = length - index
       })
 
     }
@@ -177,9 +162,20 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   }
 
   @computed
+  get fmtConfigList() {
+    const arr = (JSON.parse(JSON.stringify(this.props.addList)) || [])
+    return arr.map(ele => {
+      return {
+        ...ele,
+        key: _nameCase(ele.key)
+      }
+    })
+  }
+
+  @computed
   get configList(): conItem[] {
     const platform = (this.props.targetConfig || {}).platform === 'android' ? 2 : 1
-    const arr = (JSON.parse(JSON.stringify(this.props.addList)) || []);
+    const arr = this.fmtConfigList;
     const editDataSortTarget = this.editDataSortTarget
     const fmt = this.haveUseEditData ? arr.filter(a => editDataSortTarget.hasOwnProperty(a.key)) : arr
     return fmt.filter(ele => ele.platform != platform)
@@ -209,12 +205,12 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
             try {
               let last_id = 0
               const dataArr = this.useConfigList.map((ele, index, array) => {
-                const key = _nameCase(ele.key)
-                const value = values[ele.key];
+                const { key, value_type, addId } = ele
+                const value = values[key];
                 last_id = index === 0 ? 0 : array[index].id || last_id
                 let tt = { [key]: value }
                 // 处理后端返回的默认值在直接保存时有坑的问题
-                if (ele.value_type === '4') {
+                if (value_type === '4') {
                   let vv;
                   if (Array.isArray(value)) {
                     vv = value.filter(mn => !!mn)
@@ -231,7 +227,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
                 // 说明是新增加的
                 // if (!this.useEditData.hasOwnProperty(key)) {
-                if (ele.addId) {
+                if (addId) {
                   const mm = { ...ele, key, value: value || ele.default, last_id }
                   delete mm.addId
                   delete mm.isEdit
@@ -480,7 +476,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         <Form className="dropZone" {...layout} onSubmit={this.submit}>
           {
             this.useConfigList.map((item, index, arr) => {
-              const _val = item.key ? this.useEditData[_nameCase(item.key)] : undefined
+              const _val = item.key ? this.useEditData[item.key] : undefined
               return (
                 !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
                   <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
