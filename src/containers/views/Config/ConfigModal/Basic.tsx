@@ -11,6 +11,27 @@ import { camelCase, getEventTargetDom, getGuId, typeOf, _nameCase } from '@utils
 import ChoseSelectModal from './choseSelectModal/index'
 import EditRedioModal from './editRedioModal/index'
 
+const isLikeArray = (res) => {
+  return Object.keys(res).every(key => !isNaN(Number(key)))
+}
+const likeArray2obj = (res) => {
+  let arr = {}
+  Object.keys(res).forEach(ele => {
+    arr = Object.assign(arr, res[ele])
+  })
+  return arr
+}
+
+const objCaseName = (res) => {
+  let arr = {}
+  Object.keys(res).forEach(ele => {
+    arr[_nameCase(ele)] = res[ele]
+  })
+  return arr
+
+}
+
+
 const FormItem = Form.Item
 
 const layout = {
@@ -68,19 +89,14 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   @computed
   get usEeditData() {
-    if (typeOf(this.props.editData) === 'array') {
-      let target = {}
-      this.props.editData.forEach(ele => {
-        const tar = {}
-        Object.entries(ele).forEach(([key, value]) => {
-          tar[_nameCase(key)] = value
-        })
-        target = { ...target, ...tar }
-      })
-      return target
-    } else {
-      return this.props.editData
+    let editData = this.props.editData
+    if (typeOf(editData) === 'array') {
+      editData = { ...editData }
     }
+    if (isLikeArray(editData)) {
+      editData = likeArray2obj(editData)
+    }
+    return objCaseName(editData)
   }
 
   @observable
@@ -432,7 +448,6 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         <Form className="dropZone" {...layout} onSubmit={this.submit}>
           {
             this.useConfigList.map((item, index, arr) => {
-
               const _val = item.key ? this.usEeditData[_nameCase(item.key)] : undefined
               return (
                 !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
