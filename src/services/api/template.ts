@@ -18,6 +18,6 @@ export default {
     return http.post(`${basePath}delTemplateDetail`, data || {})
   },
   batchAddTemplateDetail(data): Promise<any> {
-    return http.post(`${basePath}delTemplateDetail`, data)
+    return http.post(`${basePath}batchAddTemplateDetail`, data)
   },
 }

@@ -100,13 +100,13 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
               addId = res.data.id
               this.props.getSidebar()
             }
-            const data = await this.api.template.batchAddTemplateDetail({ id: addId, template_name: keys.map(e => names[e]) })
+            const data = await this.api.template.batchAddTemplateDetail({ pid: addId, template_name: keys.map(e => names[e]) })
             const index = keys.findIndex(ele => ele === checked)
             this.props.fullTemplate()
             this.props.getTemplateSelect(addId, false)
             this.props.onOK({
               template_pid: addId,
-              templateId: data[index]
+              templateId: data.data[index]
             })
             this.onCancel()
             this.toggleLoading()

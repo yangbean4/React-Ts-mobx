@@ -438,7 +438,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     // const key = this.nowHandelConfig.key
     // form.setFieldsValue({
     //   [key]: data.templateId,
-    // });
+    // });templateId
     const { templateId, template_pid } = data
     runInAction('UP_THIS_CONFIG_LIST', () => {
       this.nowHandelConfig.template_pid = template_pid
