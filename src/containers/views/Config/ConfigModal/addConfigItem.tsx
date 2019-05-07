@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { observer } from 'mobx-react'
-import { observable, action, runInAction, when, autorun } from 'mobx'
+import { observer, inject } from 'mobx-react'
+import { observable, action, runInAction, when, autorun, computed } from 'mobx'
 import { Form, Input, Row, Col, Button, Select, Radio } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
@@ -20,18 +20,36 @@ const layout = {
     span: 22
   }
 }
-interface IProps {
+
+interface IStoreProps {
+  TemplatesTarget?: any
+  templateTree?: ICustomStore.ICustomTree[]
+  getTemplateSelect?: (pid: number, useCache?: boolean) => Promise<any>
+}
+
+interface IProps extends IStoreProps {
   config?: conItem
   onOk?: (con?: conItem) => void
   choseSelect?: (con: conItem) => void
   editRadio?: (con: conItem) => void
   shouldSubmit?: boolean
+  dataIndex?: number
+  changeTemp?: (index: number, config?: conItem) => void
+
 }
+
+@inject(
+  (store: IStore): IStoreProps => {
+    const { templateStore, customStore } = store
+    const { templateTree } = customStore
+
+    const { getTemplateSelect, TemplatesTarget } = templateStore
+    return { getTemplateSelect, TemplatesTarget, templateTree }
+  }
+)
 
 @observer
 class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
-
-
 
   @observable
   private loading: boolean = false
@@ -41,6 +59,37 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
 
   @observable
   private pickerVisible: boolean = true
+
+  @computed
+  get fmtValueType() {
+    const value_type = this.props.config.value_type
+    return typeOf(value_type) === 'number' ? value_type.toString() : value_type
+  }
+
+  @computed
+  get useValueType() {
+    return this.valueType || this.fmtValueType
+  }
+
+  @computed
+  get firstTmpArr() {
+    return this.props.templateTree.reduce((a, b) => a.concat(b.children), []).filter(ele => !!ele)
+  }
+
+  @computed
+  get useSelectPid() {
+    if (this.props.config.default) {
+      const target = this.firstTmpArr.find(ele => ele.id === this.props.config.default) || {}
+      return target.pid
+    } else {
+      return this.props.config.template_pid
+    }
+  }
+
+  @computed
+  get selectOptionList() {
+    return (this.props.TemplatesTarget[this.useSelectPid] || [])
+  }
 
   constructor(props) {
     super(props)
@@ -63,6 +112,10 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
   @action
   onTogglePicker = () => {
     this.pickerVisible = !this.pickerVisible
+  }
+
+  changeTemp = () => {
+    this.props.changeTemp(this.props.dataIndex, this.props.config)
   }
 
   handleColorChange = (data) => {
@@ -124,7 +177,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
     const {
       option = ''
     } = config
-    switch (this.valueType) {
+    switch (this.useValueType) {
       case '1':
         return [
           (<Col span={span} key='default'>
@@ -191,7 +244,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
         </Col>)
 
       case '3'://select
-        return (<Col span={7} key='default'>
+        return (<Col span={8} key='default'>
           <FormItem {...layout} className='gouSelect'>
             <Button onDoubleClick={this.choseSelect} key='Button' type="dashed">edit Select</Button>
             {getFieldDecorator('default', {
@@ -246,6 +299,26 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
             </span>
           </div>
         )
+      case '7'://template
+        return (<Col span={8} key='default'>
+          <FormItem {...layout} className='gouSelect'>
+            <Button onClick={this.changeTemp} key='Button' type="dashed">chose Template</Button>
+            {getFieldDecorator('default', {
+              initialValue: config.default,
+            })(<Select
+              getPopupContainer={trigger => trigger.parentElement}
+            >
+              {
+                this.selectOptionList.map((c, i) => (
+                  <Select.Option key={c.label + i} value={c.value}>
+                    {c.label}
+                  </Select.Option>
+                ))
+              }
+            </Select>
+            )}
+          </FormItem>
+        </Col>)
     }
   }
 
@@ -256,7 +329,6 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
       value_type
     } = config
     const { getFieldDecorator } = form
-
 
 
     return (
@@ -276,7 +348,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
         <Col span={span}>
           <FormItem {...layout}>
             {getFieldDecorator('value_type', {
-              initialValue: typeOf(value_type) === 'number' ? value_type.toString() : value_type,
+              initialValue: this.fmtValueType,
               rules: [
                 {
                   required: true, message: "Required"

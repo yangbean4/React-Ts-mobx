@@ -34,7 +34,6 @@ interface optionSelectItem {
 
 
 interface IStoreProps {
-  getTemplateSelect?: (pid: number, useCache?: boolean) => Promise<any>
   TemplatesTarget?: any
   templateTree?: ICustomStore.ICustomTree[]
 }
@@ -54,8 +53,8 @@ interface IProps extends IStoreProps {
     const { templateStore, customStore } = store
     const { templateTree } = customStore
 
-    const { getTemplateSelect, TemplatesTarget } = templateStore
-    return { getTemplateSelect, TemplatesTarget, templateTree }
+    const { TemplatesTarget } = templateStore
+    return { TemplatesTarget, templateTree }
   }
 )
 
@@ -68,29 +67,43 @@ class ConfigItem extends React.Component<IProps> {
   @observable
   private pickerVisible: boolean = false
 
+  // @computed
+  // get selectPid() {
+  //   return this.props.config.template_pid
+  // }
+
   @computed
-  get selectPid() {
-    return this.props.config.template_pid
+  get likeTemp() {
+    return (this.props.config.value_type === '7' || this.props.config.value_type === '7')
   }
 
   @computed
   get firstTmpArr() {
-    return this.props.templateTree.reduce((a, b) => a.concat(b.children), []).filter(ele => !!ele)
+    return this.likeTemp ? this.props.templateTree.reduce((a, b) => a.concat(b.children), []).filter(ele => !!ele) : []
+  }
+
+  @computed
+  get useTarget() {
+    if (this.likeTemp && this.props.value) {
+      return this.firstTmpArr.find(ele => ele.id === this.props.value)
+    }
+    return undefined
   }
 
   @computed
   get useSelectPid() {
-    if (this.props.value) {
-      const target = this.firstTmpArr.find(ele => ele.id === this.props.value) || {}
-      return target.pid
-    } else {
-      return this.props.config.template_pid
-    }
+    return this.useTarget ? this.useTarget.pid : this.props.config.template_pid
+  }
+
+  @computed
+  get targetToChildren() {
+    const arr = (this.props.templateTree.find(ele => ele.id === this.useSelectPid) || {}).children
+    return (arr || []).map(ele => ({ label: ele.template_name, value: ele.id }))
   }
 
   @computed
   get selectOptionList() {
-    return (this.props.TemplatesTarget[this.useSelectPid] || [])
+    return (this.props.TemplatesTarget[this.useSelectPid] || this.targetToChildren || [])
   }
 
   @action
@@ -125,12 +138,6 @@ class ConfigItem extends React.Component<IProps> {
         // value_type为5 时为radio unit是radio的待选项
         value_type !== '5' ? React.createElement('span', { className: 'unit', key: 'unit' }, unit) : null
       ])
-  }
-
-  componentWillMount() {
-    if (this.selectPid) {
-      this.props.getTemplateSelect(this.useSelectPid, true)
-    }
   }
 
   renderFormItem = () => {
@@ -176,20 +183,20 @@ class ConfigItem extends React.Component<IProps> {
               </div>
             )])
         break
-      case '3': {
+      case '3': case '7': {
         Component = Select
-        const dropdownRender = menu => {
-          return !this.selectPid ? menu : (
-            <div>
-              {menu}
-              <Divider key='Divider' style={{ margin: '4px 0' }} />
-              <div key='more-box' onMouseDown={e => { e.preventDefault(); }}
-                onClick={() => this.changeTemp()} style={{ padding: '8px', cursor: 'pointer' }}>
-                <Icon type="plus" /> Change TemplatesGroup
-            </div>
-            </div>
-          )
-        }
+        // const dropdownRender = menu => {
+        //   return !this.useSelectPid ? menu : (
+        //     <div>
+        //       {menu}
+        //       {/* <Divider key='Divider' style={{ margin: '4px 0' }} />
+        //       <div key='more-box' onMouseDown={e => { e.preventDefault(); }}
+        //         onClick={() => this.changeTemp()} style={{ padding: '8px', cursor: 'pointer' }}>
+        //         <Icon type="plus" /> Change TemplatesGroup
+        //       </div> */}
+        //     </div>
+        //   )
+        // }
         addProp = {
           allowClear: true,
           showSearch: true,
@@ -197,9 +204,10 @@ class ConfigItem extends React.Component<IProps> {
           getPopupContainer: trigger => trigger.parentElement,
           filterOption: (input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0,
           onChange: (val) => this.triggerChange(val),
-          dropdownRender,
+          // dropdownRender,
         }
-        const optionArr = this.selectPid ? this.selectOptionList :
+        debugger
+        const optionArr = this.useSelectPid ? this.selectOptionList :
           typeOf(option) === 'array' ? option.map((ele, index) => {
             if (typeOf(ele) === 'object') {
               const {

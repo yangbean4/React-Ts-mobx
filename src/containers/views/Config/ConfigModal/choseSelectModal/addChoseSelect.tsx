@@ -96,7 +96,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
             } = values;
             let addId = pId;
             if (pName) {
-              const res = await this.api.custom.createCustom({ primary_name: pName, config: defaultOption })
+              const res = await this.api.custom.createCustom({ primary_name: pName, config: defaultOption, status: 1 })
               addId = res.data.id
               this.props.getSidebar()
             }
@@ -240,7 +240,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                   <Select
                     allowClear
                     showSearch
-                    getPopupContainer={trigger => trigger. parentElement}
+                    getPopupContainer={trigger => trigger.parentElement}
                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     className={styles.minInput}
                     key='select'

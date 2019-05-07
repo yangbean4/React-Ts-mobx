@@ -72,7 +72,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
     this.showErrMsg = !this.showErrMsg
   }
   componentWillMount() {
-    this.props.fullTemplate()
+    // this.props.fullTemplate()
   }
 
   submit = (e?: React.FormEvent<any>): void => {

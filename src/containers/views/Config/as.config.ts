@@ -31,4 +31,8 @@ export const value_typeOption = [
     key: 'radio',
     value: '5'
   },
+  {
+    key: 'template',
+    value: '7'
+  }
 ]

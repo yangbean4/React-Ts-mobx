@@ -426,21 +426,23 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     // })
     this.props.getTemplateSelect(data.template_pid, true)
     // TODO:!!!!!!!
-    const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
-    arr[this.nowHandelConfigIndex] = {
-      ...arr[this.nowHandelConfigIndex],
-      ...this.nowHandelConfig,
-      template_pid: data.template_pid,
-      value: data.templateId
-    }
+    // const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
+    // arr[this.nowHandelConfigIndex] = {
+    //   ...arr[this.nowHandelConfigIndex],
+    //   ...this.nowHandelConfig,
+    //   template_pid: data.template_pid,
+    //   value: data.templateId
+    // }
     // 设置form 对应字段的值
-    const form = this.props.form;
-    const key = this.nowHandelConfig.key
-    form.setFieldsValue({
-      [key]: data.templateId,
-    });
+    // const form = this.props.form;
+    // const key = this.nowHandelConfig.key
+    // form.setFieldsValue({
+    //   [key]: data.templateId,
+    // });
+    const { templateId, template_pid } = data
     runInAction('UP_THIS_CONFIG_LIST', () => {
-      this.thisConfigList = arr
+      this.nowHandelConfig.template_pid = template_pid
+      this.nowHandelConfig.default = templateId
     })
   }
 
@@ -490,14 +492,22 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                     })(
                       <ConfigItem
                         dataIndex={index}
+                        changeTemp={this.changeTemp}
                         handel={this.handelAction}
                         showWork={this.showWork}
-                        changeTemp={this.changeTemp}
                         config={item} />
                     )}
                   </FormItem>
                 </div>
-                  : <AddConfigItem shouldSubmit={this.loading} choseSelect={this.choseSelect} editRadio={this.editRadio} key={item.addId} config={item} onOk={this.addConfigItem} />
+                  : <AddConfigItem
+                    shouldSubmit={this.loading}
+                    choseSelect={this.choseSelect}
+                    editRadio={this.editRadio}
+                    key={item.addId}
+                    config={item}
+                    dataIndex={index}
+                    changeTemp={this.changeTemp}
+                    onOk={this.addConfigItem} />
               )
             })
           }

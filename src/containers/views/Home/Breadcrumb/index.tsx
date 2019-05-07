@@ -88,7 +88,7 @@ class Bread extends React.Component<IStoreProps> {
       }
     }
     getPath(current)
-    console.log(result)
+    // console.log(result)
     // result.shift()
     return result
   }
