@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Button } from 'antd'
+import { Form, Button, Modal } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import ConfigItem from './configItem'
@@ -49,12 +49,13 @@ interface IStoreProps {
 }
 
 interface IProps extends IStoreProps {
-  onCancel: () => void
+  onCancel: (data?) => void
   onSubmit: (data) => void
   editData: any
   addList: conItem[]
   type?: string
   activeKey?: string
+  shouldSave?: boolean
 }
 @inject(
   (store: IStore): IStoreProps => {
@@ -75,6 +76,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   @observable
   private showWork: boolean = false
 
+  private confirmModal
+
   @observable
   private thisConfigList: conItem[]
 
@@ -94,7 +97,10 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   @action
   toggleLoading = (type?) => {
-    this.loading = type ? type : !this.loading
+    const loading = type === undefined ? type : !this.loading
+    if (this.loading !== loading) {
+      this.loading = loading
+    }
   }
   @action
   choseSelectModalSwitch = () => {
@@ -189,6 +195,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   }
 
   submit = (e?: React.FormEvent<any>): void => {
+    //console.log(1231);
     if (e) {
       e.preventDefault()
     }
@@ -200,7 +207,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       async (err, values): Promise<any> => {
         if (!err) {
           if (waitItemNum) {
-            console.log(waitItemNum);
+            //console.log(waitItemNum);
           } else {
             try {
               let last_id = 0
@@ -237,10 +244,10 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                 }
                 return tt
               })
-              console.log(dataArr)
-              onSubmit(dataArr)
+              //console.log(dataArr)
+              this.confirmModal ? this.props.onCancel(dataArr) : onSubmit(dataArr)
             } catch (error) {
-              console.log(error)
+              //console.log(error)
             }
             this.toggleLoading(false)
 
@@ -306,6 +313,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   @action
   addConfigItem = (config?: conItem) => {
+    //console.log('addConfigItem');
     if (config) {
       const index = this.useConfigList.findIndex(ele => ele.addId === config.addId);
       const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
@@ -327,7 +335,9 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     } else {
       this.waitItemNum = 0
       // addConfigItem组件提交过程中出问题了 结束提交过程
-      this.toggleLoading(false)
+      if (this.loading !== false) {
+        this.toggleLoading(false)
+      }
     }
   }
 
@@ -396,7 +406,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         arr.splice(tarIndex, 0, tar[0])
       }
     }
-    console.log(arr)
+    //console.log(arr)
     runInAction('UP_THIS_CONFIG_LIST', () => {
       this.thisConfigList = arr
     })
@@ -468,6 +478,26 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     })
   }
 
+  lastStep = () => {
+    this.confirmModal = Modal.confirm({
+      okText: 'Yes',
+      cancelText: 'No',
+      content: 'Save the Settings of this page?',
+      onCancel: () => {
+        this.props.onCancel()
+        setImmediate(() => {
+          this.confirmModal.destroy()
+        })
+      },
+      onOk: () => {
+        this.submit()
+        setImmediate(() => {
+          this.confirmModal.destroy()
+        })
+      }
+    })
+  }
+
 
   render() {
     const { form } = this.props
@@ -516,7 +546,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           {
             // type有值说明不是Pid中的 
             this.showWork && this.props.type ? <Button className="cancelBtn" onClick={this.toggleWork}>Cancel</Button>
-              : this.props.type === "basic1" ? null : <Button className='cancelBtn' onClick={this.props.onCancel}>Last Step</Button>
+              : this.props.type === "basic1" ? null : <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
           }
         </Form>
         <Button className="workBtn" type="primary" onClick={this.toggleWork}>{this.showWork ? 'Cancel' : 'Edit Filed'}</Button>

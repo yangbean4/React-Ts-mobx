@@ -5,5 +5,5 @@ export const null2Bar = (_?, record?) => (
 )
 
 export const FormatNumber = (_: string, record?) => (
-  !isNaN(Number(_)) && Number(_) >= 10 ? _ : `0${_}`
+  !isNaN(Number(_)) && (Number(_) >= 10 || Number(_) < 1) ? _ : `0${_}`
 )

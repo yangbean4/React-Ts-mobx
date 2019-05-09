@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Table, Divider, Icon, Popover, message, Button } from 'antd'
+import { Table, Divider, Icon, Popover, message, Button, Modal } from 'antd'
 import { PaginationConfig } from 'antd/lib/pagination'
 import { inject, observer } from 'mobx-react'
 import { observable, action } from 'mobx'
@@ -54,6 +54,12 @@ interface IProps extends IStoreProps {
 @observer
 class ConfigTable extends ComponentExt<IProps> {
 
+    private delParom = {
+        config_deploy_id: '',
+        pkg_name: '',
+        nameArr: []
+    }
+
     @observable
     private modalVisible: boolean = false
 
@@ -69,11 +75,20 @@ class ConfigTable extends ComponentExt<IProps> {
     // }
 
     @observable
+    private delModalVisible: boolean = false
+
+    @observable
     private modelType: useType
 
     @action
     hideConfigModalsVisible = () => {
         this.modalVisible = !this.modalVisible
+    }
+
+
+    @action
+    hideRoleModalVisible = () => {
+        this.delModalVisible = !this.delModalVisible
     }
 
 
@@ -86,7 +101,12 @@ class ConfigTable extends ComponentExt<IProps> {
         const { id, copyTo, pkg_name } = data;
         switch (this.modelType) {
             case 'delete':
-                this.deleteConfig({ config_deploy_id: id.join(','), pkg_name: this.targetConfig.pkg_name || pkg_name })
+                this.delParom = {
+                    config_deploy_id: id.join(','),
+                    pkg_name: this.targetConfig.pkg_name || pkg_name,
+                    nameArr: id.map(ele => this.targetConfig.versionArr.find(ver => ver.id === ele).version)
+                }
+                this.hideRoleModalVisible()
                 break;
             case 'copy':
                 this.setTargetConfig({ ...this.targetConfig, config_version: copyTo })
@@ -121,10 +141,11 @@ class ConfigTable extends ComponentExt<IProps> {
     setTargetConfig(config, id?) {
         const { pkg_name, platform, config_version, versionArr = [] } = config
         const ver = id === undefined ? undefined : versionArr.find(item => item.id === id).version
-
-        this.props.setTargetConfig({
+        const gg = {
             pkg_name, platform, config_version: ver || config_version, config_deploy_id: id ? Number(id) : id
-        })
+        }
+        this.props.setTargetConfig(gg)
+        localStorage.setItem('TargetConfig', JSON.stringify(gg))
     }
 
     @action
@@ -135,6 +156,12 @@ class ConfigTable extends ComponentExt<IProps> {
 
     goEdit(id, query?) {
         this.props.routerStore.push(`/config/edit/${id}` + (query || ''))
+    }
+
+    handelDel = () => {
+        const { config_deploy_id, pkg_name } = this.delParom
+        this.deleteConfig({ config_deploy_id, pkg_name })
+        this.hideRoleModalVisible()
     }
 
     render() {
@@ -149,6 +176,26 @@ class ConfigTable extends ComponentExt<IProps> {
         } = this.props
         return (
             <React.Fragment>
+                <Modal
+                    title="Delete"
+                    width={400}
+                    visible={this.delModalVisible}
+                    onCancel={this.hideRoleModalVisible}
+                    // onOk={() => deleteRole(this.delRole.id)}
+                    footer={[
+                        <Button key="submit" type="primary" onClick={this.handelDel}>
+                            Yes
+                      </Button>,
+                        <Button key="back" onClick={this.hideRoleModalVisible}>No</Button>
+                    ]}
+                >
+                    {
+                        this.delParom.nameArr.length === (this.targetConfig.versionArr || []).length ?
+                            <p> Sure to delete all of the config version for the pkgname?</p>
+                            : <p> Sure to delete {this.delParom.nameArr.join(',')}?</p>
+                    }
+
+                </Modal>
                 <UseModal
                     type={this.modelType}
                     visible={this.modalVisible}

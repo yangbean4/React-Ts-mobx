@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Tabs } from 'antd'
+import { Tabs, Button, Modal } from 'antd'
 import { ComponentExt } from '@utils/reactExt'
-import style from './index.scss'
+import style, { value } from './index.scss'
 
 import Loadable from 'react-loadable'
 
@@ -20,7 +20,6 @@ const asynchronousComponents = {
     POP: loadComponent(() => import(/* webpackChunkName: "POP" */ './POP')),
     PID: loadComponent(() => import(/* webpackChunkName: "PID" */ './PID/index')),
 }
-
 
 const tabArr = Object.keys(asynchronousComponents)
 
@@ -53,6 +52,9 @@ class ConfigModal extends ComponentExt<IStoreProps> {
     private hasGo = new Set(tabArr[0])
 
     @observable
+    private delCacheKey: string
+
+    @observable
     private isAdd: boolean
 
     @observable
@@ -61,11 +63,27 @@ class ConfigModal extends ComponentExt<IStoreProps> {
     @observable
     private addConfigGroup: IConfigStore.IConfigTarget = { basic1: [] }
 
+
+    @computed
+    get localConfig() {
+        const str = localStorage.getItem('TargetConfig')
+        return str ? JSON.parse(str) : {}
+    }
+
+    @computed
+    get useTargetConfig() {
+        return this.props.targetConfig || this.localConfig
+    }
+
     @computed
     get activeIndex() {
         return tabArr.findIndex(item => item === this.activeKey)
     }
 
+    @action
+    setDelCacheKey(delCacheKey) {
+        this.delCacheKey = delCacheKey
+    }
 
     @action
     onCancel = () => {
@@ -76,14 +94,30 @@ class ConfigModal extends ComponentExt<IStoreProps> {
         }
     }
 
+
     @action
-    onSubmit = async (value) => {
+    saveData = (value) => {
         const key = this.activeKey.toLowerCase()
         runInAction('Change_', () => {
             this.editData[key] = value
         })
+    }
+
+    @action
+    onSubmit = async (value) => {
+        this.saveData(value)
+        if (this.useTargetConfig.config_deploy_id) {
+            const kpi = `edit${this.activeKey}`
+            await this.api.config[kpi](
+                {
+                    config_deploy_id: this.useTargetConfig.config_deploy_id,
+                    [this.activeKey.toLowerCase()]: value
+                }
+            )
+        } else if (this.activeIndex === tabArr.length - 1) {
+            await this.props.submitConfig({ ...this.editData, ...this.useTargetConfig })
+        }
         if (this.activeIndex === tabArr.length - 1) {
-            await this.props.submitConfig(this.editData)
             this.props.routerStore.push('/config')
         } else {
             this.cardChange(tabArr[this.activeIndex + 1])
@@ -111,14 +145,14 @@ class ConfigModal extends ComponentExt<IStoreProps> {
                 editData = { basic1, basic2, pid, pop }
             }
 
-            const Detail = await this.api.config.allTemplateDetail({ platform: (this.props.targetConfig || {}).platform || 'android' })
+            const Detail = await this.api.config.allTemplateDetail({ platform: (this.useTargetConfig).platform || 'android' })
             runInAction('Change_', () => {
                 this.isAdd = !!this.props.routerStore.location.pathname.includes('add');
                 this.editData = editData
                 this.addConfigGroup = Detail.data
             })
         } catch (error) {
-            console.log(error);
+            //console.log(error);
             this.props.routerStore.push('/config')
         }
 
@@ -142,7 +176,7 @@ class ConfigModal extends ComponentExt<IStoreProps> {
         const boxProps = () => {
             const key = item.toLocaleLowerCase()
             const props = {
-                onCancel: this.onCancel,
+                onCancel: this.goBack,
                 onSubmit: this.onSubmit,
                 editData: this.editData[key],
                 // ----多传两个props
@@ -169,9 +203,22 @@ class ConfigModal extends ComponentExt<IStoreProps> {
         return (this.isAdd && !this.hasGo.has(val))
     }
 
+    goBack = (value) => {
+        if (!value) {
+            // [...tabArr].filter(ele => ele !== this.activeKey)
+            this.setDelCacheKey(this.activeKey)
+            setImmediate(() => {
+                this.setDelCacheKey('')
+            })
+        } else {
+            this.saveData(value)
+        }
+        this.onCancel()
+    }
+
 
     render() {
-        const { targetConfig = {} } = this.props
+        const targetConfig = this.useTargetConfig
         return (
             <div className={style.configModal}>
                 <div className={style.head}>
@@ -204,7 +251,7 @@ class ConfigModal extends ComponentExt<IStoreProps> {
                     {
                         <Tabs type="card" activeKey={this.activeKey} onChange={val => this.cardChange(val)}>
                             {
-                                tabArr.map(item => (
+                                tabArr.filter(item => item !== this.delCacheKey).map(item => (
                                     <TabPane tab={item} key={item} disabled={this.compuDis(item)}>
                                         {this.getBox(item)}
                                     </TabPane>

@@ -1,20 +1,23 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import { observable, action } from 'mobx'
-import { Form, Input, Row, Col, Button, Icon } from 'antd'
+import { Form, Input, Row, Col, Button, Icon, Modal } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 
 interface IProps {
-  onCancel: () => void
+  onCancel: (data?) => void
   onSubmit: (data) => Promise<any>
   editData: any
+  shouldSave?: boolean
 }
 
 @observer
 class POP extends ComponentExt<IProps & FormComponentProps> {
   @observable
   private loading: boolean = false
+
+  private confirmModal
 
   @action
   toggleLoading = () => {
@@ -31,12 +34,32 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
         if (!err) {
           this.toggleLoading()
           try {
-            onSubmit(values)
+            this.confirmModal ? this.props.onCancel(values) : onSubmit(values)
           } catch (err) { }
           this.toggleLoading()
         }
       }
     )
+  }
+
+  lastStep = () => {
+    this.confirmModal = Modal.confirm({
+      okText: 'Yes',
+      cancelText: 'No',
+      content: 'Save the Settings of this page?',
+      onCancel: () => {
+        this.props.onCancel()
+        setImmediate(() => {
+          this.confirmModal.destroy()
+        })
+      },
+      onOk: () => {
+        this.submit()
+        setImmediate(() => {
+          this.confirmModal.destroy()
+        })
+      }
+    })
   }
 
   render() {
@@ -229,7 +252,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
           </Col>
         </Row>
         <Button type="primary" className='submitBtn' onClick={this.submit}>Submit</Button>
-        <Button className='cancelBtn' onClick={this.props.onCancel}>Last Step</Button>
+        <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
       </div>
     )
   }

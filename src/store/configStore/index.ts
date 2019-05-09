@@ -116,10 +116,10 @@ export class ConfigStore extends StoreExt {
     }
 
     submitConfig = (data) => {
-        if (this.targetConfig.config_deploy_id) {
-            return this.modifyConfig({ ...data, config_deploy_id: this.targetConfig.config_deploy_id })
+        if (data.config_deploy_id) {
+            return this.modifyConfig(data)
         } else {
-            return this.createConfig({ ...data, ...this.targetConfig })
+            return this.createConfig(data)
         }
     }
 

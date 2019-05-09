@@ -3,10 +3,11 @@ import { observer, inject } from 'mobx-react'
 import { observable, action, computed } from 'mobx'
 import { Input, Select, Radio, Divider, Icon } from 'antd'
 import { conItem } from './type'
-import { SketchPicker } from 'react-color'
+// import { SketchPicker } from 'react-color'
 import myIcon from '@components/Icon'
 import { typeOf } from '@utils/index'
 import InputGroup from './InputGroup/index'
+import InputColor from './InputColor/index'
 
 const RadioGroup = Radio.Group;
 
@@ -159,8 +160,11 @@ class ConfigItem extends React.Component<IProps> {
       defaultValue: value,
       value: value,
       key: key,
+      onChange: (val) => this.triggerChange(val),
       className: `main-item-type${value_type} ${unit ? 'hasUnit' : ''}`
     }, addProp;
+
+
     const _value_type = value_type.toString()
     switch (_value_type) {
       case '1': Component = Input; addProp = {
@@ -170,18 +174,19 @@ class ConfigItem extends React.Component<IProps> {
         }
       }; break;
       case '2':
-        Component1 = React.createElement('div', {
-          key: 'color-box',
-        }, [
-            <Input key="input" value={value} onDoubleClick={() => this.onTogglePicker()} />,
-            this.pickerVisible && (
-              <div style={{ position: 'absolute', zIndex: 10 }} key='color'>
-                <SketchPicker
-                  color={{ hex: value }}
-                  onChangeComplete={this.handleColorChange}
-                />
-              </div>
-            )])
+        // Component1 = React.createElement('div', {
+        //   key: 'color-box',
+        // }, [
+        //     <Input key="input" value={value} onDoubleClick={() => this.onTogglePicker()} />,
+        //     this.pickerVisible && (
+        //       <div style={{ position: 'absolute', zIndex: 10 }} key='color'>
+        //         <SketchPicker
+        //           color={{ hex: value }}
+        //           onChangeComplete={this.handleColorChange}
+        //         />
+        //       </div>
+        //     )])
+        Component = InputColor;
         break
       case '3': case '7': {
         Component = Select
@@ -200,13 +205,14 @@ class ConfigItem extends React.Component<IProps> {
         addProp = {
           allowClear: true,
           showSearch: true,
-          value: value,
+
+          // value: value,
+          // onChange: (val) => this.triggerChange(val),
+
           getPopupContainer: trigger => trigger.parentElement,
           filterOption: (input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0,
-          onChange: (val) => this.triggerChange(val),
           // dropdownRender,
         }
-        debugger
         const optionArr = this.useSelectPid ? this.selectOptionList :
           typeOf(option) === 'array' ? option.map((ele, index) => {
             if (typeOf(ele) === 'object') {
@@ -248,9 +254,9 @@ class ConfigItem extends React.Component<IProps> {
 
         addProp = {
           value: vv,
-          onChange: (value) => {
-            this.triggerChange(value)
-          }
+          // onChange: (value) => {
+          //   this.triggerChange(value)
+          // }
         }
         break
       }
@@ -263,7 +269,7 @@ class ConfigItem extends React.Component<IProps> {
         }
         addProp = {
           value: Number(value),
-          onChange: (val) => this.triggerChange(val)
+          // onChange: (val) => this.triggerChange(val)
         }
 
         let arr: { label: string, value: string | number }[] = (option || '').split(',').map((item, index) => {

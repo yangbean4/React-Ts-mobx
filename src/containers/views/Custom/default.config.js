@@ -3,6 +3,7 @@ export const defaultOption = {
     "template_name": 1,
     "version": 0,
     "template_md5": 1,
+    "template_url": 0,
     "operate": {
       "edit": 1,
       "delete": 1
@@ -17,6 +18,7 @@ export const defaultOption = {
     "template_name": 1,
     "template": 1,
     "version": 0,
+    "template_md5": 0,
   }
 }
 export const disabled = {

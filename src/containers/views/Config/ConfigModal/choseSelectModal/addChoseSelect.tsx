@@ -66,8 +66,8 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
   }
 
   @action
-  toggleLoading = () => {
-    this.loading = !this.loading
+  toggleLoading = (type?) => {
+    this.loading = type || !this.loading
   }
 
   @action
@@ -95,21 +95,26 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
               checked
             } = values;
             let addId = pId;
-            if (pName) {
-              const res = await this.api.custom.createCustom({ primary_name: pName, config: defaultOption, status: 1 })
-              addId = res.data.id
-              this.props.getSidebar()
+            try {
+              if (pName) {
+                const res = await this.api.custom.createCustom({ primary_name: pName, config: defaultOption, status: 1 })
+                addId = res.data.id
+                this.props.getSidebar()
+              }
+              const data = await this.api.template.batchAddTemplateDetail({ pid: addId, template_name: keys.map(e => names[e]) })
+              const index = keys.findIndex(ele => ele === checked)
+              this.props.fullTemplate()
+              this.props.getTemplateSelect(addId, false)
+              this.props.onOK({
+                template_pid: addId,
+                templateId: data.data[index]
+              })
+
+              this.toggleLoading(false)
+              this.onCancel()
+            } catch (error) {
+              this.toggleLoading(false)
             }
-            const data = await this.api.template.batchAddTemplateDetail({ pid: addId, template_name: keys.map(e => names[e]) })
-            const index = keys.findIndex(ele => ele === checked)
-            this.props.fullTemplate()
-            this.props.getTemplateSelect(addId, false)
-            this.props.onOK({
-              template_pid: addId,
-              templateId: data.data[index]
-            })
-            this.onCancel()
-            this.toggleLoading()
           }
 
         }

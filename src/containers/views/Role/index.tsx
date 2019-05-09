@@ -9,7 +9,7 @@ export default function Roles() {
     return (
         <div className={styles.container}>
             <Header />
-            <AutoSizer className={styles.tableBox}>{({ height }) => <RoleTable scrollY={height - 120} />}</AutoSizer>
+            <AutoSizer className={styles.tableBox}>{({ height }) => <RoleTable scrollY={height - 160} />}</AutoSizer>
         </div>
     )
 }

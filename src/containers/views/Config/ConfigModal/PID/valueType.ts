@@ -5,7 +5,7 @@ export const value_typeOption = [
     phpKey: "RewalledVideo"
   },
   {
-    key: 'Playicon Video',
+    key: 'Playicon',
     value: 3,
     phpKey: "Playicon"
   },

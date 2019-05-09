@@ -101,6 +101,10 @@ class TemplateSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <Col span={2} offset={1}>
               <Button type="primary" htmlType="submit">Search</Button>
             </Col>
+            <Col offset={1}>
+              <span id='templateAddBtn'>
+              </span>
+            </Col>
           </Row>
         </Form>
       )

@@ -4,6 +4,7 @@ import { Button } from 'antd'
 import Search from './Search'
 import { observable, action } from 'mobx'
 import CustomModal from './../TemplateModal'
+import PortalsBtn from '@components/portalsBtn'
 
 
 interface IStoreProps {
@@ -33,9 +34,12 @@ class Header extends React.Component<IStoreProps> {
         return (
             <div>
                 <Search />
-                <Button className='addbtn-mb20' icon='plus' type="primary" onClick={this.toggleCustomModalVisible}>
-                    Add
+                <PortalsBtn querySelector='#templateAddBtn'>
+
+                    <Button className='addbtn-mb20 addbtn-ml20' icon='plus' type="primary" onClick={this.toggleCustomModalVisible}>
+                        Add
                 </Button>
+                </PortalsBtn>
 
                 <CustomModal visible={this.userModalVisible} onCancel={this.toggleCustomModalVisible} />
             </div>

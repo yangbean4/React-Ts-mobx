@@ -62,7 +62,7 @@ class ConfigSearch extends ComponentExt<IStoreProps & FormComponentProps> {
     const { form, filters } = this.props
     const { getFieldDecorator } = form
     return (
-      <Form {...layout} onSubmit={this.submit}>
+      <Form {...layout}>
         <Row>
           <Col span={span}>
             <FormItem label="Pkg Name">
@@ -92,7 +92,7 @@ class ConfigSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             </FormItem>
           </Col>
           <Col span={3} offset={1}>
-            <Button type="primary" htmlType="submit">Search</Button>
+            <Button type="primary" onClick={this.submit}>Search</Button>
           </Col>
           <Col span={3} offset={1}>
             <span id='insertBeforeConfigSearch'></span>

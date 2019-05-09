@@ -36,4 +36,17 @@ export default {
   checkConfig(data): Promise<any> {
     return http.post(`${basePath}checkConfig`, data)
   },
+
+  editBasic1(data): Promise<any> {
+    return http.post(`${basePath}editBasic1`, data)
+  },
+  editBasic2(data): Promise<any> {
+    return http.post(`${basePath}editBasic2`, data)
+  },
+  editPOP(data): Promise<any> {
+    return http.post(`${basePath}editPop`, data)
+  },
+  editPID(data): Promise<any> {
+    return http.post(`${basePath}editPid`, data)
+  },
 }

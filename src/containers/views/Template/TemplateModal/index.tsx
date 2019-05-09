@@ -209,16 +209,18 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                             })(<Input disabled={!this.typeIsAdd} />)}
                         </FormItem> : null
                     }
-                    <FormItem {...formItemLayout} label="Version">
-                        {getFieldDecorator('version', {
-                            initialValue: version,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(<Input />)}
-                    </FormItem>
+                    {
+                        this.formCon.has('version') ? <FormItem {...formItemLayout} label="Version">
+                            {getFieldDecorator('version', {
+                                initialValue: version,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(<Input />)}
+                        </FormItem> : null
+                    }
                     {
                         this.formCon.has('template') ?
                             !this.comTemplate.template_url ? <FormItem {...formItemLayout} label="Template">
@@ -235,16 +237,18 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                                 </Upload>)}
                             </FormItem> : (
                                     <React.Fragment>
-                                        <FormItem {...formItemLayout} className={styles.textItem} label="Player Template">
+                                        <FormItem {...formItemLayout} className={styles.textItem} label="Template">
                                             <span>{this.comTemplate.template_url.split('/').pop()}</span>
                                             <Icon type='iconguanbi' onClick={this.removeFile} />
                                         </FormItem>
                                         <FormItem {...formItemLayout} className={styles.textItem} label="Template Url">
                                             <span>{this.comTemplate.template_url}</span>
                                         </FormItem>
-                                        <FormItem {...formItemLayout} className={styles.textItem} label="Template MD5">
-                                            <span>{this.comTemplate.template_md5}</span>
-                                        </FormItem>
+                                        {
+                                            this.formCon.has('template_md5') ? <FormItem {...formItemLayout} className={styles.textItem} label="Template MD5">
+                                                <span>{this.comTemplate.template_md5}</span>
+                                            </FormItem> : null
+                                        }
                                     </React.Fragment>
                                 )
                             : null

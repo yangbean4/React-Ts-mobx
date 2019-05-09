@@ -15,14 +15,20 @@
     height: 70px;
     margin-bottom: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    // justify-content: center;
+    // align-items: center;
+    :global(.ant-form-item-label) {
+      width: 225px;
+    }
     :global(.ant-form-item-control-wrapper) {
-      width: 560px;
+      width: 280px;
       height: auto;
-      :global(.ant-form-item-control) {
+      :global(.ant-select) {
         width: 280px;
       }
+    }
+    :global(.ant-form-item-children) {
+      width: 280px;
     }
   }
 }

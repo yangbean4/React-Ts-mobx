@@ -98,7 +98,7 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                         message.success(data.message)
                         routerStore.push('/users')
                     } catch (err) {
-                        console.log(err);
+                        //console.log(err);
                     }
                     this.toggleLoading()
                 }

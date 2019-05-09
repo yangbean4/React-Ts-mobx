@@ -49,7 +49,7 @@ export const logId = 412
 export const menu: IMenu[] = [
     {
         id: 1,
-        title: 'Config Manage',
+        title: 'Config',
         icon: 'iconconfigpeizhi',
         authName: 'Config Manage'
     },
@@ -143,7 +143,7 @@ export const menu: IMenu[] = [
     {
         id: 41,
         pid: 4,
-        title: 'Config Manage',
+        title: 'Config',
         hasBread: false,
         // path: '/log-config',
         // component: 'Logs',
@@ -214,7 +214,7 @@ const addRouter: IRouter[] = [
         id: 10000,
         pid: 11,
         path: '/config/add',
-        title: 'Edit Config',
+        title: 'Add Config',
         component: 'ConfigModel',
         isMenu: false
     },

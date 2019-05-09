@@ -230,7 +230,7 @@
       // justify-content: center;
       align-items: center;
       &:global(.hasWork:hover) {
-        background: rgba(248, 249, 254, 1);
+        background-color: rgba(248, 249, 254, 1);
         :global(.workBox) {
           display: block !important;
         }

@@ -5,7 +5,7 @@ import { Form, Input, Select, Row, Col, Button, DatePicker } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import moment from 'moment';
 import { ComponentExt } from '@utils/reactExt'
-
+import * as style from './index.scss'
 const dateFormat = 'YYYY-MM-DD'
 const FormItem = Form.Item
 const RangePicker = DatePicker.RangePicker
@@ -72,7 +72,7 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
     this.loading = !this.loading
   }
   defaultValue = () => {
-    return [new Date(new Date().setDate(new Date().getDate() - 7)), new Date()].map(val => moment(val, dateFormat))
+    return [new Date(new Date().setDate(new Date().getDate() - 6)), new Date()].map(val => moment(val, dateFormat))
   }
 
   submit = (e?: React.FormEvent<any>): void => {
@@ -102,55 +102,43 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
     const { form } = this.props
     const { getFieldDecorator } = form
     return (
-      <Form {...layout} onSubmit={this.submit}>
-        <Row>
-          <Col span={span}>
-            <FormItem label="Operator">
-              {getFieldDecorator('operator_name')(<Input />)}
-            </FormItem>
-          </Col>
-          <Col span={span}>
-            <FormItem label="Type">
-              {getFieldDecorator('type')(
-                <Select
-                  allowClear
-                  showSearch
-                  getPopupContainer={trigger => trigger.parentElement}
-                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                >
-                  {userCategory.map(c => (
-                    <Select.Option key={c.title} value={c.value}>
-                      {c.title}
-                    </Select.Option>
-                  ))}
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col span={span}>
-            <FormItem label="Object">
-              {getFieldDecorator('object')(<Input />)}
-            </FormItem>
-          </Col>
+      <Form {...layout} className={style.logSearch} onSubmit={this.submit}>
+        <FormItem label="Operator">
+          {getFieldDecorator('operator_name')(<Input />)}
+        </FormItem>
+        <FormItem label="Type">
+          {getFieldDecorator('type')(
+            <Select
+              allowClear
+              showSearch
+              getPopupContainer={trigger => trigger.parentElement}
+              filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            >
+              {userCategory.map(c => (
+                <Select.Option key={c.title} value={c.value}>
+                  {c.title}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
+        </FormItem>
+        <FormItem label="Object">
+          {getFieldDecorator('object')(<Input />)}
+        </FormItem>
 
-          <Col span={span}>
-            <FormItem label="Operation">
-              {getFieldDecorator('operation')(<Input />)}
-            </FormItem>
-          </Col>
+        <FormItem label="Operation">
+          {getFieldDecorator('operation')(<Input />)}
+        </FormItem>
 
-          <Col span={span}>
-            <FormItem label="Time">
-              {getFieldDecorator('datetime', {
-                initialValue: this.defaultValue()
-              })(<RangePicker format={dateFormat} />)}
-            </FormItem>
-          </Col>
+        <FormItem label="Time">
+          {getFieldDecorator('datetime', {
+            initialValue: this.defaultValue()
+          })(<RangePicker allowClear={false} format={dateFormat} />)}
+        </FormItem>
 
-          <Col span={3} offset={1}>
-            <Button type="primary" htmlType="submit">Search</Button>
-          </Col>
-        </Row>
+        <FormItem label="">
+          <Button className='addbtn-ml20' type="primary" htmlType="submit">Search</Button>
+        </FormItem>
       </Form>
     )
   }

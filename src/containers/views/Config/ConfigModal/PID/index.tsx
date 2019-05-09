@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Button, Table, Icon, Divider } from 'antd'
+import { Button, Table, Icon, Divider, Modal } from 'antd'
 import { ComponentExt } from '@utils/reactExt'
 import MyIcon from '@components/Icon'
 import FormPid from './formPid'
@@ -79,7 +79,7 @@ class PidTable extends React.Component<TableProps> {
 // --------------------------------------------------------------
 
 interface IProps {
-  onCancel: () => void
+  onCancel: (data?) => void
   onSubmit: (data) => Promise<any>
   editData: any[]
 }
@@ -99,6 +99,9 @@ class PID extends ComponentExt<IProps> {
   private handelIndex: number
 
   private GJB: any[]
+
+  private confirmModal
+
 
   @computed
   get editData() {
@@ -128,7 +131,7 @@ class PID extends ComponentExt<IProps> {
   submit = () => {
     const { onSubmit } = this.props
     this.toggleLoading()
-    onSubmit(this.useData)
+    this.confirmModal ? this.props.onCancel(this.useData) : onSubmit(this.useData)
     this.toggleLoading()
   }
 
@@ -166,6 +169,26 @@ class PID extends ComponentExt<IProps> {
     this.setThisDataList(arr)
   }
 
+  lastStep = () => {
+    this.confirmModal = Modal.confirm({
+      okText: 'Yes',
+      cancelText: 'No',
+      content: 'Save the Settings of this page?',
+      onCancel: () => {
+        this.props.onCancel()
+        setImmediate(() => {
+          this.confirmModal.destroy()
+        })
+      },
+      onOk: () => {
+        this.submit()
+        setImmediate(() => {
+          this.confirmModal.destroy()
+        })
+      }
+    })
+  }
+
   render() {
     // const { form, editData } = this.props
     return (
@@ -176,9 +199,12 @@ class PID extends ComponentExt<IProps> {
 
             <PidTable data={this.useData} onEdit={this.editPid} onDelete={this.deletePid} />
             <Button type="primary" className='submitBtn' onClick={this.submit}>Submit</Button>
-            <Button className='cancelBtn' onClick={this.props.onCancel}>Last Step</Button>
+            <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
           </div> : <div className="formBox">
-              <FormPid data={this.GJB} onCancel={this.toggleIsTable} onSubmit={this.pidFormSubmit} />
+              <FormPid
+                data={this.GJB}
+                onCancel={this.toggleIsTable}
+                onSubmit={this.pidFormSubmit} />
             </div>
         }
 

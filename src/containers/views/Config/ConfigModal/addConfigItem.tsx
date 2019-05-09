@@ -6,9 +6,11 @@ import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import { value_typeOption } from '../as.config'
 import { conItem } from './type'
-import { SketchPicker } from 'react-color'
+// import { SketchPicker } from 'react-color'
 import InputGroup from './InputGroup/index'
 import { _nameCase, typeOf } from '@utils/index'
+import InputColor from './InputColor/index'
+
 const FormItem = Form.Item
 const RadioGroup = Radio.Group;
 const span = 3
@@ -93,15 +95,18 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
 
   constructor(props) {
     super(props)
-    when(
+    autorun(
       // 一旦...
       () => {
         // 父组件要提交
-        return !!this.props.shouldSubmit
-      },
-      // ... 然后
-      () => this.submit()
-    );
+        const res = !!this.props.shouldSubmit
+        //console.log(this.props.shouldSubmit)
+        if (res) {
+          this.submit()
+        }
+        return res
+      }
+    )
   }
 
 
@@ -132,6 +137,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
   }
 
   submit = (e?: React.FormEvent<any>): void => {
+    //console.log('submit')
     if (e) {
       e.preventDefault()
     }
@@ -145,7 +151,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
             const dd = values.value_type === '4' ? values.default.filter(ele => !!ele) : values.default
             data = { ...config, ...values, default: dd }
           } catch (err) {
-            console.log(err)
+            //console.log(err)
           }
           this.toggleLoading()
         }
@@ -204,17 +210,8 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
             <div>
               {getFieldDecorator('default', {
                 initialValue: config.default
-              })(<Input placeholder='default' onDoubleClick={() => this.onTogglePicker()} />)}
-              {
-                this.pickerVisible && (
-                  <div style={{ position: 'absolute', zIndex: 10 }} key='color'>
-                    <SketchPicker
-                      color={{ hex: value }}
-                      onChangeComplete={this.handleColorChange}
-                    />
-                  </div>
-                )
-              }
+              })(<InputColor />)}
+
             </div>
           </FormItem>
         </Col>)

@@ -52,7 +52,7 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
 
   @computed
   get usePid_type() {
-    return this.pid_type || this.usEeditData['pid_type'] || 1
+    return this.pid_type || this.usEeditData['pid_type'] || 3
   }
 
   @computed
@@ -127,7 +127,7 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
     const { getFieldDecorator } = form
     return (
       <div className={styles.formPid}>
-        <FormItem className={styles.minitem} {...layout} label='PID Type'>
+        <FormItem className={styles.minitem} label='PID Type'>
           {getFieldDecorator('pid_type', {
             initialValue: this.getValue('pid_type') || this.usePid_type,
             rules: [
@@ -154,7 +154,7 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
           )}
         </FormItem>
 
-        <FormItem {...layout} className={styles.minitem} label='PID'>
+        <FormItem className={styles.minitem} label='PID'>
           {getFieldDecorator('placement_id', {
             initialValue: this.getValue('placement_id'),
             rules: [

@@ -72,7 +72,7 @@ class Login extends React.Component<IStoreProps & FormComponentProps> {
             <div className={styles.login}>
                 <Form onSubmit={this.submit} className={styles.form}>
                     <div className={styles.logoBox}>
-                        <Icon type="ant-design" />
+                        {/* <Icon type="ant-design" /> */}
                     </div>
                     <FormItem hasFeedback>
                         {getFieldDecorator('userName', {

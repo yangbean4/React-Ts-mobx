@@ -3,7 +3,7 @@ import { PaginationConfig } from 'antd/lib/pagination'
 import { StoreExt } from '@utils/reactExt'
 import { dateFormat } from '@utils/index'
 
-const datetime = [new Date(new Date().setDate(new Date().getDate() - 7)), new Date()].map(ele => dateFormat(ele, 'yyyy-MM-dd')).join(' - ')
+const datetime = [new Date(new Date().setDate(new Date().getDate() - 6)), new Date()].map(ele => dateFormat(ele, 'yyyy-MM-dd')).join(' - ')
 export class LogsStore extends StoreExt {
     @observable
     logsLoading: boolean = false

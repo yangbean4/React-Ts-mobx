@@ -9,8 +9,8 @@
   overflow-x: scroll;
   width: 100%;
   & > div {
-    min-width: 1160px;
-    max-width: 1480px;
+    // min-width: 1160px;
+    // max-width: 1480px;
     width: 100%;
     margin: 0 auto;
 
@@ -36,8 +36,13 @@
       & :global(.ant-form-item-control) {
         width: 240px;
       }
+      & :global(.ant-form-item-label) {
+        text-align: left;
+        color: red;
+        margin-left: 20px;
+      }
       & :global(label) {
-        margin: 0 10px 0 20px;
+        margin: 0 10px 0 0;
         &::after {
           display: none;
         }

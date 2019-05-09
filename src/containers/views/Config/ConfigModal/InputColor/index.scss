@@ -1,0 +1,12 @@
+.colorBox {
+  width: 129px;
+  position: relative;
+  .viewColor {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: 13px;
+    right: 10px;
+    pointer-events: none;
+  }
+}

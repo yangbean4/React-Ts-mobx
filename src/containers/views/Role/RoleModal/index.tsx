@@ -89,7 +89,7 @@ class RoleModal extends ComponentExt<IProps & FormComponentProps> {
                     this.toggleLoading()
                     try {
                         let data = { message: '' }
-                        let par = { ...values, permission: this.checkedKeys ? this.checkedKeys.join(',') : role.permission }
+                        let par = { ...values, permission: this.checkedKeys ? this.checkedKeys.join(',') : role ? role.permission : [] }
                         if (this.typeIsAdd) {
                             data = await createRole(par)
                         } else {
@@ -98,7 +98,7 @@ class RoleModal extends ComponentExt<IProps & FormComponentProps> {
                         message.success(data.message)
                         routerStore.push('/role')
                     } catch (err) {
-                        console.log(err)
+                        //console.log(err)
                     }
                     this.toggleLoading()
                 }

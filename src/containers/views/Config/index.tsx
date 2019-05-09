@@ -23,7 +23,7 @@ class Config extends React.Component<IProps> {
         return (
             <div className={styles.container}>
                 <Header />
-                <AutoSizer className={styles.tableBox}>{({ height }) => <ConfigTable scrollY={height - 120} />}</AutoSizer>
+                <AutoSizer className={styles.tableBox}>{({ height }) => <ConfigTable scrollY={height - 160} />}</AutoSizer>
             </div>
         )
     }

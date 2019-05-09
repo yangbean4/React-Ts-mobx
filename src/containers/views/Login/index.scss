@@ -6,18 +6,40 @@
   flex: 1;
   justify-content: center;
   align-items: center;
+  background-image: url("../../../assets/images/login-bg.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
 }
 
 .form {
   width: 320px;
-  padding: 36px 36px 12px;
+  background: #fff;
+  width: 270px;
+  height: 276px;
+  padding: 20px 15px;
   box-shadow: 0 0 100px rgba(0, 0, 0, 0.08);
+  :global(.ant-form-item) {
+    margin-bottom: 15px;
+    height: 30px;
+  }
+  :global(.ant-input) {
+    height: 30px;
+  }
+  :global(.ant-btn) {
+    height: 30px;
+  }
+  :global(.ant-form-explain) {
+    display: none;
+  }
 }
 
 .logoBox {
-  font-size: 55px;
-  text-align: center;
-  margin-bottom: 15px;
+  margin: 20px auto;
+  width: 120px;
+  height: 22px;
+  background-image: url("../../../assets/images/login-lg.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
 }
 
 .tips {
@@ -29,6 +51,6 @@
 }
 
 .captcha {
-  width: 100%;
-  height: 46px;
+  width: 106px;
+  height: 30px;
 }
