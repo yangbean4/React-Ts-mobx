@@ -1,12 +1,11 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
-import { observable, action } from 'mobx'
+import { observable, action, computed } from 'mobx'
 import { Form, Button, Modal, Input, Select, Radio } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import Icon from '@components/Icon'
-import { defaultOption } from "@views/Custom/default.config";
 const FormItem = Form.Item
 const RadioGroup = Radio.Group;
 
@@ -28,10 +27,8 @@ let id = 0;
 
 
 interface IStoreProps {
-  fullTemplate?: () => Promise<any>
-  getSidebar?: () => Promise<any>
-  tmpSidebar?: IAuthStore.Sidebar[]
-  getTemplateSelect?: (pid: number, useCache?: boolean) => Promise<any>
+  fullTemplateAll?: () => Promise<any>
+  allTemplateInfo?: ICustomStore.ICustomTree[]
 }
 interface IProps extends IStoreProps {
   visible: boolean
@@ -40,11 +37,9 @@ interface IProps extends IStoreProps {
 }
 @inject(
   (store: IStore): IStoreProps => {
-    const { customStore, authStore, templateStore } = store
-    const { getSidebar, tmpSidebar } = authStore
-    const { fullTemplate } = customStore
-    const { getTemplateSelect } = templateStore
-    return { getTemplateSelect, fullTemplate, getSidebar, tmpSidebar }
+    const { configStore } = store
+    const { fullTemplateAll, allTemplateInfo } = configStore
+    return { fullTemplateAll, allTemplateInfo }
   }
 )
 
@@ -59,6 +54,26 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
 
   @observable
   private typeIsAdd: boolean = false
+
+  @observable
+  private template_pid: number
+
+  @action
+  setPid = (pid) => {
+    this.template_pid = pid
+  }
+
+  @computed
+  get templateTargetChidrenSet() {
+    let arr = this.props.allTemplateInfo.find(ele => ele.id === this.template_pid).children || []
+    return new Set(arr.map(ele => ele.template_name))
+  }
+
+  @computed
+  get primaryNameSet() {
+    return new Set(this.props.allTemplateInfo.map(ele => ele.primary_name))
+  }
+
 
   @action
   toggleMsgShow = (type?) => {
@@ -94,27 +109,33 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
               pName,
               checked
             } = values;
-            let addId = pId;
-            try {
-              if (pName) {
-                const res = await this.api.custom.createCustom({ primary_name: pName, config: defaultOption, status: 1 })
-                addId = res.data.id
-                this.props.getSidebar()
-              }
-              const data = await this.api.template.batchAddTemplateDetail({ pid: addId, template_name: keys.map(e => names[e]) })
-              const index = keys.findIndex(ele => ele === checked)
-              this.props.fullTemplate()
-              this.props.getTemplateSelect(addId, false)
-              this.props.onOK({
-                template_pid: addId,
-                templateId: data.data[index]
-              })
+            const index = keys.findIndex(ele => ele === checked)
+            const optionArr = keys.map(e => names[e])
+            if (optionArr.length !== [...new Set(optionArr)].length) {
+              this.$message.error('Please check if you have duplicated the contents you have filled in')
+            } else {
+              const value = optionArr[index]
+              let per = {}
 
-              this.toggleLoading(false)
+              if (pName) {
+                per = {
+                  value,
+                  unit: 2,
+                  template: pName,
+                  option: optionArr.join(','),
+                }
+              } else {
+                per = {
+                  value,
+                  unit: 1,
+                  pid: pId,
+                  option: optionArr.join(','),
+                }
+              }
+              this.props.onOK(per)
               this.onCancel()
-            } catch (error) {
-              this.toggleLoading(false)
             }
+            this.toggleLoading(false)
           }
 
         }
@@ -161,8 +182,9 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
 
 
 
+
   render() {
-    const { form, visible, tmpSidebar } = this.props
+    const { form, visible, allTemplateInfo } = this.props
     const { getFieldDecorator, getFieldValue } = form;
     getFieldDecorator('keys', { initialValue: [] });
     const keys = getFieldValue('keys');
@@ -177,8 +199,17 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
           rules: [{
             required: true,
             whitespace: true,
-            message: "Please input emplate Name or delete this field.",
-          }],
+            message: "Please input template Name or delete this field.",
+          },
+          {
+            validator: (r, v, callback) => {
+              if (!this.typeIsAdd && this.templateTargetChidrenSet.has(v)) {
+                callback('Template already exists')
+              }
+              callback()
+            }
+          }
+          ],
         })(
           <Input placeholder="Template Name" style={{ width: '60%', marginRight: 8 }} />
         )}
@@ -230,6 +261,14 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
               rules: [
                 {
                   required: true, message: "Required"
+                },
+                {
+                  validator: (r, v, callback) => {
+                    if (this.primaryNameSet.has(v)) {
+                      callback('Template already exists')
+                    }
+                    callback()
+                  }
                 }
               ]
             })(<Input className={styles.minInput} key='input' />), <Icon onClick={this.toggleAddType} className={styles.workBtn} key="iconxia" type='iconxia' />]
@@ -245,12 +284,13 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                   <Select
                     allowClear
                     showSearch
+                    onChange={(val) => this.setPid(val)}
                     getPopupContainer={trigger => trigger.parentElement}
                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     className={styles.minInput}
                     key='select'
                   >
-                    {tmpSidebar.map(c => (
+                    {allTemplateInfo.map(c => (
                       <Select.Option value={c.id} key={c.id}>
                         {c.primary_name}
                       </Select.Option>

@@ -152,8 +152,11 @@ class RoleTable extends ComponentExt<IProps> {
                                         <a key='form' href="javascript:;" onClick={() => this.modifyRole(record)}>
                                             <Icon type="form" />
                                         </a>,
-                                        <Divider key='Divider' type="vertical" />
+
                                     ])
+                                }
+                                {
+                                    this.$checkAuth('Authorization-Role Manage-Delete&Authorization-Role Manage-Delete', (<Divider key='Divider' type="vertical" />))
                                 }
                                 {
                                     this.$checkAuth('Authorization-Role Manage-Delete', (

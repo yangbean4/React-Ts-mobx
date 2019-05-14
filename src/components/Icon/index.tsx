@@ -1,9 +1,13 @@
 import { Icon } from 'antd'
 import * as styles from './style.scss'
 import React, { MouseEvent, SFC } from 'react';
+
 const MyIcon = Icon.createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_1129208_cvxrfql4bdt.js', // 在 iconfont.cn 上生成
+  // scriptUrl: ""
+  scriptUrl: '//at.alicdn.com/t/font_1129208_435x0dvfmuu.js', // 在 iconfont.cn 上生成
 });
+
+
 
 interface IProps {
   type: string

@@ -1,5 +1,6 @@
 
 import http from '@services/http'
+import { tree } from '@views/Config/ConfigModal/choseSelectModal/index.scss';
 const basePath = '/api/templateDetail/'
 export default {
   getTemplates(data): Promise<any> {
@@ -19,5 +20,8 @@ export default {
   },
   batchAddTemplateDetail(data): Promise<any> {
     return http.post(`${basePath}batchAddTemplateDetail`, data)
+  },
+  templateDetailInUse(data): Promise<any> {
+    return http.post(`${basePath}templateDetailInUse`, data, { useRes: true })
   },
 }

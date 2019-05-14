@@ -137,6 +137,10 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     return objCaseName(editData)
   }
   @computed
+  get useEditDataKeySet() {
+    return new Set(this.useConfigList.map(ele => ele.key))
+  }
+  @computed
   get haveUseEditData() {
     return !!Object.keys(this.useEditData).length
   }
@@ -163,13 +167,13 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       })
 
     }
-    return target
+    return Object.keys(target).length ? target : editData || {}
 
   }
 
   @computed
   get fmtConfigList() {
-    const arr = (JSON.parse(JSON.stringify(this.props.addList)) || [])
+    const arr = (JSON.parse(JSON.stringify(this.props.addList)) || []).filter(ele => ele && ele.key)
     return arr.map(ele => {
       return {
         ...ele,
@@ -220,7 +224,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                 if (value_type === '4') {
                   let vv;
                   if (Array.isArray(value)) {
-                    vv = value.filter(mn => !!mn)
+                    vv = value.map(v => v.toString()).filter(mn => !!mn)
                   } else {
                     try {
                       const v = JSON.parse(value)
@@ -229,6 +233,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                       vv = [value || '']
                     }
                   }
+                  vv = vv.length ? vv : ['']
                   tt = { [key]: vv }
                 }
 
@@ -244,8 +249,9 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                 }
                 return tt
               })
-              //console.log(dataArr)
-              this.confirmModal ? this.props.onCancel(dataArr) : onSubmit(dataArr)
+              // console.log(dataArr)
+              onSubmit(dataArr)
+              // this.confirmModal ? this.props.onCancel(dataArr) : onSubmit(dataArr)
             } catch (error) {
               //console.log(error)
             }
@@ -314,30 +320,48 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   @action
   addConfigItem = (config?: conItem) => {
     //console.log('addConfigItem');
-    if (config) {
-      const index = this.useConfigList.findIndex(ele => ele.addId === config.addId);
-      const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
-      arr[index] = {
-        ...arr[index],
-        ...config,
-        isEdit: false
-      }
-      runInAction('UP_THIS_CONFIG_LIST', () => {
-        this.thisConfigList = arr
-      })
 
-      if (this.loading) {
-        // 是本组件触发的自组件提交
-        if (! --this.waitItemNum) {
-          this.submit()
-        }
-      }
-    } else {
+    const errorCb = () => {
       this.waitItemNum = 0
       // addConfigItem组件提交过程中出问题了 结束提交过程
       if (this.loading !== false) {
         this.toggleLoading(false)
       }
+    }
+    if (config) {
+      const index = this.useConfigList.findIndex(ele => ele.addId === config.addId);
+      const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
+      if (this.useEditDataKeySet.has(_nameCase(config.key))) {
+        this.$message.error(`${config.key} is exist!`)
+        errorCb()
+      } else {
+        arr[index] = {
+          ...arr[index],
+          ...config,
+          isEdit: false
+        }
+        runInAction('UP_THIS_CONFIG_LIST', () => {
+          this.thisConfigList = arr
+        })
+
+        if (this.loading) {
+          // 是本组件触发的自组件提交
+          if (! --this.waitItemNum) {
+            // 这里必须要用这个nexttick 保证页面中addconfigItem 从编辑状态转为configItem
+            // 这样的话 就能保证 submit时获取的数据没有从addconfigItem 直接过来的否则，在submit时会将这条addconfigItem
+            //过来的数据的转为 value:object //见if (addId) {
+            //当再次进入页面时导致需要渲染这条新增的数据对应的configItem-formItem 而此时formItem取initValue时取为Object
+
+            // 不要改就对了。。。。。
+            setImmediate(() => {
+              this.submit()
+            })
+          }
+        }
+      }
+
+    } else {
+      errorCb()
     }
   }
 
@@ -434,7 +458,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     //   this.nowHandelConfig.template_pid = data.template_pid,
     //     this.nowHandelConfig.templateId = data.templateId
     // })
-    this.props.getTemplateSelect(data.template_pid, true)
+    const pid = data.pid || data.template_pid
+    this.props.getTemplateSelect(pid, true)
     // TODO:!!!!!!!
     // const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
     // arr[this.nowHandelConfigIndex] = {
@@ -449,10 +474,22 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     // form.setFieldsValue({
     //   [key]: data.templateId,
     // });templateId
-    const { templateId, template_pid } = data
+
+    const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
+
+    const per = this.nowHandelConfig = {
+      ...this.nowHandelConfig,
+      ...data,
+      template_pid: pid,
+      default: data.templateId || data.value,
+    }
+    arr[this.nowHandelConfigIndex] = per
     runInAction('UP_THIS_CONFIG_LIST', () => {
-      this.nowHandelConfig.template_pid = template_pid
-      this.nowHandelConfig.default = templateId
+      this.thisConfigList = arr
+    })
+    console.log(arr)
+    runInAction('UP_THIS_CONFIG_LIST', () => {
+      this.nowHandelConfig = per
     })
   }
 
@@ -490,7 +527,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         })
       },
       onOk: () => {
-        this.submit()
+        this.props.onCancel(true)
         setImmediate(() => {
           this.confirmModal.destroy()
         })
@@ -508,7 +545,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         <Form className="dropZone" {...layout} onSubmit={this.submit}>
           {
             this.useConfigList.map((item, index, arr) => {
-              const _val = item.key ? this.useEditData[item.key] : undefined
+              let _val = item.key ? this.useEditData[item.key] : undefined
+              _val = typeOf(_val) === 'object' ? _val.value : _val
               return (
                 !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
                   <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>

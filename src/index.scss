@@ -19,14 +19,14 @@
 
   .center-table {
     table td {
-      text-align: center;
+      text-align: left;
     }
     .ant-table-thead {
       height: 50px;
       border-radius: 4px 4px 0px 0px;
     }
     .ant-table-thead > tr > th {
-      text-align: center;
+      text-align: left;
       background: rgba(234, 237, 255, 1);
     }
     .ant-table-tbody > tr > td {
@@ -36,5 +36,9 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+  }
+  .childLeftSearch > * {
+    float: left;
+    height: 40px !important;
   }
 }

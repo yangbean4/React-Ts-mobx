@@ -40,16 +40,14 @@ class TemplateSearch extends ComponentExt<IStoreProps & FormComponentProps> {
 
   constructor(props) {
     super(props)
-    autorun(
-      () => {
-        if (this.template_pid !== this.props.template_pid) {
-          this.template_pid = this.props.template_pid;
-          this.props.form.resetFields()
-          return true
-        }
-        return false
-      }
-    )
+    // autorun(
+    //   () => {
+    //     if (this.template_pid !== this.props.template_pid) {
+    //       this.template_pid = this.props.template_pid;
+    //       this.props.form.resetFields()
+    //     }
+    //   }
+    // )
   }
 
   @computed
@@ -82,30 +80,32 @@ class TemplateSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   }
 
   render() {
-    const { form } = this.props
-    const { getFieldDecorator } = form
+    const { getFieldDecorator } = this.props.form
+
     return (
       this.searchList.length ? (
-        <Form {...layout} onSubmit={this.submit}>
-          <Row>
-            {
-              this.searchList.map(item => (
-                <Col span={item.includes('name') ? 8 : span} key={item}>
-                  <FormItem key={item} className={item.includes('name') ? '' : 'minInput'} label={camelCase(item)}>
-                    {getFieldDecorator(item)(<Input />)}
-                  </FormItem>
-                </Col>
-              ))
-            }
-
-            <Col span={2} offset={1}>
-              <Button type="primary" htmlType="submit">Search</Button>
-            </Col>
-            <Col offset={1}>
-              <span id='templateAddBtn'>
-              </span>
-            </Col>
-          </Row>
+        <Form {...layout} onSubmit={this.submit} className='childLeftSearch'>
+          {
+            this.searchList.includes('template_name') &&
+            <FormItem label={camelCase('template_name')}>
+              {getFieldDecorator('template_name')(<Input />)}
+            </FormItem>
+          }
+          {
+            this.searchList.includes('template_md5') &&
+            <FormItem label={camelCase('template_md5')}>
+              {getFieldDecorator('template_md5')(<Input />)}
+            </FormItem>
+          }
+          {
+            this.searchList.includes('version') &&
+            <FormItem label={camelCase('version')}>
+              {getFieldDecorator('version')(<Input />)}
+            </FormItem>
+          }
+          <Button type="primary" className='addbtn-ml20 addbtn-mb20' onClick={() => this.submit()} >Search</Button>
+          <span id='templateAddBtn' className='addbtn-mb20'>
+          </span>
         </Form>
       )
         : null

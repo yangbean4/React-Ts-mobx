@@ -49,4 +49,8 @@ export default {
   editPID(data): Promise<any> {
     return http.post(`${basePath}editPid`, data)
   },
+
+  allTemplateInfo(): Promise<any> {
+    return http.post(`${basePath}template/allTemplateInfo`)
+  },
 }

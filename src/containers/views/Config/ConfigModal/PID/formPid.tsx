@@ -8,7 +8,7 @@ import { ComponentExt } from '@utils/reactExt'
 import Basic from '../Basic'
 import * as styles from './index.scss'
 import { value_typeOption } from './valueType'
-import { typeOf } from '@utils/index'
+import { typeOf, _nameCase } from '@utils/index'
 const FormItem = Form.Item
 
 const span = 2
@@ -28,6 +28,7 @@ interface IProps extends IStoreProps {
   data?: any[]
   onSubmit?: (data) => void
   onCancel?: () => void
+  pidList?: string[]
 }
 
 @inject(
@@ -58,9 +59,19 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
   @computed
   get addList() {
     const name = value_typeOption.find(ele => ele.value === this.usePid_type).phpKey
-    return (this.addConfigGroup[name] || []).filter(ele => {
+    let arr = (this.addConfigGroup[name] || []).filter(ele => {
       return ele.key !== 'pid_type' && ele.key !== 'placement_id'
     })
+    const dataKeyarr = this.usEeditData && typeOf(this.usEeditData) === 'object' ? Object.keys(this.usEeditData) : []
+    if (dataKeyarr.length) {
+      let cccc = dataKeyarr.map(key => {
+        console.log(arr.find(ele => _nameCase(ele.key) === _nameCase(key)), this.usEeditData[key])
+        return arr.find(ele => _nameCase(ele.key) === _nameCase(key)) || (typeOf(this.usEeditData[key]) === 'object' ? this.usEeditData[key] : null)
+      }).filter(ele => !!ele)
+      console.log(cccc)
+      return cccc
+    }
+    return arr
   }
   @computed
   get usEeditData() {
@@ -85,9 +96,13 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
   }
 
   submit = (data): void => {
-    const { onSubmit, form } = this.props
+    const { onSubmit, form, pidList } = this.props
     form.validateFields(
       async (err, values): Promise<any> => {
+        if (this.isAdd && pidList.includes(values.placement_id)) {
+          this.$message.error('Add failure!PID is already exist! ')
+          return
+        }
         if (!err) {
           this.toggleLoading()
           try {

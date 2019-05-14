@@ -11,7 +11,7 @@ export interface ICustom {
   status?: number
   primary_name?: string
   template_name?: string
-  config?: TemplateConfig | string
+  config?: TemplateConfig
 }
 export interface ICustomTree extends ICustom {
   children?: ITemplate[]

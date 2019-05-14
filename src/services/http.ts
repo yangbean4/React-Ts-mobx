@@ -68,7 +68,7 @@ methods.forEach(v => {
                 } else {
                     rdata = response.data
                 }
-                if (!isSuccess(rdata)) {
+                if (!isSuccess(rdata) && !useRes) {
                     const _err = {
                         msg: rdata.message || rdata.msg,
                         errCode: rdata.errCode,

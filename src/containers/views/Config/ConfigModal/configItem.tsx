@@ -104,7 +104,14 @@ class ConfigItem extends React.Component<IProps> {
 
   @computed
   get selectOptionList() {
-    return (this.props.TemplatesTarget[this.useSelectPid] || this.targetToChildren || [])
+    const arr = (this.props.TemplatesTarget[this.useSelectPid] || this.targetToChildren || [])
+    if (this.props.config.unit && this.props.config.option) {
+      return arr.concat(this.props.config.option.split(',').map(ele => ({
+        value: ele,
+        label: ele,
+      })))
+    }
+    return arr
   }
 
   @action
@@ -137,7 +144,7 @@ class ConfigItem extends React.Component<IProps> {
     }, [
         this.renderFormItem(),
         // value_type为5 时为radio unit是radio的待选项
-        value_type !== '5' ? React.createElement('span', { className: 'unit', key: 'unit' }, unit) : null
+        value_type !== '5' && value_type !== '7' ? React.createElement('span', { className: 'unit', key: 'unit' }, unit && unit.toLowerCase ? unit.toLowerCase() : unit) : null
       ])
   }
 
@@ -213,7 +220,7 @@ class ConfigItem extends React.Component<IProps> {
           filterOption: (input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0,
           // dropdownRender,
         }
-        const optionArr = this.useSelectPid ? this.selectOptionList :
+        const optionArr = this.useSelectPid || config.unit ? this.selectOptionList :
           typeOf(option) === 'array' ? option.map((ele, index) => {
             if (typeOf(ele) === 'object') {
               const {
@@ -230,7 +237,7 @@ class ConfigItem extends React.Component<IProps> {
             }
           })
             : typeOf(option) === 'object' ? Object.entries(option).map(([key, value]) => ({ label: value, value: key }))
-              : JSON.parse(option || '[]')
+              : JSON.parse(option || '[]') || []
         children = optionArr.map((c, i) => (
           <Select.Option key={c.label + i} value={c.value}>
             {c.label}
@@ -251,6 +258,7 @@ class ConfigItem extends React.Component<IProps> {
             vv = [value || '']
           }
         }
+        vv = vv.length ? vv.map(ele => ele.toString()) : ['']
 
         addProp = {
           value: vv,
@@ -280,15 +288,15 @@ class ConfigItem extends React.Component<IProps> {
         })
 
         // 这是一段垃圾代码，把后端返回的unit转成待选项 有yes  或 on  切只有两个是 这个对应1 另一个对应0 -----TMD垃圾
-        if (arr.length === 2 && (option.toLowerCase().includes('on') || option.toLowerCase().includes('yes'))) {
-          arr = arr.map(item => {
-            const { label } = item
-            return {
-              label: label,
-              value: + (label.toLowerCase().includes('on') || label.toLowerCase().includes('yes')),
-            }
-          })
-        }
+        // if (arr.length === 2 && (option.toLowerCase().includes('on') || option.toLowerCase().includes('yes'))) {
+        //   arr = arr.map(item => {
+        //     const { label } = item
+        //     return {
+        //       label: label,
+        //       value: + (label.toLowerCase().includes('on') || label.toLowerCase().includes('yes')),
+        //     }
+        //   })
+        // }
         children = arr.map((c, i) => (
           <Radio key={c.value + c.label} value={c.value}>
             {c.label}

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Table, Divider, Modal, Icon, Button, message } from 'antd'
 import { PaginationConfig } from 'antd/lib/pagination'
 import { inject, observer } from 'mobx-react'
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, runInAction } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
 import MyIcon from '@components/Icon'
@@ -55,6 +55,9 @@ class TemplateTable extends ComponentExt<IProps> {
     @observable
     private currentTemplate: ITemplateStore.ITemplate = null
 
+    @observable
+    private delUsed: boolean
+
     @computed
     get list_filed() {
         return this.props.templateConfig.list_filed
@@ -84,9 +87,21 @@ class TemplateTable extends ComponentExt<IProps> {
     }
 
     @action
-    deleteModel = (template: ITemplateStore.ITemplate) => {
-        this.delTemplate = template
-        this.hideDelModalVisible()
+    setDelUsed = (type) => {
+        this.delUsed = type
+    }
+
+    @action
+    deleteModel = async (template: ITemplateStore.ITemplate) => {
+        const res = await this.api.template.templateDetailInUse({ id: template.id })
+
+        this.setDelUsed(res.data.errorcode !== 0)
+        runInAction('sert', () => {
+            this.delTemplate = template
+        })
+        setImmediate(() => {
+            this.hideDelModalVisible()
+        })
     }
 
     handelOk = async () => {
@@ -109,19 +124,25 @@ class TemplateTable extends ComponentExt<IProps> {
             <React.Fragment>
                 <Modal
                     title="Delete"
+                    // destroyOnClose
                     width={400}
                     visible={this.delModalVisible}
                     onCancel={this.hideDelModalVisible}
                     // onOk={() => deleteTemplate(this.delTemplate.id)}
-                    footer={[
-                        <Button key="submit" type="primary" onClick={this.handelOk}>
-                            Yes
+                    footer={
+                        this.delUsed ? <Button key="back" onClick={this.hideDelModalVisible}>Yes</Button> : [
+                            <Button key="submit" type="primary" onClick={this.handelOk}>
+                                Yes
                       </Button>,
-                        <Button key="back" onClick={this.hideDelModalVisible}>No</Button>
-                    ]}
+                            <Button key="back" onClick={this.hideDelModalVisible}>No</Button>
+                        ]}
                 >
 
-                    <p> Sure to delete {this.delTemplate.template_name}?</p>
+                    {
+                        this.delUsed ?
+                            <p>It’s in use. Please remove the corresponding relation before deleting it!</p>
+                            : <p> Sure to delete {this.delTemplate.template_name}?</p>
+                    }
                 </Modal>
 
                 <Table<ITemplateStore.ITemplate>

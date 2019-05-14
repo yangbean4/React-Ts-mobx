@@ -13,6 +13,9 @@ export class ConfigStore extends StoreExt {
     targetConfig: IConfigStore.IConfigTarget
 
     @observable
+    allTemplateInfo: ICustomStore.ICustomTree[] = []
+
+    @observable
     page: number = 1
     /**
      * table pageSize
@@ -82,6 +85,23 @@ export class ConfigStore extends StoreExt {
         this.configsList = []
     }
 
+    @action
+    fullTemplateAll = async () => {
+        if (this.allTemplateInfo.length) {
+            return
+        }
+        let data = []
+        try {
+            const res = await this.api.config.allTemplateInfo()
+            data = res.data
+        } catch (error) {
+
+        }
+        runInAction('SET_TEMP_TREE', () => {
+            this.allTemplateInfo = data
+        })
+
+    }
 
     @action
     getConfigsList = async () => {

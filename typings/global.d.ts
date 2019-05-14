@@ -32,5 +32,8 @@ declare interface TemplateConfig {
     list_filed?: {
         operate?: operate
     }
-    add_filed?: object
+    add_filed?: {
+        version?: string | number
+        template_md5?: string | number
+    }
 }

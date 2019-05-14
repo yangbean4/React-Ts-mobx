@@ -17,21 +17,86 @@
   }
 }
 
+:global {
+  .ant-menu {
+    & > .ant-menu-submenu {
+      //最大的
+      & > .ant-menu-submenu-title {
+        //config
+        padding-left: 10px !important;
+      }
+      & > .ant-menu {
+        //config 子
+        & > .ant-menu-item {
+          //Config Manage
+          padding-left: 37px !important;
+          & > .ant-menu-submenu-title {
+            //
+            padding-left: 0px !important;
+          }
+          & > .ant-menu-submenu {
+            padding-left: 37px !important;
+          }
+        }
+        & > .ant-menu-submenu {
+          //
+          padding-left: 37px !important;
+          & > .ant-menu-submenu-title {
+            padding-left: 0 !important;
+          }
+          & > .ant-menu {
+            .ant-menu-submenu {
+              padding-left: 10px !important;
+            }
+            .ant-menu-item {
+              padding-left: 10px !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
 .menu {
   flex: 1;
   :global(.ant-menu-sub) {
     box-shadow: unset !important;
   }
-  :global(ul ul > li) {
-    :global(div) {
-      padding-left: 0px !important;
-    }
-    :global(ul li) {
-      padding-left: 12px !important;
-    }
+  // :global {
+  //   .mymenu.ant-menu {
+  //     & > .ant-menu-submenu {
+  //       & > .ant-menu-submenu-title {
+  //         padding-left: 10px !important;
+  //       }
+  //       .ant-menu {
+  //         // & > .ant-menu-submenu-title {
+  //         //   padding-left: 10px !important;
+  //         // }
+  //         & > .ant-menu-item {
+  //           padding-left: 37px !important;
+  //           background: red;
+  //           & > .ant-menu-submenu-title {
+  //             padding-left: 0px !important;
+  //           }
+  //           & > .ant-menu-item {
+  //             padding-left: 47px !important;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
-    padding-left: 60px !important;
-  }
+  // :global(ul ul > li) {
+  //   :global(div) {
+  //     padding-left: 0px !important;
+  //   }
+  //   :global(ul li) {
+  //     padding-left: 12px !important;
+  //   }
+
+  //   padding-left: 60px !important;
+  // }
 }
 
 .sideBarIcon {

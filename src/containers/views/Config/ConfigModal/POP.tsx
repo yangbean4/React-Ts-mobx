@@ -34,7 +34,8 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
         if (!err) {
           this.toggleLoading()
           try {
-            this.confirmModal ? this.props.onCancel(values) : onSubmit(values)
+            // this.confirmModal ? this.props.onCancel(values) : onSubmit(values)
+            onSubmit(values)
           } catch (err) { }
           this.toggleLoading()
         }
@@ -54,7 +55,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
         })
       },
       onOk: () => {
-        this.submit()
+        this.props.onCancel(true)
         setImmediate(() => {
           this.confirmModal.destroy()
         })
@@ -71,8 +72,8 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
       marked_text = '',
       marked_button_up = '',
       marked_button_down = '',
-      unavaiab_marked_words_up = '',
-      unavaiab_marked_words_down = '',
+      unavaiab_marked_words_up = 'Oops ! Connection failed',
+      unavaiab_marked_words_down = 'Try later or download now',
       unavaiab_marked_text = '',
       pl_text = ''
     } = editData || {}
@@ -86,7 +87,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                 <div className="li">
                   <Form.Item>
                     {getFieldDecorator('unavaiab_marked_words_up', {
-                      initialValue: unavaiab_marked_words_up,
+                      initialValue: unavaiab_marked_words_up || 'Oops ! Connection failed',
                       rules: [
                         {
                           required: true, message: "Required"
@@ -98,7 +99,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                 <div className="li">
                   <Form.Item>
                     {getFieldDecorator('unavaiab_marked_words_down', {
-                      initialValue: unavaiab_marked_words_down,
+                      initialValue: unavaiab_marked_words_down || 'Try later or download now',
                       rules: [
                         {
                           required: true, message: "Required"
@@ -120,7 +121,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                     <div className="bottom">
                       <Form.Item>
                         {getFieldDecorator('unavaiab_marked_text', {
-                          initialValue: unavaiab_marked_text,
+                          initialValue: unavaiab_marked_text || 'Download',
                           rules: [
                             {
                               required: true, message: "Required"
@@ -152,7 +153,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                     <div className="bottom">
                       <Form.Item>
                         {getFieldDecorator('marked_text', {
-                          initialValue: marked_text,
+                          initialValue: marked_text || 'Download',
                           rules: [
                             {
                               required: true, message: "Required"
@@ -167,7 +168,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                 <div className="li">
                   <Form.Item>
                     {getFieldDecorator('marked_words_up', {
-                      initialValue: marked_words_up,
+                      initialValue: marked_words_up || 'Win %s %s now!',
                       rules: [
                         {
                           required: true, message: "Required"
@@ -179,7 +180,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                 <div className="li">
                   <Form.Item>
                     {getFieldDecorator('marked_words_down', {
-                      initialValue: marked_words_down,
+                      initialValue: marked_words_down || 'Return to game for rewards?',
                       rules: [
                         {
                           required: true, message: "Required"
@@ -192,7 +193,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                   <div className="flbtn btn">
                     <Form.Item>
                       {getFieldDecorator('marked_button_up', {
-                        initialValue: marked_button_up,
+                        initialValue: marked_button_up || 'Yes',
                         rules: [
                           {
                             required: true, message: "Required"
@@ -204,7 +205,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                   <div className="frbtn btn">
                     <Form.Item>
                       {getFieldDecorator('marked_button_down', {
-                        initialValue: marked_button_down,
+                        initialValue: marked_button_down || 'Quit',
                         rules: [
                           {
                             required: true, message: "Required"
@@ -235,7 +236,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                     <div className="bottom">
                       <Form.Item>
                         {getFieldDecorator('pl_text', {
-                          initialValue: pl_text,
+                          initialValue: pl_text || 'Download',
                           rules: [
                             {
                               required: true, message: "Required"

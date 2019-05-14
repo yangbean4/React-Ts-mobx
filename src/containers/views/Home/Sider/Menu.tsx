@@ -208,7 +208,7 @@ class SiderMenu extends ComponentExt<IStoreProps> {
         }
         return (
             <Menu
-                className={styles.menu}
+                className={styles.menu + ' mymenu'}
                 theme='dark'
                 mode="inline"
                 selectedKeys={selectedKeys}

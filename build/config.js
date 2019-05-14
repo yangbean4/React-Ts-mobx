@@ -16,7 +16,7 @@ module.exports = {
     assetsRoot: path.resolve(__dirname, `./../../public/dist`),
 
     assetsPublicPath: constants.APP_ENV === 'dev' ? '/' : `${STATICDOMAIN}/`,
-    assetsSubDirectory: '../',
+    assetsSubDirectory: constants.APP_ENV === 'dev' ? 'static' : '../',
     // domain for workbox
     indexDomain: INDEX_DOMAIN,
     // id you use CDN, change it!!!

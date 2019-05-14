@@ -61,7 +61,19 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
     private loading: boolean = false
 
     @observable
-    private hasVersion: boolean = false
+    private hasVersion: boolean
+
+    @computed
+    get useHasVersion() {
+        return this.hasVersion !== undefined ? this.hasVersion : !this.props.custom ? false : this.props.custom.config.add_filed.version == 1
+    }
+
+    @observable
+    private hasMd5: boolean
+
+    get useHasMd5() {
+        return this.hasMd5 !== undefined ? this.hasMd5 : !this.props.custom ? false : this.props.custom.config.add_filed.template_md5 == 1
+    }
 
     @observable
     private checkedKeys: string[] = []
@@ -195,7 +207,7 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
             {
                 label: camelCase(key),
                 value: key,
-                disabled: !!disabled[group][key] || (!this.hasVersion && key === 'version' && group !== 'add_filed')
+                disabled: !!disabled[group][key] || (((!this.useHasVersion && key === 'version') || (!this.useHasMd5 && key === 'template_md5')) && group !== 'add_filed')
             }
         ))
     }
@@ -211,7 +223,7 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
                 </TreeNode>
             );
         }
-        const dis = !!disabled.list_filed[key] || (!this.hasVersion && _key === 'version')
+        const dis = !!disabled.list_filed[key] || (!this.useHasVersion && _key === 'version') || (!this.useHasMd5 && _key === 'template_md5')
         return <TreeNode title={camelCase(_key)} key={key} disabled={dis} />
     })
 
@@ -222,24 +234,45 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
     checkChange = (e, key) => {
         if (key === 'add_filed') {
             const hasVersion = e.includes('version')
-            if (hasVersion !== this.hasVersion) {
+            const hasMd5 = e.includes('template_md5')
+
+            if (hasVersion !== this.useHasVersion) {
                 runInAction('SET_V', () => {
                     this.hasVersion = hasVersion
                 })
-            }
-            if (!hasVersion) {
-                const { getFieldValue, setFieldsValue } = this.props.form
-                const { add_filed, search_filed } = getFieldValue('config')
-                setFieldsValue(
-                    {
-                        config: {
-                            add_filed,
-                            search_filed: this.split(search_filed, 'version'),
+                if (!hasVersion) {
+                    const { getFieldValue, setFieldsValue } = this.props.form
+                    const { add_filed, search_filed } = getFieldValue('config')
+                    setFieldsValue(
+                        {
+                            config: {
+                                add_filed,
+                                search_filed: this.split(search_filed, 'version'),
+                            }
                         }
-                    }
-                )
-                this.setCheckedKeys(this.split(this.useCheckedKeys, 'version'));
+                    )
+                    this.setCheckedKeys(this.split(this.useCheckedKeys, 'version'));
+                }
             }
+            if (hasMd5 !== this.useHasMd5) {
+                runInAction('SET_V', () => {
+                    this.hasMd5 = hasMd5
+                })
+                if (!hasMd5) {
+                    const { getFieldValue, setFieldsValue } = this.props.form
+                    const { add_filed, search_filed } = getFieldValue('config')
+                    setFieldsValue(
+                        {
+                            config: {
+                                add_filed,
+                                search_filed: this.split(search_filed, 'template_md5'),
+                            }
+                        }
+                    )
+                    this.setCheckedKeys(this.split(this.useCheckedKeys, 'template_md5'));
+                }
+            }
+
         }
     }
     onCancel = () => {

@@ -7,6 +7,19 @@ import MyIcon from '@components/Icon'
 import FormPid from './formPid'
 import { value_typeOption } from './valueType'
 
+
+const likeArray2obj = (res) => {
+  let arr = {}
+  Object.keys(res).forEach(ele => {
+    arr = Object.assign(arr, res[ele])
+  })
+  return arr
+}
+
+const isLikeArray = (res: object) => {
+  return res && Object.keys(res).every(key => !isNaN(Number(key)))
+}
+
 interface pidItem {
   placement_id?: string
   pid_type?: string | number
@@ -19,28 +32,35 @@ interface TableProps {
 }
 
 @observer
-class PidTable extends React.Component<TableProps> {
+class PidTable extends ComponentExt<TableProps> {
+
+  private confirmModal
+
+  onDelete = (index) => [
+    this.confirmModal = Modal.confirm({
+      okText: 'Yes',
+      cancelText: 'No',
+      content: 'Sure to delete the PID config set?',
+      onCancel: () => {
+        this.confirmModal.destroy()
+      },
+      onOk: () => {
+        this.props.onDelete(index)
+        this.confirmModal.destroy()
+      }
+    })
+  ]
 
   render() {
     const { data, onDelete, onEdit } = this.props;
-    const useData = data.map(ele => {
-      if (Array.isArray(ele)) {
-        let targrt = {}
-        ele.forEach(ele => {
-          targrt = { ...targrt, ...ele }
-        })
-        return targrt
-      } else {
-        return ele
-      }
-    })
+
     return (
       <Table<pidItem>
         className="center-table"
         style={{ width: '100%' }}
         bordered
         rowKey={(row) => row.placement_id + row.pid_type}
-        dataSource={useData}
+        dataSource={data}
         scroll={{ y: scrollY }}
       >
         <Table.Column<pidItem>
@@ -65,7 +85,7 @@ class PidTable extends React.Component<TableProps> {
               </a>
               <Divider type="vertical" />
 
-              <a href="javascript:;" onClick={() => onDelete(index)}>
+              <a href="javascript:;" onClick={() => this.onDelete(index)}>
                 <MyIcon type='iconshanchu' />
               </a>
             </span>
@@ -82,6 +102,7 @@ interface IProps {
   onCancel: (data?) => void
   onSubmit: (data) => Promise<any>
   editData: any[]
+  configId?: string
 }
 
 
@@ -113,6 +134,21 @@ class PID extends ComponentExt<IProps> {
     return this.thisDataList || this.editData
   }
 
+  @computed
+  get tableData() {
+    return this.useData.map(ele => {
+
+      if (Array.isArray(ele)) {
+        ele = { ...ele }
+      }
+      if (isLikeArray(ele)) {
+        return likeArray2obj(ele)
+      } else {
+        return ele
+      }
+    })
+  }
+
   @action
   toggleIsTable = () => {
     this.isTable = !this.isTable
@@ -131,7 +167,8 @@ class PID extends ComponentExt<IProps> {
   submit = () => {
     const { onSubmit } = this.props
     this.toggleLoading()
-    this.confirmModal ? this.props.onCancel(this.useData) : onSubmit(this.useData)
+    // this.confirmModal ? this.props.onCancel(this.useData) : onSubmit(this.useData)
+    onSubmit(this.useData)
     this.toggleLoading()
   }
 
@@ -143,15 +180,31 @@ class PID extends ComponentExt<IProps> {
   }
 
 
-  pidFormSubmit = (data) => {
-    const arr: pidItem[] = JSON.parse(JSON.stringify(this.useData))
-    if (this.handelIndex !== undefined) {
-      arr.splice(this.handelIndex, 1, data)
-    } else {
-      arr.push(data)
+  pidFormSubmit = async (data) => {
+    const okCb = () => {
+      const arr: pidItem[] = JSON.parse(JSON.stringify(this.useData))
+      if (this.handelIndex !== undefined) {
+        arr.splice(this.handelIndex, 1, data)
+      } else {
+        arr.push(data)
+      }
+      this.setThisDataList(arr)
+      this.toggleIsTable()
     }
-    this.setThisDataList(arr)
-    this.toggleIsTable()
+    if (this.props.configId) {
+      const res = await this.api.config.editPID({
+        config_deploy_id: this.props.configId,
+        type: likeArray2obj(data)['pid_type'],
+        pid: [data]
+      })
+      if (res.errorcode === 0) {
+        okCb()
+      }
+    } else {
+      okCb()
+    }
+
+
   }
 
   editPid = (index?) => {
@@ -159,7 +212,7 @@ class PID extends ComponentExt<IProps> {
     if (index === undefined) {
       this.GJB = [];
     } else {
-      this.GJB = this.useData[index]
+      this.GJB = this.tableData[index]
     }
     this.toggleIsTable()
   }
@@ -181,7 +234,7 @@ class PID extends ComponentExt<IProps> {
         })
       },
       onOk: () => {
-        this.submit()
+        this.props.onCancel(true)
         setImmediate(() => {
           this.confirmModal.destroy()
         })
@@ -195,15 +248,16 @@ class PID extends ComponentExt<IProps> {
       <div className='PID'>
         {
           this.isTable ? <div className="tableBox">
-            <Button type="primary" onClick={() => this.editPid()}>+ Add</Button>
+            <Button type="primary" className='addbtn-mb20' onClick={() => this.editPid()}>+ Add</Button>
 
-            <PidTable data={this.useData} onEdit={this.editPid} onDelete={this.deletePid} />
+            <PidTable data={this.tableData} onEdit={this.editPid} onDelete={this.deletePid} />
             <Button type="primary" className='submitBtn' onClick={this.submit}>Submit</Button>
             <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
           </div> : <div className="formBox">
               <FormPid
                 data={this.GJB}
                 onCancel={this.toggleIsTable}
+                pidList={this.tableData.map(ele => ele.placement_id)}
                 onSubmit={this.pidFormSubmit} />
             </div>
         }

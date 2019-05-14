@@ -31,13 +31,16 @@ interface IStoreProps {
     routerStore?: RouterStore
     targetConfig?: IConfigStore.IConfigTarget
     submitConfig?: (data) => Promise<any>
+    setTargetConfig?: (con?: IConfigStore.IConfigTarget) => void
+    getSidebar?: () => Promise<any>
 }
 
 @inject(
     (store: IStore): IStoreProps => {
-        const { routerStore, configStore } = store
-        const { getConfigsList, changeFilter, targetConfig, submitConfig } = configStore
-        return { getConfigsList, changeFilter, routerStore, targetConfig, submitConfig }
+        const { routerStore, configStore, authStore } = store
+        const { getSidebar } = authStore
+        const { getConfigsList, changeFilter, targetConfig, submitConfig, setTargetConfig } = configStore
+        return { getConfigsList, changeFilter, routerStore, targetConfig, submitConfig, setTargetConfig, getSidebar }
     }
 )
 @observer
@@ -72,7 +75,11 @@ class ConfigModal extends ComponentExt<IStoreProps> {
 
     @computed
     get useTargetConfig() {
-        return this.props.targetConfig || this.localConfig
+        if (!this.props.targetConfig) {
+            // this.props.setTargetConfig(this.localConfig)
+            return this.localConfig
+        }
+        return this.props.targetConfig
     }
 
     @computed
@@ -94,6 +101,12 @@ class ConfigModal extends ComponentExt<IStoreProps> {
         }
     }
 
+    componentDidMount() {
+        if (!this.props.targetConfig) {
+            this.props.setTargetConfig(this.localConfig)
+        }
+    }
+
 
     @action
     saveData = (value) => {
@@ -106,17 +119,25 @@ class ConfigModal extends ComponentExt<IStoreProps> {
     @action
     onSubmit = async (value) => {
         this.saveData(value)
+
         if (this.useTargetConfig.config_deploy_id) {
             const kpi = `edit${this.activeKey}`
-            await this.api.config[kpi](
+            const res = await this.api.config[kpi](
                 {
                     config_deploy_id: this.useTargetConfig.config_deploy_id,
-                    [this.activeKey.toLowerCase()]: value
+                    [this.activeKey.toLowerCase()]: value,
+                    type: this.activeKey === 'PID' ? 0 : undefined
                 }
             )
+            this.$message.success(res.message)
+            this.props.getSidebar()
+            // await this.initDetail(this.useTargetConfig.config_deploy_id)
         } else if (this.activeIndex === tabArr.length - 1) {
-            await this.props.submitConfig({ ...this.editData, ...this.useTargetConfig })
+            const res = await this.props.submitConfig({ ...this.editData, ...this.useTargetConfig })
+            this.$message.success(res.message)
+            this.props.getSidebar()
         }
+
         if (this.activeIndex === tabArr.length - 1) {
             this.props.routerStore.push('/config')
         } else {
@@ -179,11 +200,12 @@ class ConfigModal extends ComponentExt<IStoreProps> {
                 onCancel: this.goBack,
                 onSubmit: this.onSubmit,
                 editData: this.editData[key],
+                configId: this.useTargetConfig.config_deploy_id,
                 // ----多传两个props
                 type: key.toLowerCase(),
                 activeKey: this.activeKey.toLowerCase(),
                 // ----用于拖动是判断是否是当前
-                addList: this.addConfigGroup[key],
+                addList: !this.useTargetConfig.config_deploy_id ? this.addConfigGroup[key] : [].concat(this.addConfigGroup['basic1'], this.addConfigGroup['basic2']),
             }
             return props
         }
@@ -211,7 +233,7 @@ class ConfigModal extends ComponentExt<IStoreProps> {
                 this.setDelCacheKey('')
             })
         } else {
-            this.saveData(value)
+            // this.saveData(value)
         }
         this.onCancel()
     }

@@ -20,6 +20,7 @@ export const asynchronousComponents = {
     UserModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/Users/UserModal')),
     RoleModal: loadComponent(() => import(/* webpackChunkName: "RoleModal" */ '@views/Role/RoleModal')),
     PermissionModal: loadComponent(() => import(/* webpackChunkName: "PermissionModal" */ '@views/Permission/PermissionModal')),
+    Test: loadComponent(() => import(/* webpackChunkName: "Test" */ '@views/Test/useEffrct.js')),
 }
 
 // 所有路由的key
@@ -280,6 +281,13 @@ const addRouter: IRouter[] = [
         component: 'Logs',
         isMenu: false
     },
+    {
+        id: 4003,
+        path: '/test',
+        title: 'ggg',
+        component: 'Test',
+        isMenu: false
+    }
 ]
 
 export const router: IRouter[] = [...menuMap, ...addRouter]

@@ -109,7 +109,7 @@ class ConfigTable extends ComponentExt<IProps> {
                 this.hideRoleModalVisible()
                 break;
             case 'copy':
-                this.setTargetConfig({ ...this.targetConfig, config_version: copyTo })
+                this.setTargetConfig({ ...this.targetConfig, config_version: copyTo, is_duplicate: 1 })
                 this.goEdit(id, copyTo ? `?copyTo=${copyTo}` : undefined)
                 break;
             case 'edit':
@@ -139,9 +139,10 @@ class ConfigTable extends ComponentExt<IProps> {
 
     @action
     setTargetConfig(config, id?) {
-        const { pkg_name, platform, config_version, versionArr = [] } = config
+        const { pkg_name, platform, config_version, versionArr = [], is_duplicate = 0 } = config
         const ver = id === undefined ? undefined : versionArr.find(item => item.id === id).version
         const gg = {
+            is_duplicate,
             pkg_name, platform, config_version: ver || config_version, config_deploy_id: id ? Number(id) : id
         }
         this.props.setTargetConfig(gg)
@@ -235,7 +236,7 @@ class ConfigTable extends ComponentExt<IProps> {
                     <Table.Column<IConfigStore.IConfig> key="platform" title="Platform" dataIndex="platform" width={200} />
                     <Table.Column<IConfigStore.IConfig>
                         key="totalConfig"
-                        title="Config Version Nunmber"
+                        title="Config Version Number"
                         width={200}
                         dataIndex="totalConfig"
                         render={(_, record) => (
@@ -283,8 +284,13 @@ class ConfigTable extends ComponentExt<IProps> {
                                         <a href="javascript:;" key='btn-edit' onClick={() => this.viewModel('edit', record)}>
                                             <Icon type="form" />
                                         </a>,
-                                        <Divider key='Divider1' type="vertical" />
                                     ])
+                                }
+
+                                {
+                                    this.$checkAuth('Config Manage-Config Manage-Add|Config Manage-Config Manage-Delete', (
+                                        <Divider key='Divider1' type="vertical" />
+                                    ))
                                 }
 
 
@@ -293,8 +299,13 @@ class ConfigTable extends ComponentExt<IProps> {
                                         <a href="javascript:;" key='copy' onClick={() => this.viewModel('copy', record)}>
                                             <MyIcon type="iconfuzhi" />
                                         </a>,
-                                        <Divider key='Divider2' type="vertical" />
                                     ])
+                                }
+
+                                {
+                                    this.$checkAuth('Config Manage-Config Manage-Add&Config Manage-Config Manage-Delete', (
+                                        <Divider key='Divider2' type="vertical" />
+                                    ))
                                 }
                                 {
                                     this.$checkAuth('Config Manage-Config Manage-Delete', (

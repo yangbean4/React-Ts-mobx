@@ -147,12 +147,13 @@ class UserTable extends ComponentExt<IProps> {
                                 {
                                     this.$checkAuth('Authorization-User Manage-Edit', [
                                         (<a key='form' href="javascript:;" onClick={() => this.modifyUser(record)}>
-                                        <Icon type="form" />
-                                    </a>),
-                                        <Divider key='Divider' type="vertical" />
-                                ])
+                                            <Icon type="form" />
+                                        </a>)
+                                    ])
                                 }
-
+                                {
+                                    this.$checkAuth('Authorization-User Manage-Edit&Authorization-User Manage-Delete', (<Divider key='Divider' type="vertical" />))
+                                }
                                 {
                                     this.$checkAuth('Authorization-User Manage-Delete', (
                                         <a href="javascript:;" onClick={() => this.deleteModel(record)}>

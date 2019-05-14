@@ -72,20 +72,25 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
     const { form } = this.props
     form.validateFields(
       async (err, values): Promise<any> => {
-        const cb = () => {
-          this.props.onOk(values)
-          this.props.form.resetFields()
+        let per = values;
+        per.config_version = per.config_version ? `V${per.config_version}` : per.config_version
+        per.copyTo = per.copyTo ? `V${per.copyTo}` : per.copyTo
 
+        const cb = () => {
+
+
+          this.props.onOk(per)
+          this.props.form.resetFields()
         }
         if (!err) {
-          if (this.props.type === 'copy' && this.props.targetConfig.versionArr.find(ele => ele.version === values.copyTo)) {
-            this.$message.error(`${values.copyTo} is already exist!`)
+          if (this.props.type === 'copy' && this.props.targetConfig.versionArr.find(ele => ele.version === per.copyTo)) {
+            this.$message.error(`${per.copyTo} is already exist!`)
             this.toggleLoading(false)
             return
           }
           if (this.props.type === 'add') {
             try {
-              await this.api.config.checkConfig(values)
+              await this.api.config.checkConfig(per)
               cb()
             } catch (error) {
               this.toggleLoading(false)

@@ -210,13 +210,16 @@
     :global(.gouSelect .ant-select) {
       display: inline-block;
       margin-left: 14px;
-      width: calc(100% - 150px);
+      // width: calc(100% - );
     }
     :global(.redioGroup) {
       float: left;
       display: inline-block;
       height: 100%;
       width: max-content;
+      :global(.ant-input) {
+        width: 140px;
+      }
     }
 
     // :global(.addItem) {

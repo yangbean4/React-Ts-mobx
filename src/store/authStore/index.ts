@@ -36,7 +36,7 @@ export class AuthStore extends StoreExt {
     captcha: string = `${process.env.BASEURL}//captcha/url`
 
     @observable
-    tmpSidebar: IAuthStore.Sidebar[]
+    tmpSidebar: IAuthStore.Sidebar[] = []
 
     @action
     getCaptcha = (): void => {
@@ -99,18 +99,19 @@ export class AuthStore extends StoreExt {
     @action
     initUserInfo = (): IAuthStore.UserInfo => {
         const lcoalUserInfo = localStorage.getItem(LOCALSTORAGE_KEYS.USERINFO)
-        const lcoalSidebar = localStorage.getItem(LOCALSTORAGE_KEYS.SIDEBAR)
+        // const lcoalSidebar = localStorage.getItem(LOCALSTORAGE_KEYS.SIDEBAR)
         if (!lcoalUserInfo) {
             throw new Error('no local userinfo!!')
         }
         const userInfo: IAuthStore.UserInfo = JSON.parse(lcoalUserInfo)
         this.setUserInfo(userInfo)
-        if (!lcoalSidebar) {
-            this.getSidebar()
-        } else {
-            const sidebar: IAuthStore.Sidebar[] = JSON.parse(lcoalSidebar)
-            this.tmpSidebar = sidebar
-        }
+        // if (!lcoalSidebar) {
+        //     this.getSidebar()
+        // } else {
+        //     const sidebar: IAuthStore.Sidebar[] = JSON.parse(lcoalSidebar)
+        //     this.tmpSidebar = sidebar
+        // }
+        this.getSidebar()
 
         return userInfo
     }

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { observable, action, runInAction, when, autorun, computed } from 'mobx'
-import { Form, Input, Row, Col, Button, Select, Radio } from 'antd'
+import { Form, Input, Row, Col, Button, Select, Radio, Divider, Icon } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import { value_typeOption } from '../as.config'
@@ -82,7 +82,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
   get useSelectPid() {
     if (this.props.config.default) {
       const target = this.firstTmpArr.find(ele => ele.id === this.props.config.default) || {}
-      return target.pid
+      return target.pid || this.props.config.template_pid
     } else {
       return this.props.config.template_pid
     }
@@ -90,7 +90,14 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
 
   @computed
   get selectOptionList() {
-    return (this.props.TemplatesTarget[this.useSelectPid] || [])
+    const arr = (this.props.TemplatesTarget[this.useSelectPid] || [])
+    if (this.props.config.unit && this.props.config.option) {
+      return arr.concat(this.props.config.option.split(',').map(ele => ({
+        value: ele,
+        label: ele,
+      })))
+    }
+    return arr
   }
 
   constructor(props) {
@@ -149,7 +156,12 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
           this.toggleLoading()
           try {
             const dd = values.value_type === '4' ? values.default.filter(ele => !!ele) : values.default
+
             data = { ...config, ...values, default: dd }
+            data.key = data.key.trim().replace(' ', '_')
+            if (Array.isArray(data.option) && data.value_type === '5') {
+              data.option = data.option.join(',')
+            }
           } catch (err) {
             //console.log(err)
           }
@@ -166,7 +178,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
       this.valueType = value
     })
     this.props.form.setFieldsValue({
-      default: undefined
+      default: value === '4' ? [''] : undefined
     })
   }
 
@@ -204,7 +216,6 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
 
       case '2':
         const value = this.props.form.getFieldValue('default');
-
         return (<Col span={4} key='default'>
           <FormItem {...layout}>
             <div>
@@ -233,7 +244,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
 
             {
               getFieldDecorator('default', {
-                initialValue: vv,
+                initialValue: vv || [''],
               })(<InputGroup />)
               // value={vv} onChange={this.InputGroupChange}
             }
@@ -243,10 +254,22 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
       case '3'://select
         return (<Col span={8} key='default'>
           <FormItem {...layout} className='gouSelect'>
-            <Button onDoubleClick={this.choseSelect} key='Button' type="dashed">edit Select</Button>
+            {/* <Button onDoubleClick={this.choseSelect} key='Button' type="dashed">edit Select</Button> */}
             {getFieldDecorator('default', {
               initialValue: config.default,
             })(<Select
+              dropdownRender={
+                menu => (
+                  <div>
+                    {menu}
+                    <Divider key='Divider' style={{ margin: '4px 0' }} />
+                    <div key='more-box' onMouseDown={e => { e.preventDefault(); }}
+                      onClick={() => this.choseSelect()} style={{ padding: '8px', cursor: 'pointer' }}>
+                      <Icon type="plus" /> edit Select
+                      </div>
+                  </div>
+                )
+              }
               getPopupContainer={trigger => trigger.parentElement}
             >
               {
@@ -261,33 +284,43 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
           </FormItem>
         </Col>)
       case '5'://radio
-        let arr: { label: string, value: string | number }[] = option.split(',').filter(item => !!item).map((item, index) => {
-          return {
-            label: item,
-            value: index,
-          }
-        })
-        if (arr.length === 2 && (option.toLowerCase().includes('on') || option.toLowerCase().includes('yes'))) {
-          arr = arr.map(item => {
-            const { label } = item
-            return {
-              label: label,
-              value: +(label.toLowerCase().includes('on') || label.toLowerCase().includes('yes')),
-            }
-          })
-        }
+        // let arr: { label: string, value: string | number }[] = option.split(',').filter(item => !!item).map((item, index) => {
+        //   return {
+        //     label: item,
+        //     value: index,
+        //   }
+        // })
+        // if (arr.length === 2 && (option.toLowerCase().includes('on') || option.toLowerCase().includes('yes'))) {
+        //   arr = arr.map(item => {
+        //     const { label } = item
+        //     return {
+        //       label: label,
+        //       value: +(label.toLowerCase().includes('on') || label.toLowerCase().includes('yes')),
+        //     }
+        //   })
+        // }
         return (
           <div className='redioGroup'>
-            <Button onDoubleClick={this.editRadio} key='Button' type="dashed">edit Radio</Button>
+            {/* <Button onDoubleClick={this.editRadio} key='Button' type="dashed">edit Radio</Button> */}
             <span key='RadioGroup' >
               {
                 getFieldDecorator('default', {
-                  initialValue: config.default
+                  initialValue: config.default || 0
                 })(<RadioGroup>
                   {
-                    arr.map((c, i) => (
-                      <Radio key={c.value + c.label} value={c.value}>
-                        {c.label}
+                    [0, 1].map((c, index) => (
+                      <Radio key={c} value={c}>
+                        {
+                          getFieldDecorator(`option[${index}]`,
+                            {
+                              rules: [
+                                {
+                                  required: true, message: "Required"
+                                }
+                              ]
+                            }
+                          )(<Input />)
+                        }
                       </Radio>
                     ))
                   }
@@ -297,12 +330,23 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
           </div>
         )
       case '7'://template
-        return (<Col span={8} key='default'>
+        return (<Col span={6} key='default'>
           <FormItem {...layout} className='gouSelect'>
-            <Button onClick={this.changeTemp} key='Button' type="dashed">chose Template</Button>
             {getFieldDecorator('default', {
               initialValue: config.default,
             })(<Select
+              dropdownRender={
+                menu => (
+                  <div>
+                    {menu}
+                    <Divider key='Divider' style={{ margin: '4px 0' }} />
+                    <div key='more-box' onMouseDown={e => { e.preventDefault(); }}
+                      onClick={() => this.changeTemp()} style={{ padding: '8px', cursor: 'pointer' }}>
+                      <Icon type="plus" /> Change TemplatesGroup
+                      </div>
+                  </div>
+                )
+              }
               getPopupContainer={trigger => trigger.parentElement}
             >
               {
@@ -315,7 +359,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
             </Select>
             )}
           </FormItem>
-        </Col>)
+        </Col >)
     }
   }
 

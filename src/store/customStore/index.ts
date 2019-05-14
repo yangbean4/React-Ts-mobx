@@ -81,6 +81,9 @@ export class CustomStore extends StoreExt {
 
   @action
   fullTemplate = async () => {
+    if (this.templateTree.length) {
+      return
+    }
     let data = []
     try {
       const res = await this.api.custom.fullTemplate()
