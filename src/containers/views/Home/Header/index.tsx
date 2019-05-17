@@ -16,7 +16,7 @@ function Header({ sideBarCollapsed, toggleSideBarCollapsed, logout, userInfo }: 
     const menu = (
         <Menu>
             <Menu.Item onClick={logout}>
-                <span>layout</span>
+                <span>logout</span>
             </Menu.Item>
         </Menu>
     )

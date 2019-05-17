@@ -73,8 +73,8 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
     form.validateFields(
       async (err, values): Promise<any> => {
         let per = values;
-        per.config_version = per.config_version ? `V${per.config_version}` : per.config_version
-        per.copyTo = per.copyTo ? `V${per.copyTo}` : per.copyTo
+        per.config_version = per.config_version ? `v${per.config_version}` : per.config_version
+        per.copyTo = per.copyTo ? `v${per.copyTo}` : per.copyTo
 
         const cb = () => {
 
