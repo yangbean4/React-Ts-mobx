@@ -49,8 +49,8 @@ interface IStoreProps {
 }
 
 interface IProps extends IStoreProps {
-  onCancel: (data?) => void
-  onSubmit: (data) => void
+  onCancel?: (data?) => void
+  onSubmit?: (data) => void
   editData: any
   addList: conItem[]
   type?: string
@@ -189,7 +189,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     const arr = this.fmtConfigList;
     const editDataSortTarget = this.editDataSortTarget
     const fmt = this.haveUseEditData ? arr.filter(a => editDataSortTarget.hasOwnProperty(a.key)) : arr
-    return fmt.filter(ele => ele.platform != platform)
+    // TODO:
+    return arr.filter(ele => ele.platform != platform)
       .slice().sort((a, b) => a.sort - b.sort)
       .slice().sort((a, b) => editDataSortTarget[b.key] - editDataSortTarget[a.key])
   }

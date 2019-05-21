@@ -2,13 +2,13 @@ import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { observable, action, computed } from 'mobx'
 import { Input, Select, Radio, Divider, Icon } from 'antd'
-import { conItem } from './type'
+import { conItem, conItemTreeItem } from './type'
 // import { SketchPicker } from 'react-color'
 import myIcon from '@components/Icon'
 import { typeOf } from '@utils/index'
 import InputGroup from './InputGroup/index'
 import InputColor from './InputColor/index'
-
+import Basic from './Basic'
 const RadioGroup = Radio.Group;
 
 const workGroup = [{
@@ -39,7 +39,7 @@ interface IStoreProps {
   templateTree?: ICustomStore.ICustomTree[]
 }
 interface IProps extends IStoreProps {
-  config?: conItem
+  config?: conItemTreeItem
   showWork?: boolean
   handel?: (type: string, index: number, config?: conItem) => void
   dataIndex?: number
@@ -325,7 +325,24 @@ class ConfigItem extends React.Component<IProps> {
   }
 
   render() {
-    return React.createElement('div', null, this.renderFormBox());
+    const {
+      config,
+      value
+    } = this.props;
+    const {
+      value_type,
+      children
+    } = config
+    if (children && children.length) {
+      debugger
+    }
+    return children && children.length ?
+      React.createElement(Basic, {
+        deep: true,
+        addList: children,
+        editData: value,
+      })
+      : React.createElement('div', null, this.renderFormBox())
   }
 }
 
