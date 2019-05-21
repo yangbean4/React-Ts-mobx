@@ -67,6 +67,7 @@ interface IProps extends IStoreProps {
   type?: string
   activeKey?: string
   shouldSave?: boolean
+  deep?: boolean
 }
 @inject(
   (store: IStore): IStoreProps => {
