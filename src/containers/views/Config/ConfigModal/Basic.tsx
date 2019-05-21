@@ -56,6 +56,7 @@ interface IProps extends IStoreProps {
   type?: string
   activeKey?: string
   shouldSave?: boolean
+  deep?: boolean
 }
 @inject(
   (store: IStore): IStoreProps => {
@@ -546,52 +547,53 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     const { template_pid = undefined, templateId = undefined, option = '' } = this.nowHandelConfig || {}
     return (
       <div className='Basic'>
-        <Form className="dropZone" {...layout} onSubmit={this.submit}>
-          {
-            this.useConfigList.map((item, index, arr) => {
-              let _val = item.key ? this.useEditData[item.key] : undefined
-              _val = typeOf(_val) === 'object' ? _val.value : _val
-              return (
-                !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
-                  <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
-                    {getFieldDecorator(item.key, {
-                      initialValue: _val === undefined ? item.default : _val,
-                      rules: [
-                        {
-                          required: true, message: "Required"
-                        }
-                      ]
-                    })(
-                      <ConfigItem
-                        dataIndex={index}
-                        changeTemp={this.changeTemp}
-                        handel={this.handelAction}
-                        showWork={this.showWork}
-                        config={item} />
-                    )}
-                  </FormItem>
-                </div>
-                  : <AddConfigItem
-                    shouldSubmit={this.loading}
-                    choseSelect={this.choseSelect}
-                    editRadio={this.editRadio}
-                    key={item.addId}
-                    config={item}
-                    dataIndex={index}
-                    changeTemp={this.changeTemp}
-                    onOk={this.addConfigItem} />
-              )
-            })
-          }
+        {
+          this.useConfigList.map((item, index, arr) => {
+            let _val = item.key ? this.useEditData[item.key] : undefined
+            _val = typeOf(_val) === 'object' ? _val.value : _val
+            return (
+              !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
+                <FormItem {...layout} className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
+                  {getFieldDecorator(item.key, {
+                    initialValue: _val === undefined ? item.default : _val,
+                    rules: [
+                      {
+                        required: true, message: "Required"
+                      }
+                    ]
+                  })(
+                    <ConfigItem
+                      dataIndex={index}
+                      changeTemp={this.changeTemp}
+                      handel={this.handelAction}
+                      showWork={this.showWork}
+                      config={item} />
+                  )}
+                </FormItem>
+              </div>
+                : <AddConfigItem
+                  shouldSubmit={this.loading}
+                  choseSelect={this.choseSelect}
+                  editRadio={this.editRadio}
+                  key={item.addId}
+                  config={item}
+                  dataIndex={index}
+                  changeTemp={this.changeTemp}
+                  onOk={this.addConfigItem} />
+            )
+          })
+        }
 
-          <Button type="primary" loading={this.loading} className='submitBtn' htmlType="submit">Submit</Button>
-          {
+        {
+          this.props.deep ? null : [
+            <Button type="primary" key='submit' loading={this.loading} className='submitBtn' onClick={this.submit}>Submit</Button>,
             // type有值说明不是Pid中的 
-            this.showWork && this.props.type ? <Button className="cancelBtn" onClick={this.toggleWork}>Cancel</Button>
-              : this.props.type === "basic1" ? null : <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
-          }
-        </Form>
-        <Button className="workBtn" type="primary" onClick={this.toggleWork}>{this.showWork ? 'Cancel' : 'Edit Filed'}</Button>
+            this.showWork && this.props.type ? <Button key='Cancel' className="cancelBtn" onClick={this.toggleWork}>Cancel</Button>
+              : this.props.type === "basic1" ? null : <Button key='Last Step' className='cancelBtn' onClick={this.lastStep}>Last Step</Button>,
+
+            <Button className="workBtn" type="primary" key='work' onClick={this.toggleWork}>{this.showWork ? 'Cancel' : 'Edit Filed'}</Button>
+          ]
+        }
         <ChoseSelectModal
           visible={this.modalVisible}
           onCancel={this.choseSelectModalSwitch}
