@@ -2,14 +2,14 @@ import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { observable, action, computed } from 'mobx'
 import { Input, Select, Radio, Divider, Icon } from 'antd'
-import { conItem } from './type'
+import { conItem, conItemTreeItem } from './type'
 // import { SketchPicker } from 'react-color'
 import myIcon from '@components/Icon'
 import { typeOf } from '@utils/index'
 import InputGroup from './InputGroup/index'
 import InputColor from './InputColor/index'
 
-const RadioGroup = Radio.Group;
+const RadioGroup = Radio.Group
 
 const workGroup = [{
   action: 'acc',
@@ -39,7 +39,7 @@ interface IStoreProps {
   templateTree?: ICustomStore.ICustomTree[]
 }
 interface IProps extends IStoreProps {
-  config?: conItem
+  config?: conItemTreeItem
   showWork?: boolean
   handel?: (type: string, index: number, config?: conItem) => void
   dataIndex?: number

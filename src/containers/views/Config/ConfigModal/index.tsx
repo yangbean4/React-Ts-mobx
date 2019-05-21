@@ -3,7 +3,9 @@ import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
 import { Tabs, Button, Modal } from 'antd'
 import { ComponentExt } from '@utils/reactExt'
-import style, { value } from './index.scss'
+import * as style from './index.scss'
+import { arrayToTree, queryArray } from '@utils/index'
+import { conItem } from './type'
 
 import Loadable from 'react-loadable'
 
@@ -66,6 +68,18 @@ class ConfigModal extends ComponentExt<IStoreProps> {
     @observable
     private addConfigGroup: IConfigStore.IConfigTarget = { basic1: [] }
 
+    @computed
+    get allList() {
+        const toTree = (list) => list ? arrayToTree<conItem>(list, 'id', 'pid') : []
+        const basic1 = toTree(this.addConfigGroup['basic1'])
+        const basic2 = toTree(this.addConfigGroup['basic2'])
+        console.log(basic2)
+        return {
+            basic1,
+            basic2,
+            all: [].concat(basic1, basic2),
+        }
+    }
 
     @computed
     get localConfig() {
@@ -193,9 +207,10 @@ class ConfigModal extends ComponentExt<IStoreProps> {
     }
 
     getBox = (item) => {
+        const key = item.toLowerCase()
         const Components = asynchronousComponents[item || this.activeKey]
+
         const boxProps = () => {
-            const key = item.toLocaleLowerCase()
             const props = {
                 onCancel: this.goBack,
                 onSubmit: this.onSubmit,
@@ -205,7 +220,7 @@ class ConfigModal extends ComponentExt<IStoreProps> {
                 type: key.toLowerCase(),
                 activeKey: this.activeKey.toLowerCase(),
                 // ----用于拖动是判断是否是当前
-                addList: !this.useTargetConfig.config_deploy_id ? this.addConfigGroup[key] : [].concat(this.addConfigGroup['basic1'], this.addConfigGroup['basic2']),
+                addList: !this.useTargetConfig.config_deploy_id ? this.allList[key] : this.allList.all,
             }
             return props
         }

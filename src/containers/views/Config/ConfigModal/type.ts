@@ -13,3 +13,9 @@ export interface conItem {
   value?: any
   pid_type?: number
 }
+
+export interface conItemTreeItem extends conItem {
+  children?: conItemTreeItem[]
+}
+
+export type conItemTree = conItemTreeItem[]

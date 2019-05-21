@@ -5,7 +5,7 @@ import { Form, Button, Modal } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import ConfigItem from './configItem'
-import { conItem } from './type'
+import { conItem, conItemTree } from './type'
 import AddConfigItem from './addConfigItem'
 import { camelCase, getEventTargetDom, getGuId, typeOf, _nameCase } from '@utils/index'
 import ChoseSelectModal from './choseSelectModal/index'
@@ -52,7 +52,7 @@ interface IProps extends IStoreProps {
   onCancel: (data?) => void
   onSubmit: (data) => void
   editData: any
-  addList: conItem[]
+  addList: conItemTree,
   type?: string
   activeKey?: string
   shouldSave?: boolean
@@ -79,7 +79,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   private confirmModal
 
   @observable
-  private thisConfigList: conItem[]
+  private thisConfigList: conItemTree
 
   private nowHandelConfig: conItem = {}
 
@@ -115,7 +115,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   @action
   toggleWork = () => {
     if (this.showWork) {
-      const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList)).filter(ele => !ele.isEdit)
+      const arr: conItemTree = JSON.parse(JSON.stringify(this.useConfigList)).filter(ele => !ele.isEdit)
       runInAction('UP_THIS_CONFIG_LIST', () => {
         this.thisConfigList = arr
       })
@@ -183,18 +183,19 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   }
 
   @computed
-  get configList(): conItem[] {
+  get configList(): conItemTree {
     const platform = (this.props.targetConfig || {}).platform === 'android' ? 2 : 1
     const arr = this.fmtConfigList;
     const editDataSortTarget = this.editDataSortTarget
     const fmt = this.haveUseEditData ? arr.filter(a => editDataSortTarget.hasOwnProperty(a.key)) : arr
-    return fmt.filter(ele => ele.platform != platform)
+    // TODO:
+    return arr.filter(ele => ele.platform != platform)
       .slice().sort((a, b) => a.sort - b.sort)
       .slice().sort((a, b) => editDataSortTarget[b.key] - editDataSortTarget[a.key])
   }
 
   @computed
-  get useConfigList(): conItem[] {
+  get useConfigList(): conItemTree {
     return this.thisConfigList || this.configList
   }
 
@@ -330,7 +331,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     }
     if (config) {
       const index = this.useConfigList.findIndex(ele => ele.addId === config.addId);
-      const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
+      const arr: conItemTree = JSON.parse(JSON.stringify(this.useConfigList))
       if (this.useEditDataKeySet.has(_nameCase(config.key))) {
         this.$message.error(`${config.key} is exist!`)
         errorCb()
@@ -425,7 +426,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     if (this.props.activeKey !== this.props.type) {
       return;
     }
-    const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
+    const arr: conItemTree = JSON.parse(JSON.stringify(this.useConfigList))
     if (addCon !== undefined) {
       arr.splice(fromIndex, 0, addCon)
     } else {
@@ -465,7 +466,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     const pid = data.pid || data.template_pid
     this.props.getTemplateSelect(pid, true)
     // TODO:!!!!!!!
-    // const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
+    // const arr: conItemTree = JSON.parse(JSON.stringify(this.useConfigList))
     // arr[this.nowHandelConfigIndex] = {
     //   ...arr[this.nowHandelConfigIndex],
     //   ...this.nowHandelConfig,
@@ -479,7 +480,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     //   [key]: data.templateId,
     // });templateId
 
-    const arr: conItem[] = JSON.parse(JSON.stringify(this.useConfigList))
+    const arr: conItemTree = JSON.parse(JSON.stringify(this.useConfigList))
 
     const per = this.nowHandelConfig = {
       ...this.nowHandelConfig,
@@ -539,51 +540,69 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     })
   }
 
+  formObjToVal = (obj, keyStr: string) => {
+    let j = obj
+    try {
+      keyStr.split('.').forEach(key => j = j[key])
+      return j
+    } catch (error) {
+      return undefined
+    }
+  }
 
   render() {
     const { form } = this.props
     const { getFieldDecorator } = form
     const { template_pid = undefined, templateId = undefined, option = '' } = this.nowHandelConfig || {}
-    return (
-      <div className='Basic'>
-        <Form className="dropZone" {...layout} onSubmit={this.submit}>
-          {
-            this.useConfigList.map((item, index, arr) => {
-              let _val = item.key ? this.useEditData[item.key] : undefined
-              _val = typeOf(_val) === 'object' ? _val.value : _val
-              return (
-                !item.isEdit ? <div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
-                  <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
-                    {getFieldDecorator(item.key, {
-                      initialValue: _val === undefined ? item.default : _val,
-                      rules: [
-                        {
-                          required: true, message: "Required"
-                        }
-                      ]
-                    })(
-                      <ConfigItem
-                        dataIndex={index}
-                        changeTemp={this.changeTemp}
-                        handel={this.handelAction}
-                        showWork={this.showWork}
-                        config={item} />
-                    )}
-                  </FormItem>
-                </div>
-                  : <AddConfigItem
-                    shouldSubmit={this.loading}
-                    choseSelect={this.choseSelect}
-                    editRadio={this.editRadio}
-                    key={item.addId}
-                    config={item}
-                    dataIndex={index}
-                    changeTemp={this.changeTemp}
-                    onOk={this.addConfigItem} />
+    const renderItem = (arr: conItemTree, per?: string) => arr.map(
+      (item, index) => {
+        const Key = per ? `${per}.${item.key}` : item.key
+        let _val = this.formObjToVal(this.useEditData, Key)
+        _val = typeOf(_val) === 'object' ? _val.value : _val
+        return (
+          item.children ? (
+            <div className='ggg'>
+              <span>{camelCase(item.key)}</span>
+              {renderItem(item.children)}
+            </div>
+          ) :
+            !item.isEdit ?
+              (<div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
+                <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
+                  {getFieldDecorator(Key, {
+                    initialValue: _val === undefined ? item.default : _val,
+                    rules: [
+                      {
+                        required: true, message: "Required"
+                      }
+                    ]
+                  })(
+                    <ConfigItem
+                      dataIndex={index}
+                      changeTemp={this.changeTemp}
+                      handel={this.handelAction}
+                      showWork={this.showWork}
+                      config={item} />
+                  )}
+                </FormItem>
+              </div>)
+              : (
+                <AddConfigItem
+                  shouldSubmit={this.loading}
+                  choseSelect={this.choseSelect}
+                  editRadio={this.editRadio}
+                  key={item.addId}
+                  config={item}
+                  dataIndex={index}
+                  changeTemp={this.changeTemp}
+                  onOk={this.addConfigItem} />
               )
-            })
-          }
-
+        )
+      })
+    return (
+      <div className='Basic' >
+        <Form className="dropZone" {...layout} onSubmit={this.submit}>
+          {renderItem(this.useConfigList)}
           <Button type="primary" loading={this.loading} className='submitBtn' htmlType="submit">Submit</Button>
           {
             // type有值说明不是Pid中的 
