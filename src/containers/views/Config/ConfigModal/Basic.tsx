@@ -60,8 +60,8 @@ interface IStoreProps {
 }
 
 interface IProps extends IStoreProps {
-  onCancel: (data?) => void
-  onSubmit: (data) => void
+  onCancel?: (data?) => void
+  onSubmit?: (data) => void
   editData: any
   addList: conItemTree,
   type?: string
