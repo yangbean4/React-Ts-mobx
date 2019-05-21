@@ -333,14 +333,13 @@ class ConfigItem extends React.Component<IProps> {
       value_type,
       children
     } = config
-    if (children && children.length) {
-      debugger
-    }
+
     return children && children.length ?
       React.createElement(Basic, {
         deep: true,
         addList: children,
         editData: value,
+        showWork: this.props.showWork
       })
       : React.createElement('div', null, this.renderFormBox())
   }
