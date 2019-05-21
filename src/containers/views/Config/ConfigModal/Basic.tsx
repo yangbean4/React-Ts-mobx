@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { observer, inject } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
 import { Form, Button, Modal } from 'antd'
@@ -368,40 +368,44 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   addDragEvent = () => {
     let dragged
 
-    document.addEventListener('dragstart', (event) => {
+    document.addEventListener('dragstart', (event: DragEvent) => {
       // 保存拖动元素的引用(ref.)
-      dragged = event.target
+      const target = event.target as HTMLElement
+      dragged = target
       // 使其半透明
-      event.target.style.opacity = .5
+      target.style.opacity = '.5'
     }, false)
 
-    document.addEventListener('dragend', (event) => {
+    document.addEventListener('dragend', (event: DragEvent) => {
+      const target = event.target as HTMLElement
       // 重置透明度
-      event.target.style.opacity = ''
+      target.style.opacity = ''
     }, false)
 
     /* 放下目标节点时触发事件 */
-    document.addEventListener('dragover', (event) => {
+    document.addEventListener('dragover', (event: DragEvent) => {
       // 阻止默认动作
       event.preventDefault()
     }, false)
 
 
-    document.addEventListener('dragleave', (event) => {
+    document.addEventListener('dragleave', (event: DragEvent) => {
+      const target = event.target as HTMLElement
+
       // 当拖动元素离开可放置目标节点，重置其背景
-      if (event.target.className === 'dropZone') {
-        event.target.style.background = ''
+      if (target.className === 'dropZone') {
+        target.style.background = ''
       }
     }, false)
 
-    document.addEventListener('drop', (event) => {
+    document.addEventListener('drop', (event: DragEvent) => {
       // 阻止默认动作（如打开一些元素的链接）
       event.preventDefault();
       // 移动拖动的元素到所选择的放置目标节点
-      const tar = getEventTargetDom(event, 'itemBox')
+      const tar = getEventTargetDom(event, 'itemBox') as HTMLElement
       if (tar) {
-        const tarIndex = parseInt(tar.getAttribute('data-index'))
-        const fromIndex = parseInt(dragged.getAttribute('data-index'))
+        const tarIndex = parseInt(tar.getAttribute('data-index'), 10)
+        const fromIndex = parseInt(dragged.getAttribute('data-index'), 10)
         if (tarIndex !== fromIndex) {
           this.handelUpdateList(fromIndex, tarIndex)
         } else {
