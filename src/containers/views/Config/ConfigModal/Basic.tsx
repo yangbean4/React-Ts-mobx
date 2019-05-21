@@ -65,6 +65,7 @@ interface IProps extends IStoreProps {
   editData: any
   addList: conItemTree,
   type?: string
+  showWork?: boolean
   activeKey?: string
   shouldSave?: boolean
   deep?: boolean
