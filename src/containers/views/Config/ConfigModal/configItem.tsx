@@ -41,12 +41,13 @@ interface IStoreProps {
 interface IProps extends IStoreProps {
   config?: conItemTreeItem
   showWork?: boolean
-  handel?: (type: string, index: number, config?: conItem) => void
-  dataIndex?: number
+  handel?: (type: string, config?: conItem) => void
   // getFieldDecorator包裹的组件会给该组件加上value和onChange的props 做双向绑定
   value?: any
-  changeTemp?: (index: number, config?: conItem) => void
+  changeTemp?: (config?: conItem) => void
   onChange?: (data: any) => void
+  noDel?: boolean
+  workTypeArr?: string[]
 }
 
 @inject(
@@ -127,7 +128,7 @@ class ConfigItem extends React.Component<IProps> {
     this.props.onChange(data.hex);
   }
   changeTemp = () => {
-    this.props.changeTemp(this.props.dataIndex, this.props.config)
+    this.props.changeTemp(this.props.config)
   }
 
   renderFormBox = () => {
@@ -313,19 +314,22 @@ class ConfigItem extends React.Component<IProps> {
   }
 
   renderWoker = () => {
+    const set = new Set(this.props.workTypeArr)
     return React.createElement('div', { className: 'workBox', key: 'workBox' },
-      workGroup.map(item => {
+      workGroup.filter(ele => set.has(ele.action)).map(item => {
         return React.createElement(myIcon, {
           key: item.type,
           type: item.type,
-          onClick: () => this.props.handel(item.action, this.props.dataIndex, this.props.config)
+          onClick: () => this.props.handel(item.action, this.props.config)
         })
       })
     )
   }
 
   render() {
-    return React.createElement('div', null, this.renderFormBox());
+    return React.createElement('div', {
+
+    }, this.renderFormBox())
   }
 }
 

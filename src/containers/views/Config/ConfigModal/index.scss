@@ -1,4 +1,37 @@
 @import "_base.scss";
+
+:global {
+  .dropZone > .itemBox {
+    & > .haveChild > .ant-form-item-label > label {
+      height: 40px;
+      display: block;
+      width: max-content;
+      margin-left: 30px;
+      padding-left: 14px;
+      background: #f2f4fe;
+      color: #667ffd;
+      &::after {
+        content: " ";
+        display: inline-block;
+        width: 0;
+        border-color: transparent;
+        border-left-color: #f2f4fe;
+        border-width: 20px;
+        border-style: solid;
+        height: 0;
+        margin: unset;
+        position: absolute;
+      }
+    }
+    & > .ggg {
+      // margin-left: 80px;
+      .ggg {
+        margin-left: 80px;
+      }
+    }
+  }
+}
+
 .configModal {
   display: flex;
   flex-direction: column;
@@ -197,6 +230,10 @@
   // ---------------------------------
 
   :global(.Basic) {
+    :global(.additemGroup) {
+      margin-left: 10%;
+    }
+
     :global(.ant-form-item-label) {
       font-size: 14px;
       font-family: Montserrat-Light;

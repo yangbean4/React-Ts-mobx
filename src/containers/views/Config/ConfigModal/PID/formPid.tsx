@@ -64,12 +64,9 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
     })
     const dataKeyarr = this.usEeditData && typeOf(this.usEeditData) === 'object' ? Object.keys(this.usEeditData) : []
     if (dataKeyarr.length) {
-      let cccc = dataKeyarr.map(key => {
-        console.log(arr.find(ele => _nameCase(ele.key) === _nameCase(key)), this.usEeditData[key])
-        return arr.find(ele => _nameCase(ele.key) === _nameCase(key)) || (typeOf(this.usEeditData[key]) === 'object' ? this.usEeditData[key] : null)
-      }).filter(ele => !!ele)
-      console.log(cccc)
-      return cccc
+      return dataKeyarr.map(key =>
+        arr.find(ele => _nameCase(ele.key) === _nameCase(key)) || (typeOf(this.usEeditData[key]) === 'object' ? this.usEeditData[key] : null)
+      ).filter(ele => !!ele)
     }
     return arr
   }

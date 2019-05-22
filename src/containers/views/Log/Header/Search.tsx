@@ -102,7 +102,7 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
     const { form } = this.props
     const { getFieldDecorator } = form
     return (
-      <Form {...layout} className={style.logSearch} onSubmit={this.submit}>
+      <Form {...layout} className={style.logSearch} >
         <FormItem label="Operator">
           {getFieldDecorator('operator_name')(<Input />)}
         </FormItem>
@@ -137,7 +137,7 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
         </FormItem>
 
         <FormItem label="">
-          <Button className='addbtn-ml20' type="primary" htmlType="submit">Search</Button>
+          <Button className='addbtn-ml20' type="primary" onClick={this.submit}>Search</Button>
         </FormItem>
       </Form>
     )

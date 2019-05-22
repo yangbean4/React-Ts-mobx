@@ -131,7 +131,7 @@ class RoleModal extends ComponentExt<IProps & FormComponentProps> {
         const arr = this.checkedKeys || permission.split(',').filter(ele => !!ele)
         return (
             <div className='sb-form'>
-                <Form className={styles.roleModal} onSubmit={this.submit}>
+                <Form className={styles.roleModal} >
                     <FormItem {...formItemLayout} label="Role Name">
                         {getFieldDecorator('role_name', {
                             initialValue: role_name,
@@ -160,7 +160,7 @@ class RoleModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
 
                     <FormItem className={styles.btnBox}>
-                        <Button type="primary" loading={this.loading} htmlType="submit">Submit</Button>
+                        <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
                         <Button className={styles.btn2} onClick={() => this.Cancel()} >Cancel</Button>
                     </FormItem>
                 </Form>

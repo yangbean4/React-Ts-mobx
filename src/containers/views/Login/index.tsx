@@ -70,7 +70,7 @@ class Login extends React.Component<IStoreProps & FormComponentProps> {
         const { getFieldDecorator } = this.props.form
         return (
             <div className={styles.login}>
-                <Form onSubmit={this.submit} className={styles.form}>
+                <Form className={styles.form}>
                     <div className={styles.logoBox}>
                         {/* <Icon type="ant-design" /> */}
                     </div>
@@ -118,7 +118,7 @@ class Login extends React.Component<IStoreProps & FormComponentProps> {
                         </Row>
                     </FormItem>
                     <FormItem>
-                        <Button type="primary" htmlType="submit" block loading={this.loading}>
+                        <Button type="primary" onClick={this.submit} block loading={this.loading}>
                             login
                         </Button>
                     </FormItem>

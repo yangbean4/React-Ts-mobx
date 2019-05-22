@@ -33,6 +33,10 @@ export const value_typeOption = [
   },
   {
     key: 'template',
-    value: '7'
-  }
+    value: '7',
+  },
+  {
+    key: 'multiple',
+    value: '8',
+  },
 ]

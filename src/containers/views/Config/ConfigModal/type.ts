@@ -12,6 +12,8 @@ export interface conItem {
   isEdit?: boolean | undefined
   value?: any
   pid_type?: number
+  indexPath?: string
+  typeIsOnly8?: boolean
 }
 
 export interface conItemTreeItem extends conItem {

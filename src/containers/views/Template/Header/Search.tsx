@@ -84,7 +84,7 @@ class TemplateSearch extends ComponentExt<IStoreProps & FormComponentProps> {
 
     return (
       this.searchList.length ? (
-        <Form {...layout} onSubmit={this.submit} className='childLeftSearch'>
+        <Form {...layout} className='childLeftSearch'>
           {
             this.searchList.includes('template_name') &&
             <FormItem label={camelCase('template_name')}>

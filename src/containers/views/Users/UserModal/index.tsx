@@ -123,7 +123,7 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
         }
         return (
             <div className='sb-form'>
-                <Form className={styles.userModal} onSubmit={this.submit}>
+                <Form className={styles.userModal} >
                     <FormItem {...formItemLayout} label="User Name">
                         {getFieldDecorator('user_name', {
                             initialValue: user_name,
@@ -197,7 +197,7 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                         )}
                     </FormItem>
                     <FormItem className={styles.btnBox}>
-                        <Button type="primary" loading={this.loading} htmlType="submit">Submit</Button>
+                        <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
                         <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
                     </FormItem>
                 </Form>

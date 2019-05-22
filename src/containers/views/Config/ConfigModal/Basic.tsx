@@ -83,7 +83,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   private nowHandelConfig: conItem = {}
 
-  private nowHandelConfigIndex: number
+  private nowHandelConfigIndexPath: string
 
   private editRedioModaType: number = 0
 
@@ -94,6 +94,43 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   @observable
   private redioVisible: boolean = false
+
+  private fromUseList = (() => {
+    let last_id = 0
+    const getData = (arr, values) => arr.map((ele, index, array) => {
+      const { key, value_type, addId, children } = ele
+      let value = values[key];
+      value = value_type === '8' && children ? getData(children, value) : value
+      let tt = { [key]: value }
+      last_id = index === 0 ? 0 : array[index].id || last_id
+      // 处理后端返回的默认值在直接保存时有坑的问题
+      if (value_type === '4') {
+        let vv;
+        if (Array.isArray(value)) {
+          vv = value.map(v => v.toString()).filter(mn => !!mn)
+        } else {
+          try {
+            const v = JSON.parse(value)
+            vv = Array.isArray(v) ? v : [v || '']
+          } catch (error) {
+            vv = [value || '']
+          }
+        }
+        vv = vv.length ? vv : ['']
+        tt = { [key]: vv }
+      }
+      // 说明是新增加的
+      // if (!this.useEditData.hasOwnProperty(key)) {
+      if (addId && !children) {
+        const mm = { ...ele, key, value: value || ele.default, last_id }
+        delete mm.addId
+        delete mm.isEdit
+        tt = mm
+      }
+      return tt
+    })
+    return getData;
+  })()
 
   @action
   toggleLoading = (type?) => {
@@ -188,8 +225,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     const arr = this.fmtConfigList;
     const editDataSortTarget = this.editDataSortTarget
     const fmt = this.haveUseEditData ? arr.filter(a => editDataSortTarget.hasOwnProperty(a.key)) : arr
-    // TODO:
-    return arr.filter(ele => ele.platform != platform)
+    return fmt.filter(ele => ele.platform != platform)
       .slice().sort((a, b) => a.sort - b.sort)
       .slice().sort((a, b) => editDataSortTarget[b.key] - editDataSortTarget[a.key])
   }
@@ -198,6 +234,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   get useConfigList(): conItemTree {
     return this.thisConfigList || this.configList
   }
+
 
   submit = (e?: React.FormEvent<any>): void => {
     //console.log(1231);
@@ -215,51 +252,16 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
             //console.log(waitItemNum);
           } else {
             try {
-              let last_id = 0
-              const dataArr = this.useConfigList.map((ele, index, array) => {
-                const { key, value_type, addId } = ele
-                const value = values[key];
-                last_id = index === 0 ? 0 : array[index].id || last_id
-                let tt = { [key]: value }
-                // 处理后端返回的默认值在直接保存时有坑的问题
-                if (value_type === '4') {
-                  let vv;
-                  if (Array.isArray(value)) {
-                    vv = value.map(v => v.toString()).filter(mn => !!mn)
-                  } else {
-                    try {
-                      const v = JSON.parse(value)
-                      vv = Array.isArray(v) ? v : [v || '']
-                    } catch (error) {
-                      vv = [value || '']
-                    }
-                  }
-                  vv = vv.length ? vv : ['']
-                  tt = { [key]: vv }
-                }
 
-                // 说明是新增加的
-                // if (!this.useEditData.hasOwnProperty(key)) {
-                if (addId) {
-                  const mm = { ...ele, key, value: value || ele.default, last_id }
-                  delete mm.addId
-                  delete mm.isEdit
-                  tt = {
-                    [key]: mm
-                  }
-                }
-                return tt
-              })
-              // console.log(dataArr)
-              onSubmit(dataArr)
+              const dataArr = this.fromUseList(this.useConfigList, values)
+              console.log(JSON.stringify(dataArr))
+              // onSubmit(dataArr)
               // this.confirmModal ? this.props.onCancel(dataArr) : onSubmit(dataArr)
             } catch (error) {
               //console.log(error)
             }
             this.toggleLoading(false)
-
           }
-
         } else {
           this.toggleLoading(false)
         }
@@ -268,17 +270,28 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     )
   }
 
-  handelAction = (type: string, index: number, config?: conItem) => {
+  @action
+  handelAction = (indexPath: string, type: string, config?: conItem) => {
+
+    const indexPathArr = indexPath.split('.')
+    let arrM = JSON.parse(JSON.stringify(this.useConfigList)), arr = arrM, index = Number(indexPathArr.pop())
+    indexPathArr.forEach(ele => arr = arr[Number(ele)].children)
+    const getBol8 = (index) => arr[index].value_type === '8'
+    const typeIs8 = getBol8(index)
+    // 从第八种类型中增加出来的，并且在最外层 就只能是第八种类型
+    const typeIsOnly8 = typeIs8 && !indexPath.includes('.')
     switch (type) {
       case 'down': {
-        if (index !== this.useConfigList.length) {
-          this.handelUpdateList(index, index + 1)
+        // 第八种类型不能到非第八种类型的组中
+        if (index !== this.useConfigList.length && typeIs8 === getBol8(index + 1)) {
+          this.handelUpdateList(arr, index, index + 1)
         }
         break
       }
       case 'up': {
-        if (index !== this.useConfigList.length) {
-          this.handelUpdateList(index, index - 1)
+        // 第八种类型不能到非第八种类型的组中
+        if (index !== 0 && typeIs8 === getBol8(index + 1)) {
+          this.handelUpdateList(arr, index, index - 1)
         }
         break
       }
@@ -292,34 +305,68 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           id: undefined,
           default: undefined,
           addId: id,
-          isEdit: true
+          isEdit: true,
+          typeIsOnly8,
         }
-        this.handelUpdateList(index + 1, undefined, addItem)
+        this.handelUpdateList(arr, index + 1, undefined, addItem)
         break
       }
       case 'acc': {
-        this.handelUpdateList(index)
+        this.handelUpdateList(arr, index)
         break
       }
       case 'add': {
         const id = getGuId()
         const addItem = {
-          value_type: undefined,
+          value_type: typeIsOnly8 ? '8' : undefined,
           key: undefined,
           unit: undefined,
           id: undefined,
           default: undefined,
           addId: id,
-          isEdit: true
+          isEdit: true,
+          typeIsOnly8,
         }
-        this.handelUpdateList(index + 1, undefined, addItem)
+        this.handelUpdateList(arr, index + 1, undefined, addItem)
         break
       }
     }
+    runInAction('SET_ARR', () => {
+      this.thisConfigList = arrM
+    })
+  }
+  addConfigItemSetType = (indexPath) => {
+    console.log(indexPath)
+    const indexPathArr = indexPath.split('.')
+    let arrM = JSON.parse(JSON.stringify(this.useConfigList)), arr = arrM, index = Number(indexPathArr.pop())
+    indexPathArr.forEach(ele => arr = arr[Number(ele)].children)
+    arr[index] = {
+      ...arr[index],
+      value_type: '8',
+      unit: undefined,
+      id: undefined,
+      default: undefined,
+      addId: getGuId(),
+      isEdit: true,
+      children: [
+        {
+          value_type: undefined,
+          key: undefined,
+          unit: undefined,
+          id: undefined,
+          default: undefined,
+          addId: getGuId(),
+          isEdit: true,
+        }
+      ]
+    }
+    runInAction('SET_ARR', () => {
+      this.thisConfigList = arrM
+    })
   }
 
   @action
-  addConfigItem = (config?: conItem) => {
+  addConfigItem = (indexPath, config?: conItem) => {
     //console.log('addConfigItem');
 
     const errorCb = () => {
@@ -330,8 +377,16 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       }
     }
     if (config) {
-      const index = this.useConfigList.findIndex(ele => ele.addId === config.addId);
-      const arr: conItemTree = JSON.parse(JSON.stringify(this.useConfigList))
+      // const indexPathArr = config.indexPath.split('.')
+      const indexPathArr = indexPath.split('.')
+      indexPathArr.pop();
+      let arrM = JSON.parse(JSON.stringify(this.useConfigList)),
+        arr = arrM
+      indexPathArr.forEach(ele => arr = arr[Number(ele)].children)
+
+      const index = arr.findIndex(ele => ele.addId === config.addId);
+      // const arr: conItemTree = JSON.parse(JSON.stringify(this.useConfigList))
+
       if (this.useEditDataKeySet.has(_nameCase(config.key))) {
         this.$message.error(`${config.key} is exist!`)
         errorCb()
@@ -342,7 +397,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           isEdit: false
         }
         runInAction('UP_THIS_CONFIG_LIST', () => {
-          this.thisConfigList = arr
+          this.thisConfigList = arrM
         })
 
         if (this.loading) {
@@ -419,14 +474,9 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   /**
    * 只有fromIndex 时删除
    */
-  @action
-  handelUpdateList = (fromIndex: number, tarIndex?: number, addCon?: conItem) => {
+  handelUpdateList = (arr, fromIndex: number, tarIndex?: number, addCon?: conItem) => {
     // 由于是keepLive组件 而拖动事件绑定在document上 需要判断当前组件是否是活动组件，
     // 解决拖动1  而2动的bug
-    if (this.props.activeKey !== this.props.type) {
-      return;
-    }
-    const arr: conItemTree = JSON.parse(JSON.stringify(this.useConfigList))
     if (addCon !== undefined) {
       arr.splice(fromIndex, 0, addCon)
     } else {
@@ -435,18 +485,14 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         arr.splice(tarIndex, 0, tar[0])
       }
     }
-    //console.log(arr)
-    runInAction('UP_THIS_CONFIG_LIST', () => {
-      this.thisConfigList = arr
-    })
   }
 
   componentDidMount() {
     this.addDragEvent()
   }
 
-  changeTemp = (index, con) => {
-    this.nowHandelConfigIndex = index
+  changeTemp = (indexPath: string, con) => {
+    this.nowHandelConfigIndexPath = indexPath
     this.nowHandelConfig = con
     this.choseSelectModalSwitch()
   }
@@ -467,8 +513,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     this.props.getTemplateSelect(pid, true)
     // TODO:!!!!!!!
     // const arr: conItemTree = JSON.parse(JSON.stringify(this.useConfigList))
-    // arr[this.nowHandelConfigIndex] = {
-    //   ...arr[this.nowHandelConfigIndex],
+    // arr[this.nowHandelConfigIndexPath] = {
+    //   ...arr[this.nowHandelConfigIndexPath],
     //   ...this.nowHandelConfig,
     //   template_pid: data.template_pid,
     //   value: data.templateId
@@ -488,7 +534,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       template_pid: pid,
       default: data.templateId || data.value,
     }
-    arr[this.nowHandelConfigIndex] = per
+    arr[this.nowHandelConfigIndexPath] = per
     runInAction('UP_THIS_CONFIG_LIST', () => {
       this.thisConfigList = arr
     })
@@ -551,25 +597,59 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   }
 
   render() {
-    const { form } = this.props
+    const { form, type: BasicType } = this.props
     const { getFieldDecorator } = form
     const { template_pid = undefined, templateId = undefined, option = '' } = this.nowHandelConfig || {}
-    const renderItem = (arr: conItemTree, per?: string) => arr.map(
+
+    const getAddGroup = (item, indexPath) => {
+      let valueTypeArr = BasicType === "basic1" ? ['string', 'color', 'select', 'array', 'radio', 'template']
+        : !BasicType ? ['string', 'color', 'select', 'array', 'radio']
+          : ['string', 'color', 'select', 'array', 'radio', 'template']
+      if (BasicType !== "basic1" && indexPath.split('.').length !== 3) {
+        // 不是basic1就可以包含'multiple',在嵌套不超过三层时可以是multiple
+        valueTypeArr.push('multiple')
+      }
+      return (
+        <AddConfigItem
+          shouldSubmit={this.loading}
+          choseSelect={this.choseSelect}
+          editRadio={this.editRadio}
+          key={item.addId}
+          config={item}
+          valueTypeArr={valueTypeArr}
+          setType={() => this.addConfigItemSetType(indexPath)}
+          changeTemp={(con) => this.changeTemp(indexPath, con)}
+          onOk={(con) => this.addConfigItem(indexPath, con)} >
+          {
+            // item.children ? item.children.map((ele, index) => getAddGroup(ele, `${indexPath}.${index}`)) : null
+            item.children ? renderItem(item.children, undefined, `${indexPath}`) : null
+          }
+        </AddConfigItem>
+      )
+    }
+    const renderItem = (arr: conItemTree, per?: string, indexPre?) => arr.map(
       (item, index) => {
         const Key = per ? `${per}.${item.key}` : item.key
+        const indexPath = indexPre !== undefined ? `${indexPre}.${index}` : `${index}`
+
         let _val = this.formObjToVal(this.useEditData, Key)
         _val = typeOf(_val) === 'object' ? _val.value : _val
+        // 仅剩一条的话不能删除
+        const workTypeArr = arr.length === 1 ? ['add', 'copy', 'up', 'down'] : ['acc', 'add', 'copy', 'up', 'down']
         return (
-          item.children ? (
-            <div className='ggg'>
-              <span>{camelCase(item.key)}</span>
-              {renderItem(item.children)}
-            </div>
-          ) :
-            !item.isEdit ?
-              (<div key={item.key + index} draggable={this.showWork} className="itemBox" data-index={`${index}-${item.key}`}>
-                <FormItem className={this.showWork ? 'hasWork work' : 'noWork work'} key={item.key + index} label={camelCase(item.key)}>
-                  {getFieldDecorator(Key, {
+          !item.isEdit ?
+            (<div
+              key={Key + indexPath}
+              // draggable={this.showWork} 
+              className="itemBox" data-index={`${indexPath}-${item.key}`}
+            >
+              <FormItem className={(this.showWork ? 'hasWork work' : 'noWork work') + (item.children ? ' haveChild' : ' noChild')} key='FormItem' label={camelCase(item.key)}>
+                {item.children ? <ConfigItem
+                  handel={(type, con) => this.handelAction(indexPath, type, con)}
+                  showWork={this.showWork}
+                  workTypeArr={workTypeArr}
+                  config={item} />
+                  : getFieldDecorator(Key, {
                     initialValue: _val === undefined ? item.default : _val,
                     rules: [
                       {
@@ -578,36 +658,29 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                     ]
                   })(
                     <ConfigItem
-                      dataIndex={index}
-                      changeTemp={this.changeTemp}
-                      handel={this.handelAction}
+                      changeTemp={(con) => this.changeTemp(indexPath, con)}
+                      handel={(type, con) => this.handelAction(indexPath, type, con)}
                       showWork={this.showWork}
+                      workTypeArr={workTypeArr}
                       config={item} />
                   )}
-                </FormItem>
-              </div>)
-              : (
-                <AddConfigItem
-                  shouldSubmit={this.loading}
-                  choseSelect={this.choseSelect}
-                  editRadio={this.editRadio}
-                  key={item.addId}
-                  config={item}
-                  dataIndex={index}
-                  changeTemp={this.changeTemp}
-                  onOk={this.addConfigItem} />
-              )
+              </FormItem>
+              {!item.children ? null : <div className='ggg'>
+                {renderItem(item.children, Key, indexPath)}
+              </div>}
+            </div>)
+            : getAddGroup(item, indexPath)
         )
       })
     return (
       <div className='Basic' >
-        <Form className="dropZone" {...layout} onSubmit={this.submit}>
+        <Form className="dropZone" {...layout}>
           {renderItem(this.useConfigList)}
-          <Button type="primary" loading={this.loading} className='submitBtn' htmlType="submit">Submit</Button>
+          <Button type="primary" loading={this.loading} className='submitBtn' onClick={this.submit}>Submit</Button>
           {
             // type有值说明不是Pid中的 
-            this.showWork && this.props.type ? <Button className="cancelBtn" onClick={this.toggleWork}>Cancel</Button>
-              : this.props.type === "basic1" ? null : <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
+            this.showWork && BasicType ? <Button className="cancelBtn" onClick={this.toggleWork}>Cancel</Button>
+              : BasicType === "basic1" ? null : <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
           }
         </Form>
         <Button className="workBtn" type="primary" onClick={this.toggleWork}>{this.showWork ? 'Cancel' : 'Edit Filed'}</Button>

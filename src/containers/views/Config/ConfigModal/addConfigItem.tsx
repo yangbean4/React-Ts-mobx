@@ -5,7 +5,7 @@ import { Form, Input, Row, Col, Button, Select, Radio, Divider, Icon } from 'ant
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import { value_typeOption } from '../as.config'
-import { conItem } from './type'
+import { conItemTreeItem } from './type'
 // import { SketchPicker } from 'react-color'
 import InputGroup from './InputGroup/index'
 import { _nameCase, typeOf } from '@utils/index'
@@ -30,14 +30,15 @@ interface IStoreProps {
 }
 
 interface IProps extends IStoreProps {
-  config?: conItem
-  onOk?: (con?: conItem) => void
-  choseSelect?: (con: conItem) => void
-  editRadio?: (con: conItem) => void
+  config?: conItemTreeItem
+  children?: () => React.ReactNode
+  onOk?: (con?: conItemTreeItem) => void
+  choseSelect?: (con: conItemTreeItem) => void
+  editRadio?: (con: conItemTreeItem) => void
   shouldSubmit?: boolean
-  dataIndex?: number
-  changeTemp?: (index: number, config?: conItem) => void
-
+  changeTemp?: (config?: conItemTreeItem) => void
+  setType?: () => void
+  valueTypeArr?: string[]
 }
 
 @inject(
@@ -66,6 +67,12 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
   get fmtValueType() {
     const value_type = this.props.config.value_type
     return typeOf(value_type) === 'number' ? value_type.toString() : value_type
+  }
+
+  @computed
+  get value_typeOption() {
+    const set = new Set(this.props.valueTypeArr)
+    return value_typeOption.filter(ele => set.has(ele.key))
   }
 
   @computed
@@ -127,7 +134,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
   }
 
   changeTemp = () => {
-    this.props.changeTemp(this.props.dataIndex, this.props.config)
+    this.props.changeTemp(this.props.config)
   }
 
   handleColorChange = (data) => {
@@ -180,6 +187,9 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
     this.props.form.setFieldsValue({
       default: value === '4' ? [''] : undefined
     })
+    if (value === '8') {
+      this.props.setType()
+    }
   }
 
   editRadio = () => {
@@ -189,8 +199,8 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
     this.props.choseSelect(this.props.config)
   }
 
-  getChild = () => {
-    const config = this.props.config
+  getChild = (config: conItemTreeItem) => {
+    // const config = this.props.config
     const getFieldDecorator = this.props.form.getFieldDecorator
     const {
       option = ''
@@ -360,65 +370,82 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
             )}
           </FormItem>
         </Col >)
+      // case '8': {
+      //   return (
+      //     <div className='addGroup' key='addGroup'>
+      //       {(config.children || []).map((ele) => this.getBox(ele))}
+      //     </div>
+      //   )
+      // }
     }
   }
 
-  render() {
-    const { form, config } = this.props
+  getBox = (config) => {
+    const { form } = this.props
     const {
       key,
-      value_type
     } = config
     const { getFieldDecorator } = form
-
-
     return (
-      <Row className='addConfigItem'>
-        <Col span={span} offset={3}>
-          <FormItem {...layout}>
-            {getFieldDecorator('key', {
-              initialValue: key,
-              rules: [
-                {
-                  required: true, message: "Required"
-                }
-              ]
-            })(<Input placeholder='name' />)}
-          </FormItem>
-        </Col>
-        <Col span={span}>
-          <FormItem {...layout}>
-            {getFieldDecorator('value_type', {
-              initialValue: this.fmtValueType,
-              rules: [
-                {
-                  required: true, message: "Required"
-                }
-              ]
-            })(
-              <Select
-                allowClear
-                showSearch
-                getPopupContainer={trigger => trigger.parentElement}
-                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                onChange={this.typeChange}
-                placeholder='value type'
-              >
-                {value_typeOption.map(c => (
-                  <Select.Option {...c}>
-                    {c.key}
-                  </Select.Option>
-                ))}
-              </Select>
-            )}
-          </FormItem>
-        </Col>
-        {this.getChild()}
-        <Col span={3} offset={1}>
-          <Button type="primary" onClick={this.submit}>OK</Button>
-        </Col>
-      </Row>
+      <React.Fragment>
+        <Row className='addConfigItem' key={config.addId}>
+          <Col span={span} offset={3}>
+            <FormItem {...layout}>
+              {getFieldDecorator('key', {
+                initialValue: key,
+                rules: [
+                  {
+                    required: true, message: "Required"
+                  }
+                ]
+              })(<Input placeholder='name' />)}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem {...layout}>
+              {getFieldDecorator('value_type', {
+                initialValue: this.fmtValueType,
+                rules: [
+                  {
+                    required: true, message: "Required"
+                  }
+                ]
+              })(
+                <Select
+                  disabled={config.typeIsOnly8}
+                  allowClear
+                  showSearch
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  onChange={this.typeChange}
+                  placeholder='value type'
+                >
+                  {this.value_typeOption.map(c => (
+                    <Select.Option value={c.value} key={c.value}>
+                      {c.key}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          {this.getChild(config)}
+          <Col span={3} offset={1}>
+            <Button type="primary" onClick={this.submit}>OK</Button>
+          </Col>
+        </Row>
+        {
+          this.props.children ? <div className='additemGroup'>
+            {this.props.children}
+          </div> : null
+        }
+      </React.Fragment>
+
     )
+  }
+
+  render() {
+    return this.getBox(this.props.config)
   }
 }
 

@@ -126,7 +126,7 @@ class PermissionModal extends ComponentExt<IProps & FormComponentProps> {
         } = permission || {}
         return (
             <div className='sb-form'>
-                <Form className={styles.permissionModal} onSubmit={this.submit}>
+                <Form className={styles.permissionModal} >
                     <FormItem {...formItemLayout} label="Permission Name">
                         {getFieldDecorator('name', {
                             initialValue: name,
@@ -177,7 +177,7 @@ class PermissionModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
 
                     <FormItem className={styles.btnBox}>
-                        <Button type="primary" loading={this.loading} htmlType="submit">Submit</Button>
+                        <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
                         <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
                     </FormItem>
                 </Form >

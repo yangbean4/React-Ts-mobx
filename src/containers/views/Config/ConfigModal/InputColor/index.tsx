@@ -49,12 +49,14 @@ class InputColor extends React.Component<IProp>  {
   componentDidMount() {
     document.addEventListener('dblclick', (e) => {
       const dom = this.colorBox.current as HTMLElement
-      const domRect = dom.getBoundingClientRect()
-      const show = e.clientY < domRect.bottom && e.clientY > domRect.top
-        && e.clientX < domRect.right && e.clientX > domRect.left
-      runInAction('SET_SHOW', () => {
-        this.pickerVisible = show
-      })
+      if (dom) {
+        const domRect = dom.getBoundingClientRect()
+        const show = e.clientY < domRect.bottom && e.clientY > domRect.top
+          && e.clientX < domRect.right && e.clientX > domRect.left
+        runInAction('SET_SHOW', () => {
+          this.pickerVisible = show
+        })
+      }
     })
   }
 
