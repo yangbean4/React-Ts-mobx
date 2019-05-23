@@ -228,93 +228,6 @@
     }
   }
   // ---------------------------------
-
-  :global(.Basic) {
-    :global(.additemGroup) {
-      margin-left: 90px;
-    }
-    :global(.dropZone > .addItemHasChildren) {
-      margin-left: -90px;
-    }
-
-    :global(.ant-form-item-label) {
-      font-size: 14px;
-      font-family: Montserrat-Light;
-      color: #3e3664;
-    }
-    :global(.addConfigItem) {
-      width: 900px;
-      min-height: 70px;
-      padding-top: 15px;
-    }
-    :global(.gouSelect .ant-select) {
-      display: inline-block;
-      margin-left: 14px;
-      // width: calc(100% - );
-    }
-    :global(.redioGroup) {
-      float: left;
-      display: inline-block;
-      height: 100%;
-      width: max-content;
-      :global(.ant-input) {
-        width: 140px;
-      }
-    }
-
-    // :global(.addItem) {
-    // }
-
-    :global(.work.ant-form-item) {
-      width: 900px;
-      min-height: 70px;
-      margin-bottom: 0;
-      display: flex;
-      // justify-content: center;
-      align-items: center;
-      &:global(.hasWork:hover) {
-        background-color: rgba(248, 249, 254, 1);
-        :global(.workBox) {
-          display: block !important;
-        }
-      }
-
-      :global(.ant-form-item-control-wrapper) {
-        width: 560px;
-        height: auto;
-        :global(.box) {
-          width: 100%;
-          :global(.mainBox) {
-            width: 50%;
-            float: left;
-            :global(.hasUnit) {
-              width: 50%;
-              margin-right: 10px;
-            }
-          }
-
-          :global(.workBox) {
-            width: 40%;
-            float: right;
-            display: none;
-            :global(.anticon) {
-              margin-right: 10px;
-              color: rgba(186, 193, 229, 1);
-              &:hover {
-                color: #667ffd;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    :global(.workBtn) {
-      position: absolute;
-      top: 60px;
-      right: 30px;
-    }
-  }
 }
 
 .head {
@@ -334,6 +247,118 @@
       font-weight: 300;
       flex: 1;
       color: rgba(154, 151, 174, 1);
+    }
+  }
+}
+
+:global(.Basic) {
+  :global(.additemGroup) {
+    margin-left: 90px;
+    :global(.ggg) {
+      margin-left: 80px;
+    }
+  }
+  :global(.dropZone > .addItemHasChildren) {
+    margin-left: -90px;
+  }
+
+  :global(.ant-form-item-label) {
+    font-size: 14px;
+    font-family: Montserrat-Light;
+    color: #3e3664;
+  }
+  :global(.addConfigItem) {
+    width: 900px;
+    min-height: 70px;
+    padding-top: 15px;
+  }
+  :global(.gouSelect .ant-select) {
+    display: inline-block;
+    margin-left: 14px;
+    // width: calc(100% - );
+  }
+  :global(.redioGroup) {
+    float: left;
+    display: inline-block;
+    height: 100%;
+    width: max-content;
+    :global(.ant-input) {
+      width: 140px;
+    }
+  }
+
+  // :global(.addItem) {
+  // }
+
+  :global(.work.ant-form-item) {
+    width: 900px;
+    min-height: 70px;
+    margin-bottom: 0;
+    display: flex;
+    // justify-content: center;
+    align-items: center;
+    &:global(.hasWork:hover) {
+      background-color: rgba(248, 249, 254, 1);
+      :global(.workBox) {
+        display: block !important;
+      }
+    }
+
+    :global(.ant-form-item-control-wrapper) {
+      width: 560px;
+      height: auto;
+      :global(.box) {
+        width: 100%;
+        :global(.mainBox) {
+          width: 50%;
+          float: left;
+          :global(.hasUnit) {
+            width: 50%;
+            margin-right: 10px;
+          }
+        }
+
+        :global(.workBox) {
+          width: 40%;
+          float: right;
+          display: none;
+          :global(.anticon) {
+            margin-right: 10px;
+            color: rgba(186, 193, 229, 1);
+            &:hover {
+              color: #667ffd;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  :global(.workBtn) {
+    position: absolute;
+    top: 60px;
+    right: 30px;
+  }
+}
+
+:global(.PID) {
+  :global(.Basic) {
+    :global(.dropZone > .addItemHasChildren) {
+      margin-left: 0;
+    }
+  }
+  :global {
+    .dropZone > .itemBox {
+      & > .haveChild > .ant-form-item-label > label {
+        margin-right: 28px;
+        float: right;
+      }
+      & > .ggg {
+        margin-left: 80px;
+        .ggg {
+          margin-left: 80px;
+        }
+      }
     }
   }
 }

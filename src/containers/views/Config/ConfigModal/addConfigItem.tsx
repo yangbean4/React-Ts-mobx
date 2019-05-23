@@ -37,7 +37,7 @@ interface IProps extends IStoreProps {
   editRadio?: (con: conItemTreeItem) => void
   shouldSubmit?: boolean
   changeTemp?: (config?: conItemTreeItem) => void
-  setType?: (string) => void
+  setType?: (string, data) => void
   valueTypeArr?: string[]
 }
 
@@ -187,7 +187,9 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
     this.props.form.setFieldsValue({
       default: value === '4' ? [''] : undefined
     })
-    this.props.setType(value)
+    this.props.setType(value, {
+      key: this.props.form.getFieldValue('key')
+    })
   }
 
   editRadio = () => {

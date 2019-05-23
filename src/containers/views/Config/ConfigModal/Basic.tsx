@@ -12,15 +12,27 @@ import ChoseSelectModal from './choseSelectModal/index'
 import EditRedioModal from './editRedioModal/index'
 
 const isLikeArray = (res: object) => {
-  return res && Object.keys(res).every(key => !isNaN(Number(key)))
+  return typeOf(res) === 'array' || (res && typeOf(res) === 'object' && Object.keys(res).every(key => !isNaN(Number(key))))
 }
 
 const likeArray2obj = (res) => {
-  let arr = {}
+  let tar = {}
   Object.keys(res).forEach(ele => {
-    arr = Object.assign(arr, res[ele])
+    tar = Object.assign(tar, typeOf(res[ele]) === 'object' ? deepLikeArray2obj(res[ele]) : res[ele])
   })
-  return arr
+  return tar
+}
+
+const deepLikeArray2obj = (res) => {
+  let tar = {}
+  Object.keys(res).forEach(ele => {
+    let value = res[ele]
+    if (isLikeArray(value) && typeOf(value[0]) !== 'string' && typeOf(value[0]) !== 'number') {
+      value = likeArray2obj(value)
+    }
+    tar[ele] = value
+  })
+  return tar
 }
 
 const objCaseName = (res) => {
@@ -29,7 +41,6 @@ const objCaseName = (res) => {
     arr[_nameCase(ele)] = res[ele]
   })
   return arr
-
 }
 
 const FormItem = Form.Item
@@ -97,7 +108,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   private fromUseList = (() => {
     let last_id = 0
-    const getData = (arr, values) => arr.map((ele, index, array) => {
+    const getData = (arr, values, type?) => arr.map((ele, index, array) => {
       const { key, value_type, addId, children } = ele
       let value = values[key];
       value = value_type === '8' && children ? getData(children, value) : value
@@ -127,7 +138,11 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         delete mm.isEdit
         tt = mm
       }
-      return tt
+
+      return type && value_type === '8' ? {
+        ...tt,
+        value_type: '8'
+      } : tt
     })
     return getData;
   })()
@@ -182,6 +197,11 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     return !!Object.keys(this.useEditData).length
   }
 
+  // @computed
+  // allEditdataList(){
+
+  // }
+
   @computed
   get editDataSortTarget() {
     const target = {}
@@ -218,7 +238,10 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     const platform = (this.props.targetConfig || {}).platform === 'android' ? 2 : 1
     const arr = this.fmtConfigList
     const editDataSortTarget = this.editDataSortTarget
-    const fmt = this.haveUseEditData ? arr.filter(a => editDataSortTarget.hasOwnProperty(_nameCase(a.key))) : arr
+    // this.props.editData
+    // const fmt = this.haveUseEditData ? arr.filter(a => editDataSortTarget.hasOwnProperty(_nameCase(a.key))) : arr
+    const fmt = this.haveUseEditData ? this.diffTree(arr, this.useEditData) : arr
+
     return fmt.filter(ele => ele.platform != platform)
       .slice().sort((a, b) => a.sort - b.sort)
       .slice().sort((a, b) => editDataSortTarget[_nameCase(b.key)] - editDataSortTarget[_nameCase(a.key)])
@@ -227,6 +250,15 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   @computed
   get useConfigList(): conItemTree {
     return this.thisConfigList || this.configList
+  }
+
+  diffTree = (arr, data) => {
+    return arr.filter(ele => data.hasOwnProperty(_nameCase(ele.key))).map(ele => {
+      if (ele.children) {
+        ele.children = this.diffTree(ele.children, data[_nameCase(ele.key)])
+      }
+      return ele
+    })
   }
 
 
@@ -247,7 +279,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           } else {
             try {
 
-              const dataArr = this.fromUseList(this.useConfigList, values)
+              const dataArr = this.fromUseList(this.useConfigList, values, !this.props.type)
               console.log(JSON.stringify(dataArr))
               onSubmit(dataArr)
               // this.confirmModal ? this.props.onCancel(dataArr) : onSubmit(dataArr)
@@ -301,9 +333,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           addId: id,
           isEdit: true,
           typeIsOnly8,
-        }
-        if (typeIsOnly8) {
-          addItem.children = [
+          children: typeIsOnly8 ? [
             {
               value_type: undefined,
               key: undefined,
@@ -313,8 +343,9 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
               addId: getGuId(),
               isEdit: true,
             }
-          ]
+          ] : undefined
         }
+
         this.handelUpdateList(arr, index + 1, undefined, addItem)
         break
       }
@@ -333,9 +364,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           addId: id,
           isEdit: true,
           typeIsOnly8,
-        }
-        if (typeIsOnly8) {
-          addItem.children = [
+          children: typeIsOnly8 ? [
             {
               value_type: undefined,
               key: undefined,
@@ -345,7 +374,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
               addId: getGuId(),
               isEdit: true,
             }
-          ]
+          ] : undefined
         }
         this.handelUpdateList(arr, index + 1, undefined, addItem)
         break
@@ -355,8 +384,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       this.thisConfigList = arrM
     })
   }
-  addConfigItemSetType = (indexPath, type) => {
-    console.log(indexPath)
+  addConfigItemSetType = (indexPath, type, data) => {
     const indexPathArr = indexPath.split('.')
     let arrM = JSON.parse(JSON.stringify(this.useConfigList)), arr = arrM, index = Number(indexPathArr.pop())
     indexPathArr.forEach(ele => arr = arr[Number(ele)].children)
@@ -365,6 +393,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         ...arr[index],
         value_type: '8',
         unit: undefined,
+        ...data,
         id: undefined,
         default: undefined,
         addId: getGuId(),
@@ -520,13 +549,12 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   changeTemp = (indexPath: string, con) => {
     this.nowHandelConfigIndexPath = indexPath
-    this.nowHandelConfig = con
     this.choseSelectModalSwitch()
   }
 
-  choseSelect = (con: conItem) => {
-    this.nowHandelConfig = con
+  choseSelect = (indexPath) => {
     // this.choseSelectModalSwitch()
+    this.nowHandelConfigIndexPath = indexPath
     this.editRedioModaType = 0
     this.editRedioModalSwitch()
   }
@@ -553,45 +581,56 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     //   [key]: data.templateId,
     // });templateId
 
-    const arr: conItemTree = JSON.parse(JSON.stringify(this.useConfigList))
+    const indexPath = this.nowHandelConfigIndexPath;
 
-    const per = this.nowHandelConfig = {
-      ...this.nowHandelConfig,
+    const indexPathArr = indexPath.split('.')
+    const index = indexPathArr.pop();
+    let arrM = JSON.parse(JSON.stringify(this.useConfigList)),
+      arr = arrM
+    indexPathArr.forEach(ele => arr = arr[Number(ele)].children)
+
+    const per = {
+      ...arr[index],
       ...data,
       template_pid: pid,
       default: data.templateId || data.value,
     }
-    arr[this.nowHandelConfigIndexPath] = per
+    arr[index] = per
     runInAction('UP_THIS_CONFIG_LIST', () => {
-      this.thisConfigList = arr
+      this.thisConfigList = arrM
     })
-    console.log(arr)
-    runInAction('UP_THIS_CONFIG_LIST', () => {
-      this.nowHandelConfig = per
-    })
+    console.log(arrM)
   }
-
+  // ------------------------
   editRadio = (con: conItem) => {
     this.nowHandelConfig = con
     this.editRedioModaType = 1
     this.editRedioModalSwitch()
   }
   setEditRedio = (data) => {
+    const indexPath = this.nowHandelConfigIndexPath;
+
+    const indexPathArr = indexPath.split('.')
+    const index = indexPathArr.pop();
+    let arrM = JSON.parse(JSON.stringify(this.useConfigList)),
+      arr = arrM
+    indexPathArr.forEach(ele => arr = arr[Number(ele)].children)
+
     let option = data.option;
     let def = data.default
-    // if (this.editRedioModaType === 0) {
-    //   option = data.option.split(',').map((ele, index) => {
-    //     return {
-    //       label: ele,
-    //       value: index,
-    //     }
-    //   })
-    // }
-    runInAction('SET_OPTION', () => {
-      this.nowHandelConfig.option = option
-      this.nowHandelConfig.default = def
+
+    const per = {
+      ...arr[index],
+      ...data,
+      option,
+      default: def,
+    }
+    arr[index] = per
+    runInAction('UP_THIS_CONFIG_LIST', () => {
+      this.thisConfigList = arrM
     })
   }
+  // ------------------------------------
 
   lastStep = () => {
     this.confirmModal = Modal.confirm({
@@ -616,7 +655,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   formObjToVal = (obj, keyStr: string) => {
     let j = obj
     try {
-      keyStr.split('.').forEach(key => j = j[key])
+      keyStr.split('.').forEach(key => j = j[key] || j[_nameCase(key)])
       return j
     } catch (error) {
       return undefined
@@ -639,12 +678,12 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       return (
         <AddConfigItem
           shouldSubmit={this.loading}
-          choseSelect={this.choseSelect}
+          choseSelect={() => this.choseSelect(indexPath)}
           editRadio={this.editRadio}
           key={item.addId}
           config={item}
           valueTypeArr={valueTypeArr}
-          setType={(type) => this.addConfigItemSetType(indexPath, type)}
+          setType={(type, data) => this.addConfigItemSetType(indexPath, type, data)}
           changeTemp={(con) => this.changeTemp(indexPath, con)}
           onOk={(con) => this.addConfigItem(indexPath, con)} >
           {
