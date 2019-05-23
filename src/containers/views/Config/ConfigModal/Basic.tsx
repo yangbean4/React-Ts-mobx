@@ -210,24 +210,18 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   @computed
   get fmtConfigList() {
-    const arr = (JSON.parse(JSON.stringify(this.props.addList)) || []).filter(ele => ele && ele.key)
-    return arr.map(ele => {
-      return {
-        ...ele,
-        key: _nameCase(ele.key)
-      }
-    })
+    return (JSON.parse(JSON.stringify(this.props.addList)) || []).filter(ele => ele && ele.key)
   }
 
   @computed
   get configList(): conItemTree {
     const platform = (this.props.targetConfig || {}).platform === 'android' ? 2 : 1
-    const arr = this.fmtConfigList;
+    const arr = this.fmtConfigList
     const editDataSortTarget = this.editDataSortTarget
-    const fmt = this.haveUseEditData ? arr.filter(a => editDataSortTarget.hasOwnProperty(a.key)) : arr
+    const fmt = this.haveUseEditData ? arr.filter(a => editDataSortTarget.hasOwnProperty(_nameCase(a.key))) : arr
     return fmt.filter(ele => ele.platform != platform)
       .slice().sort((a, b) => a.sort - b.sort)
-      .slice().sort((a, b) => editDataSortTarget[b.key] - editDataSortTarget[a.key])
+      .slice().sort((a, b) => editDataSortTarget[_nameCase(b.key)] - editDataSortTarget[_nameCase(a.key)])
   }
 
   @computed
@@ -255,7 +249,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
               const dataArr = this.fromUseList(this.useConfigList, values)
               console.log(JSON.stringify(dataArr))
-              // onSubmit(dataArr)
+              onSubmit(dataArr)
               // this.confirmModal ? this.props.onCancel(dataArr) : onSubmit(dataArr)
             } catch (error) {
               //console.log(error)
@@ -298,7 +292,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       case 'copy': {
         const id = getGuId()
         const { value_type, unit } = config
-        const addItem = {
+        let addItem = {
           value_type: value_type,
           key: undefined,
           unit,
@@ -307,6 +301,19 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           addId: id,
           isEdit: true,
           typeIsOnly8,
+        }
+        if (typeIsOnly8) {
+          addItem.children = [
+            {
+              value_type: undefined,
+              key: undefined,
+              unit: undefined,
+              id: undefined,
+              default: undefined,
+              addId: getGuId(),
+              isEdit: true,
+            }
+          ]
         }
         this.handelUpdateList(arr, index + 1, undefined, addItem)
         break
@@ -317,7 +324,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       }
       case 'add': {
         const id = getGuId()
-        const addItem = {
+        let addItem = {
           value_type: typeIsOnly8 ? '8' : undefined,
           key: undefined,
           unit: undefined,
@@ -327,6 +334,19 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           isEdit: true,
           typeIsOnly8,
         }
+        if (typeIsOnly8) {
+          addItem.children = [
+            {
+              value_type: undefined,
+              key: undefined,
+              unit: undefined,
+              id: undefined,
+              default: undefined,
+              addId: getGuId(),
+              isEdit: true,
+            }
+          ]
+        }
         this.handelUpdateList(arr, index + 1, undefined, addItem)
         break
       }
@@ -335,31 +355,36 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       this.thisConfigList = arrM
     })
   }
-  addConfigItemSetType = (indexPath) => {
+  addConfigItemSetType = (indexPath, type) => {
     console.log(indexPath)
     const indexPathArr = indexPath.split('.')
     let arrM = JSON.parse(JSON.stringify(this.useConfigList)), arr = arrM, index = Number(indexPathArr.pop())
     indexPathArr.forEach(ele => arr = arr[Number(ele)].children)
-    arr[index] = {
-      ...arr[index],
-      value_type: '8',
-      unit: undefined,
-      id: undefined,
-      default: undefined,
-      addId: getGuId(),
-      isEdit: true,
-      children: [
-        {
-          value_type: undefined,
-          key: undefined,
-          unit: undefined,
-          id: undefined,
-          default: undefined,
-          addId: getGuId(),
-          isEdit: true,
-        }
-      ]
+    if (type === '8') {
+      arr[index] = {
+        ...arr[index],
+        value_type: '8',
+        unit: undefined,
+        id: undefined,
+        default: undefined,
+        addId: getGuId(),
+        isEdit: true,
+        children: [
+          {
+            value_type: undefined,
+            key: undefined,
+            unit: undefined,
+            id: undefined,
+            default: undefined,
+            addId: getGuId(),
+            isEdit: true,
+          }
+        ]
+      }
+    } else {
+      arr[index].children = null
     }
+
     runInAction('SET_ARR', () => {
       this.thisConfigList = arrM
     })
@@ -391,9 +416,11 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         this.$message.error(`${config.key} is exist!`)
         errorCb()
       } else {
+        const children = arr[index].children ? arr[index].children.filter(ele => !ele.isEdit) : null
         arr[index] = {
           ...arr[index],
           ...config,
+          children,
           isEdit: false
         }
         runInAction('UP_THIS_CONFIG_LIST', () => {
@@ -617,7 +644,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           key={item.addId}
           config={item}
           valueTypeArr={valueTypeArr}
-          setType={() => this.addConfigItemSetType(indexPath)}
+          setType={(type) => this.addConfigItemSetType(indexPath, type)}
           changeTemp={(con) => this.changeTemp(indexPath, con)}
           onOk={(con) => this.addConfigItem(indexPath, con)} >
           {

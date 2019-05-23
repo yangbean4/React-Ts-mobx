@@ -37,7 +37,7 @@ interface IProps extends IStoreProps {
   editRadio?: (con: conItemTreeItem) => void
   shouldSubmit?: boolean
   changeTemp?: (config?: conItemTreeItem) => void
-  setType?: () => void
+  setType?: (string) => void
   valueTypeArr?: string[]
 }
 
@@ -187,9 +187,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
     this.props.form.setFieldsValue({
       default: value === '4' ? [''] : undefined
     })
-    if (value === '8') {
-      this.props.setType()
-    }
+    this.props.setType(value)
   }
 
   editRadio = () => {
@@ -387,7 +385,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
     } = config
     const { getFieldDecorator } = form
     return (
-      <React.Fragment>
+      <div className={this.props.children ? 'addItemHasChildren' : ''}>
         <Row className='addConfigItem' key={config.addId}>
           <Col span={span} offset={3}>
             <FormItem {...layout}>
@@ -439,7 +437,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
             {this.props.children}
           </div> : null
         }
-      </React.Fragment>
+      </div>
 
     )
   }

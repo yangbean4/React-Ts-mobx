@@ -231,7 +231,10 @@
 
   :global(.Basic) {
     :global(.additemGroup) {
-      margin-left: 10%;
+      margin-left: 90px;
+    }
+    :global(.dropZone > .addItemHasChildren) {
+      margin-left: -90px;
     }
 
     :global(.ant-form-item-label) {
