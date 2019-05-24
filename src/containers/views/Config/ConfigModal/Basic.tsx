@@ -199,7 +199,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   }
   @computed
   get useEditDataKeySet() {
-    return new Set(this.useConfigList.filter(ele => !ele.isEdit).map(ele => ele.key))
+    const getList = (arr) => arr.reduce((prev, item) => prev.concat(Array.isArray(item.children) ? getList(item.children) : item), [])
+    return new Set(getList(this.useConfigList).filter(ele => !ele.isEdit).map(ele => _nameCase(ele.key)))
   }
   @computed
   get haveUseEditData() {
@@ -261,7 +262,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   }
 
   diffTree = (arr, data) => {
-    return arr.filter(ele => data.hasOwnProperty(_nameCase(ele.key))).map(ele => {
+    const set = new Set(Object.keys(data || {}).map(ele => _nameCase(ele)))
+    return arr.filter(ele => set.has(_nameCase(ele.key))).map(ele => {
       if (ele.children) {
         ele.children = this.diffTree(ele.children, data[_nameCase(ele.key)])
       }
@@ -306,7 +308,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     const indexPathArr = indexPath.split('.')
     let arrM = JSON.parse(JSON.stringify(this.useConfigList)), arr = arrM, index = Number(indexPathArr.pop())
     indexPathArr.forEach(ele => arr = arr[Number(ele)].children)
-    const getBol8 = (index) => arr[index].value_type == '8'
+    const getBol8 = (index) => arr[index] && arr[index].value_type == '8'
     const typeIs8 = getBol8(index)
     // 从第八种类型中增加出来的，并且在最外层 就只能是第八种类型
     const typeIsOnly8 = typeIs8 && !indexPath.includes('.')
@@ -446,8 +448,6 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
       if (this.useEditDataKeySet.has(_nameCase(config.key))) {
         console.log([...this.useEditDataKeySet]);
-        console.log([...this.useEditDataKeySet]);
-
         this.$message.error(`${config.key} is exist!`)
         errorCb()
       } else {
