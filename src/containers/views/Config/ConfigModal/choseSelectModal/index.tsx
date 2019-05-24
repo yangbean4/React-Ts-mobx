@@ -52,7 +52,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
 
   @observable
   private checkedKeys: string[]
-  
+
   @observable
   private showErrMsg: boolean = false
 
@@ -133,7 +133,6 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
   }
   render() {
     const { form, visible, onCancel, templateTree } = this.props
-    console.log(this.showErrMsg)
     return (
 
       <React.Fragment>

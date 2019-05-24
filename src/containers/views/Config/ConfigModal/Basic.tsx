@@ -206,8 +206,11 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   }
   @computed
   get useEditDataKeySet() {
-    const getList = (arr) => arr.reduce((prev, item) => prev.concat(Array.isArray(item.children) ? getList(item.children) : item), [])
-    return new Set(getList(this.useConfigList).filter(ele => !ele.isEdit).map(ele => _nameCase(ele.key)))
+    const getList = (arr) => arr.reduce((prev, item) => prev.concat(Array.isArray(item.children) ? getList(item.children).concat(item) : item), [])
+    const all = getList(this.useConfigList);
+    const arr = new Set(all.filter(ele => !ele.isEdit).map(ele => _nameCase(ele.key)))
+    console.log(arr)
+    return arr
   }
   @computed
   get haveUseEditData() {
@@ -458,7 +461,6 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
       const index = arr.findIndex(ele => ele.addId === config.addId);
       // const arr: conItemTree = JSON.parse(JSON.stringify(this.useConfigList))
-
       if (this.useEditDataKeySet.has(_nameCase(config.key))) {
         this.$message.error(`${config.key} is exist!`)
         errorCb()

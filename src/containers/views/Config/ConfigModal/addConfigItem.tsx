@@ -267,6 +267,11 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
             {/* <Button onDoubleClick={this.choseSelect} key='Button' type="dashed">edit Select</Button> */}
             {getFieldDecorator('default', {
               initialValue: config.default,
+              rules: [
+                {
+                  required: true, message: "Required"
+                }
+              ]
             })(<Select
               dropdownRender={
                 menu => (
@@ -344,6 +349,11 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
           <FormItem {...layout} className='gouSelect'>
             {getFieldDecorator('default', {
               initialValue: config.default,
+              rules: [
+                {
+                  required: true, message: "Required"
+                }
+              ]
             })(<Select
               dropdownRender={
                 menu => (
