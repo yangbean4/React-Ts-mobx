@@ -248,6 +248,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
       <Modal
         title='Add Template'
         visible={visible}
+        destroyOnClose={true}
         onOk={this.submit}
         onCancel={this.onCancel}
         footer={[

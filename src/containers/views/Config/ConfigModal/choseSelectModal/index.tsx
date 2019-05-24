@@ -135,6 +135,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
           visible={visible}
           onOk={this.submit}
           onCancel={this.onCancel}
+          destroyOnClose={true}
           footer={[
             <Button key='cancel' loading={this.loading} onClick={onCancel} >Cancel</Button>,
             <Button key='submit' type="primary" loading={this.loading} onClick={this.submit} >Submit</Button>

@@ -112,9 +112,10 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     let last_id = 0
     const getData = (arr, values, level, type?) => arr.map((ele, index, array) => {
       const { key, value_type, addId, children } = ele
-      let value = values[key];
+      const _key = _nameCase(key);
+      let value = values[_key];
       value = value_type == '8' && children ? getData(children, value, level + 1) : value
-      let tt = { [key]: value }
+      let tt = { [_key]: value }
       last_id = index === 0 ? 0 : array[index].id || last_id
       // 处理后端返回的默认值在直接保存时有坑的问题
       if (value_type == '4') {
@@ -130,13 +131,13 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           }
         }
         vv = vv.length ? vv : ['']
-        tt = { [key]: vv }
+        tt = { [_key]: vv }
       }
       // 说明是新增加的
       // if (!this.useEditData.hasOwnProperty(key)) {
       if (addId && !children) {
         const mm = {
-          ...ele, key,
+          ...ele, key: _key,
           value: value || ele.default,
           last_id,
           level
@@ -176,7 +177,13 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   @action
   toggleWork = () => {
     if (this.showWork) {
-      const arr: conItemTree = JSON.parse(JSON.stringify(this.useConfigList)).filter(ele => !ele.isEdit)
+      const delEdit = (arr) => arr.filter(ele => !ele.isEdit).map(ele => {
+        if (ele.children) {
+          ele.children = delEdit(ele.children)
+        }
+        return ele
+      })
+      const arr: conItemTree = delEdit(JSON.parse(JSON.stringify(this.useConfigList)))
       runInAction('UP_THIS_CONFIG_LIST', () => {
         this.thisConfigList = arr
       })
@@ -216,26 +223,32 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   get editDataSortTarget() {
     const target = {}
     const editData = this.props.editData
-    if (typeOf(editData) === 'array') {
-      const length = editData.length;
-      editData.forEach((ele, index) => {
-        const key = Object.keys(ele)[0]
-        target[_nameCase(key)] = length - index
-      })
+    let tttt = 100000;
+    const runSort = (arr, per) => {
+      const jizhun = tttt - Number(per) * 100
+      if (typeOf(arr) === 'array') {
+        arr = { ...arr }
+      }
+      if (isLikeArray(arr)) {
+        const keys = Object.keys(arr).map(key => Number(key))
+
+        keys.forEach(index => {
+          let value = arr[index];
+          if (typeof value === "object") {
+            if (Object.keys(value).length === 1) {
+              const key = Object.keys(value)[0]
+              target[_nameCase(key)] = jizhun - index
+              value = value[key]
+            }
+            runSort(value, index)
+          }
+        })
+      }
     }
-
-    if (isLikeArray(editData)) {
-      const keys = Object.keys(editData).map(key => Number(key))
-      const length = Math.max.apply(null, keys)
-
-      keys.forEach(index => {
-        const key = Object.keys(editData[index])[0]
-        target[_nameCase(key)] = length - index
-      })
-
-    }
-    return Object.keys(target).length ? target : editData || {}
-
+    runSort(editData, 0);
+    const mm = Object.keys(target).length ? target : editData || {}
+    console.log(mm)
+    return mm
   }
 
   @computed
@@ -247,13 +260,12 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   get configList(): conItemTree {
     const platform = (this.props.targetConfig || {}).platform === 'android' ? 2 : 1
     const arr = this.fmtConfigList
-    const editDataSortTarget = this.editDataSortTarget
     // this.props.editData
     // const fmt = this.haveUseEditData ? arr.filter(a => editDataSortTarget.hasOwnProperty(_nameCase(a.key))) : arr
     const fmt = this.haveUseEditData ? this.diffTree(arr, this.useEditData) : arr
     return fmt.filter(ele => ele.platform != platform)
       .slice().sort((a, b) => a.sort - b.sort)
-      .slice().sort((a, b) => editDataSortTarget[_nameCase(b.key)] - editDataSortTarget[_nameCase(a.key)])
+    // .slice().sort((a, b) => editDataSortTarget[_nameCase(b.key)] - editDataSortTarget[_nameCase(a.key)])
   }
 
   @computed
@@ -268,6 +280,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         ele.children = this.diffTree(ele.children, data[_nameCase(ele.key)])
       }
       return ele
+    }).sort((a, b) => {
+      return this.editDataSortTarget[_nameCase(b.key)] - this.editDataSortTarget[_nameCase(a.key)]
     })
   }
 
@@ -315,14 +329,14 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     switch (type) {
       case 'down': {
         // 第八种类型不能到非第八种类型的组中
-        if (index !== this.useConfigList.length && typeIs8 === getBol8(index + 1)) {
+        if (index !== arrM.length) {
           this.handelUpdateList(arr, index, index + 1)
         }
         break
       }
       case 'up': {
         // 第八种类型不能到非第八种类型的组中
-        if (index !== 0 && typeIs8 === getBol8(index + 1)) {
+        if (index !== 0) {
           this.handelUpdateList(arr, index, index - 1)
         }
         break
@@ -452,12 +466,14 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         errorCb()
       } else {
         const children = arr[index].children ? arr[index].children.filter(ele => !ele.isEdit) : null
-        arr[index] = {
+        const per = {
           ...arr[index],
           ...config,
           children,
           isEdit: false
         }
+        per.key = _nameCase(per.key)
+        arr[index] = per
         runInAction('UP_THIS_CONFIG_LIST', () => {
           this.thisConfigList = arrM
         })
@@ -660,7 +676,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   formObjToVal = (obj, keyStr: string) => {
     let j = obj
     try {
-      keyStr.split('.').forEach(key => j = j[key] || j[_nameCase(key)])
+      keyStr.split('.').forEach(key => j = j[key] !== undefined ? j[key] : j[_nameCase(key)])
       return j
     } catch (error) {
       return undefined
@@ -671,7 +687,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     const { form, type: BasicType } = this.props
     const { getFieldDecorator } = form
     const { template_pid = undefined, templateId = undefined, option = '' } = this.nowHandelConfig || {}
-
+    console.log(JSON.parse(JSON.stringify(this.useEditData)));
     const getAddGroup = (item, indexPath) => {
       let valueTypeArr = BasicType === "basic1" ? ['string', 'color', 'select', 'array', 'radio', 'template']
         : !BasicType ? ['string', 'color', 'select', 'array', 'radio']
@@ -720,7 +736,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                   showWork={this.showWork}
                   workTypeArr={workTypeArr}
                   config={item} />
-                  : getFieldDecorator(Key, {
+                  : getFieldDecorator(Key.toLowerCase(), {
                     initialValue: _val === undefined ? item.default : _val,
                     rules: [
                       {

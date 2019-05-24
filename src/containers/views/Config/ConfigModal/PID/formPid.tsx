@@ -130,7 +130,7 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
     return (
       <div className={styles.formPid}>
         <FormItem className={styles.minitem} label='PID Status'>
-          {getFieldDecorator('PID_status', {
+          {getFieldDecorator('pid_status', {
             initialValue: this.getValue('PID_status') === undefined ? 1 : this.getValue('PID_status'),
             rules: [
               {
