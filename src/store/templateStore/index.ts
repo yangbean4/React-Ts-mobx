@@ -122,7 +122,8 @@ export class TemplatesStore extends StoreExt {
         return await this.api.template.createTemplate({ ...template, pid: this.template_pid })
     }
 
-    upTemplate = async (data) => {
+    upTemplate = async (data: FormData) => {
+        data.append('pid', this.template_pid.toString())
         return await this.api.util.uploadToS3(data)
     }
 

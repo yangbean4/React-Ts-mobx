@@ -54,6 +54,8 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
 
     private removePropFile: boolean = false
 
+    @observable
+    private fileName: string
     @computed
     get typeIsAdd() {
         return !this.props.template || !this.props.template.id
@@ -81,6 +83,11 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     toggleLoading = (type?) => {
         this.loading = type !== undefined ? type : !this.loading
+    }
+
+    @action
+    setFileName = (name) => {
+        this.fileName = name;
     }
 
     @action
@@ -173,16 +180,25 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
             },
             customRequest: (data) => {
                 this.setTemplate({})
+                this.setFileName('')
                 const formData = new FormData()
                 formData.append('file', data.file)
                 this.props.upTemplate(formData).then(res => {
                     this.setTemplate(res.data)
+                    this.setFileName(data.file.name)
                 }, () => {
                     this.setTemplate({})
                 }).catch(() => {
                     this.setTemplate({})
                 })
             }
+        }
+
+        const getUrl = () => {
+            const arr = this.comTemplate.template_url.split('/')
+            arr.pop()
+            arr.push(this.fileName)
+            return arr.join('/')
         }
         return (
             <Modal
@@ -238,11 +254,11 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                             </FormItem> : (
                                     <React.Fragment>
                                         <FormItem {...formItemLayout} className={styles.textItem} label="Template">
-                                            <span>{this.comTemplate.template_url.split('/').pop()}</span>
+                                            <span>{this.fileName !== undefined ? this.fileName : this.comTemplate.template_url.split('/').pop()}</span>
                                             <Icon type='iconguanbi' onClick={this.removeFile} />
                                         </FormItem>
                                         <FormItem {...formItemLayout} className={styles.textItem} label="Template Url">
-                                            <span>{this.comTemplate.template_url}</span>
+                                            <span>{this.fileName !== undefined ? getUrl() : this.comTemplate.template_url}</span>
                                         </FormItem>
                                         {
                                             this.formCon.has('template_md5') ? <FormItem {...formItemLayout} className={styles.textItem} label="Template MD5">

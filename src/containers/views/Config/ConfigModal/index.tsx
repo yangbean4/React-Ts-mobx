@@ -73,7 +73,6 @@ class ConfigModal extends ComponentExt<IStoreProps> {
         const toTree = (list) => list ? arrayToTree<conItem>(list, 'id', 'pid') : []
         const basic1 = toTree(this.addConfigGroup['basic1'])
         const basic2 = toTree(this.addConfigGroup['basic2'])
-        console.log(basic2)
         return {
             basic1,
             basic2,
@@ -193,7 +192,7 @@ class ConfigModal extends ComponentExt<IStoreProps> {
 
     }
 
-    componentWillMount() {
+    runInit = () => {
         const location = this.props.routerStore.location;
         const isAdd = location.pathname.includes('add')
 
@@ -206,6 +205,10 @@ class ConfigModal extends ComponentExt<IStoreProps> {
         }
     }
 
+    componentWillMount() {
+        this.runInit()
+    }
+
     getBox = (item) => {
         const key = item.toLowerCase()
         const Components = asynchronousComponents[item || this.activeKey]
@@ -215,6 +218,7 @@ class ConfigModal extends ComponentExt<IStoreProps> {
                 onCancel: this.goBack,
                 onSubmit: this.onSubmit,
                 editData: this.editData[key],
+                RefreshData: this.runInit,
                 configId: this.useTargetConfig.config_deploy_id,
                 // ----多传两个props
                 type: key.toLowerCase(),

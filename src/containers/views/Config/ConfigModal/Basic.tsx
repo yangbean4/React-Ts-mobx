@@ -108,14 +108,14 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   private fromUseList = (() => {
     let last_id = 0
-    const getData = (arr, values, type?) => arr.map((ele, index, array) => {
+    const getData = (arr, values, level, type?) => arr.map((ele, index, array) => {
       const { key, value_type, addId, children } = ele
       let value = values[key];
-      value = value_type === '8' && children ? getData(children, value) : value
+      value = value_type == '8' && children ? getData(children, value, level + 1) : value
       let tt = { [key]: value }
       last_id = index === 0 ? 0 : array[index].id || last_id
       // 处理后端返回的默认值在直接保存时有坑的问题
-      if (value_type === '4') {
+      if (value_type == '4') {
         let vv;
         if (Array.isArray(value)) {
           vv = value.map(v => v.toString()).filter(mn => !!mn)
@@ -133,13 +133,20 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       // 说明是新增加的
       // if (!this.useEditData.hasOwnProperty(key)) {
       if (addId && !children) {
-        const mm = { ...ele, key, value: value || ele.default, last_id }
+        const mm = {
+          ...ele, key,
+          value: value || ele.default,
+          last_id,
+          level
+        }
         delete mm.addId
         delete mm.isEdit
+        delete mm.children
+        delete mm.typeIsOnly8
         tt = mm
       }
 
-      return type && value_type === '8' ? {
+      return type && value_type == '8' ? {
         ...tt,
         value_type: '8'
       } : tt
@@ -190,7 +197,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   }
   @computed
   get useEditDataKeySet() {
-    return new Set(this.useConfigList.map(ele => ele.key))
+    return new Set(this.useConfigList.filter(ele => !ele.isEdit).map(ele => ele.key))
   }
   @computed
   get haveUseEditData() {
@@ -241,7 +248,6 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     // this.props.editData
     // const fmt = this.haveUseEditData ? arr.filter(a => editDataSortTarget.hasOwnProperty(_nameCase(a.key))) : arr
     const fmt = this.haveUseEditData ? this.diffTree(arr, this.useEditData) : arr
-
     return fmt.filter(ele => ele.platform != platform)
       .slice().sort((a, b) => a.sort - b.sort)
       .slice().sort((a, b) => editDataSortTarget[_nameCase(b.key)] - editDataSortTarget[_nameCase(a.key)])
@@ -263,7 +269,6 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
 
   submit = (e?: React.FormEvent<any>): void => {
-    //console.log(1231);
     if (e) {
       e.preventDefault()
     }
@@ -275,16 +280,13 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       async (err, values): Promise<any> => {
         if (!err) {
           if (waitItemNum) {
-            //console.log(waitItemNum);
           } else {
             try {
 
-              const dataArr = this.fromUseList(this.useConfigList, values, !this.props.type)
-              console.log(JSON.stringify(dataArr))
+              const dataArr = this.fromUseList(this.useConfigList, values, 0, !this.props.type)
               onSubmit(dataArr)
               // this.confirmModal ? this.props.onCancel(dataArr) : onSubmit(dataArr)
             } catch (error) {
-              //console.log(error)
             }
             this.toggleLoading(false)
           }
@@ -302,7 +304,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     const indexPathArr = indexPath.split('.')
     let arrM = JSON.parse(JSON.stringify(this.useConfigList)), arr = arrM, index = Number(indexPathArr.pop())
     indexPathArr.forEach(ele => arr = arr[Number(ele)].children)
-    const getBol8 = (index) => arr[index].value_type === '8'
+    const getBol8 = (index) => arr[index].value_type == '8'
     const typeIs8 = getBol8(index)
     // 从第八种类型中增加出来的，并且在最外层 就只能是第八种类型
     const typeIsOnly8 = typeIs8 && !indexPath.includes('.')
@@ -421,7 +423,6 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   @action
   addConfigItem = (indexPath, config?: conItem) => {
-    //console.log('addConfigItem');
 
     const errorCb = () => {
       this.waitItemNum = 0
@@ -442,6 +443,9 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       // const arr: conItemTree = JSON.parse(JSON.stringify(this.useConfigList))
 
       if (this.useEditDataKeySet.has(_nameCase(config.key))) {
+        console.log([...this.useEditDataKeySet]);
+        console.log([...this.useEditDataKeySet]);
+
         this.$message.error(`${config.key} is exist!`)
         errorCb()
       } else {
@@ -599,7 +603,6 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     runInAction('UP_THIS_CONFIG_LIST', () => {
       this.thisConfigList = arrM
     })
-    console.log(arrM)
   }
   // ------------------------
   editRadio = (con: conItem) => {

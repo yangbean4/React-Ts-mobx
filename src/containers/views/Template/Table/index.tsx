@@ -8,6 +8,7 @@ import { ComponentExt } from '@utils/reactExt'
 import MyIcon from '@components/Icon'
 import TemplateModal from '../TemplateModal/index'
 import { camelCase } from '@utils/index'
+import { async } from 'q';
 interface IStoreProps {
     getTemplatesloading?: boolean
     templatesList?: ITemplateStore.ITemplate[]
@@ -58,6 +59,9 @@ class TemplateTable extends ComponentExt<IProps> {
     @observable
     private delUsed: boolean
 
+    @observable
+    private actionType: string
+
     @computed
     get list_filed() {
         return this.props.templateConfig.list_filed
@@ -77,9 +81,24 @@ class TemplateTable extends ComponentExt<IProps> {
 
 
     @action
-    modifyTemplate = (template: ITemplateStore.ITemplate) => {
-        this.currentTemplate = template
-        this.templateModalVisible = true
+    modifyTemplate = async (template: ITemplateStore.ITemplate) => {
+        const res = await this.api.template.templateDetailInUse({ id: template.id })
+
+        if (res.data.errorcode !== 0) {
+            this.setDelUsed(res.data.errorcode !== 0, 'edit')
+            runInAction('sert', () => {
+                this.delTemplate = template
+            })
+            setImmediate(() => {
+                this.hideDelModalVisible()
+            })
+        } else {
+            runInAction('www', () => {
+                this.currentTemplate = template
+                this.templateModalVisible = true
+            })
+        }
+
     }
     @action
     hideTemplateModalVisible = () => {
@@ -87,15 +106,16 @@ class TemplateTable extends ComponentExt<IProps> {
     }
 
     @action
-    setDelUsed = (type) => {
+    setDelUsed = (type, actionType) => {
         this.delUsed = type
+        this.actionType = actionType
     }
 
     @action
     deleteModel = async (template: ITemplateStore.ITemplate) => {
         const res = await this.api.template.templateDetailInUse({ id: template.id })
 
-        this.setDelUsed(res.data.errorcode !== 0)
+        this.setDelUsed(res.data.errorcode !== 0, 'del')
         runInAction('sert', () => {
             this.delTemplate = template
         })
@@ -123,7 +143,7 @@ class TemplateTable extends ComponentExt<IProps> {
         return (
             <React.Fragment>
                 <Modal
-                    title="Delete"
+                    title={this.actionType === 'del' ? "Delete" : 'Edit'}
                     // destroyOnClose
                     width={400}
                     visible={this.delModalVisible}
@@ -139,9 +159,14 @@ class TemplateTable extends ComponentExt<IProps> {
                 >
 
                     {
-                        this.delUsed ?
-                            <p>It’s in use. Please remove the corresponding relation before deleting it!</p>
-                            : <p> Sure to delete {this.delTemplate.template_name}?</p>
+                        this.actionType === 'del' ? (
+                            this.delUsed ?
+                                <p>It’s in use. Please remove the corresponding relation before deleting it!</p>
+                                : <p> Sure to delete {this.delTemplate.template_name}?</p>
+                        ) : (
+                                <p>It’s in use. Please remove the corresponding relation before editit！</p>
+                            )
+
                     }
                 </Modal>
 

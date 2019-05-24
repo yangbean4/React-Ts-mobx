@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observable, action, runInAction, computed } from 'mobx'
-import { inject, observer } from 'mobx-react'
+import { observer } from 'mobx-react'
 
 import { Form, Input, Select, Button } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
@@ -9,47 +9,43 @@ import Basic from '../Basic'
 import * as styles from './index.scss'
 import { value_typeOption } from './valueType'
 import { typeOf, _nameCase } from '@utils/index'
+import { arrayToTree, queryArray } from '@utils/index'
+import { conItem } from '../type'
+
 const FormItem = Form.Item
 
-const span = 2
-const layout = {
-  labelCol: {
-    span: 6,
-  },
-  wrapperCol: {
-    span: 18
-  }
-}
 
-interface IStoreProps {
-  targetConfig?: IConfigStore.IConfigTarget
-}
-interface IProps extends IStoreProps {
+interface IProps {
   data?: any[]
+  addConfigGroup?: any
   onSubmit?: (data) => void
   onCancel?: () => void
   pidList?: string[]
 }
 
-@inject(
-  (store: IStore): IStoreProps => {
-    const { configStore } = store
-    const { targetConfig } = configStore
-    return { targetConfig }
-  }
-)
+
 
 @observer
 class FormPid extends ComponentExt<IProps & FormComponentProps> {
   @observable
   private loading: boolean = false
 
-  @observable
-  private addConfigGroup = {}
+
 
   @observable
   private pid_type: number
 
+
+  @computed
+  get propData() {
+    const tar = JSON.parse(JSON.stringify(this.props.data))
+    // Object.keys(tar).forEach(key => {
+    //   if (typeOf(tar[key]) === 'object') {
+    //     delete tar[key].value_type
+    //   }
+    // })
+    return tar
+  }
 
   @computed
   get usePid_type() {
@@ -59,16 +55,19 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
   @computed
   get addList() {
     const name = value_typeOption.find(ele => ele.value === this.usePid_type).phpKey
-    let arr = (this.addConfigGroup[name] || []).filter(ele => {
+    let arr = (this.props.addConfigGroup[name] || []).filter(ele => {
       return ele.key !== 'pid_type' && ele.key !== 'placement_id'
     })
+    const toTree = (list) => list ? arrayToTree<conItem>(list, 'id', 'pid') : []
+    let mmArr = toTree(arr);
     const dataKeyarr = this.usEeditData && typeOf(this.usEeditData) === 'object' ? Object.keys(this.usEeditData) : []
     if (dataKeyarr.length) {
-      return dataKeyarr.map(key =>
-        arr.find(ele => _nameCase(ele.key) === _nameCase(key)) || (typeOf(this.usEeditData[key]) === 'object' ? this.usEeditData[key] : null)
+      mmArr = dataKeyarr.map(key =>
+        mmArr.find(ele => _nameCase(ele.key) === _nameCase(key)) || (typeOf(this.usEeditData[key]) === 'object' ? this.usEeditData[key] : null)
       ).filter(ele => !!ele)
     }
-    return arr
+    console.log(mmArr)
+    return mmArr
   }
   @computed
   get usEeditData() {
@@ -117,20 +116,11 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
     this.pid_type = value
   }
 
-  initDetail = async () => {
-    const Detail = await this.api.config.pidFieldInfo({ platform: (this.props.targetConfig || {}).platform || 'android' })
-    runInAction('Change_', () => {
-      this.addConfigGroup = Detail.data
-    })
-  }
-
   getValue = (key) => {
     return this.usEeditData[key]
   }
 
-  componentWillMount() {
-    this.initDetail()
-  }
+
 
 
   render() {
@@ -179,7 +169,7 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
         <Basic
           onCancel={this.props.onCancel}
           onSubmit={this.submit}
-          editData={this.props.data}
+          editData={this.propData}
           addList={this.addList}
         />
         {/* <Button className={styles.cancelBtn} onClick={() => this.props.onCancel()} >Cancel</Button> */}

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { observer } from 'mobx-react'
+import { observer, inject } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
 import { Button, Table, Icon, Divider, Modal } from 'antd'
 import { ComponentExt } from '@utils/reactExt'
@@ -98,16 +98,32 @@ class PidTable extends ComponentExt<TableProps> {
 
 // --------------------------------------------------------------
 
-interface IProps {
+
+interface IStoreProps {
+  targetConfig?: IConfigStore.IConfigTarget
+}
+interface IProps extends IStoreProps {
   onCancel: (data?) => void
   onSubmit: (data) => Promise<any>
   editData: any[]
   configId?: string
+  RefreshData?: () => void
 }
 
+@inject(
+  (store: IStore): IStoreProps => {
+    const { configStore } = store
+    const { targetConfig } = configStore
+    return { targetConfig }
+  }
+)
 
 @observer
 class PID extends ComponentExt<IProps> {
+
+  @observable
+  private addConfigGroup = {}
+
   @observable
   private loading: boolean = false
 
@@ -149,6 +165,13 @@ class PID extends ComponentExt<IProps> {
     })
   }
 
+  initDetail = async () => {
+    const Detail = await this.api.config.pidFieldInfo({ platform: (this.props.targetConfig || {}).platform || 'android' })
+    runInAction('Change_', () => {
+      this.addConfigGroup = Detail.data
+    })
+  }
+
   @action
   toggleIsTable = () => {
     this.isTable = !this.isTable
@@ -181,7 +204,7 @@ class PID extends ComponentExt<IProps> {
 
 
   pidFormSubmit = async (data) => {
-    const okCb = () => {
+    if (!this.props.configId) {
       const arr: pidItem[] = JSON.parse(JSON.stringify(this.useData))
       if (this.handelIndex !== undefined) {
         arr.splice(this.handelIndex, 1, data)
@@ -190,21 +213,20 @@ class PID extends ComponentExt<IProps> {
       }
       this.setThisDataList(arr)
       this.toggleIsTable()
-    }
-    if (this.props.configId) {
+
+    } else {
       const res = await this.api.config.editPID({
         config_deploy_id: this.props.configId,
         type: likeArray2obj(data)['pid_type'],
         pid: [data]
       })
       if (res.errorcode === 0) {
-        okCb()
+        this.initDetail()
+        this.props.RefreshData()
+        this.setThisDataList(null)
+        this.toggleIsTable()
       }
-    } else {
-      okCb()
     }
-
-
   }
 
   editPid = (index?) => {
@@ -212,7 +234,7 @@ class PID extends ComponentExt<IProps> {
     if (index === undefined) {
       this.GJB = [];
     } else {
-      this.GJB = this.tableData[index]
+      this.GJB = this.useData[index]
     }
     this.toggleIsTable()
   }
@@ -242,6 +264,10 @@ class PID extends ComponentExt<IProps> {
     })
   }
 
+  componentWillMount() {
+    this.initDetail()
+  }
+
   render() {
     // const { form, editData } = this.props
     return (
@@ -256,6 +282,7 @@ class PID extends ComponentExt<IProps> {
           </div> : <div className="formBox">
               <FormPid
                 data={this.GJB}
+                addConfigGroup={this.addConfigGroup}
                 onCancel={this.toggleIsTable}
                 pidList={this.tableData.map(ele => ele.placement_id)}
                 onSubmit={this.pidFormSubmit} />

@@ -162,11 +162,11 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
         if (!err) {
           this.toggleLoading()
           try {
-            const dd = values.value_type === '4' ? values.default.filter(ele => !!ele) : values.default
+            const dd = values.value_type == '4' ? values.default.filter(ele => !!ele) : values.default
 
             data = { ...config, ...values, default: dd }
             data.key = data.key.trim().replace(' ', '_')
-            if (Array.isArray(data.option) && data.value_type === '5') {
+            if (Array.isArray(data.option) && data.value_type == '5') {
               data.option = data.option.join(',')
             }
           } catch (err) {

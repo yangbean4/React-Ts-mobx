@@ -76,7 +76,7 @@ class ConfigItem extends React.Component<IProps> {
 
   @computed
   get likeTemp() {
-    return (this.props.config.value_type === '7' || this.props.config.value_type === '7')
+    return (this.props.config.value_type == '7' || this.props.config.value_type == '7')
   }
 
   @computed
