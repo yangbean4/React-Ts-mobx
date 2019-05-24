@@ -247,7 +247,6 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     }
     runSort(editData, 0);
     const mm = Object.keys(target).length ? target : editData || {}
-    console.log(mm)
     return mm
   }
 
@@ -461,7 +460,6 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       // const arr: conItemTree = JSON.parse(JSON.stringify(this.useConfigList))
 
       if (this.useEditDataKeySet.has(_nameCase(config.key))) {
-        console.log([...this.useEditDataKeySet]);
         this.$message.error(`${config.key} is exist!`)
         errorCb()
       } else {
@@ -687,7 +685,6 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     const { form, type: BasicType } = this.props
     const { getFieldDecorator } = form
     const { template_pid = undefined, templateId = undefined, option = '' } = this.nowHandelConfig || {}
-    console.log(JSON.parse(JSON.stringify(this.useEditData)));
     const getAddGroup = (item, indexPath) => {
       let valueTypeArr = BasicType === "basic1" ? ['string', 'color', 'select', 'array', 'radio', 'template']
         : !BasicType ? ['string', 'color', 'select', 'array', 'radio']
