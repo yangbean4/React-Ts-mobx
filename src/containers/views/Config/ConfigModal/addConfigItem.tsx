@@ -431,7 +431,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
           </Col>
           {this.getChild(config)}
           <Col span={3} offset={1}>
-            <Button type="primary" onClick={this.submit}>OK</Button>
+            <Button type="primary" disabled={this.props.config.children && this.props.config.children.some(ele => ele.isEdit)} onClick={this.submit}>OK</Button>
           </Col>
         </Row>
         {

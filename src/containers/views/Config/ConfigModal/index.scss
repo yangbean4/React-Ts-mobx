@@ -354,9 +354,21 @@
         float: right;
       }
       & > .ggg {
-        margin-left: 80px;
+        margin-left: 200px;
+        .ant-col-6.ant-form-item-label {
+          width: 20%;
+        }
         .ggg {
-          margin-left: 80px;
+          margin-left: 200px;
+        }
+        .ant-form-item-label {
+          text-align: left;
+        }
+        .addConfigItem {
+          .ant-col-offset-3:first-child {
+            margin-left: 0;
+            margin-right: 8%;
+          }
         }
       }
     }
