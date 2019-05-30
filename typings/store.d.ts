@@ -1,6 +1,7 @@
 declare interface IStore {
     authStore: IAuthStore.AuthStore
     userStore: IUserStore.UserStore
+    companyStore: ICompanyStore.CompanyStore
     roleStore: IRoleStore.RoleStore
     globalStore: IGlobalStore.GlobalStore
     routerStore: RouterStore,

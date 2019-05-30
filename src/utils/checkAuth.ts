@@ -11,7 +11,6 @@ const checkName = (name) => {
 }
 
 export const checkAuth = (name: string, component?: React.ReactNode): React.ReactNode | boolean => {
-
   const hasAdd = (name || '').includes('&')
   const or = (name || '').includes('|')
   if (name && (hasAdd || or)) {

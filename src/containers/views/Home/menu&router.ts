@@ -5,11 +5,15 @@ import PageLoading from '@components/PageLoading'
 const loadComponent = (loader: () => Promise<any>) =>
     Loadable({
         loader,
-        loading: PageLoading
+        loading: PageLoading 
     })
 
 export const asynchronousComponents = {
     Config: loadComponent(() => import(/* webpackChunkName: "Config" */ '@views/Config')),
+    CompanySite: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Company')),
+    Account: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Account')),
+    Apps: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppsGroup/Apps')),
+    CompanyModel: loadComponent(() => import(/* webpackChunkName: "CompanyModel" */ '@views/Company/CompanyModel')),
     Logs: loadComponent(() => import(/* webpackChunkName: "Logs" */ '@views/Log')),
     Users: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Users')),
     Role: loadComponent(() => import(/* webpackChunkName: "Role" */ '@views/Role')),
@@ -156,7 +160,61 @@ export const menu: IMenu[] = [
         title: 'Authorization',
         // path: '/log-auth',
         // component: 'Logs',
-    }
+    },
+    {
+        id: 5,
+        title: 'Apps',
+        icon: 'iconlog',
+        authName: 'Apps'
+    },
+    // {
+    //     pid:5,
+    //     id: 51,
+    //     title: 'Company',
+    //     path: '/Company',
+    //     icon: 'iconlog',
+    //     authName: 'Apps-Company',
+    //     component: 'Company',
+    //     exact: true,
+    // },
+    {
+        id: 6,
+        title: 'Company',
+        icon: 'iconlog',
+        authName: 'Company'
+    },
+    {
+        pid:6,
+        id: 61,
+        title: 'Subsite Company',
+        path: '/Subsite',
+        icon: 'iconlog',
+        authName: 'Company-Subsite Company',
+        component: 'CompanySite',
+        exact: true,
+    },
+    {
+        pid:6,
+        id: 62,
+        title: 'Source Company',
+        path: '/Source',
+        icon: 'iconlog',
+        authName: 'Company-Subsite Company',
+        component: 'CompanySite',
+        exact: true,
+    },
+    {
+        id: 7,
+        title: 'Account',
+        icon: 'iconlog',
+        authName: 'Account'
+    },
+    {
+        id: 8,
+        title: 'Offers',
+        icon: 'iconlog',
+        authName: 'Offers'       
+    },
 ]
 export const logMenu: IMenu[] = [{
     id: 411,
@@ -287,7 +345,23 @@ const addRouter: IRouter[] = [
         title: 'ggg',
         component: 'Test',
         isMenu: false
-    }
+    },
+    {
+        id: 5101,
+        pid: 51,
+        path: '/Company/add',
+        title: 'Add company',
+        component: 'CompanyModel',
+        isMenu: false
+    },
+    {
+        id: 5102,
+        pid: 51,
+        path: '/Subsite/edit/:id',
+        title: 'Edit company',
+        component: 'CompanyModel',
+        isMenu: false,
+    },
 ]
 
 export const router: IRouter[] = [...menuMap, ...addRouter]

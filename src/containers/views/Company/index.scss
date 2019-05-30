@@ -1,0 +1,10 @@
+@import '_base.scss';
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+.table-box {
+    flex: 1;
+    overflow-y: hidden;
+}

@@ -19,3 +19,6 @@ export { default as customStore } from './customStore'
 export { default as templateStore } from './templateStore'
 
 export { default as configStore } from './configStore'
+
+export { default as companyStore } from './companyStore'
+
