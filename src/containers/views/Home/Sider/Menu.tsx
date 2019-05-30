@@ -5,7 +5,7 @@ import { Menu } from 'antd'
 import pathToRegexp from 'path-to-regexp'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-import menu, { router, IMenu, IMenuInTree, templateId, logId, logMenu } from '../menu&router'
+import menu, { router, IMenu, IMenuInTree, templateId, logId } from '../menu&router'
 import { arrayToTree, queryArray } from '@utils/index'
 import { clearAuth } from '@utils/checkAuth'
 import Icon from '@components/Icon'
@@ -58,7 +58,7 @@ class SiderMenu extends ComponentExt<IStoreProps> {
                     path: `/template/${encodeURI(item.id)}`
                 }
             })
-            const addLog: IMenu[] = logMenu.concat(tmp.map((item, index) => {
+            const addLog: IMenu[] = tmp.map((item, index) => {
                 return {
                     pid: logId,
                     id: (logId * 1000) + index,
@@ -66,7 +66,7 @@ class SiderMenu extends ComponentExt<IStoreProps> {
                     title: item.primary_name,
                     path: `/log/${(item.primary_name)}`
                 }
-            }))
+            })
             return pop.concat(addTmp, addLog)
         }
         return merge([], this.props.tmpSidebar)

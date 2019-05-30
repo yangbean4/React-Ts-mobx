@@ -2,7 +2,7 @@ import React from 'react';
 import { inject, observer } from 'mobx-react'
 import { observable, computed } from 'mobx'
 import { Breadcrumb } from 'antd'
-import menu, { router, IMenu, templateId, logId, logMenu } from '../menu&router'
+import menu, { router, IMenu, templateId, logId } from '../menu&router'
 import pathToRegexp from 'path-to-regexp'
 import { queryArray } from '@utils/index'
 import * as styles from './style.scss'
@@ -38,7 +38,7 @@ class Bread extends React.Component<IStoreProps> {
           path: `/template/${encodeURI(item.id)}`
         }
       })
-      const addLog: IMenu[] = logMenu.concat(tmp.map((item, index) => {
+      const addLog: IMenu[] = tmp.map((item, index) => {
         return {
           pid: logId,
           id: (logId * 1000) + index,
@@ -46,7 +46,7 @@ class Bread extends React.Component<IStoreProps> {
           title: item.primary_name,
           path: `/log/${(item.primary_name)}`
         }
-      }))
+      })
       return pop.concat(addTmp, addLog)
     }
     return merge([], this.props.tmpSidebar)
