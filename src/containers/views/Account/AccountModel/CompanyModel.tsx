@@ -43,6 +43,7 @@ class CompanyModel extends React.Component<IProps>{
         visible={visible}
         footer={null}
         width={460}
+        onCancel={this.props.onCancel}
       >
         {this.getComponent()}
       </Modal>
