@@ -19,7 +19,7 @@ export default {
   // },
 
   fullAppGroup(): Promise<any> {
-    return http.post(`${basePath}fullAppGroup`)
+    return http.post(`${basePath}appList`)
   },
 
   getAppGroupInfo(data): Promise<any> {

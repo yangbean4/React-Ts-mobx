@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Table, Icon } from 'antd'
 import { PaginationConfig } from 'antd/lib/pagination'
 import { inject, observer } from 'mobx-react'
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, autorun } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
 import { statusOption, accountTypeOption } from '../web.config'
@@ -15,6 +15,7 @@ interface IStoreProps {
     getAccounts?: () => Promise<any>
     // deleteAccount?: (id: number) => Promise<any>
     handleTableChange?: (pagination: PaginationConfig) => void
+    setAccountType?: (string) => void
     page?: number
     pageSize?: number
     total?: number
@@ -36,21 +37,38 @@ interface IProps extends IStoreProps {
             page,
             pageSize,
             total,
-            setAccount
+            setAccount,
+            setAccountType
         } = accountStore
-        return { routerStore, setAccount, getAccountLoading, accounts, getAccounts, handleTableChange, page, pageSize, total }
+        return { routerStore, setAccount, getAccountLoading, setAccountType, accounts, getAccounts, handleTableChange, page, pageSize, total }
     }
 )
 @observer
 class AccountTable extends ComponentExt<IProps> {
 
+
     @observable
     private modalVisible: boolean = false
 
-    @computed
-    get accountType() {
-        return this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+    @observable
+    private accountType: string
+    constructor(props) {
+        super(props)
+        autorun(
+            // 一旦...
+            () => {
+                const accountType = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+                if (accountType !== this.accountType) {
+                    this.accountType = accountType;
+                    this.props.setAccountType(accountType)
+                    return true
+                }
+                return false
+            }
+        )
     }
+
+
 
     @computed
     get typeName() {
@@ -69,7 +87,7 @@ class AccountTable extends ComponentExt<IProps> {
     }
 
     componentDidMount() {
-        this.props.getAccounts()
+        // this.props.getAccounts()
     }
 
     render() {

@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
 import { Form, Input, Select, Radio, Button, message } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
-import { statusOption } from '../web.config'
+import { statusOption, accountTypeOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
 import { camelCase } from '@utils/index'
 import * as styles from './index.scss'
@@ -153,7 +153,8 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
             user_name = '',
             status = 1,
             role_id = 1,
-            company = undefined
+            company = undefined,
+            account_type = undefined
         } = account || {}
 
         return (
@@ -234,6 +235,31 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                 </Select>
                             )}
                         </FormItem>
+                        {
+                            this.accountType === 'source' && <FormItem {...formItemLayout} label="Account Type">
+                                {getFieldDecorator('account_type', {
+                                    initialValue: account_type,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(
+                                    <Select
+                                        allowClear
+                                        showSearch
+                                        getPopupContainer={trigger => trigger.parentElement}
+                                        filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        {accountTypeOption.map(c => (
+                                            <Select.Option key={c.value} value={c.value}>
+                                                {c.key}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                )}
+                            </FormItem>
+                        }
                         <FormItem {...formItemLayout} label="Status">
                             {getFieldDecorator('status', {
                                 initialValue: status,

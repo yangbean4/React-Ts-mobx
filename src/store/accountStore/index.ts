@@ -12,6 +12,9 @@ export class AccountStore extends StoreExt {
      */
     @observable
     getAccountLoading: boolean = false
+
+    @observable
+    accountType: string
     /**
      * 用户列表
      *
@@ -51,6 +54,12 @@ export class AccountStore extends StoreExt {
     @observable
     filters: IAccountStore.SearchParams = {}
 
+    @action
+    setAccountType = (accountType: string) => {
+        this.accountType = accountType
+        this.getAccounts()
+    }
+
     /**
      * 加载用户列表
      *
@@ -61,7 +70,10 @@ export class AccountStore extends StoreExt {
     getAccounts = async () => {
         this.getAccountLoading = true
         try {
-            const res = await this.api.account.getAccounts({ page: this.page, pageSize: this.pageSize, ...this.filters })
+            let mdata
+            let data = { page: this.page, pageSize: this.pageSize, ...this.filters }
+            this.accountType === 'source' && (mdata = { ...data, account_type: null })
+            const res = await this.api.account.getAccounts(mdata || data)
             runInAction('SET_USER_LIST', () => {
                 this.accounts = res.data
                 this.total = res.total
