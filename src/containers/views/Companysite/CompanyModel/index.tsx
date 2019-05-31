@@ -21,7 +21,7 @@ const formItemLayout = {
     }
 }
 
-interface IProps {
+interface IStoreProps {
     company?: ICompanyStore.ICompany
     createCompany?: (company: ICompanyStore.ICompany) => Promise<any>
     modifyCompany?: (company: ICompanyStore.ICompany) => Promise<any>
@@ -30,11 +30,17 @@ interface IProps {
     clearCompany?: () => void
 }
 
+interface IProps extends IStoreProps {
+    type?: string
+    onOk?: () => void
+    onCancel?: () => void
+}
+
 @inject(
     (store: IStore): IProps => {
         const { companyStore, routerStore } = store
-        const { company, createCompany, modifyCompany, clearCompany} = companyStore
-        return { clearCompany, company, routerStore, createCompany, modifyCompany}
+        const { company, createCompany, modifyCompany, clearCompany } = companyStore
+        return { clearCompany, company, routerStore, createCompany, modifyCompany }
     }
 )
 @observer
@@ -53,7 +59,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     componentWillMount() {
-        const { routerStore, company = {}} = this.props
+        const { routerStore, company = {} } = this.props
         const routerId = routerStore.location.pathname.toString().split('/').pop()
         const Id = Number(routerId)
         if ((!isNaN(Id) && (!company.id || company.id !== Id))) {
@@ -63,7 +69,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
     componentWillUnmount() {
         this.props.clearCompany()
     }
-   
+
     submit = (e?: React.FormEvent<any>): void => {
         if (e) {
             e.preventDefault()
@@ -85,7 +91,11 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             data = await modifyCompany({ ...values, id: company.id })
                         }
                         message.success(data.message)
-                        routerStore.push('/Subsite')
+                        if (this.props.type) {
+                            this.props.onOk();
+                        } else {
+                            routerStore.push('/Subsite')
+                        }
                     } catch (err) {
                         //console.log(err);
                     }
@@ -101,7 +111,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
         const {
             company_name = '',
             company_full_name = '',
-            address = '' ,
+            address = '',
             phone = '',
             email = '',
             beneficiary_name = '',
@@ -112,7 +122,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
         return (
             <div className='sb-form'>
                 <Form className={styles.CompanyModal}>
-                    <FormItem  label="Subsite Company" {...formItemLayout} >
+                    <FormItem label="Subsite Company" {...formItemLayout} >
                         {getFieldDecorator('company_name', {
                             initialValue: company_name,
                             rules: [
@@ -125,18 +135,18 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem label="Full name of company"{...formItemLayout} >
                         {getFieldDecorator('company_full_name', {
                             initialValue: company_full_name,
-                            rules: [                                {
-                                    required: true, message: "Required"
-                                }
+                            rules: [{
+                                required: true, message: "Required"
+                            }
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem  label="Address"{...formItemLayout} >
+                    <FormItem label="Address"{...formItemLayout} >
                         {getFieldDecorator('address', {
                             initialValue: address,
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
                     </FormItem>
-                    <FormItem  label="Email"{...formItemLayout} >
+                    <FormItem label="Email"{...formItemLayout} >
                         {getFieldDecorator('email', {
                             initialValue: email,
                             rules: [
@@ -150,7 +160,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem  label="Phone"{...formItemLayout} >
+                    <FormItem label="Phone"{...formItemLayout} >
                         {getFieldDecorator('phone', {
                             initialValue: phone,
                             rules: [
@@ -159,12 +169,12 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                 },
                                 {
                                     pattern: /^[1][3,4,5,7,8][0-9]{9}$/,
-                                    message: 'Incorrect phone number format!' 
+                                    message: 'Incorrect phone number format!'
                                 }
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem  label="Beneficiary name"{...formItemLayout} >
+                    <FormItem label="Beneficiary name"{...formItemLayout} >
                         {getFieldDecorator('beneficiary_name', {
                             initialValue: beneficiary_name,
                             rules: [
@@ -174,7 +184,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem  label="bank_account_number"{...formItemLayout} >
+                    <FormItem label="bank_account_number"{...formItemLayout} >
                         {getFieldDecorator('bank_account_number', {
                             initialValue: bank_account_number,
                             rules: [
@@ -183,12 +193,12 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                 },
                                 {
                                     pattern: /^[0-9]{14,19}$/,
-                                    message: 'Incorrect bank account number format' 
+                                    message: 'Incorrect bank account number format'
                                 }
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem  label="bank_swift_code"{...formItemLayout} >
+                    <FormItem label="bank_swift_code"{...formItemLayout} >
                         {getFieldDecorator('bank_swift_code', {
                             initialValue: bank_swift_code,
                             rules: [
@@ -197,12 +207,12 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                 },
                                 {
                                     pattern: /^[0-9]*$/,
-                                    message: 'number format' 
+                                    message: 'number format'
                                 }
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem  label="bank_address"{...formItemLayout} >
+                    <FormItem label="bank_address"{...formItemLayout} >
                         {getFieldDecorator('bank_address', {
                             initialValue: bank_address,
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}

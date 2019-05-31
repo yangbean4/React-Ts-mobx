@@ -4,6 +4,7 @@ import { Button } from 'antd'
 import Search from './Search'
 import { ComponentExt } from '@utils/reactExt'
 import PortalsBtn from '@components/portalsBtn'
+import { computed } from 'mobx'
 
 interface IStoreProps {
     routerStore?: RouterStore
@@ -20,8 +21,13 @@ interface IStoreProps {
 @observer
 class Header extends ComponentExt<IStoreProps> {
 
-    addCompany = () => {
-        this.props.routerStore.push('/company/add')
+    @computed
+    get accountType() {
+        return this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+    }
+
+    addCcount = () => {
+        this.props.routerStore.push(`/account/${this.accountType}/add`)
     }
 
     render() {
@@ -29,13 +35,14 @@ class Header extends ComponentExt<IStoreProps> {
             <div>
                 <Search />
                 {
-                    this.$checkAuth('Authorization-User Manage-Add', (
-                        <PortalsBtn querySelector='#companyAddBtn'>
-                            <Button icon='plus' type="primary" onClick={this.addCompany}>
-                                Add
+                    // this.$checkAuth('Authorization-Ccount Manage-Add', (
+                    <PortalsBtn querySelector='#accountAddBtn'>
+                        <Button icon='plus' type="primary" onClick={this.addCcount}>
+                            Add
                         </Button>
-                        </PortalsBtn>
-                    ))
+                    </PortalsBtn>
+
+                    // ))
                 }
             </div>
         )

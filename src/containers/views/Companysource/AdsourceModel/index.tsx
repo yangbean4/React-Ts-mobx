@@ -22,7 +22,11 @@ const formItemLayout = {
     }
 }
 
-interface IProps {
+interface IProps extends IStoreProps {
+    type?: string
+    onOk?: () => void
+}
+interface IStoreProps {
     user?: IUserStore.IUser
     createUser?: (user: IUserStore.IUser) => Promise<any>
     modifyUser?: (user: IUserStore.IUser) => Promise<any>
@@ -96,7 +100,11 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             data = await modifyUser({ ...values, id: user.id })
                         }
                         message.success(data.message)
-                        routerStore.push('/users')
+                        if (this.props.type) {
+                            this.props.onOk();
+                        } else {
+                            routerStore.push('/Subsite')
+                        }
                     } catch (err) {
                         //console.log(err);
                     }
@@ -124,7 +132,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
         return (
             <div className='sb-form'>
                 <Form className={styles.CompanyModal}>
-                    <FormItem  label="Subsite Company" {...formItemLayout} >
+                    <FormItem label="Subsite Company" {...formItemLayout} >
                         {getFieldDecorator('user_name', {
                             initialValue: user_name,
                             rules: [
@@ -136,18 +144,18 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
                     <FormItem label="Full name of company"{...formItemLayout} >
                         {getFieldDecorator('pwd', {
-                            rules: this.typeIsAdd ? [                                {
-                                    required: true, message: "Required"
-                                }
+                            rules: this.typeIsAdd ? [{
+                                required: true, message: "Required"
+                            }
                             ] : undefined
                         })(<Input />)}
                     </FormItem>
-                    <FormItem  label="Remarks"{...formItemLayout} >
+                    <FormItem label="Remarks"{...formItemLayout} >
                         {getFieldDecorator('remarks', {
                             initialValue: role,
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
                     </FormItem>
-                    <FormItem  label="Email"{...formItemLayout} >
+                    <FormItem label="Email"{...formItemLayout} >
                         {getFieldDecorator('owner', {
                             initialValue: owner,
                             rules: [
@@ -157,7 +165,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input disabled={!this.typeIsAdd} />)}
                     </FormItem>
-                    <FormItem  label="Phone"{...formItemLayout} >
+                    <FormItem label="Phone"{...formItemLayout} >
                         {getFieldDecorator('owner', {
                             initialValue: owner,
                             rules: [
@@ -167,7 +175,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input disabled={!this.typeIsAdd} />)}
                     </FormItem>
-                    <FormItem  label="Beneficiary name"{...formItemLayout} >
+                    <FormItem label="Beneficiary name"{...formItemLayout} >
                         {getFieldDecorator('owner', {
                             initialValue: owner,
                             rules: [
@@ -177,7 +185,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input disabled={!this.typeIsAdd} />)}
                     </FormItem>
-                    <FormItem  label="Account number"{...formItemLayout} >
+                    <FormItem label="Account number"{...formItemLayout} >
                         {getFieldDecorator('owner', {
                             initialValue: owner,
                             rules: [
@@ -187,7 +195,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input disabled={!this.typeIsAdd} />)}
                     </FormItem>
-                    <FormItem  label="Swift code"{...formItemLayout} >
+                    <FormItem label="Swift code"{...formItemLayout} >
                         {getFieldDecorator('owner', {
                             initialValue: owner,
                             rules: [
@@ -197,7 +205,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input disabled={!this.typeIsAdd} />)}
                     </FormItem>
-                    <FormItem  label="Address"{...formItemLayout} >
+                    <FormItem label="Address"{...formItemLayout} >
                         {getFieldDecorator('owner', {
                             initialValue: owner,
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}

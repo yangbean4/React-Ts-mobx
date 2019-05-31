@@ -1,4 +1,5 @@
 declare interface IStore {
+    accountStore: ICurrencyStore.AccountStore
     currencyStore: ICurrencyStore.CurrencyStore
     authStore: IAuthStore.AuthStore
     userStore: IUserStore.UserStore

@@ -9,26 +9,36 @@ const loadComponent = (loader: () => Promise<any>) =>
     })
 
 export const asynchronousComponents = {
-    Apps: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppsGroup/Apps')),
+    //------------------Apps
+    Apps: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppGroup')),
     Currency: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency')),
     CurrencyAdd: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency/CurrencyModal/Add')),
     CurrencyEdit: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency/CurrencyModal/Edit')),
-    //------------------Apps
-    Config: loadComponent(() => import(/* webpackChunkName: "Config" */ '@views/Config')),
+
+    Account: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Account')),
+    AccountModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Account/AccountModel')),
+
     CompanySite: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Companysite')),
     CompanySource: loadComponent(() => import(/* webpackChunkName: "CompanySource" */ '@views/Companysource')),
-    // Account: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Account')),
     CompanyModel: loadComponent(() => import(/* webpackChunkName: "CompanyModel" */ '@views/Companysite/CompanyModel')),
-    Logs: loadComponent(() => import(/* webpackChunkName: "Logs" */ '@views/Log')),
-    Users: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Users')),
-    Role: loadComponent(() => import(/* webpackChunkName: "Role" */ '@views/Role')),
-    Permission: loadComponent(() => import(/* webpackChunkName: "Permission" */ '@views/Permission')),
-    Template: loadComponent(() => import(/* webpackChunkName: "Template" */ '@views/Template')),
-    Custom: loadComponent(() => import(/* webpackChunkName: "Custom" */ '@views/Custom')),
+
+    Config: loadComponent(() => import(/* webpackChunkName: "Config" */ '@views/Config')),
     ConfigModel: loadComponent(() => import(/* webpackChunkName: "Config" */ '@views/Config/ConfigModal')),
+
+    Users: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Users')),
     UserModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/Users/UserModal')),
+
+    Role: loadComponent(() => import(/* webpackChunkName: "Role" */ '@views/Role')),
     RoleModal: loadComponent(() => import(/* webpackChunkName: "RoleModal" */ '@views/Role/RoleModal')),
+
+    Permission: loadComponent(() => import(/* webpackChunkName: "Permission" */ '@views/Permission')),
     PermissionModal: loadComponent(() => import(/* webpackChunkName: "PermissionModal" */ '@views/Permission/PermissionModal')),
+
+    Custom: loadComponent(() => import(/* webpackChunkName: "Custom" */ '@views/Custom')),
+    Template: loadComponent(() => import(/* webpackChunkName: "Template" */ '@views/Template')),
+
+    Logs: loadComponent(() => import(/* webpackChunkName: "Logs" */ '@views/Log')),
+
     Test: loadComponent(() => import(/* webpackChunkName: "Test" */ '@views/Test/useEffrct.js')),
 }
 
@@ -105,6 +115,58 @@ export const routerAndMenu: IRouter[] = [
         title: 'Account',
         icon: 'iconlog',
         authName: 'Account'
+    },
+    {
+        pid: 7,
+        isMenu: true,
+        id: 71,
+        title: 'Subsite Account',
+        path: '/account/subsite',
+        authName: 'Account-Subsite Account',
+        component: 'Account',
+        exact: true,
+    },
+    {
+        id: 7101,
+        pid: 71,
+        path: '/account/subsite/add',
+        title: 'Add Account',
+        component: 'AccountModel',
+        isMenu: false
+    },
+    {
+        id: 7102,
+        pid: 71,
+        path: '/account/subsite/edit/:id',
+        title: 'Edit Account',
+        component: 'AccountModel',
+        isMenu: false
+    },
+    {
+        pid: 7,
+        isMenu: true,
+        id: 72,
+        title: 'Source Account',
+        path: '/account/source',
+        authName: 'Account-Source Account',
+        component: 'Account',
+        exact: true,
+    },
+    {
+        id: 7201,
+        pid: 72,
+        path: '/account/source/add',
+        title: 'Add Account',
+        component: 'AccountModel',
+        isMenu: false
+    },
+    {
+        id: 7202,
+        pid: 72,
+        path: '/account/source/edit/:id',
+        title: 'Edit Account',
+        component: 'AccountModel',
+        isMenu: false
     },
     {
         id: 6,

@@ -1,4 +1,4 @@
-.CompanyModal {
+.accountModal {
   display: flex;
   flex-direction: column;
   padding-top: 30px;
@@ -16,4 +16,16 @@
   .btn2 {
     margin-left: 20px;
   }
+}
+
+.workBtn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-left: 10px;
+  background: rgba(237, 240, 255, 1);
+  border-radius: 4px;
+  color: #667ffd;
+  position: absolute;
+  line-height: 40px;
 }
