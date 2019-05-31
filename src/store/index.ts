@@ -22,3 +22,4 @@ export { default as configStore } from './configStore'
 
 export { default as companyStore } from './companyStore'
 
+export { default as currencyStore } from './currency'

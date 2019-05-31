@@ -19,6 +19,9 @@
 
 :global {
   .ant-menu {
+    & > .ant-menu-item {
+      padding-left: 10px !important;
+    }
     & > .ant-menu-submenu {
       //最大的
       & > .ant-menu-submenu-title {

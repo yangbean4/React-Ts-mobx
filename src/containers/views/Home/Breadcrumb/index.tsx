@@ -4,7 +4,6 @@ import { observable, computed } from 'mobx'
 import { Breadcrumb } from 'antd'
 import menu, { router, IMenu, templateId, logId } from '../menu&router'
 import pathToRegexp from 'path-to-regexp'
-import { queryArray } from '@utils/index'
 import * as styles from './style.scss'
 
 interface IStoreProps {

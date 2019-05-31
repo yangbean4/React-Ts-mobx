@@ -9,10 +9,14 @@ const loadComponent = (loader: () => Promise<any>) =>
     })
 
 export const asynchronousComponents = {
+    Apps: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppsGroup/Apps')),
+    Currency: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency')),
+    CurrencyAdd: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency/CurrencyModal/Add')),
+    CurrencyEdit: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency/CurrencyModal/Edit')),
+    //------------------Apps
     Config: loadComponent(() => import(/* webpackChunkName: "Config" */ '@views/Config')),
     CompanySite: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Company')),
     Account: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Account')),
-    Apps: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppsGroup/Apps')),
     CompanyModel: loadComponent(() => import(/* webpackChunkName: "CompanyModel" */ '@views/Company/CompanyModel')),
     Logs: loadComponent(() => import(/* webpackChunkName: "Logs" */ '@views/Log')),
     Users: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Users')),
@@ -60,6 +64,48 @@ export const routerAndMenu: IRouter[] = [
         authName: 'Apps'
     },
     {
+        id: 51,
+        pid: 5,
+        isMenu: true,
+        title: 'Apps Manage',
+        icon: 'iconlog',
+        authName: 'Apps-Apps Manage'
+    },
+    {
+        id: 52,
+        pid: 5,
+        isMenu: true,
+        exact: true,
+        path: '/currency',
+        title: 'Virtual Currency',
+        icon: 'iconlog',
+        component: 'Currency',
+        authName: 'Apps-Virtual Currency'
+    },
+    {
+        id: 521,
+        pid: 52,
+        isMenu: false,
+        path: '/currency/add',
+        title: 'Add Virtual Currency',
+        component: 'CurrencyAdd',
+    },
+    {
+        id: 521,
+        pid: 52,
+        isMenu: false,
+        path: '/currency/edit',
+        title: 'Edit Virtual Currency',
+        component: 'CurrencyEdit',
+    },
+    {
+        id: 7,
+        isMenu: true,
+        title: 'Account',
+        icon: 'iconlog',
+        authName: 'Account'
+    },
+    {
         id: 6,
         isMenu: true,
         title: 'Company',
@@ -104,20 +150,14 @@ export const routerAndMenu: IRouter[] = [
         component: 'CompanyModel',
         isMenu: false,
     },
-    {
-        id: 7,
-        isMenu: true,
-        title: 'Account',
-        icon: 'iconlog',
-        authName: 'Account'
-    },
-    {
-        id: 8,
-        isMenu: true,
-        title: 'Offers',
-        icon: 'iconlog',
-        authName: 'Offers'
-    },
+
+    // {
+    //     id: 8,
+    //     isMenu: true,
+    //     title: 'Offers',
+    //     icon: 'iconlog',
+    //     authName: 'Offers'
+    // },
     // ----------------------------------------
     {
         id: 1,

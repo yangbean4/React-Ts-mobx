@@ -7,3 +7,5 @@ export { default as template } from './template'
 export { default as util } from './util'
 export { default as log } from './log'
 export { default as config } from './config'
+export { default as currency } from './currency'
+
