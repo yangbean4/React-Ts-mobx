@@ -22,4 +22,6 @@ export { default as configStore } from './configStore'
 
 export { default as companyStore } from './companyStore'
 
-export { default as currencyStore } from './currency'
+export { default as sourceStore } from './sourceStore'
+
+export { default as currencyStore } from './currencyStore'

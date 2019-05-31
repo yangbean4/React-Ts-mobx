@@ -1,10 +1,10 @@
-import { CompanyStore as CompanyStoreModel } from './index'
+import { SourceStore as SourceStoreModel } from './index'
 
-export as namespace ICompanyStore
+export as namespace ISourceStore
 
-export interface CompanyStore extends CompanyStoreModel { }
+export interface SourceStore extends SourceStoreModel { }
 
-export interface ICompany {
+export interface ISource {
     id?: number
     company_name?: string
     company_full_name?: string
@@ -17,5 +17,5 @@ export interface ICompany {
     bank_address?: string
 }
 export interface SearchParams {
-    company?: string
+    SourceCompany?: string
 }

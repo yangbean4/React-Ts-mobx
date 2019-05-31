@@ -1,0 +1,19 @@
+.currencyModal {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  :global(.ant-form-item) {
+    margin-bottom: 30px;
+    :global(.ant-form-item-control-wrapper) {
+      width: 280px;
+    }
+  }
+
+  .btnBox {
+    margin-left: 12%;
+  }
+
+  .btn2 {
+    margin-left: 20px;
+  }
+}

@@ -48,7 +48,7 @@ export class CompanyStore extends StoreExt {
     getCompanys = async () => {
         this.getCompanyloading = true
         try {
-            const res = await this.api.user.getUsers({ page: this.page, pageSize: this.pageSize, ...this.filters })
+            const res = await this.api.company.getCompanys({ page: this.page, pageSize: this.pageSize, ...this.filters })
             runInAction('SET_COMPANY_LIST', () => {
                 this.companys = res.data
                 this.total = res.total
@@ -64,7 +64,7 @@ export class CompanyStore extends StoreExt {
         })
     }
     createCompany = async (company: ICompanyStore.ICompany) => {
-        const res = await this.api.user.createUser(company)
+        const res = await this.api.company.createCompany(company)
         return res
     }
     @action
@@ -72,13 +72,6 @@ export class CompanyStore extends StoreExt {
         // const { id, role, status, pwd } = company
         // return await this.api.user.modifyUser({ id, role, status, pwd })
     }
-
-    deleteCompany = async (id: number) => {
-        const res = await this.api.user.deleteUser({ id })
-        this.getCompanys()
-        return res
-    }
-
     @action
     changePage = (page: number) => {
         this.page = page

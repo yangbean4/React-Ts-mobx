@@ -1,4 +1,5 @@
 node_modules
+.vscode
 npm-debug*
 /index.html
 /.cache-loader

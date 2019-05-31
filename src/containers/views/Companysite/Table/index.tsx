@@ -1,0 +1,106 @@
+import * as React from 'react'
+import { Table, message } from 'antd'
+import { PaginationConfig } from 'antd/lib/pagination'
+import { inject, observer } from 'mobx-react'
+import { observable, action } from 'mobx'
+import PageConfig from '@components/Pagination'
+import { ComponentExt } from '@utils/reactExt'
+
+
+interface IStoreProps {
+    getCompanyloading?: boolean
+    companys?: ICompanyStore.ICompany[]
+    setCompany?: (company: ICompanyStore.ICompany) => void
+    getCompanys?: () => Promise<any>
+    handleTableChange?: (pagination: PaginationConfig) => void
+    page?: number
+    pageSize?: number
+    total?: number
+    routerStore?: RouterStore
+}  
+
+interface IProps extends IStoreProps {
+    scrollY: number
+}
+
+@inject(
+    (store: IStore): IStoreProps => {
+        const { routerStore, companyStore } = store
+        const {
+            getCompanyloading,
+            setCompany,
+            getCompanys,
+            companys,
+            handleTableChange,
+            page,
+            pageSize,
+            total
+        } = companyStore
+        return { routerStore, getCompanyloading, setCompany, getCompanys, companys, handleTableChange, page, pageSize, total }
+    }
+)
+@observer
+class CompanyTable extends ComponentExt<IProps> {
+    @action
+    modifyCompany = (company: ICompanyStore.ICompany) => {
+        this.props.setCompany(company)
+        this.props.routerStore.replace(`/companysite/edit/${company.id}`)
+    }
+    // 去请求数据
+    componentDidMount() {
+        this.props.getCompanys()
+    }
+
+    render() {
+        const {
+            scrollY,
+            getCompanyloading,
+            companys,
+            handleTableChange,
+            page,
+            pageSize,
+            total
+        } = this.props
+        return (
+            <React.Fragment>
+                <Table<ICompanyStore.ICompany>
+                    className="center-table"
+                    style={{ width: '100%' }}
+                    bordered
+                    rowKey="id"
+                    loading={getCompanyloading}
+                    dataSource={companys}
+                    scroll={{ y: scrollY }}
+                    pagination={{
+                        current: page,
+                        pageSize,
+                        total,
+                        ...PageConfig
+                    }}
+                    onChange={handleTableChange}
+                >
+                    <Table.Column<ICompanyStore.ICompany> key="company_name" title="Subsite Company" dataIndex="company_name" width={100} />
+                    <Table.Column<ICompanyStore.ICompany> key="company_full_name" title="Full Name Of Company" dataIndex="company_full_name" width={200} />
+                    <Table.Column<ICompanyStore.ICompany>
+                        key="action"
+                        title="Operate"
+                        width={80}
+                        render={(_, record) => (
+                            <span>
+                                {
+                                    this.$checkAuth('Authorization-User Manage-Edit', [
+                                        (<a key='form' href="javascript:;" onClick={() => this.modifyCompany(record)}>
+                                            {`Edit`}
+                                        </a>)
+                                    ])
+                                }
+                            </span>
+                        )}
+                    />
+                </Table>
+            </React.Fragment>
+        )
+    }
+}
+
+export default CompanyTable
