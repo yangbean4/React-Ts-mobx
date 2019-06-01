@@ -113,12 +113,20 @@ class PID extends ComponentExt<IStoreProps> {
 
   @action
   initDetail = async () => {
-    const currency = localStorage.getItem('TargetCurrency');
-
-    const Detail = await this.api.currency.getCurrencyInfo(currency)
+    const currencyStr = localStorage.getItem('TargetCurrency') || '{}';
+    const currency = JSON.parse(currencyStr)
     runInAction('Change_', () => {
-      this.thisDataList = Detail.data
+      this.targetCurrency = currency
     })
+    const state = this.props.routerStore.location.state
+    if (state.type) {
+      this.editPid()
+    } else {
+      const Detail = await this.api.currency.getCurrencyInfo(currency)
+      runInAction('Change_', () => {
+        this.thisDataList = Detail.data
+      })
+    }
   }
 
   submit = () => {
@@ -156,7 +164,7 @@ class PID extends ComponentExt<IStoreProps> {
                 Pkg Name
                     </div>
               <div className={style.value}>
-                {this.targetCurrency.pkg_name}
+                {this.targetCurrency.app_name}
               </div>
             </div>
             <div className={style.row}>

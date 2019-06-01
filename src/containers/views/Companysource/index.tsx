@@ -17,7 +17,7 @@ class Company extends React.Component<IProps> {
                 <Header />
                 <AutoSizer className={styles.tableBox}>{({ height }) => <CompanyTable scrollY={height - 160} />}</AutoSizer>
             </div>
-        ) 
+        )
     }
 }
 export default Company

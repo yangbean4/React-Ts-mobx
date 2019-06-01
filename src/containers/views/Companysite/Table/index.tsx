@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Table, message } from 'antd'
+import { Table, message, Icon } from 'antd'
 import { PaginationConfig } from 'antd/lib/pagination'
 import { inject, observer } from 'mobx-react'
 import { observable, action } from 'mobx'
@@ -90,7 +90,7 @@ class CompanyTable extends ComponentExt<IProps> {
                                 {
                                     this.$checkAuth('Authorization-User Manage-Edit', [
                                         (<a key='form' href="javascript:;" onClick={() => this.modifyCompany(record)}>
-                                            {`Edit`}
+                                            <Icon type="form" />
                                         </a>)
                                     ])
                                 }

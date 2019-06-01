@@ -21,7 +21,7 @@ interface IStoreProps {
 class Header extends ComponentExt<IStoreProps> {
 
     addCompany = () => {
-        this.props.routerStore.push('/Company/add')
+        this.props.routerStore.push('/companysource/add')
     }
 
     render() {

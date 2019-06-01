@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Input, Select, Radio, Button, message } from 'antd'
+import { Form, Input, Select, Radio, Button, message, Popover, Icon as AntIcon } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { statusOption, accountTypeOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
@@ -96,6 +96,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
         this.props.form.setFieldsValue({
             company: id
         })
+        this.toggleCompanyShow(false)
     }
 
     componentWillMount() {
@@ -126,19 +127,15 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                     this.toggleLoading()
                     try {
                         let data = { message: '' }
-                        values = {
-                            ...values,
-                            role: values.role.join(',')
-                        }
                         if (this.typeIsAdd) {
                             data = await createAccount(values)
                         } else {
                             data = await modifyAccount({ ...values, id: account.id })
                         }
                         message.success(data.message)
-                        routerStore.push('/accounts')
+                        this.Cancel()
                     } catch (err) {
-                        //console.log(err);
+                        console.log(err);
                     }
                     this.toggleLoading()
                 }
@@ -153,7 +150,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
             user_name = '',
             status = 1,
             role_id = 1,
-            company = undefined,
+            company_id: company = undefined,
             account_type = undefined
         } = account || {}
 
@@ -185,6 +182,10 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 ] : undefined
                             })(<Input />)}
+
+                            <Popover content={(<p>It is recommended that passwords contain <br /> both upper and lower case letters and Numbers.</p>)}>
+                                <AntIcon className={styles.workBtn} type="question-circle" />
+                            </Popover>
                         </FormItem>
 
                         <FormItem {...formItemLayout} label={this.typeName}>

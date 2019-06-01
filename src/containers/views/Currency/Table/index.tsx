@@ -5,7 +5,6 @@ import { inject, observer } from 'mobx-react'
 import { observable, action } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
-import MyIcon from '@components/Icon'
 
 interface IStoreProps {
     getCurrencyLoading?: boolean
@@ -53,21 +52,24 @@ class CurrencyTable extends ComponentExt<IProps> {
     }
 
     @action
-    modifyCurrency = (currency: ICurrencyStore.ICurrencyForList) => {
+    modifyCurrency = (currency: ICurrencyStore.ICurrencyForList, type?) => {
         this.props.setCurrency(currency)
         localStorage.setItem('TargetCurrency', JSON.stringify(currency))
-        this.props.routerStore.push('/currency/edit')
+        this.props.routerStore.push({
+            pathname: '/currency/edit',
+            state: {
+                type
+            }
+        })
     }
 
-    addCurrency = () => {
+    addCurrency = (record) => {
         this.props.routerStore.push('/currency/add')
     }
 
     componentDidMount() {
         this.props.getCurrency()
     }
-
-
 
     render() {
         const {
@@ -84,7 +86,7 @@ class CurrencyTable extends ComponentExt<IProps> {
                 className="center-table"
                 style={{ width: '100%' }}
                 bordered
-                rowKey="id"
+                rowKey={r => r.app_name + r.platform}
                 locale={{ emptyText: 'No Data' }}
                 loading={getCurrencyLoading}
                 dataSource={currencyList}
@@ -97,7 +99,7 @@ class CurrencyTable extends ComponentExt<IProps> {
                 }}
                 onChange={handleTableChange}
             >
-                <Table.Column<ICurrencyStore.ICurrencyForList> key="pkg_name" title="Pkgname" dataIndex="pkg_name" width={200} />
+                <Table.Column<ICurrencyStore.ICurrencyForList> key="app_name" title="Pkgname" dataIndex="app_name" width={200} />
                 <Table.Column<ICurrencyStore.ICurrencyForList> key="Platform" title="Platform" dataIndex="platform" width={100} />
                 <Table.Column<ICurrencyStore.ICurrencyForList>
                     key="action"
@@ -106,21 +108,23 @@ class CurrencyTable extends ComponentExt<IProps> {
                     render={(_, record) => (
                         <span>
                             {
-                                this.$checkAuth('Apps-Virtual Currency-Add', [
-                                    (<a key='form' href="javascript:;" onClick={() => this.modifyCurrency(record)}>
-                                        <Icon type="form" />
-                                    </a>)
-                                ])
+                                // this.$checkAuth('Apps-Virtual Currency-Add', [
+                                (<a key='form' href="javascript:;" onClick={() => this.modifyCurrency(record)}>
+                                    <Icon type="form" />
+                                </a>)
+                                // ])
                             }
                             {
-                                this.$checkAuth('Apps-Virtual Currency-Edit&Apps-Virtual Currency-Add', (<Divider key='Divider' type="vertical" />))
+                                // this.$checkAuth('Apps-Virtual Currency-Edit&Apps-Virtual Currency-Add', (
+                                <Divider key='Divider' type="vertical" />
+                                // ))
                             }
                             {
-                                this.$checkAuth('Authorization-Currency Manage-Delete', (
-                                    <a href="javascript:;" onClick={() => this.addCurrency()}>
-                                        <MyIcon type='plus' />
-                                    </a>
-                                ))
+                                // this.$checkAuth('Authorization-Currency Manage-Delete', (
+                                <a href="javascript:;" onClick={() => this.modifyCurrency(record, 1)}>
+                                    <Icon type='plus' />
+                                </a>
+                                // ))
                             }
                         </span>
                     )}

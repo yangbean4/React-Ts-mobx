@@ -13,6 +13,7 @@ export interface IAccount {
     company?: number
     role_id?: number
     account_type?: number
+    company_id?: number
 }
 export interface SearchParams {
     company_name?: string,

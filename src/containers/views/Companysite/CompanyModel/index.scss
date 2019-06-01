@@ -8,9 +8,33 @@
       width: 280px;
     }
   }
-
+  .companyTag {
+    height: 40px;
+    width: 106px;
+    margin-bottom: 20px;
+    .tagWrapper {
+      height: 40px;
+      color: #667ffd;
+      line-height: 40px;
+      font-size: 14px;
+      text-align: center;
+      background: rgba(242, 244, 254, 1);
+    }
+    &::after {
+      position: absolute;
+      top: 0;
+      left: 106px;
+      content: "";
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border: 20px solid transparent;
+      border-left-color: #f2f4fe;
+      margin: unset;
+    }
+  }
   .btnBox {
-    margin-left: 12%;
+    margin-left: 16.5%;
   }
 
   .btn2 {

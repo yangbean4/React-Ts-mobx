@@ -18,6 +18,7 @@ export interface ICurrency {
 
 export interface ICurrencyForList {
     pkg_name?: string
+    app_name?: string
     platform?: string
     id?: string
 }

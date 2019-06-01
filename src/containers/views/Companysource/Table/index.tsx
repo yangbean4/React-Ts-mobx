@@ -1,13 +1,10 @@
 import * as React from 'react'
-import { Table, Divider, Modal, Icon, Button, message } from 'antd'
+import { Table, Icon } from 'antd'
 import { PaginationConfig } from 'antd/lib/pagination'
 import { inject, observer } from 'mobx-react'
 import { observable, action } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
-import { statusOption } from '../web.config'
-import MyIcon from '@components/Icon'
-
 interface IStoreProps {
     getCompanyloading?: boolean
     companys?: ICompanyStore.ICompany[]
@@ -42,34 +39,15 @@ interface IProps extends IStoreProps {
 )
 @observer
 class AdsourceTable extends ComponentExt<IProps> {
-
-    @observable
-    private modalVisible: boolean = false
-
-    @observable
-    private delUser: IUserStore.IUser = {}
-
     @action
-    hideUserModalVisible = () => {
-        this.modalVisible = !this.modalVisible
-    }
-
-
-    @action
-    modifyUser = (user: IUserStore.IUser) => {
+    modifyCompany = (user: IUserStore.IUser) => {
         this.props.setCompany(user)
-        this.props.routerStore.replace(`/Company/edit/${user.id}`)
+        this.props.routerStore.replace(`/companysource/edit/${user.id}`)
     }
 
     componentDidMount() {
         this.props.getCompanys()
     }
-    @action
-    deleteModel = (user: IUserStore.IUser) => {
-        this.delUser = user
-        this.hideUserModalVisible()
-    }
-   
     render() {
         const {
             scrollY,
@@ -82,21 +60,6 @@ class AdsourceTable extends ComponentExt<IProps> {
         } = this.props
         return (
             <React.Fragment>
-                {/* <Modal
-                    title="Delete"
-                    width={400}
-                    visible={this.modalVisible}
-                    onCancel={this.hideUserModalVisible}
-                    // onOk={() => deleteUser(this.delUser.id)}
-                    footer={[
-                        <Button key="submit" type="primary" onClick={this.handelOk}>
-                            Yes
-                      </Button>,
-                        <Button key="back" onClick={this.hideUserModalVisible}>No</Button>
-                    ]}
-                >
-                    <p> Sure to delete {this.delUser.user_name}</p>
-                </Modal> */}
                 <Table<IUserStore.IUser>
                     className="center-table"
                     style={{ width: '100%' }}
@@ -113,12 +76,9 @@ class AdsourceTable extends ComponentExt<IProps> {
                     }}
                     onChange={handleTableChange}
                 >
-                    <Table.Column<IUserStore.IUser> key="User name" title="User Name" dataIndex="User Name" width={100} />
-                    <Table.Column<IUserStore.IUser> key="Source Company" title="Source Company" dataIndex="Source Company" width={200} />
-                    <Table.Column<IUserStore.IUser> key="Role" title="Role" dataIndex="Role" width={100} />
-                    <Table.Column<IUserStore.IUser> key="Account Type" title="Account Type" dataIndex="Account Type" width={100} />
-                    <Table.Column<IUserStore.IUser> key="Status" title="Status" dataIndex="Status" width={100} />
-                    <Table.Column<IUserStore.IUser>
+                    <Table.Column<ICompanyStore.ICompany> key="company_name" title="Source Company" dataIndex="company_name" width={100} />
+                    <Table.Column<ICompanyStore.ICompany> key="company_full_name" title="Full Name Of Source Company" dataIndex="company_full_name" width={200} />
+                    <Table.Column<ICompanyStore.ICompany>
                         key="action"
                         title="Operate"
                         width={80}
@@ -126,13 +86,10 @@ class AdsourceTable extends ComponentExt<IProps> {
                             <span>
                                 {
                                     this.$checkAuth('Authorization-User Manage-Edit', [
-                                        (<a key='form' href="javascript:;" onClick={() => this.modifyUser(record)}>
-                                            {`Edit`}
+                                        (<a key='form' href="javascript:;" onClick={() => this.modifyCompany(record)}>
+                                            <Icon type="form" />
                                         </a>)
                                     ])
-                                }
-                                {
-                                    this.$checkAuth('Authorization-User Manage-Edit&Authorization-User Manage-Delete')
                                 }
                             </span>
                         )}

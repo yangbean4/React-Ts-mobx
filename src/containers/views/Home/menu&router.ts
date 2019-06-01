@@ -21,7 +21,8 @@ export const asynchronousComponents = {
     CompanySite: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Companysite')),
     CompanySource: loadComponent(() => import(/* webpackChunkName: "CompanySource" */ '@views/Companysource')),
     CompanyModel: loadComponent(() => import(/* webpackChunkName: "CompanyModel" */ '@views/Companysite/CompanyModel')),
-
+    CompanysourceModel: loadComponent(() => import(/* webpackChunkName: "CompanyModel" */ '@views/Companysource/AdsourceModel')),
+ 
     Config: loadComponent(() => import(/* webpackChunkName: "Config" */ '@views/Config')),
     ConfigModel: loadComponent(() => import(/* webpackChunkName: "Config" */ '@views/Config/ConfigModal')),
 
@@ -198,16 +199,32 @@ export const routerAndMenu: IRouter[] = [
         exact: true,
     },
     {
-        id: 5101,
-        pid: 51,
+        id: 6201,
+        pid: 62,
+        path: '/companysource/add',
+        title: 'Add company',
+        component: 'CompanysourceModel',
+        isMenu: false
+    },
+    {
+        id: 6202,
+        pid: 62,
+        path: '/companysource/edit/:id',
+        title: 'Edit company',
+        component: 'CompanysourceModel',
+        isMenu: false,
+    },
+    {
+        id: 6101,
+        pid: 61,
         path: '/companysite/add',
         title: 'Add company',
         component: 'CompanyModel',
         isMenu: false
     },
     {
-        id: 5102,
-        pid: 51,
+        id: 6102,
+        pid: 61,
         path: '/companysite/edit/:id',
         title: 'Edit company',
         component: 'CompanyModel',

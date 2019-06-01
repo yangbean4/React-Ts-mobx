@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed } from 'mobx'
-import { Form, Input, Select, Radio, Button, message } from 'antd'
+import { Form, Input, Button, message, Col } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
@@ -11,13 +11,25 @@ const FormItem = Form.Item
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 8 },
-        lg: { span: 5 }
+        sm: { span: 5 },
+        lg: { span: 4 }
     },
     wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 14 },
-        lg: { span: 5 }
+        sm: { span: 19 },
+        lg: { span: 6 }
+    }
+}
+const formItemLayoutForModel = {
+    labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 },
+        lg: { span: 9 },
+    },
+    wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+        lg: { span: 15 }
     }
 }
 
@@ -32,7 +44,7 @@ interface IStoreProps {
 
 interface IProps extends IStoreProps {
     type?: string
-    onOk?: () => void
+    onOk?: (id: string) => void
     onCancel?: () => void
 }
 
@@ -49,6 +61,11 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
     private loading: boolean = false
 
     @computed
+    get formItemLayout() {
+        return this.props.type ? formItemLayoutForModel : formItemLayout
+    }
+
+    @computed
     get typeIsAdd() {
         return !this.props.company || !this.props.company.id
     }
@@ -63,7 +80,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
         const routerId = routerStore.location.pathname.toString().split('/').pop()
         const Id = Number(routerId)
         if ((!isNaN(Id) && (!company.id || company.id !== Id))) {
-            routerStore.push('/Company')
+            routerStore.push('/companysite')
         }
     }
     componentWillUnmount() {
@@ -80,8 +97,12 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
                     this.toggleLoading()
                     try {
-                        console.log(111);
-                        let data = { message: '' }
+                        let data = {
+                            message: '',
+                            data: {
+                                id: ''
+                            }
+                        }
                         values = {
                             ...values,
                         }
@@ -92,9 +113,9 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                         }
                         message.success(data.message)
                         if (this.props.type) {
-                            this.props.onOk();
+                            this.props.onOk(data.data.id)
                         } else {
-                            routerStore.push('/Subsite')
+                            routerStore.push('/companysite')
                         }
                     } catch (err) {
                         //console.log(err);
@@ -121,8 +142,13 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
         } = company || {}
         return (
             <div className='sb-form'>
-                <Form className={styles.CompanyModal}>
-                    <FormItem label="Subsite Company" {...formItemLayout} >
+                <Form className={styles.CompanyModal} {...this.formItemLayout}>
+                    <Col span={4} className={styles.companyTag}>
+                        <div className={styles.tagWrapper}>
+                            <span>{`Company Info`}</span>
+                        </div>
+                    </Col>
+                    <FormItem label="Subsite Company"  >
                         {getFieldDecorator('company_name', {
                             initialValue: company_name,
                             rules: [
@@ -132,7 +158,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem label="Full name of company"{...formItemLayout} >
+                    <FormItem label="Full name of company" >
                         {getFieldDecorator('company_full_name', {
                             initialValue: company_full_name,
                             rules: [{
@@ -141,12 +167,12 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem label="Address"{...formItemLayout} >
+                    <FormItem label="Address" >
                         {getFieldDecorator('address', {
                             initialValue: address,
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
                     </FormItem>
-                    <FormItem label="Email"{...formItemLayout} >
+                    <FormItem label="Email" >
                         {getFieldDecorator('email', {
                             initialValue: email,
                             rules: [
@@ -160,7 +186,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem label="Phone"{...formItemLayout} >
+                    <FormItem label="Phone" >
                         {getFieldDecorator('phone', {
                             initialValue: phone,
                             rules: [
@@ -174,7 +200,12 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem label="Beneficiary name"{...formItemLayout} >
+                    <Col span={4} className={styles.companyTag}>
+                        <div className={styles.tagWrapper}>
+                            <span>{`Bank Info`}</span>
+                        </div>
+                    </Col>
+                    <FormItem label="Beneficiary name" >
                         {getFieldDecorator('beneficiary_name', {
                             initialValue: beneficiary_name,
                             rules: [
@@ -184,7 +215,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem label="bank_account_number"{...formItemLayout} >
+                    <FormItem label="bank_account_number" >
                         {getFieldDecorator('bank_account_number', {
                             initialValue: bank_account_number,
                             rules: [
@@ -198,7 +229,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem label="bank_swift_code"{...formItemLayout} >
+                    <FormItem label="bank_swift_code" >
                         {getFieldDecorator('bank_swift_code', {
                             initialValue: bank_swift_code,
                             rules: [
@@ -212,12 +243,12 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem label="bank_address"{...formItemLayout} >
+                    <FormItem label="bank_address" >
                         {getFieldDecorator('bank_address', {
                             initialValue: bank_address,
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
                     </FormItem>
-                    <FormItem className={styles.btnBox} {...formItemLayout}>
+                    <FormItem className={styles.btnBox} >
                         <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
                     </FormItem>
                 </Form>

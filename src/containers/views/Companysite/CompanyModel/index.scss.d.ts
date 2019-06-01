@@ -3,3 +3,5 @@
 export const CompanyModal: string;
 export const btn2: string;
 export const btnBox: string;
+export const companyTag: string;
+export const tagWrapper: string;

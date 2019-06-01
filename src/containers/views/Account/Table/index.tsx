@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Table, Icon } from 'antd'
 import { PaginationConfig } from 'antd/lib/pagination'
 import { inject, observer } from 'mobx-react'
-import { observable, action, computed, autorun } from 'mobx'
+import { observable, action, computed, autorun, runInAction } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
 import { statusOption, accountTypeOption } from '../web.config'
@@ -51,24 +51,25 @@ class AccountTable extends ComponentExt<IProps> {
     private modalVisible: boolean = false
 
     @observable
-    private accountType: string
-    constructor(props) {
-        super(props)
-        autorun(
-            // 一旦...
-            () => {
-                const accountType = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
-                if (accountType !== this.accountType) {
-                    this.accountType = accountType;
-                    this.props.setAccountType(accountType)
-                    return true
-                }
-                return false
-            }
-        )
-    }
+    private accountType: string = ''
 
-
+    // constructor(props) {
+    //     super(props)
+    //     autorun(
+    //         // 一旦...
+    //         () => {
+    //             const accountType = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+    //             if (accountType !== this.accountType) {
+    //                 runInAction('SET_TYPE', () => {
+    //                     this.accountType = accountType
+    //                 })
+    //                 this.props.setAccountType(accountType)
+    //                 return true
+    //             }
+    //             return false
+    //         }
+    //     )
+    // }
 
     @computed
     get typeName() {
@@ -88,6 +89,13 @@ class AccountTable extends ComponentExt<IProps> {
 
     componentDidMount() {
         // this.props.getAccounts()
+        const accountType = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+        if (accountType !== this.accountType) {
+            runInAction('SET_TYPE', () => {
+                this.accountType = accountType
+            })
+            this.props.setAccountType(accountType)
+        }
     }
 
     render() {

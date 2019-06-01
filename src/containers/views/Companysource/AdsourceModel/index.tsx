@@ -1,9 +1,8 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed } from 'mobx'
-import { Form, Input, Select, Radio, Button, message } from 'antd'
+import { Form, Input, Button, message } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
-import { statusOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 // 封装表单域组件
@@ -24,26 +23,22 @@ const formItemLayout = {
 
 interface IProps extends IStoreProps {
     type?: string
-    onOk?: () => void
+    onOk?: (id: string) => void
 }
 interface IStoreProps {
-    user?: IUserStore.IUser
-    createUser?: (user: IUserStore.IUser) => Promise<any>
-    modifyUser?: (user: IUserStore.IUser) => Promise<any>
+    company?: ICompanyStore.ICompany
+    createCompany?: (company: ICompanyStore.ICompany) => Promise<any>
+    modifyCompany?: (company: ICompanyStore.ICompany) => Promise<any>
     changepage?: (page: number) => void
     routerStore?: RouterStore
-    allRole?: IRoleStore.RoleOption[]
-    getAllRoles?: () => Promise<any>
-    clearRolesAll?: () => void
-    clearUser?: () => void
+    clearCompany?: () => void
 }
 
 @inject(
     (store: IStore): IProps => {
-        const { userStore, routerStore, roleStore } = store
-        const { user, createUser, modifyUser, clearUser } = userStore
-        const { getAllRoles, allRole, clearRolesAll } = roleStore
-        return { clearUser, clearRolesAll, getAllRoles, allRole, routerStore, user, createUser, modifyUser }
+        const { companyStore, routerStore } = store
+        const { company, createCompany, modifyCompany, clearCompany} = companyStore
+        return { clearCompany, company, routerStore, createCompany, modifyCompany}
     }
 )
 @observer
@@ -53,7 +48,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get typeIsAdd() {
-        return !this.props.user || !this.props.user.id
+        return !this.props.company || !this.props.company.id
     }
 
     @action
@@ -62,48 +57,46 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     componentWillMount() {
-        const { routerStore, user = {}, getAllRoles } = this.props
+        const { routerStore, company = {}} = this.props
         const routerId = routerStore.location.pathname.toString().split('/').pop()
         const Id = Number(routerId)
-        if ((!isNaN(Id) && (!user.id || user.id !== Id))) {
-            routerStore.push('/users')
-        } else {
-            getAllRoles()
+        if ((!isNaN(Id) && (!company.id || company.id !== Id))) {
+            routerStore.push('/companysource')
         }
     }
     componentWillUnmount() {
-        this.props.clearRolesAll()
-        this.props.clearUser()
+        this.props.clearCompany()
     }
-    Cancel = () => {
-        this.props.routerStore.push('/users')
-    }
-
+   
     submit = (e?: React.FormEvent<any>): void => {
         if (e) {
             e.preventDefault()
         }
-        const { routerStore, user, createUser, modifyUser, form } = this.props
+        const { routerStore, company, createCompany, modifyCompany, form } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
                     this.toggleLoading()
                     try {
-                        let data = { message: '' }
+                        let data = {
+                            message: '',
+                            data: {
+                                id: ''
+                            }
+                        }
                         values = {
                             ...values,
-                            role: values.role.join(',')
                         }
                         if (this.typeIsAdd) {
-                            data = await createUser(values)
+                            data = await createCompany(values)
                         } else {
-                            data = await modifyUser({ ...values, id: user.id })
+                            data = await modifyCompany({ ...values, id: company.id })
                         }
                         message.success(data.message)
                         if (this.props.type) {
-                            this.props.onOk();
+                            this.props.onOk(data.data.id);
                         } else {
-                            routerStore.push('/Subsite')
+                            routerStore.push('/companysource')
                         }
                     } catch (err) {
                         //console.log(err);
@@ -115,100 +108,69 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     render() {
-        const { user, form, allRole } = this.props
+        const { company, form } = this.props
         const { getFieldDecorator } = form
-        let roleValue: (string | number)[] = []
         const {
-            role = undefined,
-            user_name = '',
-            owner = '',
-            status = 1,
-        } = user || {}
-        if (role && user) {
-            roleValue = role.split(',').map(ele => {
-                return (allRole.find(role => role.role_name === ele) || {}).id
-            }).filter(ele => ele !== undefined)
-        }
+            company_name = '',
+            company_full_name = '',
+            address = '' ,
+            phone = '',
+            email = '',
+        } = company || {}
         return (
             <div className='sb-form'>
                 <Form className={styles.CompanyModal}>
-                    <FormItem label="Subsite Company" {...formItemLayout} >
-                        {getFieldDecorator('user_name', {
-                            initialValue: user_name,
+                    <FormItem  label="Subsite Company" {...formItemLayout} >
+                        {getFieldDecorator('company_name', {
+                            initialValue: company_name,
                             rules: [
                                 {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
-                    </FormItem>
-                    <FormItem label="Full name of company"{...formItemLayout} >
-                        {getFieldDecorator('pwd', {
-                            rules: this.typeIsAdd ? [{
-                                required: true, message: "Required"
-                            }
-                            ] : undefined
                         })(<Input />)}
                     </FormItem>
-                    <FormItem label="Remarks"{...formItemLayout} >
-                        {getFieldDecorator('remarks', {
-                            initialValue: role,
+                    <FormItem label="Full name of company"{...formItemLayout} >
+                        {getFieldDecorator('company_full_name', {
+                            initialValue: company_full_name,
+                            rules: [                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(<Input />)}
+                    </FormItem>
+                    <FormItem  label="Address"{...formItemLayout} >
+                        {getFieldDecorator('address', {
+                            initialValue: address,
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
                     </FormItem>
-                    <FormItem label="Email"{...formItemLayout} >
-                        {getFieldDecorator('owner', {
-                            initialValue: owner,
+                    <FormItem  label="Email"{...formItemLayout} >
+                        {getFieldDecorator('email', {
+                            initialValue: email,
                             rules: [
                                 {
                                     required: true, message: "Required"
+                                },
+                                {
+                                    pattern: /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/,
+                                    message: 'please enter the correct email format!'
                                 }
                             ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
+                        })(<Input />)}
                     </FormItem>
-                    <FormItem label="Phone"{...formItemLayout} >
-                        {getFieldDecorator('owner', {
-                            initialValue: owner,
+                    <FormItem  label="Phone"{...formItemLayout} >
+                        {getFieldDecorator('phone', {
+                            initialValue: phone,
                             rules: [
                                 {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
-                    </FormItem>
-                    <FormItem label="Beneficiary name"{...formItemLayout} >
-                        {getFieldDecorator('owner', {
-                            initialValue: owner,
-                            rules: [
+                                    required: true, message: 'required'
+                                },
                                 {
-                                    required: true, message: "Required"
+                                    pattern: /^[1][3,4,5,7,8][0-9]{9}$/,
+                                    message: 'Incorrect phone number format!' 
                                 }
                             ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
-                    </FormItem>
-                    <FormItem label="Account number"{...formItemLayout} >
-                        {getFieldDecorator('owner', {
-                            initialValue: owner,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
-                    </FormItem>
-                    <FormItem label="Swift code"{...formItemLayout} >
-                        {getFieldDecorator('owner', {
-                            initialValue: owner,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
-                    </FormItem>
-                    <FormItem label="Address"{...formItemLayout} >
-                        {getFieldDecorator('owner', {
-                            initialValue: owner,
-                        })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
+                        })(<Input />)}
                     </FormItem>
                     <FormItem className={styles.btnBox} {...formItemLayout}>
                         <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
