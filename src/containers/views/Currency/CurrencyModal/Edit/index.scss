@@ -1,10 +1,13 @@
 @import "_base.scss";
 .box {
   width: 100%;
+  height: max-content;
   :global {
     .sb-form {
-      border-radius: unset;
-      box-shadow: unset;
+      .ant-form {
+        border-radius: unset;
+        box-shadow: unset;
+      }
     }
   }
 }

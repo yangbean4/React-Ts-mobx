@@ -35,9 +35,9 @@ class VcTable extends ComponentExt<TableProps> {
           width={200}
         />
         <Table.Column<ICurrencyStore.ICurrency>
-          key="placement_id"
+          key="vc_exchange_rate"
           title="VC Exchang Rate"
-          dataIndex="placement_id"
+          dataIndex="vc_exchange_rate"
           render={(_) => (
             `${_}=1$`
           )}
@@ -168,7 +168,7 @@ class PID extends ComponentExt<IStoreProps> {
                 Pkg Name
                     </div>
               <div className={style.value}>
-                {this.targetCurrency.app_name || this.targetCurrency.pkg_name}
+                {this.targetCurrency.pkg_name}
               </div>
             </div>
             <div className={style.row}>
