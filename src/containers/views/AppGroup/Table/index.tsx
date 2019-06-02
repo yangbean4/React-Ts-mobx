@@ -6,13 +6,14 @@ import { observable, action } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
 import MyIcon from '@components/Icon'
+import { statusOption } from '../web.config'
 
 interface IStoreProps {
-    getCurrencyLoading?: boolean
-    currencyList?: ICurrencyStore.ICurrencyForList[]
-    setCurrency?: (currency: ICurrencyStore.ICurrency) => void
-    getCurrency?: () => Promise<any>
-    deleteCurrency?: (id: number) => Promise<any>
+    getAppGroupLoading?: boolean
+    appGroupList?: IAppGroupStore.IAppGroupForList[]
+    setAppGroup?: (appGroup: IAppGroupStore.IAppGroup) => void
+    getAppGroup?: () => Promise<any>
+    deleteAppGroup?: (id: number) => Promise<any>
     handleTableChange?: (pagination: PaginationConfig) => void
     page?: number
     pageSize?: number
@@ -26,45 +27,45 @@ interface IProps extends IStoreProps {
 
 @inject(
     (store: IStore): IStoreProps => {
-        const { routerStore, currencyStore } = store
+        const { routerStore, appGroupStore } = store
         const {
-            getCurrencyLoading,
-            currencyList,
-            getCurrency,
+            getAppGroupLoading,
+            appGroupList,
+            getAppGroup,
             handleTableChange,
             page,
             pageSize,
             total,
-            setCurrency
-        } = currencyStore
-        return { routerStore, setCurrency, getCurrencyLoading, currencyList, getCurrency, handleTableChange, page, pageSize, total }
+            setAppGroup
+        } = appGroupStore
+        return { routerStore, setAppGroup, getAppGroupLoading, appGroupList, getAppGroup, handleTableChange, page, pageSize, total }
     }
 )
 @observer
-class CurrencyTable extends ComponentExt<IProps> {
+class AppGroupTable extends ComponentExt<IProps> {
 
     @observable
     private modalVisible: boolean = false
 
 
     @action
-    hideCurrencyModalVisible = () => {
+    hideAppGroupModalVisible = () => {
         this.modalVisible = !this.modalVisible
     }
 
     @action
-    modifyCurrency = (currency: ICurrencyStore.ICurrencyForList) => {
-        this.props.setCurrency(currency)
-        localStorage.setItem('TargetCurrency', JSON.stringify(currency))
-        this.props.routerStore.push('/currency/edit')
+    modifyAppGroup = (appGroup: IAppGroupStore.IAppGroupForList) => {
+        this.props.setAppGroup(appGroup)
+        localStorage.setItem('TargetAppGroup', JSON.stringify(appGroup))
+        this.props.routerStore.push('/apps/edit')
     }
 
-    addCurrency = () => {
-        this.props.routerStore.push('/currency/add')
+    addAppGroup = () => {
+        this.props.routerStore.push('/apps/add')
     }
 
     componentDidMount() {
-        this.props.getCurrency()
+        this.props.getAppGroup()
     }
 
 
@@ -72,22 +73,22 @@ class CurrencyTable extends ComponentExt<IProps> {
     render() {
         const {
             scrollY,
-            getCurrencyLoading,
-            currencyList,
+            getAppGroupLoading,
+            appGroupList,
             handleTableChange,
             page,
             pageSize,
             total
         } = this.props
         return (
-            <Table<ICurrencyStore.ICurrencyForList>
+            <Table<IAppGroupStore.IAppGroupForList>
                 className="center-table"
                 style={{ width: '100%' }}
                 bordered
                 rowKey="id"
                 locale={{ emptyText: 'No Data' }}
-                loading={getCurrencyLoading}
-                dataSource={currencyList}
+                loading={getAppGroupLoading}
+                dataSource={appGroupList}
                 scroll={{ y: scrollY }}
                 pagination={{
                     current: page,
@@ -97,30 +98,43 @@ class CurrencyTable extends ComponentExt<IProps> {
                 }}
                 onChange={handleTableChange}
             >
-                <Table.Column<ICurrencyStore.ICurrencyForList> key="pkg_name" title="Pkgname" dataIndex="pkg_name" width={200} />
-                <Table.Column<ICurrencyStore.ICurrencyForList> key="Platform" title="Platform" dataIndex="platform" width={100} />
-                <Table.Column<ICurrencyStore.ICurrencyForList>
+                <Table.Column<IAppGroupStore.IAppGroupForList> key="app_name" title="App Name" dataIndex="app_name" width={200} />
+                <Table.Column<IAppGroupStore.IAppGroupForList> key="pkg_name" title="Pkgname" dataIndex="pkg_name" width={200} />
+                <Table.Column<IAppGroupStore.IAppGroupForList> key="platform" title="Platform" dataIndex="platform" width={100} />
+                <Table.Column<IAppGroupStore.IAppGroupForList> key="sdk_token" title="SDK Token" dataIndex="sdk_token" width={200} />
+                <Table.Column<IAccountStore.IAccount>
+                    key="status"
+                    title="Status"
+                    dataIndex="status"
+                    width={100}
+                    render={(_) => (
+                        statusOption.find(item => item.value === _).key
+                    )}
+                />
+                <Table.Column<IAppGroupStore.IAppGroupForList>
                     key="action"
                     title="Operate"
                     width={120}
                     render={(_, record) => (
                         <span>
                             {
-                                this.$checkAuth('Apps-Virtual Currency-Add', [
-                                    (<a key='form' href="javascript:;" onClick={() => this.modifyCurrency(record)}>
-                                        <Icon type="form" />
-                                    </a>)
-                                ])
+                                // this.$checkAuth('Apps-Virtual AppGroup-Add', [
+                                (<a key='form' href="javascript:;" onClick={() => this.modifyAppGroup(record)}>
+                                    <Icon type="form" />
+                                </a>)
+                                // ])
                             }
                             {
-                                this.$checkAuth('Apps-Virtual Currency-Edit&Apps-Virtual Currency-Add', (<Divider key='Divider' type="vertical" />))
+                                // this.$checkAuth('Apps-Virtual AppGroup-Edit&Apps-Virtual AppGroup-Add', (
+                                <Divider key='Divider' type="vertical" />
+                                // ))
                             }
                             {
-                                this.$checkAuth('Authorization-Currency Manage-Delete', (
-                                    <a href="javascript:;" onClick={() => this.addCurrency()}>
-                                        <MyIcon type='plus' />
-                                    </a>
-                                ))
+                                // this.$checkAuth('Authorization-AppGroup Manage-Delete', (
+                                <a href="javascript:;" onClick={() => this.addAppGroup()}>
+                                    <Icon type='plus' />
+                                </a>
+                                // ))
                             }
                         </span>
                     )}
@@ -130,4 +144,4 @@ class CurrencyTable extends ComponentExt<IProps> {
     }
 }
 
-export default CurrencyTable
+export default AppGroupTable

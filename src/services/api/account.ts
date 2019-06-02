@@ -15,7 +15,7 @@ export default {
   },
 
   getAllCompany(data?): Promise<any> {
-    return http.post(`/api/company/detail`, data || {})
+    return http.post(`/api/company/companyList`, data || {})
   },
 
   // deleteAccount(data): Promise<any> {

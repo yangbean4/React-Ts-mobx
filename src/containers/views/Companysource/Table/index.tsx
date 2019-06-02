@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Table, Icon } from 'antd'
 import { PaginationConfig } from 'antd/lib/pagination'
 import { inject, observer } from 'mobx-react'
-import { observable, action } from 'mobx'
+import { observable, action, runInAction } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
 interface IStoreProps {
@@ -10,6 +10,7 @@ interface IStoreProps {
     companys?: ICompanyStore.ICompany[]
     setCompany?: (user: IUserStore.IUser) => void
     getCompanys?: () => Promise<any>
+    setCompanyType?: (string) => void
     handleTableChange?: (pagination: PaginationConfig) => void
     page?: number
     pageSize?: number
@@ -32,13 +33,18 @@ interface IProps extends IStoreProps {
             handleTableChange,
             page,
             pageSize,
+            setCompanyType,
             total
         } = companyStore
-        return { routerStore, getCompanyloading, setCompany, getCompanys, companys, handleTableChange, page, pageSize, total }
+        return { setCompanyType, routerStore, getCompanyloading, setCompany, getCompanys, companys, handleTableChange, page, pageSize, total }
     }
 )
 @observer
 class AdsourceTable extends ComponentExt<IProps> {
+
+    @observable
+    private companyType: string = ''
+
     @action
     modifyCompany = (user: IUserStore.IUser) => {
         this.props.setCompany(user)
@@ -46,7 +52,13 @@ class AdsourceTable extends ComponentExt<IProps> {
     }
 
     componentDidMount() {
-        this.props.getCompanys()
+        const companyType = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+        if (companyType !== this.companyType) {
+            runInAction('SET_TYPE', () => {
+                this.companyType = companyType
+            })
+        }
+        this.props.setCompanyType(companyType)
     }
     render() {
         const {

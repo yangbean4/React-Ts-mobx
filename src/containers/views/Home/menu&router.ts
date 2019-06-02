@@ -11,6 +11,8 @@ const loadComponent = (loader: () => Promise<any>) =>
 export const asynchronousComponents = {
     //------------------Apps
     Apps: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppGroup')),
+    AppsModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppGroup/AppGroupModal')),
+
     Currency: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency')),
     CurrencyAdd: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency/CurrencyModal/Add')),
     CurrencyEdit: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency/CurrencyModal/Edit')),
@@ -22,7 +24,7 @@ export const asynchronousComponents = {
     CompanySource: loadComponent(() => import(/* webpackChunkName: "CompanySource" */ '@views/Companysource')),
     CompanyModel: loadComponent(() => import(/* webpackChunkName: "CompanyModel" */ '@views/Companysite/CompanyModel')),
     CompanysourceModel: loadComponent(() => import(/* webpackChunkName: "CompanyModel" */ '@views/Companysource/AdsourceModel')),
- 
+
     Config: loadComponent(() => import(/* webpackChunkName: "Config" */ '@views/Config')),
     ConfigModel: loadComponent(() => import(/* webpackChunkName: "Config" */ '@views/Config/ConfigModal')),
 
@@ -79,9 +81,27 @@ export const routerAndMenu: IRouter[] = [
         id: 51,
         pid: 5,
         isMenu: true,
+        exact: true,
         title: 'Apps Manage',
-        icon: 'iconlog',
-        authName: 'Apps-Apps Manage'
+        authName: 'Apps-Apps Manage',
+        component: 'Apps',
+        path: '/apps'
+    },
+    {
+        id: 511,
+        pid: 51,
+        isMenu: false,
+        path: '/apps/add',
+        title: 'Add App',
+        component: 'AppsModel',
+    },
+    {
+        id: 511,
+        pid: 51,
+        isMenu: false,
+        path: '/apps/edit/:id',
+        title: 'Edit App',
+        component: 'AppsModel',
     },
     {
         id: 52,
@@ -90,7 +110,6 @@ export const routerAndMenu: IRouter[] = [
         exact: true,
         path: '/currency',
         title: 'Virtual Currency',
-        icon: 'iconlog',
         component: 'Currency',
         authName: 'Apps-Virtual Currency'
     },
@@ -202,7 +221,7 @@ export const routerAndMenu: IRouter[] = [
         id: 6201,
         pid: 62,
         path: '/companysource/add',
-        title: 'Add company',
+        title: 'Add Source Company',
         component: 'CompanysourceModel',
         isMenu: false
     },
@@ -210,7 +229,7 @@ export const routerAndMenu: IRouter[] = [
         id: 6202,
         pid: 62,
         path: '/companysource/edit/:id',
-        title: 'Edit company',
+        title: 'Edit Source Company',
         component: 'CompanysourceModel',
         isMenu: false,
     },
@@ -218,7 +237,7 @@ export const routerAndMenu: IRouter[] = [
         id: 6101,
         pid: 61,
         path: '/companysite/add',
-        title: 'Add company',
+        title: 'Add Subsite Company',
         component: 'CompanyModel',
         isMenu: false
     },
@@ -226,7 +245,7 @@ export const routerAndMenu: IRouter[] = [
         id: 6102,
         pid: 61,
         path: '/companysite/edit/:id',
-        title: 'Edit company',
+        title: 'Edit Subsite Company',
         component: 'CompanyModel',
         isMenu: false,
     },

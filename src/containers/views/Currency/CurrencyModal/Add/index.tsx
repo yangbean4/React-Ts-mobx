@@ -67,16 +67,24 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
                     this.toggleLoading()
                     try {
-                        let data = await createCurrency(values)
-                        message.success(data.message)
-                        const {
-                            pkg_name,
-                            platform
-                        } = values
-                        localStorage.setItem('TargetCurrency', JSON.stringify({
-                            pkg_name,
-                            platform
-                        }))
+                        if (this.isAdd) {
+                            let data = await createCurrency(values)
+                            message.success(data.message)
+                            const {
+                                pkg_name,
+                                platform
+                            } = values
+                            localStorage.setItem('TargetCurrency', JSON.stringify({
+                                pkg_name,
+                                platform
+                            }))
+                        } else {
+                            const currencyStr = localStorage.getItem('TargetCurrency') || '{}';
+                            const currency = JSON.parse(currencyStr)
+                            let data = await createCurrency({ ...values, ...currency })
+                            message.success(data.message)
+                        }
+
                         routerStore.push('/currency/edit')
                     } catch (err) {
                         //console.log(err);
@@ -179,9 +187,18 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem {...formItemLayout} label="VC Exchange Rate">
                         {getFieldDecorator('vc_exchange_rate', {
                             initialValue: vc_exchange_rate,
+                            validateTrigger: 'blur',
                             rules: [
                                 {
-                                    required: true, message: "Required"
+                                    required: true, message: "Required",
+                                },
+                                {
+                                    validator: (r, v, callback) => {
+                                        if (v <= 0) {
+                                            callback('The Exchange Rate should be a positive integer!')
+                                        }
+                                        callback()
+                                    }
                                 }
                             ]
                         })(<InputNumber precision={0} />)}

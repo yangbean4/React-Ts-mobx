@@ -69,7 +69,7 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
       <Form {...layout} >
         <Row>
           <Col span={span}>
-            <FormItem label="Pkgname">
+            <FormItem label="Pkg Name">
               {getFieldDecorator('pkg_name', {
                 initialValue: filters.pkg_name
               })(<Input />)}

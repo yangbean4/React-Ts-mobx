@@ -22,13 +22,17 @@
     margin-left: 20px;
   }
   :global(.sb-form) {
-    background: $background-color-white;
-    box-shadow: $box-shadow-base;
-    border-radius: $border-radius-lg;
-    margin-top: 20px;
-    padding-left: 100px;
+    padding: 20px;
+    display: flex;
     :global(.ant-form) {
-      width: 100%;
+      min-height: calc(100% - 20px);
+      flex: 1;
+      height: max-content;
+      background: $background-color-white;
+      box-shadow: $box-shadow-base;
+      border-radius: $border-radius-lg;
+      padding-top: 40px;
+      padding-left: 100px;
     }
   }
 }

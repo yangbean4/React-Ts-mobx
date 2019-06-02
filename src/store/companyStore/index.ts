@@ -2,6 +2,7 @@ import { observable, action, runInAction } from "mobx"
 import { PaginationConfig } from 'antd/lib/pagination'
 
 import { StoreExt } from '@utils/reactExt'
+import { company } from '@services/api';
 
 
 export class CompanyStore extends StoreExt {
@@ -11,6 +12,11 @@ export class CompanyStore extends StoreExt {
      */
     @observable
     getCompanyloading: boolean = false
+    /**
+     * 类型
+     */
+    @observable
+    companyType: string 
     /**
      * 公司列表
      */
@@ -41,6 +47,14 @@ export class CompanyStore extends StoreExt {
     @observable
     filters: ICompanyStore.SearchParams = {}
 
+    @action
+    /**
+     * 设置类型
+     */
+    setCompanyType = (companyType: string) => {
+        this.companyType = companyType
+        this.getCompanys()
+    }
     /**
      * 加载公司列表
      */
@@ -48,7 +62,11 @@ export class CompanyStore extends StoreExt {
     getCompanys = async () => {
         this.getCompanyloading = true
         try {
-            const res = await this.api.company.getCompanys({ page: this.page, pageSize: this.pageSize, ...this.filters })
+            let param
+            let data = { page: this.page, pageSize: this.pageSize, ...this.filters }
+            this.companyType === 'source' && (param = { ...data, type: 0 })
+            this.companyType === 'subsite' && (param = { ...data, type: 1 })
+            const res = await this.api.company.getCompanys(param)
             runInAction('SET_COMPANY_LIST', () => {
                 this.companys = res.data
                 this.total = res.total
@@ -69,8 +87,8 @@ export class CompanyStore extends StoreExt {
     }
     @action
     modifyCompany = async (company: ICompanyStore.ICompany) => {
-        // const { id, role, status, pwd } = company
-        // return await this.api.user.modifyUser({ id, role, status, pwd })
+        const res = await this.api.company.modifyCompany(company)
+        return res
     }
     @action
     changePage = (page: number) => {

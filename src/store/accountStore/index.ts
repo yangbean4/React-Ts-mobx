@@ -57,7 +57,7 @@ export class AccountStore extends StoreExt {
     @action
     setAccountType = (accountType: string) => {
         this.accountType = accountType
-        this.getAccounts()
+        this.changeFilter({})
     }
 
     /**

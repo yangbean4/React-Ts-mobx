@@ -20,8 +20,8 @@ interface IStoreProps {
 @observer
 class Header extends ComponentExt<IStoreProps> {
 
-    addCurrency = () => {
-        this.props.routerStore.push('/currency/add')
+    addAppGroup = () => {
+        this.props.routerStore.push('/apps/add')
     }
 
     render() {
@@ -29,9 +29,9 @@ class Header extends ComponentExt<IStoreProps> {
             <div>
                 <Search />
                 {
-                    // this.$checkAuth('Apps-Virtual Currency-Add', (
-                    <PortalsBtn querySelector='#currencyAddBtn'>
-                        <Button icon='plus' type="primary" onClick={this.addCurrency}>
+                    // this.$checkAuth('Apps-Virtual AppGroup-Add', (
+                    <PortalsBtn querySelector='#appGroupAddBtn'>
+                        <Button icon='plus' type="primary" onClick={this.addAppGroup}>
                             Add
                         </Button>
                     </PortalsBtn>

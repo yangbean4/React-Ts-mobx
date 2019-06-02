@@ -104,6 +104,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             }
                         }
                         values = {
+                            type: 1,
                             ...values,
                         }
                         if (this.typeIsAdd) {
@@ -158,7 +159,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem label="Full name of company" >
+                    <FormItem label="Full name of Subsite Company" >
                         {getFieldDecorator('company_full_name', {
                             initialValue: company_full_name,
                             rules: [{
@@ -183,7 +184,8 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                     pattern: /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/,
                                     message: 'please enter the correct email format!'
                                 }
-                            ]
+                            ],
+                            validateTrigger: 'onBlur'
                         })(<Input />)}
                     </FormItem>
                     <FormItem label="Phone" >
@@ -191,13 +193,14 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: phone,
                             rules: [
                                 {
-                                    required: true, message: 'required'
+                                    required: false, message: 'required'
                                 },
                                 {
-                                    pattern: /^[1][3,4,5,7,8][0-9]{9}$/,
+                                    pattern: /^[1][3,4,5,7,8,9][0-9]{9}$/,
                                     message: 'Incorrect phone number format!'
                                 }
-                            ]
+                            ],
+                            validateTrigger: 'onBlur'
                         })(<Input />)}
                     </FormItem>
                     <Col span={4} className={styles.companyTag}>
@@ -215,7 +218,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem label="bank_account_number" >
+                    <FormItem label="Account number" >
                         {getFieldDecorator('bank_account_number', {
                             initialValue: bank_account_number,
                             rules: [
@@ -224,12 +227,13 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                 },
                                 {
                                     pattern: /^[0-9]{14,19}$/,
-                                    message: 'Incorrect bank account number format'
+                                    message: 'Incorrect account number format'
                                 }
-                            ]
+                            ],
+                            validateTrigger: 'onBlur'
                         })(<Input />)}
                     </FormItem>
-                    <FormItem label="bank_swift_code" >
+                    <FormItem label="Swift code" >
                         {getFieldDecorator('bank_swift_code', {
                             initialValue: bank_swift_code,
                             rules: [
@@ -240,10 +244,11 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                     pattern: /^[0-9]*$/,
                                     message: 'number format'
                                 }
-                            ]
+                            ],
+                            validateTrigger: 'onBlur'
                         })(<Input />)}
                     </FormItem>
-                    <FormItem label="bank_address" >
+                    <FormItem label="Address" >
                         {getFieldDecorator('bank_address', {
                             initialValue: bank_address,
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}

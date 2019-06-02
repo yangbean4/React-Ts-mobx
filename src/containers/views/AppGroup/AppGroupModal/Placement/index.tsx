@@ -23,29 +23,29 @@ const formItemLayout = {
 }
 
 interface IStoreProps {
-    createCurrency?: (currency: ICurrencyStore.ICurrency) => Promise<any>
+    createAppGroup?: (appGroup: IAppGroupStore.IAppGroup) => Promise<any>
     routerStore?: RouterStore
 }
 
 interface IProps extends IStoreProps {
-    currency?: ICurrencyStore.ICurrency
+    appGroup?: IAppGroupStore.IAppGroup
     onCancel?: () => void
 }
 @inject(
     (store: IStore): IProps => {
-        const { currencyStore, routerStore } = store
-        const { createCurrency } = currencyStore
-        return { routerStore, createCurrency }
+        const { appGroupStore, routerStore } = store
+        const { createAppGroup } = appGroupStore
+        return { routerStore, createAppGroup }
     }
 )
 @observer
-class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
+class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private loading: boolean = false
 
     @computed
     get isAdd() {
-        return !this.props.currency
+        return !this.props.appGroup
     }
 
     @action
@@ -54,30 +54,30 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     Cancel = () => {
-        this.isAdd ? this.props.routerStore.push('/currency') : this.props.onCancel()
+        this.isAdd ? this.props.routerStore.push('/apps') : this.props.onCancel()
     }
 
     submit = (e?: React.FormEvent<any>): void => {
         if (e) {
             e.preventDefault()
         }
-        const { routerStore, createCurrency, form } = this.props
+        const { routerStore, createAppGroup, form } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
                     this.toggleLoading()
                     try {
-                        let data = await createCurrency(values)
+                        let data = await createAppGroup(values)
                         message.success(data.message)
                         const {
                             pkg_name,
                             platform
                         } = values
-                        localStorage.setItem('TargetCurrency', JSON.stringify({
+                        localStorage.setItem('TargetAppGroup', JSON.stringify({
                             pkg_name,
                             platform
                         }))
-                        routerStore.push('/currency/edit')
+                        routerStore.push('/apps/edit')
                     } catch (err) {
                         //console.log(err);
                     }
@@ -88,7 +88,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     render() {
-        const { currency, form } = this.props
+        const { appGroup, form } = this.props
         const { getFieldDecorator } = form
         let roleValue: (string | number)[] = []
         const {
@@ -100,10 +100,10 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
             vc_desc = '',
             vc_secret_key = '',
             status = 1,
-        } = currency || {}
+        } = appGroup || {}
         return (
             <div className='sb-form'>
-                <Form className={styles.currencyModal} >
+                <Form className={styles.appGroupModal} >
                     <FormItem {...formItemLayout} label="Status">
                         {getFieldDecorator('status', {
                             initialValue: status,
@@ -215,4 +215,4 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
     }
 }
 
-export default Form.create<IProps>()(CurrencyModal)
+export default Form.create<IProps>()(AppGroupModal)

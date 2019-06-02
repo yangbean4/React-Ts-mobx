@@ -113,19 +113,23 @@ class PID extends ComponentExt<IStoreProps> {
 
   @action
   initDetail = async () => {
-    const currencyStr = localStorage.getItem('TargetCurrency') || '{}';
-    const currency = JSON.parse(currencyStr)
-    runInAction('Change_', () => {
-      this.targetCurrency = currency
-    })
-    const state = this.props.routerStore.location.state
-    if (state.type) {
-      this.editPid()
-    } else {
-      const Detail = await this.api.currency.getCurrencyInfo(currency)
+    try {
+      const currencyStr = localStorage.getItem('TargetCurrency') || '{}';
+      const currency = JSON.parse(currencyStr)
       runInAction('Change_', () => {
-        this.thisDataList = Detail.data
+        this.targetCurrency = currency
       })
+      const state = this.props.routerStore.location.state
+      if (state && state.type) {
+        this.editPid()
+      } else {
+        const Detail = await this.api.currency.getCurrencyInfo(currency)
+        runInAction('Change_', () => {
+          this.thisDataList = Detail.data
+        })
+      }
+    } catch (error) {
+      this.props.routerStore.push('/currency');
     }
   }
 
@@ -181,7 +185,7 @@ class PID extends ComponentExt<IStoreProps> {
               <Button type="primary" className={style.addbtn} onClick={() => this.editPid()}>+ Add</Button>
               <VcTable data={this.thisDataList} onEdit={this.editPid} />
               <div className={style.btnGroup}>
-                <Button type="primary" className={style.submitBtn} onClick={this.submit}>Submit</Button>
+                {/* <Button type="primary" className={style.submitBtn} onClick={this.submit}>Submit</Button> */}
                 <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
               </div>
             </div> : <div className="formBox">

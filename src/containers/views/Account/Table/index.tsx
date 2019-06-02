@@ -15,7 +15,6 @@ interface IStoreProps {
     getAccounts?: () => Promise<any>
     // deleteAccount?: (id: number) => Promise<any>
     handleTableChange?: (pagination: PaginationConfig) => void
-    setAccountType?: (string) => void
     page?: number
     pageSize?: number
     total?: number
@@ -38,9 +37,9 @@ interface IProps extends IStoreProps {
             pageSize,
             total,
             setAccount,
-            setAccountType
+
         } = accountStore
-        return { routerStore, setAccount, getAccountLoading, setAccountType, accounts, getAccounts, handleTableChange, page, pageSize, total }
+        return { routerStore, setAccount, getAccountLoading, accounts, getAccounts, handleTableChange, page, pageSize, total }
     }
 )
 @observer
@@ -50,26 +49,7 @@ class AccountTable extends ComponentExt<IProps> {
     @observable
     private modalVisible: boolean = false
 
-    @observable
-    private accountType: string = ''
-
-    // constructor(props) {
-    //     super(props)
-    //     autorun(
-    //         // 一旦...
-    //         () => {
-    //             const accountType = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
-    //             if (accountType !== this.accountType) {
-    //                 runInAction('SET_TYPE', () => {
-    //                     this.accountType = accountType
-    //                 })
-    //                 this.props.setAccountType(accountType)
-    //                 return true
-    //             }
-    //             return false
-    //         }
-    //     )
-    // }
+    private accountType: string = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
 
     @computed
     get typeName() {
@@ -85,17 +65,6 @@ class AccountTable extends ComponentExt<IProps> {
     modifyAccount = (account: IAccountStore.IAccount) => {
         this.props.setAccount(account)
         this.props.routerStore.replace(`/account/${this.accountType}/edit/${account.id}`)
-    }
-
-    componentDidMount() {
-        // this.props.getAccounts()
-        const accountType = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
-        if (accountType !== this.accountType) {
-            runInAction('SET_TYPE', () => {
-                this.accountType = accountType
-            })
-            this.props.setAccountType(accountType)
-        }
     }
 
     render() {

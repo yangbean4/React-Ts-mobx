@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Table, message, Icon } from 'antd'
 import { PaginationConfig } from 'antd/lib/pagination'
 import { inject, observer } from 'mobx-react'
-import { observable, action } from 'mobx'
+import { observable, action, runInAction } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
 
@@ -12,6 +12,7 @@ interface IStoreProps {
     companys?: ICompanyStore.ICompany[]
     setCompany?: (company: ICompanyStore.ICompany) => void
     getCompanys?: () => Promise<any>
+    setCompanyType?: (string) => void
     handleTableChange?: (pagination: PaginationConfig) => void
     page?: number
     pageSize?: number
@@ -34,13 +35,18 @@ interface IProps extends IStoreProps {
             handleTableChange,
             page,
             pageSize,
+            setCompanyType,
             total
         } = companyStore
-        return { routerStore, getCompanyloading, setCompany, getCompanys, companys, handleTableChange, page, pageSize, total }
+        return { routerStore, getCompanyloading, setCompany, getCompanys, companys, handleTableChange, page, pageSize, setCompanyType, total }
     }
 )
 @observer
 class CompanyTable extends ComponentExt<IProps> {
+
+    @observable
+    private companyType: string = ''
+
     @action
     modifyCompany = (company: ICompanyStore.ICompany) => {
         this.props.setCompany(company)
@@ -48,7 +54,14 @@ class CompanyTable extends ComponentExt<IProps> {
     }
     // 去请求数据
     componentDidMount() {
-        this.props.getCompanys()
+        const companyType = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+        console.log(companyType);
+        if (companyType !== this.companyType) {
+            runInAction('SET_TYPE', () => {
+                this.companyType = companyType
+            })
+        }
+        this.props.setCompanyType(companyType)
     }
 
     render() {
@@ -80,7 +93,7 @@ class CompanyTable extends ComponentExt<IProps> {
                     onChange={handleTableChange}
                 >
                     <Table.Column<ICompanyStore.ICompany> key="company_name" title="Subsite Company" dataIndex="company_name" width={100} />
-                    <Table.Column<ICompanyStore.ICompany> key="company_full_name" title="Full Name Of Company" dataIndex="company_full_name" width={200} />
+                    <Table.Column<ICompanyStore.ICompany> key="company_full_name" title="Full Name Of Subsite Company" dataIndex="company_full_name" width={200} />
                     <Table.Column<ICompanyStore.ICompany>
                         key="action"
                         title="Operate"

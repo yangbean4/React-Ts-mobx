@@ -23,12 +23,6 @@ const formItemLayout = {
         lg: { span: 5 }
     }
 }
-const allRole = [
-    {
-        role_name: 'Publisher',
-        id: 1
-    }
-]
 
 interface IProps {
     account?: IAccountStore.IAccount
@@ -69,6 +63,21 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @computed
+    get allRole() {
+        return this.accountType === 'source' ? [
+            {
+                role_name: 'Advertiser',
+                id: 0
+            }
+        ] : [
+                {
+                    role_name: 'Publisher',
+                    id: 1
+                }
+            ]
+    }
+
+    @computed
     get typeName() {
         return `${camelCase(this.accountType)} Company`
     }
@@ -85,7 +94,9 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     getAllCompany = async () => {
-        const res = await this.api.account.getAllCompany()
+        const res = await this.api.account.getAllCompany({
+            type: this.accountType === 'source' ? 0 : 1
+        })
         runInAction('set_all_co', () => {
             this.allCompany = res.data
         })
@@ -228,7 +239,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                     getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
-                                    {allRole.map(c => (
+                                    {this.allRole.map(c => (
                                         <Select.Option key={c.id} value={c.id}>
                                             {c.role_name}
                                         </Select.Option>

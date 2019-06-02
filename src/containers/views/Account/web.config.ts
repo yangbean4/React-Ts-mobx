@@ -11,15 +11,15 @@ export const statusOption = [
 
 export const accountTypeOption = [
   {
-    key: '直客账号',
+    key: 'Direct Client',
     value: 1
   },
   {
-    key: '网盟账号',
+    key: 'Network Alliance',
     value: 2
   },
   {
-    key: '补填充账户',
+    key: 'For filling',
     value: 3
   },
 ]

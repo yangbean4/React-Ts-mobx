@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, autorun, runInAction } from 'mobx'
 import { Form, Input, Select, Row, Col, Button } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { statusOption } from '../web.config'
@@ -23,15 +23,14 @@ interface IStoreProps {
   changeFilter?: (params: IAccountStore.SearchParams) => void
   filters?: IAccountStore.SearchParams
   routerStore?: RouterStore
+  setAccountType?: (str: string) => void
 }
-
-
 
 @inject(
   (store: IStore): IStoreProps => {
     const { accountStore, routerStore } = store
-    const { changeFilter, filters } = accountStore
-    return { changeFilter, filters, routerStore }
+    const { changeFilter, filters, setAccountType } = accountStore
+    return { changeFilter, filters, routerStore, setAccountType }
   }
 )
 @observer
@@ -39,9 +38,28 @@ class AccountSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   @observable
   private loading: boolean = false
 
-  @computed
-  get accountType() {
-    return this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+  @observable
+  private accountType: string = ''
+
+  private IReactionDisposer: () => void
+
+  constructor(props) {
+    super(props)
+    this.IReactionDisposer = autorun(
+      () => {
+        const accountType = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+        if (accountType !== this.accountType) {
+          runInAction('SET_TYPE', () => {
+            this.accountType = accountType
+          })
+          this.props.form.resetFields()
+          console.log(123)
+          this.props.setAccountType(accountType)
+          return true
+        }
+        return false
+      }
+    )
   }
 
   @computed
@@ -71,6 +89,9 @@ class AccountSearch extends ComponentExt<IStoreProps & FormComponentProps> {
         }
       }
     )
+  }
+  componentDidMount() {
+    this.IReactionDisposer()
   }
 
   render() {

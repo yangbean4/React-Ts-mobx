@@ -1,4 +1,5 @@
 node_modules
+.project
 .vscode
 npm-debug*
 /index.html

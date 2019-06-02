@@ -20,15 +20,16 @@ const layout = {
 
 
 interface IStoreProps {
-  changeFilter?: (params: IUserStore.SearchParams) => void
-  filters?: IUserStore.SearchParams
+  changeFilter?: (params: ICompanyStore.SearchParams) => void
+  filters?: ICompanyStore.SearchParams
+  routerStore?: RouterStore
 }
 
 
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { changeFilter, filters } = store.userStore
+    const { changeFilter, filters } = store.companyStore
     return { changeFilter, filters }
   }
 )
@@ -61,7 +62,6 @@ class CompanySearch extends ComponentExt<IStoreProps & FormComponentProps> {
       }
     )
   }
-
   render() {
     const { form, filters } = this.props
     const { getFieldDecorator } = form
@@ -71,11 +71,11 @@ class CompanySearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <Col span={span}>
                 <FormItem label="Source Company">
                 {getFieldDecorator('company', {
-                    initialValue: filters.user_name
+                    initialValue: filters.company
                 })(<Input />)}
                 </FormItem>
             </Col>
-            <Col span={span}>
+            {/* <Col span={span}>
               <FormItem label="Status" className='minInput'>
                 {getFieldDecorator('status', {
                   initialValue: filters.status
@@ -94,7 +94,7 @@ class CompanySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   </Select>
                 )}
               </FormItem>
-            </Col>
+            </Col> */}
             <Col span={3} offset={1}>
                 <Button type="primary" onClick={this.submit}>Search</Button>
             </Col>

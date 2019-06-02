@@ -11,13 +11,25 @@ const FormItem = Form.Item
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 8 },
-        lg: { span: 5 }
+        sm: { span: 5 },
+        lg: { span: 4 }
     },
     wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 14 },
-        lg: { span: 5 }
+        sm: { span: 19 },
+        lg: { span: 6 }
+    }
+}
+const formItemLayoutForModel = {
+    labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 },
+        lg: { span: 9 },
+    },
+    wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+        lg: { span: 15 }
     }
 }
 
@@ -49,6 +61,11 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
     @computed
     get typeIsAdd() {
         return !this.props.company || !this.props.company.id
+    }
+
+    @computed
+    get formItemLayout() {
+        return this.props.type ? formItemLayoutForModel : formItemLayout
     }
 
     @action
@@ -85,6 +102,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             }
                         }
                         values = {
+                            type: 0,
                             ...values,
                         }
                         if (this.typeIsAdd) {
@@ -119,8 +137,8 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
         } = company || {}
         return (
             <div className='sb-form'>
-                <Form className={styles.CompanyModal}>
-                    <FormItem  label="Subsite Company" {...formItemLayout} >
+                <Form className={styles.CompanyModal} {...this.formItemLayout}>
+                    <FormItem  label="Sourcee Company">
                         {getFieldDecorator('company_name', {
                             initialValue: company_name,
                             rules: [
@@ -130,7 +148,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem label="Full name of company"{...formItemLayout} >
+                    <FormItem label="Full name of Source Company" >
                         {getFieldDecorator('company_full_name', {
                             initialValue: company_full_name,
                             rules: [                                {
@@ -139,12 +157,12 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem  label="Address"{...formItemLayout} >
+                    <FormItem  label="Address">
                         {getFieldDecorator('address', {
                             initialValue: address,
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
                     </FormItem>
-                    <FormItem  label="Email"{...formItemLayout} >
+                    <FormItem  label="Email">
                         {getFieldDecorator('email', {
                             initialValue: email,
                             rules: [
@@ -155,24 +173,26 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                     pattern: /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/,
                                     message: 'please enter the correct email format!'
                                 }
-                            ]
+                            ],
+                            validateTrigger: 'onBlur'
                         })(<Input />)}
                     </FormItem>
-                    <FormItem  label="Phone"{...formItemLayout} >
+                    <FormItem  label="Phone">
                         {getFieldDecorator('phone', {
                             initialValue: phone,
                             rules: [
                                 {
-                                    required: true, message: 'required'
+                                    required: false, message: 'required'
                                 },
                                 {
-                                    pattern: /^[1][3,4,5,7,8][0-9]{9}$/,
+                                    pattern: /^[1][3,4,5,7,8,9][0-9]{9}$/,
                                     message: 'Incorrect phone number format!' 
                                 }
-                            ]
+                            ],
+                            validateTrigger: 'onBlur'
                         })(<Input />)}
                     </FormItem>
-                    <FormItem className={styles.btnBox} {...formItemLayout}>
+                    <FormItem className={styles.btnBox}>
                         <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
                     </FormItem>
                 </Form>

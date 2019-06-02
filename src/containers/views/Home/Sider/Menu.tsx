@@ -5,7 +5,7 @@ import { Menu } from 'antd'
 import pathToRegexp from 'path-to-regexp'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-import menu, { router, IMenu, IMenuInTree, templateId, logId } from '../menu&router'
+import menu, { router, IMenu, IMenuInTree, templateId, logId, routerAndMenu } from '../menu&router'
 import { arrayToTree, queryArray } from '@utils/index'
 import { clearAuth } from '@utils/checkAuth'
 import Icon from '@components/Icon'
@@ -193,7 +193,7 @@ class SiderMenu extends ComponentExt<IStoreProps> {
         const menuItems = this.getMenus(this.menuTree)
         // 寻找选中路由
         let currentMenu: IMenu = null
-        for (const item of this.menuConfig) {
+        for (const item of routerAndMenu) {
             if (item.path && pathToRegexp(item.path).exec(this.currentRoute)) {
                 currentMenu = item
                 break
@@ -201,7 +201,7 @@ class SiderMenu extends ComponentExt<IStoreProps> {
         }
         let selectedKeys: string[] = null
         if (currentMenu) {
-            selectedKeys = this.getPathArray(this.menuConfig, currentMenu)
+            selectedKeys = this.getPathArray(routerAndMenu, currentMenu)
         }
         if (!selectedKeys) {
             selectedKeys = ['1']

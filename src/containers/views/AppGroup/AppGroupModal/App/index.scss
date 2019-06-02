@@ -1,0 +1,24 @@
+:global {
+  .sb-form {
+    box-shadow: unset !important;
+  }
+}
+.app {
+}
+.hasHelp {
+}
+
+.help {
+}
+.btnBox {
+}
+
+.btnGroup {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .submitBtn {
+    margin-right: 20px;
+  }
+}

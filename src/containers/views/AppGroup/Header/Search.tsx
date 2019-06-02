@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react'
 import { observable, action } from 'mobx'
 import { Form, Input, Select, Row, Col, Button } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
-import { platformOption } from '../web.config'
+import { platformOption, statusOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
 
 const FormItem = Form.Item
@@ -20,20 +20,20 @@ const layout = {
 
 
 interface IStoreProps {
-  changeFilter?: (params: ICurrencyStore.SearchParams) => void
-  filters?: ICurrencyStore.SearchParams
+  changeFilter?: (params: IAppGroupStore.SearchParams) => void
+  filters?: IAppGroupStore.SearchParams
 }
 
 
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { changeFilter, filters } = store.currencyStore
+    const { changeFilter, filters } = store.appGroupStore
     return { changeFilter, filters }
   }
 )
 @observer
-class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
+class AppGroupSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   @observable
   private loading: boolean = false
 
@@ -93,11 +93,31 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
               )}
             </FormItem>
           </Col>
+          <Col span={span}>
+            <FormItem label="Status" className='minInput'>
+              {getFieldDecorator('status', {
+                initialValue: filters.status
+              })(
+                <Select
+                  allowClear
+                  showSearch
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {statusOption.map(c => (
+                    <Select.Option {...c}>
+                      {c.key}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
           <Col span={3} offset={1}>
             <Button type="primary" onClick={this.submit}>Search</Button>
           </Col>
           <Col span={3} offset={1}>
-            <span id='currencyAddBtn'></span>
+            <span id='appGroupAddBtn'></span>
           </Col>
         </Row>
       </Form>
@@ -105,4 +125,4 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
   }
 }
 
-export default Form.create<IStoreProps>()(CurrencySearch)
+export default Form.create<IStoreProps>()(AppGroupSearch)

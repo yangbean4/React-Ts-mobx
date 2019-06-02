@@ -114,7 +114,7 @@ class CurrencyTable extends ComponentExt<IProps> {
                                 </a>)
                                 // ])
                             }
-                            {
+                            {/* {
                                 // this.$checkAuth('Apps-Virtual Currency-Edit&Apps-Virtual Currency-Add', (
                                 <Divider key='Divider' type="vertical" />
                                 // ))
@@ -125,7 +125,7 @@ class CurrencyTable extends ComponentExt<IProps> {
                                     <Icon type='plus' />
                                 </a>
                                 // ))
-                            }
+                            } */}
                         </span>
                     )}
                 />
