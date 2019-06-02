@@ -14,6 +14,7 @@ export interface ICurrency {
     vc_desc?: string
     vc_secret_key?: string
     status?: number
+    id?: string
 }
 
 export interface ICurrencyForList {

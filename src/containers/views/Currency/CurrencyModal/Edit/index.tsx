@@ -140,6 +140,10 @@ class PID extends ComponentExt<IStoreProps> {
   onCancel = () => {
     this.toggleIsTable()
   }
+  onOK = (id: number) => {
+    this.initDetail()
+    this.toggleIsTable()
+  }
 
   editPid = (index?) => {
     const data = index === undefined ? {} : this.thisDataList[index]
@@ -191,6 +195,7 @@ class PID extends ComponentExt<IStoreProps> {
             </div> : <div className="formBox">
                 <FormAdd
                   onCancel={this.onCancel}
+                  onOk={this.onOK}
                   currency={this.GJB} />
               </div>
           }

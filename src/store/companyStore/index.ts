@@ -16,7 +16,7 @@ export class CompanyStore extends StoreExt {
      * 类型
      */
     @observable
-    companyType: string 
+    companyType: string
     /**
      * 公司列表
      */
@@ -81,15 +81,17 @@ export class CompanyStore extends StoreExt {
             this.getCompanyloading = false
         })
     }
+
     createCompany = async (company: ICompanyStore.ICompany) => {
         const res = await this.api.company.createCompany(company)
         return res
     }
-    @action
+
     modifyCompany = async (company: ICompanyStore.ICompany) => {
         const res = await this.api.company.modifyCompany(company)
         return res
     }
+
     @action
     changePage = (page: number) => {
         this.page = page

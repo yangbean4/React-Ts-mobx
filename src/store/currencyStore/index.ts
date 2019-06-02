@@ -85,10 +85,10 @@ export class CurrencyStore extends StoreExt {
         return res
     }
 
-    @action
     modifyCurrency = async (currency: ICurrencyStore.ICurrency) => {
-        // const { id, role, status, pwd } = currency
-        // return await this.api.currency.modifyCurrency({ id, role, status, pwd })
+        const res = await this.api.currency.modifyCurrency(currency)
+        this.changepage(1)
+        return res
     }
 
 

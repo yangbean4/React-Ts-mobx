@@ -92,7 +92,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
         const { getFieldDecorator } = form
         let roleValue: (string | number)[] = []
         const {
-            platform = 'Android',
+            platform = 'android',
             vc_name = '',
             pkg_name = "",
             vc_exchange_rate = '',

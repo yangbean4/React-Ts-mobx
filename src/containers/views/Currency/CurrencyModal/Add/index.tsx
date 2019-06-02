@@ -23,6 +23,7 @@ const formItemLayout = {
 }
 
 interface IStoreProps {
+    modifyCurrency?: (currency: ICurrencyStore.ICurrency) => Promise<any>
     createCurrency?: (currency: ICurrencyStore.ICurrency) => Promise<any>
     routerStore?: RouterStore
 }
@@ -30,12 +31,13 @@ interface IStoreProps {
 interface IProps extends IStoreProps {
     currency?: ICurrencyStore.ICurrency
     onCancel?: () => void
+    onOk?: (id: number) => void
 }
 @inject(
     (store: IStore): IProps => {
         const { currencyStore, routerStore } = store
-        const { createCurrency } = currencyStore
-        return { routerStore, createCurrency }
+        const { createCurrency, modifyCurrency } = currencyStore
+        return { routerStore, createCurrency, modifyCurrency }
     }
 )
 @observer
@@ -61,14 +63,14 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
         if (e) {
             e.preventDefault()
         }
-        const { routerStore, createCurrency, form } = this.props
+        const { routerStore, createCurrency, form, modifyCurrency } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
                     this.toggleLoading()
                     try {
                         if (this.isAdd) {
-                            let data = await createCurrency(values)
+                            let data = await createCurrency({ ...values, type: 1 })
                             message.success(data.message)
                             const {
                                 pkg_name,
@@ -78,14 +80,28 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                                 pkg_name,
                                 platform
                             }))
+                            routerStore.push('/currency/edit')
                         } else {
                             const currencyStr = localStorage.getItem('TargetCurrency') || '{}';
                             const currency = JSON.parse(currencyStr)
-                            let data = await createCurrency({ ...values, ...currency })
+                            const pre = { ...values, type: 2 }
+                            let data
+                            if (this.props.currency.id) {
+                                data = await modifyCurrency({
+                                    ...pre,
+                                    ...currency,
+                                    id: this.props.currency.id
+                                })
+                            } else {
+                                data = await createCurrency({
+                                    ...pre,
+                                    ...currency,
+                                })
+                            }
                             message.success(data.message)
-                        }
+                            this.props.onOk(data.data.id)
 
-                        routerStore.push('/currency/edit')
+                        }
                     } catch (err) {
                         //console.log(err);
                     }
@@ -100,7 +116,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
         const { getFieldDecorator } = form
         let roleValue: (string | number)[] = []
         const {
-            platform = 'Android',
+            platform = 'android',
             vc_name = '',
             pkg_name = "",
             vc_exchange_rate = '',

@@ -93,7 +93,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
         let roleValue: (string | number)[] = []
         const {
             status = 1,
-            platform = 'Android',
+            platform = 'android',
             not_in_appstore = 0,
             pkg_name = '',
             app_name = "",

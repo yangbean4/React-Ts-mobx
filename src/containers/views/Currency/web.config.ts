@@ -15,7 +15,7 @@ export const platformOption = [
     value: 'android'
   },
   {
-    key: 'Ios',
+    key: 'iOS',
     value: 'ios'
   }
 ]
