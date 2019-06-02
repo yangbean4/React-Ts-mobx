@@ -53,7 +53,6 @@ class AccountSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             this.accountType = accountType
           })
           this.props.form.resetFields()
-          console.log(123)
           this.props.setAccountType(accountType)
           return true
         }

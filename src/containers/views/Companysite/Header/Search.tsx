@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
-import { observable, action } from 'mobx'
+import { observable, action, runInAction, autorun } from 'mobx'
 import { Form, Input, Select, Row, Col, Button } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
@@ -21,14 +21,17 @@ const layout = {
 interface IStoreProps {
   changeFilter?: (params: ICompanyStore.SearchParams) => void
   filters?: ICompanyStore.SearchParams
+  routerStore?: RouterStore
+  setCompanyType?: (str: string) => void
 }
 
 
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { changeFilter, filters } = store.companyStore
-    return { changeFilter, filters }
+    const { routerStore } = store
+    const { changeFilter, filters, setCompanyType } = store.companyStore
+    return { changeFilter, filters, routerStore, setCompanyType }
   }
 )
 @observer
@@ -36,11 +39,31 @@ class CompanySearch extends ComponentExt<IStoreProps & FormComponentProps> {
   @observable
   private loading: boolean = false
 
+  @observable
+  private companyType: string = ''
 
-
+  private IReactionDisposer: () => void
   @action
   toggleLoading = () => {
     this.loading = !this.loading
+  }
+
+  constructor(props) {
+    super(props)
+    this.IReactionDisposer = autorun(
+      () => {
+        const companyType = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+        if (companyType !== this.companyType) {
+          runInAction('SET_TYPE', () => {
+            this.companyType = companyType
+          })
+          this.props.form.resetFields()
+          this.props.setCompanyType(companyType)
+          return true
+        }
+        return false
+      }
+    )
   }
 
   submit = (e?: React.FormEvent<any>): void => {
@@ -60,6 +83,9 @@ class CompanySearch extends ComponentExt<IStoreProps & FormComponentProps> {
       }
     )
   }
+  componentDidMount() {
+    this.IReactionDisposer()
+  }
 
   render() {
     const { form, filters } = this.props
@@ -69,7 +95,7 @@ class CompanySearch extends ComponentExt<IStoreProps & FormComponentProps> {
         <Row>
             <Col span={span}>
                 <FormItem label="Subsite Company">
-                {getFieldDecorator('company', {
+                {getFieldDecorator('company_name', {
                     initialValue: filters.company
                 })(<Input />)}
                 </FormItem>

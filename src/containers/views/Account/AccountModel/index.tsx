@@ -67,12 +67,12 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
         return this.accountType === 'source' ? [
             {
                 role_name: 'Advertiser',
-                id: 0
+                id: 1
             }
         ] : [
                 {
                     role_name: 'Publisher',
-                    id: 1
+                    id: 2
                 }
             ]
     }
@@ -160,7 +160,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
         const {
             user_name = '',
             status = 1,
-            role_id = 1,
+            role_id = this.allRole[0].id,
             company_id: company = undefined,
             account_type = undefined
         } = account || {}

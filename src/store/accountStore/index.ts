@@ -70,10 +70,11 @@ export class AccountStore extends StoreExt {
     getAccounts = async () => {
         this.getAccountLoading = true
         try {
-            let mdata
-            let data = { page: this.page, pageSize: this.pageSize, ...this.filters }
-            this.accountType === 'source' && (mdata = { ...data, account_type: null })
-            const res = await this.api.account.getAccounts(mdata || data)
+            let data = {
+                page: this.page, pageSize: this.pageSize, ...this.filters,
+                type: this.accountType === 'source' ? 1 : 2
+            }
+            const res = await this.api.account.getAccounts(data)
             runInAction('SET_USER_LIST', () => {
                 this.accounts = res.data
                 this.total = res.total

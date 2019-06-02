@@ -54,7 +54,14 @@ class CurrencyTable extends ComponentExt<IProps> {
     @action
     modifyCurrency = (currency: ICurrencyStore.ICurrencyForList, type?) => {
         this.props.setCurrency(currency)
-        localStorage.setItem('TargetCurrency', JSON.stringify(currency))
+        const {
+            app_name,
+            platform
+        } = currency
+        localStorage.setItem('TargetCurrency', JSON.stringify({
+            platform,
+            pkg_name: app_name
+        }))
         this.props.routerStore.push({
             pathname: '/currency/edit',
             state: {

@@ -168,7 +168,7 @@ class PID extends ComponentExt<IStoreProps> {
                 Pkg Name
                     </div>
               <div className={style.value}>
-                {this.targetCurrency.app_name}
+                {this.targetCurrency.app_name || this.targetCurrency.pkg_name}
               </div>
             </div>
             <div className={style.row}>

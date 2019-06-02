@@ -55,7 +55,6 @@ class CompanyTable extends ComponentExt<IProps> {
     // 去请求数据
     componentDidMount() {
         const companyType = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
-        console.log(companyType);
         if (companyType !== this.companyType) {
             runInAction('SET_TYPE', () => {
                 this.companyType = companyType
