@@ -53,7 +53,7 @@ export class CompanyStore extends StoreExt {
      */
     setCompanyType = (companyType: string) => {
         this.companyType = companyType
-        this.getCompanys()
+        this.changeFilter({})
     }
     /**
      * 加载公司列表

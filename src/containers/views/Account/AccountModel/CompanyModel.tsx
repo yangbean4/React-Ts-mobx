@@ -37,12 +37,13 @@ class CompanyModel extends React.Component<IProps>{
   }
 
   render() {
-    const { visible } = this.props
+    const { visible} = this.props
     return (
       <Modal
+        title={`Add Company`}
         visible={visible}
         footer={null}
-        width={460}
+        width={580}
         onCancel={this.props.onCancel}
       >
         {this.getComponent()}

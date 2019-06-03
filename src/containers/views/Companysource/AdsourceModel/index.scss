@@ -12,7 +12,13 @@
   .btnBox {
     margin-left: 16.5%;
   }
-
+  .modalBtn {
+    position: relative
+  }
+  .btn{
+    position: absolute;
+    left: 432px;
+  }
   .btn2 {
     margin-left: 20px;
   }

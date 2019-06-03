@@ -106,7 +106,7 @@ class CurrencyTable extends ComponentExt<IProps> {
                 }}
                 onChange={handleTableChange}
             >
-                <Table.Column<ICurrencyStore.ICurrencyForList> key="app_name" title="Pkgname" dataIndex="app_name" width={200} />
+                <Table.Column<ICurrencyStore.ICurrencyForList> key="app_name" title="Pkg Name" dataIndex="app_name" width={200} />
                 <Table.Column<ICurrencyStore.ICurrencyForList> key="Platform" title="Platform" dataIndex="platform" width={100} />
                 <Table.Column<ICurrencyStore.ICurrencyForList>
                     key="action"

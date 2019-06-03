@@ -46,6 +46,18 @@ export default {
   getAccount(): Promise<any> {
     return http.post(`api/account/account`)
   },
+  getPidType(): Promise<any> {
+    return http.post(`${basePath}pidType`)
+  },
+  getVC(): Promise<any> {
+    return http.post(`${basePath}virtualCurrency`)
+  },
+  getAppWall(): Promise<any> {
+    return http.post(`${basePath}appWall`)
+  },
   // -----
 
+  uploadIcon(data): Promise<any> {
+    return http.post(`/api/upload/uploadIcon`, data || {})
+  }
 }

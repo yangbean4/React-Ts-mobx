@@ -32,7 +32,7 @@ class Header extends ComponentExt<IStoreProps> {
 
     render() {
         return (
-            <div>
+            <div className='searchForm'>
                 <Search />
                 {
                     // this.$checkAuth('Authorization-Ccount Manage-Add', (

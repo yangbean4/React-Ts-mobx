@@ -26,11 +26,13 @@ interface IProps extends IStoreProps {
 
 interface IStoreProps {
     routerStore?: RouterStore
+    clearCache?: () => void
 }
 
 @inject((store: IStore): IStoreProps => {
-    const { routerStore } = store
-    return { routerStore }
+    const { routerStore, appGroupStore } = store
+    const { clearCache } = appGroupStore
+    return { routerStore, clearCache }
 })
 
 @observer
@@ -112,6 +114,9 @@ class AppGroupModal extends React.Component<IProps>{
 
     componentWillMount() {
         this.runInit()
+    }
+    componentWillUnmount() {
+        this.props.clearCache()
     }
 
     render() {

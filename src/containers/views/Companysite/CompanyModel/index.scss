@@ -4,9 +4,6 @@
   padding-top: 30px;
   :global(.ant-form-item) {
     margin-bottom: 30px;
-    :global(.ant-form-item-control-wrapper) {
-      width: 280px;
-    }
   }
   .companyTag {
     height: 40px;
@@ -33,10 +30,16 @@
       margin: unset;
     }
   }
+  .modalBtn {
+    position: relative
+  }
+  .btn{
+    position: absolute;
+    left: 432px;
+  }
   .btnBox {
     margin-left: 16.5%;
   }
-
   .btn2 {
     margin-left: 20px;
   }

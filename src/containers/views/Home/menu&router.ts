@@ -68,7 +68,7 @@ export interface IRouter extends IMenu {
     isMenu?: boolean
 }
 export const templateId = 2
-export const logId = 412
+export const logId = 442
 export const routerAndMenu: IRouter[] = [
     {
         id: 5,
@@ -418,20 +418,91 @@ export const routerAndMenu: IRouter[] = [
         id: 41,
         pid: 4,
         isMenu: true,
-        title: 'Config',
         hasBread: false,
+        title: 'Apps',
     },
     {
         id: 42,
         pid: 4,
         isMenu: true,
         hasBread: false,
+        title: 'Account',
+    },
+    {
+        id: 43,
+        pid: 4,
+        isMenu: true,
+        hasBread: false,
+        title: 'Company',
+    },
+    {
+        id: 44,
+        pid: 4,
+        isMenu: true,
+        title: 'Config',
+        hasBread: false,
+    },
+    {
+        id: 45,
+        pid: 4,
+        isMenu: true,
+        hasBread: false,
         title: 'Authorization',
     },
-
+     /****************** */
     {
         id: 411,
         pid: 41,
+        isMenu: true,
+        path: '/log/app',
+        title: 'Apps Manage',
+        component: 'Logs',
+    },
+   
+    {
+        id: 412,
+        pid: 41,
+        isMenu: true,
+        path: '/log/currency',
+        title: 'Virtual Currency',
+        component: 'Logs',
+    },
+    {
+        id: 421,
+        pid: 42,
+        isMenu: true,
+        path: '/log/accoutsubsite',
+        title: 'Subsite Account',
+        component: 'Logs',
+    },
+    {
+        id: 422,
+        pid: 42,
+        isMenu: true,
+        path: '/log/accountsource',
+        title: 'Source Account',
+        component: 'Logs',
+    },
+    {
+        id: 431,
+        pid: 43,
+        isMenu: true,
+        path: '/log/companysubsite',
+        title: 'Subsite Company',
+        component: 'Logs',
+    },
+    {
+        id: 432,
+        pid: 43,
+        isMenu: true,
+        path: '/log/companysource',
+        title: 'Source Company',
+        component: 'Logs',
+    },
+    
+    {
+        id: 441,
+        pid: 44,
         isMenu: true,
         path: '/log/config',
         title: 'Config Manage',
@@ -439,14 +510,14 @@ export const routerAndMenu: IRouter[] = [
     },
     {
         id: logId,
-        pid: 41,
+        pid: 44,
         isMenu: true,
         title: 'Template Manage',
         hasBread: false,
         component: 'Logs',
     },
     {
-        id: 413,
+        id: 451,
         pid: logId,
         isMenu: true,
         path: '/log/template',
@@ -454,16 +525,16 @@ export const routerAndMenu: IRouter[] = [
         component: 'Logs',
     },
     {
-        id: 421,
-        pid: 42,
+        id: 451,
+        pid: 45,
         isMenu: true,
         path: '/log/user',
         title: 'User Manage',
         component: 'Logs',
     },
     {
-        id: 422,
-        pid: 42,
+        id: 452,
+        pid: 45,
         isMenu: true,
         path: '/log/role',
         title: 'Roles Manage',

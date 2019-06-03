@@ -17,7 +17,7 @@ class Header extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className='searchForm'>
                 <Search />
                 <PortalsBtn querySelector='#customAddBtn'>
                     <Button icon='plus' type="primary" onClick={this.toggleCustomModalVisible}>

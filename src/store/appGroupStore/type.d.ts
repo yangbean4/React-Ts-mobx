@@ -19,7 +19,7 @@ export interface IAppGroup {
     screen_type?: number
     apply_screen_type?: number
     account_id?: number
-
+    dev_id?: string
     preload_ige_num?: number
     preload_video_num?: number
     preload_playicon_num?: number
@@ -29,7 +29,6 @@ export interface IAppGroup {
     contains_native_s2s_pid_types?: number
     sdk_token?: string
     s2s_token?: string
-    subsite_id?: number
     ad_type?: string
 }
 

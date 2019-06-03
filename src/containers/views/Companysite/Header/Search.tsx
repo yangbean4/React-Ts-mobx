@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, runInAction, autorun } from 'mobx'
-import { Form, Input, Select, Row, Col, Button } from 'antd'
+import { Form, Input, Row, Col, Button } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 

@@ -1,4 +1,15 @@
 .box {
   width: 100%;
   height: max-content;
+  :global {
+    .ant-tabs-bar {
+      margin: 0;
+    }
+    .sb-form {
+      padding: 0;
+      :global(.ant-form) {
+        box-shadow: unset !important;
+      }
+    }
+  }
 }

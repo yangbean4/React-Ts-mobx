@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
-import { observable, action, computed } from 'mobx'
-import { Form, Input, Select, Radio, Button, message, InputNumber } from 'antd'
+import { observable, action, computed, runInAction } from 'mobx'
+import { Form, Input, Select, Radio, Button, message, InputNumber, Upload, Icon, Popover } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import * as web from '../../web.config'
 import { ComponentExt } from '@utils/reactExt'
@@ -13,7 +13,7 @@ const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
         sm: { span: 5 },
-        lg: { span: 3 }
+        lg: { span: 4 }
     },
     wrapperCol: {
         xs: { span: 24 },
@@ -21,21 +21,43 @@ const formItemLayout = {
         lg: { span: 5 }
     }
 }
+const minLayout = {
+    labelCol: {
+        lg: { span: 12 }
+    },
+    wrapperCol: {
+        lg: { span: 12 }
+    }
+}
+
+
+const getKey = (key: string): string => {
+    return `preload_${key.split(' ')[0].toLowerCase()}_num`
+}
+
+interface hasResult {
+    result?: string
+}
 
 interface IStoreProps {
+    modifyAppGroup?: (appGroup: IAppGroupStore.IAppGroup) => Promise<any>
     createAppGroup?: (appGroup: IAppGroupStore.IAppGroup) => Promise<any>
+    getOptionListDb?: () => Promise<any>
+    optionListDb?: any
     routerStore?: RouterStore
 }
 
 interface IProps extends IStoreProps {
-    appGroup?: IAppGroupStore.IAppGroup
+    Id?: string | number
     onCancel?: () => void
+    isAdd?: boolean
+    onSubmit?: () => void
 }
 @inject(
-    (store: IStore): IProps => {
+    (store: IStore): IStoreProps => {
         const { appGroupStore, routerStore } = store
-        const { createAppGroup } = appGroupStore
-        return { routerStore, createAppGroup }
+        const { createAppGroup, getOptionListDb, optionListDb, modifyAppGroup } = appGroupStore
+        return { routerStore, createAppGroup, getOptionListDb, optionListDb, modifyAppGroup }
     }
 )
 @observer
@@ -43,15 +65,78 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private loading: boolean = false
 
+    @observable
+    private appGroup: IAppGroupStore.IAppGroup = {}
+
+    @observable
+    private logo: string
+
+    @observable
+    private platform: string
+
+    @computed
+    get usePlatform() {
+        return this.platform || this.appGroup.platform || 'android'
+    }
+
+    @observable
+    private not_in_appstore: boolean
+
+    @computed
+    get useNot_in_appstore() {
+        const arr = [this.not_in_appstore, !this.appGroup.not_in_appstore, true]
+        return arr.find(ele => ele !== undefined)
+    }
+
+    @observable
+    private pidType: boolean
+
+    @computed
+    get usePidType() {
+        return [this.pidType, !this.appGroup.contains_native_s2s_pid_types, true].find(ele => ele !== undefined)
+    }
+
     @computed
     get isAdd() {
-        return !this.props.appGroup
+        return this.props.isAdd
     }
 
     @action
     toggleLoading = () => {
         this.loading = !this.loading
     }
+
+    @action
+    inAppstoreChange = (e) => {
+        const value = e.target.value
+        if (!value) {
+            this.props.form.setFieldsValue({
+                pkg_name: ''
+            })
+        }
+        runInAction('set_STore', () => {
+            this.not_in_appstore = !value
+        })
+    }
+
+    @action
+    pidTypeChange = (e) => {
+        const value = e.target.value
+        if (!value) {
+            this.props.form.setFieldsValue({
+                pkg_name: ''
+            })
+        }
+        runInAction('set_STore', () => {
+            this.pidType = !value
+        })
+    }
+
+    @action
+    platformChange = value => {
+        this.platform = value
+    }
+
 
     Cancel = () => {
         this.isAdd ? this.props.routerStore.push('/apps') : this.props.onCancel()
@@ -61,23 +146,18 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
         if (e) {
             e.preventDefault()
         }
-        const { routerStore, createAppGroup, form } = this.props
+        const { modifyAppGroup, createAppGroup, form } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
                     this.toggleLoading()
                     try {
-                        let data = await createAppGroup(values)
-                        message.success(data.message)
-                        const {
-                            pkg_name,
-                            platform
-                        } = values
-                        localStorage.setItem('TargetAppGroup', JSON.stringify({
-                            pkg_name,
-                            platform
-                        }))
-                        routerStore.push('/apps/edit')
+                        if (this.isAdd) {
+                            await createAppGroup(values)
+                        } else {
+                            await modifyAppGroup({ ...values, id: this.props.Id })
+                        }
+                        this.props.onSubmit()
                     } catch (err) {
                         //console.log(err);
                     }
@@ -87,10 +167,78 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
         )
     }
 
+    @action
+    removeFile = () => {
+        runInAction('SET_URL', () => {
+            this.logo = ''
+        })
+        this.props.form.setFieldsValue({
+            logo: ''
+        })
+    }
+
+    @action
+    getDetail = async () => {
+        const res = await this.api.appGroup.getAppGroupInfo({ id: this.props.Id })
+        runInAction('SET_APPGroup', () => {
+            this.appGroup = res.data
+        })
+    }
+
+
+
+    componentWillMount() {
+        this.props.getOptionListDb()
+        if (this.props.Id) {
+            this.getDetail()
+        }
+    }
+
+
     render() {
-        const { appGroup, form } = this.props
+        const { form, optionListDb } = this.props
         const { getFieldDecorator } = form
-        let roleValue: (string | number)[] = []
+
+
+        const props = {
+            showUploadList: false,
+            accept: ".png, .jpg, .jpeg, .gif",
+            name: 'file',
+            // listType: "picture",
+            className: "avatar-uploader",
+            onRemove: this.removeFile,
+            // beforeUpload: (file) => {
+            //     const isHtml = file.type === 'text/html';
+            //     if (!isHtml) {
+            //         message.error('Upload failed! The file must be in HTML format.');
+            //     }
+            //     const isLt2M = file.size / 1024 / 1024 < 2;
+            //     if (!isLt2M) {
+            //         message.error('Image must smaller than 2MB!');
+            //     }
+            //     return isHtml && isLt2M;
+            // },
+            customRequest: (data) => {
+                const formData = new FormData()
+                formData.append('file', data.file)
+                this.api.appGroup.uploadIcon(formData).then(res => {
+                    const logo = res.data.url
+                    this.props.form.setFieldsValue({
+                        logo: logo
+                    })
+
+                    const fileRender = new FileReader()
+                    fileRender.onload = (ev) => {
+                        const target = ev.target as hasResult
+                        runInAction('SET_URL', () => {
+                            this.logo = target.result;
+                        })
+                    }
+                    fileRender.readAsDataURL(data.file)
+                }, this.removeFile).catch(this.removeFile)
+            }
+        }
+        const reData = this.appGroup
         const {
             status = 1,
             platform = 'android',
@@ -100,25 +248,26 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
             logo = '',
             spec = undefined,
             category = undefined,
+            frame = undefined,
             style = undefined,
             screen_type = 0,
             apply_screen_type = 0,
             account_id = undefined,
-            preload_ige_num = undefined,
-            preload_video_num,
-            preload_playicon_num,
-            recover_num,
+            // preload_ige_num = undefined,
+            // preload_video_num,
+            // preload_playicon_num,
+            // recover_num,
             is_block = 0,
-            recover_flag,
-            contains_native_s2s_pid_types,
+            recover_flag = undefined,
+            contains_native_s2s_pid_types = 0,
             sdk_token = '',
             s2s_token = '',
-            subsite_id,
+            dev_id = '',
             ad_type = 0,
-        } = appGroup || {}
+        } = reData
         return (
             <div className='sb-form'>
-                <Form className={styles.app} {...formItemLayout}>
+                <Form  {...formItemLayout}>
                     <FormItem label="Status">
                         {getFieldDecorator('status', {
                             initialValue: status,
@@ -136,31 +285,34 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 ))}
                             </Radio.Group>
                         )}
+                        <Popover content={(<p>Adjust to disable status, may reduce revenue.</p>)}>
+                            <Icon className={styles.workBtn} type="question-circle" />
+                        </Popover>
                     </FormItem>
-                    {
-                        this.isAdd && <FormItem label="Platform">
-                            {getFieldDecorator('platform',
-                                {
-                                    initialValue: platform,
-                                    rules: [
-                                        {
-                                            required: true, message: "Required"
-                                        }
-                                    ]
-                                })(
-                                    <Select
-                                        showSearch
-                                        filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                    >
-                                        {web.platformOption.map(c => (
-                                            <Select.Option {...c}>
-                                                {c.key}
-                                            </Select.Option>
-                                        ))}
-                                    </Select>
-                                )}
-                        </FormItem>
-                    }
+                    <FormItem label="Platform">
+                        {getFieldDecorator('platform',
+                            {
+                                initialValue: platform,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Select
+                                    disabled={!this.isAdd}
+                                    onChange={this.platformChange}
+                                    showSearch
+                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    {web.platformOption.map(c => (
+                                        <Select.Option {...c}>
+                                            {c.key}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            )}
+                    </FormItem>
 
                     <FormItem label="In the App Store">
                         {getFieldDecorator('not_in_appstore', {
@@ -171,7 +323,9 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 }
                             ]
                         })(
-                            <Radio.Group>
+                            <Radio.Group
+                                onChange={this.inAppstoreChange}
+                            >
                                 {web.YesOrNo.map(c => (
                                     <Radio key={c.key} value={c.value}>
                                         {c.key}
@@ -180,18 +334,26 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                             </Radio.Group>
                         )}
                     </FormItem>
-                    {
-                        this.isAdd && <FormItem label="Pkgname">
-                            {getFieldDecorator('pkg_name', {
-                                initialValue: pkg_name,
-                                rules: [
-                                    {
-                                        required: true, message: "Required"
+                    <FormItem label="Pkgname">
+                        {getFieldDecorator('pkg_name', {
+                            initialValue: pkg_name,
+                            validateTrigger: 'blur',
+                            rules: [
+                                {
+                                    required: this.useNot_in_appstore, message: "Required",
+                                },
+                                {
+                                    validator: (r, v, callback) => {
+                                        const reg = this.usePlatform === 'android' ? /^com./ : /^[0-9]*$/
+                                        if (!reg.test(v)) {
+                                            callback('Pkgname for android /Ios platform should start with com.xxx/number!')
+                                        }
+                                        callback()
                                     }
-                                ]
-                            })(<Input />)}
-                        </FormItem>
-                    }
+                                }
+                            ]
+                        })(<Input disabled={!this.useNot_in_appstore || (!this.isAdd && !!pkg_name)} />)}
+                    </FormItem>
 
                     <FormItem label="App Name">
                         {getFieldDecorator('app_name', {
@@ -202,6 +364,9 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 }
                             ]
                         })(<Input />)}
+                        <Popover content={(<p>Enter a temporary app name if the app is not in the app store.</p>)}>
+                            <Icon className={styles.workBtn} type="question-circle" />
+                        </Popover>
                     </FormItem>
 
                     <FormItem label="Icon">
@@ -212,7 +377,11 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input />)}
+                        })(
+                            <Upload {...props}>
+                                {this.logo || logo ? <img style={{ width: '100px' }} src={this.logo || logo} alt="avatar" /> : <Icon className={styles.workBtn} type='plus' />}
+                            </Upload>
+                        )}
                     </FormItem>
 
                     <FormItem label="Spec">
@@ -229,9 +398,9 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     showSearch
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
-                                    {this.specOption.map(c => (
-                                        <Select.Option {...c}>
-                                            {c.key}
+                                    {optionListDb.Spec.map(c => (
+                                        <Select.Option key={c.id} value={c.id}>
+                                            {c.name}
                                         </Select.Option>
                                     ))}
                                 </Select>
@@ -251,9 +420,9 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     showSearch
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
-                                    {this.categoryOption.map(c => (
-                                        <Select.Option {...c}>
-                                            {c.key}
+                                    {optionListDb.Category.map(c => (
+                                        <Select.Option key={c.id} value={c.id}>
+                                            {c.name}
                                         </Select.Option>
                                     ))}
                                 </Select>
@@ -273,9 +442,9 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     showSearch
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
-                                    {this.frameOption.map(c => (
-                                        <Select.Option {...c}>
-                                            {c.key}
+                                    {optionListDb.Frame.map(c => (
+                                        <Select.Option key={c.id} value={c.id}>
+                                            {c.name}
                                         </Select.Option>
                                     ))}
                                 </Select>
@@ -295,9 +464,9 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     showSearch
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
-                                    {this.StyleOption.map(c => (
-                                        <Select.Option {...c}>
-                                            {c.key}
+                                    {optionListDb.Style.map(c => (
+                                        <Select.Option key={c.id} value={c.id}>
+                                            {c.name}
                                         </Select.Option>
                                     ))}
                                 </Select>
@@ -352,16 +521,41 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 showSearch
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
-                                {this.accountOption.map(c => (
-                                    <Select.Option {...c}>
-                                        {c.key}
+                                {optionListDb.Account.map(c => (
+                                    <Select.Option key={c.id} value={c.id}>
+                                        {c.name}
                                     </Select.Option>
                                 ))}
                             </Select>
                         )}
                     </FormItem>
                     <FormItem label='Preload Number'>
-
+                        {
+                            ['IGE', 'Video', 'Playicon', 'Recover Offer'].map(key => {
+                                const rowKey = getKey(key)
+                                return (
+                                    <FormItem key={key} {...minLayout} label={key}>
+                                        {getFieldDecorator(rowKey, {
+                                            initialValue: reData[rowKey],
+                                            // validateTrigger: 'blur',
+                                            rules: [
+                                                {
+                                                    required: true, message: "Required",
+                                                },
+                                                {
+                                                    validator: (r, v, callback) => {
+                                                        if (v <= 0) {
+                                                            callback('The Exchange Rate should be a positive integer!')
+                                                        }
+                                                        callback()
+                                                    }
+                                                }
+                                            ]
+                                        })(<InputNumber precision={0} />)}
+                                    </FormItem>
+                                )
+                            })
+                        }
                     </FormItem>
 
                     <FormItem label="Blacklist">
@@ -381,6 +575,9 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 ))}
                             </Radio.Group>
                         )}
+                        <Popover content={(<p>No conversion has occurred in the past n days,no longer release advertisements to the user.</p>)}>
+                            <Icon className={styles.workBtn} type="question-circle" />
+                        </Popover>
                     </FormItem>
                     <FormItem label="Recover Flag">
                         {getFieldDecorator('recover_flag', {
@@ -404,6 +601,64 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                         )}
                     </FormItem>
 
+                    <FormItem label="Contains Native s2s PID types">
+                        {getFieldDecorator('contains_native_s2s_pid_types', {
+                            initialValue: contains_native_s2s_pid_types,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(
+                            <Radio.Group
+                                onChange={this.pidTypeChange}
+                            >
+                                {web.YesOrNo.map(c => (
+                                    <Radio key={c.key} value={c.value}>
+                                        {c.key}
+                                    </Radio>
+                                ))}
+                            </Radio.Group>
+                        )}
+                    </FormItem>
+
+                    <div style={{ marginLeft: '10%' }}>
+                        <FormItem label="SDK Token">
+                            {getFieldDecorator('sdk_token', {
+                                initialValue: sdk_token,
+                                rules: [
+                                    {
+                                        required: true, message: "Required",
+                                    },
+                                ]
+                            })(<Input />)}
+                        </FormItem>
+                        {
+                            this.usePidType && <FormItem label="S2S Token">
+                                {getFieldDecorator('s2s_token', {
+                                    initialValue: s2s_token,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required",
+                                        },
+                                    ]
+                                })(<Input />)}
+                            </FormItem>
+                        }
+                    </div>
+
+
+
+                    <FormItem label="Subsite ID">
+                        {getFieldDecorator('dev_id', {
+                            initialValue: dev_id,
+                            rules: [
+                                {
+                                    required: true, message: "Required",
+                                },
+                            ]
+                        })(<Input disabled={!this.isAdd} />)}
+                    </FormItem>
 
 
 
@@ -430,8 +685,8 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
 
                     <div className={styles.btnGroup}>
-                        <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
-                        <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
+                        <Button type="primary" className={styles.submitBtn} loading={this.loading} onClick={this.submit}>Submit</Button>
+                        <Button onClick={() => this.Cancel()}>Cancel</Button>
                     </div>
                 </Form>
 

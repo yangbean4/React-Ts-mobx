@@ -103,8 +103,8 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     companyModelOk = async (id: string) => {
-        await this.getAllCompany()
-        this.props.form.setFieldsValue({
+        await this.getAllCompany() // 获取公司列表
+        this.props.form.setFieldsValue({// 重新赋值
             company: id
         })
         this.toggleCompanyShow(false)

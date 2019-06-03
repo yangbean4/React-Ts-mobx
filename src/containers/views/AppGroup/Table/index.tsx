@@ -57,7 +57,7 @@ class AppGroupTable extends ComponentExt<IProps> {
     modifyAppGroup = (appGroup: IAppGroupStore.IAppGroupForList) => {
         this.props.setAppGroup(appGroup)
         localStorage.setItem('TargetAppGroup', JSON.stringify(appGroup))
-        this.props.routerStore.push('/apps/edit')
+        this.props.routerStore.push(`/apps/edit/${appGroup.id}`)
     }
 
     addAppGroup = () => {
@@ -99,7 +99,7 @@ class AppGroupTable extends ComponentExt<IProps> {
                 onChange={handleTableChange}
             >
                 <Table.Column<IAppGroupStore.IAppGroupForList> key="app_name" title="App Name" dataIndex="app_name" width={200} />
-                <Table.Column<IAppGroupStore.IAppGroupForList> key="pkg_name" title="Pkgname" dataIndex="pkg_name" width={200} />
+                <Table.Column<IAppGroupStore.IAppGroupForList> key="pkg_name" title="Pkg Name" dataIndex="pkg_name" width={200} />
                 <Table.Column<IAppGroupStore.IAppGroupForList> key="platform" title="Platform" dataIndex="platform" width={100} />
                 <Table.Column<IAppGroupStore.IAppGroupForList> key="sdk_token" title="SDK Token" dataIndex="sdk_token" width={200} />
                 <Table.Column<IAccountStore.IAccount>

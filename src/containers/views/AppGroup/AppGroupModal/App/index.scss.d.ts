@@ -2,3 +2,4 @@
 // Please do not change this file!
 export const btnGroup: string;
 export const submitBtn: string;
+export const workBtn: string;

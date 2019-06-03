@@ -53,6 +53,42 @@ export class AppGroupStore extends StoreExt {
     @observable
     filters: IAppGroupStore.SearchParams = {}
 
+    @observable
+    optionListDb = {
+        Category: [],
+        Frame: [],
+        Spec: [],
+        Style: [],
+        Account: [],
+        PidType: [],
+        VC: [],
+        AppWall: [],
+    }
+
+    @action
+    clearCache = () => {
+        let target = {}
+        Object.keys(this.optionListDb).forEach(key => target[key] = [])
+        runInAction('CLEAR', () => {
+            this.optionListDb = target
+        })
+    }
+
+    @action
+    getOptionListDb = async () => {
+        const keys = Object.keys(this.optionListDb)
+        const promiseAll = keys.map(key => this.api.appGroup[`get${key}`]())
+        Promise.all(promiseAll).then(data => {
+            const target = {}
+            keys.forEach((key, index) => {
+                target[key] = data[index].data
+            })
+            runInAction('SET', () => {
+                this.optionListDb = target
+            })
+        })
+    }
+
     /**
      * 加载用户列表
      *
@@ -80,15 +116,12 @@ export class AppGroupStore extends StoreExt {
     }
 
     createAppGroup = async (appGroup: IAppGroupStore.IAppGroup) => {
-        const res = await this.api.appGroup.createAppGroup(appGroup)
-        this.changepage(1)
-        return res
+        return await this.api.appGroup.createAppGroup(appGroup)
     }
 
     @action
     modifyAppGroup = async (appGroup: IAppGroupStore.IAppGroup) => {
-        // const { id, role, status, pwd } = appGroup
-        // return await this.api.appGroup.modifyAppGroup({ id, role, status, pwd })
+        return await this.api.appGroup.modifyAppGroup(appGroup)
     }
 
 

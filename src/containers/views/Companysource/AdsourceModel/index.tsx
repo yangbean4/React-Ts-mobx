@@ -23,13 +23,13 @@ const formItemLayout = {
 const formItemLayoutForModel = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 8 },
-        lg: { span: 9 },
+        sm: { span: 5 },
+        lg: { span: 10},
     },
     wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
-        lg: { span: 15 }
+        sm: { span: 13 },
+        lg: { span: 13 }
     }
 }
 
@@ -77,7 +77,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
         const { routerStore, company = {}} = this.props
         const routerId = routerStore.location.pathname.toString().split('/').pop()
         const Id = Number(routerId)
-        if ((!isNaN(Id) && (!company.id || company.id !== Id))) {
+        if ((!isNaN(Id) && (!company.id || company.id !== Id)) && !this.props.type) {
             routerStore.push('/companysource')
         }
     }
@@ -113,6 +113,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                         message.success(data.message)
                         if (this.props.type) {
                             this.props.onOk(data.data.id);
+                            this.props.form.resetFields()
                         } else {
                             routerStore.push('/companysource')
                         }
@@ -138,7 +139,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
         return (
             <div className='sb-form'>
                 <Form className={styles.CompanyModal} {...this.formItemLayout}>
-                    <FormItem  label="Sourcee Company">
+                    <FormItem  label="Source Company">
                         {getFieldDecorator('company_name', {
                             initialValue: company_name,
                             rules: [
@@ -148,7 +149,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input />)}
                     </FormItem>
-                    <FormItem label="Full name of Source Company" >
+                    <FormItem label="Full Name of Source Company" >
                         {getFieldDecorator('company_full_name', {
                             initialValue: company_full_name,
                             rules: [                                {
@@ -192,8 +193,8 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             validateTrigger: 'onBlur'
                         })(<Input />)}
                     </FormItem>
-                    <FormItem className={styles.btnBox}>
-                        <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
+                    <FormItem className={this.props.type? styles.modalBtn :styles.btnBox} >
+                        <Button className={this.props.type? styles.btn : ''} type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
                     </FormItem>
                 </Form>
 
