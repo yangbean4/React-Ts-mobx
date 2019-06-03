@@ -46,3 +46,15 @@ export interface SearchParams {
     platform?: string,
     status?: number | string
 }
+
+
+export interface OptionListDb {
+    Category?: any[],
+    Frame?: any[],
+    Spec?: any[],
+    Style?: any[],
+    Account?: any[],
+    PidType?: any[],
+    VC?: any[],
+    AppWall?: any[],
+}

@@ -58,6 +58,7 @@ export class AccountStore extends StoreExt {
     setAccountType = (accountType: string) => {
         this.accountType = accountType
         this.changeFilter({})
+        this.pageSize = 10
     }
 
     /**

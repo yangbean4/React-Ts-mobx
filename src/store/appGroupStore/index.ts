@@ -54,7 +54,7 @@ export class AppGroupStore extends StoreExt {
     filters: IAppGroupStore.SearchParams = {}
 
     @observable
-    optionListDb = {
+    optionListDb: IAppGroupStore.OptionListDb = {
         Category: [],
         Frame: [],
         Spec: [],
