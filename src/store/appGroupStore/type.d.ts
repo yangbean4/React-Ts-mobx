@@ -58,3 +58,58 @@ export interface OptionListDb {
     VC?: any[],
     AppWall?: any[],
 }
+
+export interface PlacementForList {
+    id?: number
+    pid_type_name?: string
+    placement_name?: string
+    placement_id?: string
+    status?: string
+}
+
+export interface styleDetail {
+    title_text?: string
+    title_text_color?: string
+    title_font?: string
+    title_background_color?: string
+    title_background_image?: string
+    subtitle_text?: string
+    subtitle_color?: string
+    subtitle_background_color?: string
+    subtitle_background_image?: string
+    ad_title_color?: string
+    ad_desc_color?: string
+    ad_edge_color?: string
+    ad_background_color?: string
+    ad_background_image?: string
+    button_text_color?: string
+    button_background_color?: string
+    button_background_image?: string
+    button_edge_color?: string
+    button_unavail_color?: string
+    vc_icon?: string
+    big_background_image?: string
+    big_background_color?: string
+    content_font?: string
+}
+
+export interface Placement {
+    status?: number
+    placement_id?: string
+    placement_name?: string
+    ige_carrier_block?: string[]
+    frequency_num?: number
+    frequency_time?: number
+    pid_type?: number
+    min_offer_num?: number
+    offer_num?: number
+    budget?: number
+
+    // appwall add
+    style_id?: number
+    style_detail?: styleDetail
+    // VC Reward add
+    vc_id?: number
+    reward_type?: number
+    reward_num?: number
+}

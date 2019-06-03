@@ -59,5 +59,20 @@ export default {
 
   uploadIcon(data): Promise<any> {
     return http.post(`/api/upload/uploadIcon`, data || {})
-  }
+  },
+
+  // ---------------Placement
+  addPalcement(data): Promise<any> {
+    return http.post(`${basePath}addPalcement`, data)
+  },
+  palcementDetail(data): Promise<any> {
+    return http.post(`${basePath}palcementDetail`, data)
+  },
+  // addPalcement(): Promise<any> {
+  //   return http.post(`${basePath}addPalcement`)
+  // },
+  placementList(data): Promise<any> {
+    return http.post(`${basePath}placementList`, data)
+  },
+
 }

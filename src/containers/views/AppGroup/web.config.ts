@@ -86,3 +86,34 @@ export const adType = [
     value: 9
   }
 ]
+
+export const IGE = [
+  {
+    key: 'wifi',
+    value: 'wifi'
+  },
+  {
+    key: '2g',
+    value: '2g'
+  },
+  {
+    key: '3g',
+    value: '3g'
+  },
+  {
+    key: '4g',
+    value: '4g'
+  }
+]
+
+
+export const rewardOption = [
+  {
+    key: 'Dynamic Reward',
+    value: 0
+  },
+  {
+    key: 'Fix Reward',
+    value: 1
+  }
+]

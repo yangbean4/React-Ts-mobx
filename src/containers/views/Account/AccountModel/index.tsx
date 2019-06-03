@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
 import { Form, Input, Select, Radio, Button, message, Popover, Icon as AntIcon } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
-import { statusOption, accountTypeOption } from '../web.config'
+import { statusOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
 import { camelCase } from '@utils/index'
 import * as styles from './index.scss'
@@ -50,6 +50,9 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
     private allCompany: ICompanyStore.ICompany[] = []
 
     @observable
+    private accountTypeOption: any[] = []
+
+    @observable
     private companyShow: boolean = false
 
     @computed
@@ -93,6 +96,14 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
+    getAccountTypeOption = async () => {
+        const res = await this.api.account.accountTypeList();
+        runInAction('set_all_co', () => {
+            this.accountTypeOption = res.data
+        })
+    }
+
+    @action
     getAllCompany = async () => {
         const res = await this.api.account.getAllCompany({
             type: this.accountType === 'source' ? 0 : 1
@@ -118,6 +129,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
             routerStore.push(`/account/${this.accountType}`)
         } else {
             this.getAllCompany()
+            this.getAccountTypeOption()
         }
     }
     componentWillUnmount() {
@@ -263,9 +275,9 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                         getPopupContainer={trigger => trigger.parentElement}
                                         filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
-                                        {accountTypeOption.map(c => (
-                                            <Select.Option key={c.value} value={c.value}>
-                                                {c.key}
+                                        {this.accountTypeOption.map(c => (
+                                            <Select.Option key={c.id} value={c.id}>
+                                                {c.type_name}
                                             </Select.Option>
                                         ))}
                                     </Select>

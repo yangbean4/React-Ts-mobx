@@ -43,7 +43,7 @@ interface IStoreProps {
     modifyAppGroup?: (appGroup: IAppGroupStore.IAppGroup) => Promise<any>
     createAppGroup?: (appGroup: IAppGroupStore.IAppGroup) => Promise<any>
     getOptionListDb?: () => Promise<any>
-    optionListDb?: any
+    optionListDb?: IAppGroupStore.OptionListDb
     routerStore?: RouterStore
 }
 
@@ -51,7 +51,7 @@ interface IProps extends IStoreProps {
     Id?: string | number
     onCancel?: () => void
     isAdd?: boolean
-    onSubmit?: () => void
+    onSubmit?: (data?: number) => void
 }
 @inject(
     (store: IStore): IStoreProps => {
@@ -153,11 +153,12 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                     this.toggleLoading()
                     try {
                         if (this.isAdd) {
-                            await createAppGroup(values)
+                            const res = await createAppGroup(values)
+                            this.props.onSubmit(res.data.id)
                         } else {
                             await modifyAppGroup({ ...values, id: this.props.Id })
+                            this.props.onSubmit()
                         }
-                        this.props.onSubmit()
                     } catch (err) {
                         //console.log(err);
                     }
@@ -337,7 +338,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem label="Pkgname">
                         {getFieldDecorator('pkg_name', {
                             initialValue: pkg_name,
-                            validateTrigger: 'blur',
+                            // validateTrigger: 'blur',
                             rules: [
                                 {
                                     required: this.useNot_in_appstore, message: "Required",

@@ -109,9 +109,9 @@ class AccountTable extends ComponentExt<IProps> {
                             title="Account Type"
                             dataIndex="account_type"
                             width={200}
-                            render={(_) => (
-                                (accountTypeOption.find(item => item.value === _) || { key: '' }).key
-                            )}
+                        // render={(_) => (
+                        //     (accountTypeOption.find(item => item.value === _) || { key: '' }).key
+                        // )}
                         />
                     }
                     <Table.Column<IAccountStore.IAccount>

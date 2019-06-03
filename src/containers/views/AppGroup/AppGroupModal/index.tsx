@@ -79,10 +79,15 @@ class AppGroupModal extends React.Component<IProps>{
     }
 
     @action
-    onSubmit = () => {
+    onSubmit = (id?) => {
         if (this.activeIndex === tabArr.length - 1) {
             this.props.routerStore.push('/config')
         } else {
+            if (id) {
+                runInAction('SET_StATE', () => {
+                    this.Id = id
+                })
+            }
             this.cardChange(tabArr[this.activeIndex + 1])
         }
     }

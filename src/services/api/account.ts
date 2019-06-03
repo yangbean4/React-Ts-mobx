@@ -29,4 +29,8 @@ export default {
   // getAccount(data): Promise<any> {
   //   return http.post(`${basePath}getAccount`, data)
   // },
+
+  accountTypeList(): Promise<any> {
+    return http.post(`${basePath}accountTypeList`)
+  },
 }

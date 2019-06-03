@@ -1,218 +1,165 @@
 import * as React from 'react'
-import { inject, observer } from 'mobx-react'
-import { observable, action, computed } from 'mobx'
-import { Form, Input, Select, Radio, Button, message, InputNumber } from 'antd'
-import { FormComponentProps } from 'antd/lib/form'
-import { statusOption, platformOption } from '../../web.config'
+import { observer, inject } from 'mobx-react'
+import { observable, action, runInAction } from 'mobx'
+import { Button, Table, Icon } from 'antd'
 import { ComponentExt } from '@utils/reactExt'
-import * as styles from './index.scss'
+import FormAdd from './FormAdd'
+import * as style from './index.scss'
 
-const FormItem = Form.Item
-
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 5 },
-        lg: { span: 3 }
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 19 },
-        lg: { span: 5 }
-    }
+interface TableProps {
+  onEdit: (index: number) => void
+  data: any[]
 }
 
-interface IStoreProps {
-    createAppGroup?: (appGroup: IAppGroupStore.IAppGroup) => Promise<any>
-    routerStore?: RouterStore
-}
 
-interface IProps extends IStoreProps {
-    appGroup?: IAppGroupStore.IAppGroup
-    onCancel?: () => void
-}
-@inject(
-    (store: IStore): IProps => {
-        const { appGroupStore, routerStore } = store
-        const { createAppGroup } = appGroupStore
-        return { routerStore, createAppGroup }
-    }
-)
 @observer
-class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
-    @observable
-    private loading: boolean = false
+class VcTable extends ComponentExt<TableProps> {
 
-    @computed
-    get isAdd() {
-        return !this.props.appGroup
-    }
+  render() {
+    const { data, onEdit } = this.props;
 
-    @action
-    toggleLoading = () => {
-        this.loading = !this.loading
-    }
+    return (
+      <Table<IAppGroupStore.PlacementForList>
+        className="center-table"
+        style={{ width: '100%' }}
+        bordered
+        rowKey='id'
+        dataSource={data}
+        scroll={{ y: scrollY }}
+      >
+        <Table.Column<IAppGroupStore.PlacementForList>
+          key="pid_type_name"
+          title="PID Type"
+          dataIndex="pid_type_name"
+          width={200}
+        />
+        <Table.Column<IAppGroupStore.PlacementForList>
+          key="placement_name"
+          title="Placement Name"
+          dataIndex="placement_name"
+          render={(_) => (
+            `${_}=1$`
+          )}
+          width={200} />
+        <Table.Column<IAppGroupStore.PlacementForList> key="placement_id" title="PID" dataIndex="placement_id" width={200} />
+        <Table.Column<IAppGroupStore.PlacementForList>
+          key="status"
+          title="Status"
+          dataIndex="status"
+          // render={(_) => (
+          //   statusOption.find(item => item.value === _).key
+          // )}
+          width={200} />
 
-    Cancel = () => {
-        this.isAdd ? this.props.routerStore.push('/apps') : this.props.onCancel()
-    }
-
-    submit = (e?: React.FormEvent<any>): void => {
-        if (e) {
-            e.preventDefault()
-        }
-        const { routerStore, createAppGroup, form } = this.props
-        form.validateFields(
-            async (err, values): Promise<any> => {
-                if (!err) {
-                    this.toggleLoading()
-                    try {
-                        let data = await createAppGroup(values)
-                        message.success(data.message)
-                        const {
-                            pkg_name,
-                            platform
-                        } = values
-                        localStorage.setItem('TargetAppGroup', JSON.stringify({
-                            pkg_name,
-                            platform
-                        }))
-                        routerStore.push('/apps/edit')
-                    } catch (err) {
-                        //console.log(err);
-                    }
-                    this.toggleLoading()
-                }
-            }
-        )
-    }
-
-    render() {
-        const { appGroup, form } = this.props
-        const { getFieldDecorator } = form
-        let roleValue: (string | number)[] = []
-        const {
-            platform = 'android',
-            vc_name = '',
-            pkg_name = "",
-            vc_exchange_rate = '',
-            vc_callback_url = '',
-            vc_desc = '',
-            vc_secret_key = '',
-            status = 1,
-        } = appGroup || {}
-        return (
-            <div className='sb-form'>
-                <Form className={styles.appGroupModal} >
-                    <FormItem {...formItemLayout} label="Status">
-                        {getFieldDecorator('status', {
-                            initialValue: status,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Radio.Group>
-                                {statusOption.map(c => (
-                                    <Radio key={c.key} value={c.value}>
-                                        {c.key}
-                                    </Radio>
-                                ))}
-                            </Radio.Group>
-                        )}
-                    </FormItem>
-                    {
-                        this.isAdd && <FormItem {...formItemLayout} label="Pkgname">
-                            {getFieldDecorator('pkg_name', {
-                                initialValue: pkg_name,
-                                rules: [
-                                    {
-                                        required: true, message: "Required"
-                                    }
-                                ]
-                            })(<Input />)}
-                        </FormItem>
-                    }
-                    {
-                        this.isAdd && <FormItem {...formItemLayout} label="Platform">
-                            {getFieldDecorator('platform',
-                                {
-                                    initialValue: platform,
-                                    rules: [
-                                        {
-                                            required: true, message: "Required"
-                                        }
-                                    ]
-                                })(
-                                    <Select
-                                        showSearch
-                                        filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                    >
-                                        {platformOption.map(c => (
-                                            <Select.Option {...c}>
-                                                {c.key}
-                                            </Select.Option>
-                                        ))}
-                                    </Select>
-                                )}
-                        </FormItem>
-                    }
-
-                    <FormItem {...formItemLayout} label="VC Name">
-                        {getFieldDecorator('vc_name', {
-                            initialValue: vc_name,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(<Input />)}
-                    </FormItem>
-
-                    <FormItem label="VC Description" {...formItemLayout} >
-                        {getFieldDecorator('vc_desc', {
-                            initialValue: vc_desc,
-                        })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
-                    </FormItem>
-
-                    <FormItem {...formItemLayout} label="VC Exchange Rate">
-                        {getFieldDecorator('vc_exchange_rate', {
-                            initialValue: vc_exchange_rate,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(<InputNumber precision={0} />)}
-                        <span>=1$</span>
-                    </FormItem>
-
-                    <FormItem label="VC Callback Url" {...formItemLayout} >
-                        {getFieldDecorator('vc_callback_url', {
-                            initialValue: vc_callback_url,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
-                    </FormItem>
-                    <FormItem {...formItemLayout} label="VC Secret Key">
-                        {getFieldDecorator('vc_secret_key', {
-                            initialValue: vc_secret_key,
-                        })(<Input />)}
-                    </FormItem>
-
-                    <FormItem className={styles.btnBox}>
-                        <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
-                        <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
-                    </FormItem>
-                </Form>
-
-            </div>
-        )
-    }
+        <Table.Column<IAppGroupStore.PlacementForList>
+          key="action"
+          title="Operate"
+          width={120}
+          render={(_, record, index) => (
+            <span>
+              <a href="javascript:;" onClick={() => onEdit(index)}>
+                <Icon type="form" />
+              </a>
+            </span>
+          )}
+        />
+      </Table>
+    )
+  }
 }
 
-export default Form.create<IProps>()(AppGroupModal)
+// --------------------------------------------------------------
+
+
+interface IProps {
+  Id?: string | number
+  onCancel?: () => void
+  isAdd?: boolean
+  onSubmit?: () => void
+}
+
+@observer
+class PID extends ComponentExt<IProps> {
+
+  @observable
+  private targetPlacement: IAppGroupStore.PlacementForList = {}
+
+  @observable
+  private GJB: IAppGroupStore.PlacementForList
+
+  @observable
+  private loading: boolean = false
+
+  @observable
+  private isTable: boolean = true
+
+  @observable
+  private thisDataList: IAppGroupStore.PlacementForList[]
+
+  @action
+  toggleIsTable = () => {
+    this.isTable = !this.isTable
+  }
+
+  @action
+  toggleLoading = () => {
+    this.loading = !this.loading
+  }
+
+  @action
+  initDetail = async () => {
+    if (this.props.Id !== undefined) {
+      const res = await this.api.appGroup.placementList({ id: this.props.Id })
+      runInAction('SETLIST', () => {
+        this.thisDataList = res.data
+      })
+    }
+  }
+
+
+  onCancel = () => {
+    this.toggleIsTable()
+  }
+  onOK = (id: number) => {
+    this.initDetail()
+    this.toggleIsTable()
+  }
+
+  editPid = (index?) => {
+    const data = index === undefined ? {} : this.thisDataList[index]
+    runInAction('set_GJB', () => {
+      this.GJB = data
+    })
+    this.toggleIsTable()
+  }
+
+
+  componentWillMount() {
+    this.initDetail()
+  }
+
+  render() {
+    // const { form, editData } = this.props
+    return (
+      <div className='PID'>
+        {
+          this.isTable ? <div className="tableBox">
+            <Button type="primary" className={style.addbtn} onClick={() => this.editPid()}>+ Add</Button>
+            <VcTable data={this.thisDataList} onEdit={this.editPid} />
+            <div className={style.btnGroup}>
+              {/* <Button type="primary" className={style.submitBtn} onClick={this.submit}>Submit</Button> */}
+              {/* <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button> */}
+            </div>
+          </div> : <div className="formBox">
+              <FormAdd
+                onCancel={this.onCancel}
+                onOk={this.onOK}
+                placementID={this.GJB.id} />
+            </div>
+        }
+      </div>
+    )
+  }
+}
+
+export default PID
