@@ -66,10 +66,10 @@ export default {
 
   // ---------------Placement
   addPalcement(data): Promise<any> {
-    return http.post(`${basePath}addPalcement`, data)
+    return http.post(`${basePath}addPlalcement`, data)
   },
   palcementDetail(data): Promise<any> {
-    return http.post(`${basePath}palcementDetail`, data)
+    return http.post(`${basePath}placementDetail`, data)
   },
   editPlacement(data): Promise<any> {
     return http.post(`${basePath}editPlacement`, data)

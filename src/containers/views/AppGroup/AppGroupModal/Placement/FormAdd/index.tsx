@@ -129,7 +129,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get usePidtype() {
-        return [this.pidType, !this.Palcement.pid_type, true].find(ele => ele !== undefined)
+        return [this.pidType, this.Palcement.pid_type].find(ele => ele !== undefined)
     }
 
     @computed
@@ -145,6 +145,11 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     pidTypeChange = (type) => {
         this.pidType = type;
+        if (type === 1 || type === 3) {
+            this.props.form.setFieldsValue({
+                offer_num: 1, min_offer_num: 1,
+            })
+        }
     }
 
     @action
@@ -182,6 +187,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
         const { form, Id, placementID, onOk } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
+                values = { ...values, ige_carrier_block: values.ige_carrier_block.join(',') }
                 if (!err) {
                     this.toggleLoading()
                     try {
@@ -224,12 +230,13 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
         const colorKey = key.replace('image', 'color')
         const data = andColor ? {
             [`style_detail.${key}`]: '',
-            [`style_detail.${colorKey}`]: InitColor
+            [`style_detail.${colorKey}`]: typeof andColor === 'boolean' ? InitColor : andColor
         } : {
                 [`style_detail.${key}`]: '',
             }
         this.props.form.setFieldsValue(data)
     }
+
 
     @action
     addFile = (key, localUrl, url, andColor?) => {
@@ -363,7 +370,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input />)}
+                        })(<Input disabled={!this.isAdd} />)}
                     </FormItem>
 
                     <FormItem label="Placement Name">
@@ -438,7 +445,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={0} />)}seconds
+                        })(<InputNumber precision={0} />)}&nbsp;&nbsp;&nbsp;&nbsp;seconds
                     </FormItem>
 
 
@@ -474,8 +481,8 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
 
                     <FormItem label="Offer Number">
-                        {getFieldDecorator('frequency_num', {
-                            initialValue: frequency_num,
+                        {getFieldDecorator('offer_num', {
+                            initialValue: offer_num,
                             rules: [
                                 {
                                     required: true, message: "Required"
@@ -489,7 +496,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={0} />)}
+                        })(<InputNumber disabled={this.usePidtype === 1 || this.usePidtype === 3} precision={0} />)}
                     </FormItem>
 
                     <FormItem label="Mini Offer Number">
@@ -508,248 +515,254 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={0} />)}
+                        })(<InputNumber disabled={this.usePidtype === 1 || this.usePidtype === 3} precision={0} />)}
                     </FormItem>
 
-                    <FormItem label="PID Budget">
-                        {getFieldDecorator('budget', {
-                            initialValue: budget,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                },
-                                {
-                                    validator: (r, v, callback) => {
-                                        if (v <= 0) {
-                                            callback('The Exchange Rate should be a positive integer!')
-                                        }
-                                        callback()
-                                    }
-                                }
-                            ]
-                        })(<InputNumber precision={0} />)}
-                        $
-                        <Popover content={(<p>Support the network type of ige offer.</p>)}>
-                            <Icon className={styles.workBtn} type="question-circle" />
-                        </Popover>
-                    </FormItem>
-                    <FormItem {...bigLayout} className={styles.hasImg} label='Select App Wall style'>
-                        {getFieldDecorator('style_id', {
-                            initialValue: this.usePidtype,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Radio.Group
-                                onChange={this.AppWallCahnge}
-                            >
-                                {optionListDb.AppWall.map(c => (
-                                    <div className={styles.GroupBox} key={c.id}>
-                                        <div className={styles.imgBox}><img src={c.url} /></div>
-                                        <Radio value={c.id}>
-                                            Style{c.id}
-                                        </Radio>
-                                    </div>
-                                ))}
-                            </Radio.Group>
-                        )}
-                    </FormItem>
-                    <FormItem label='Preview picture'>
-                        <div className={styles.picture}>
-                            <img src={this.useAppWallUrl} />
-                        </div>
-                    </FormItem>
-
-                    <FormItem label="Title">
-                        {getFieldDecorator('style_detail.title_text', {
-                            initialValue: style_detail.title_text,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(<Input />)}
-                    </FormItem>
-
-                    <div className={`${styles.formItemBox} ${styles.noTitle}`}>
-                        <FormItem {...noLabelLayout}>
-                            {getFieldDecorator('style_detail.title_text_color', {
-                                initialValue: style_detail.title_text_color || InitColor,
+                    {
+                        (this.usePidtype === 2 || this.usePidtype === 5) && <FormItem label="PID Budget">
+                            {getFieldDecorator('budget', {
+                                initialValue: budget,
                                 rules: [
                                     {
                                         required: true, message: "Required"
-                                    }
-                                ]
-                            })(<InputColor />)}
-                            <span className={styles.lineSpan}>   text   </span>
-                        </FormItem>
-                        <FormItem {...noLabelLayout}>
-                            {getFieldDecorator('style_detail.title_background_color', {
-                                initialValue: style_detail.title_background_color || InitColor,
-                            })(<InputColor />)}
-                            <span className={styles.lineSpan}>   bkgd    or   </span>
-                        </FormItem>
-
-                        {getUnpload('title_background_image')}
-                    </div>
-
-
-                    <FormItem label="Subtitle">
-                        {getFieldDecorator('style_detail.subtitle_text', {
-                            initialValue: style_detail.subtitle_text,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(<Input />)}
-                    </FormItem>
-
-                    <div className={`${styles.formItemBox} ${styles.noTitle}`}>
-                        <FormItem {...noLabelLayout}>
-                            {getFieldDecorator('style_detail.subtitle_color', {
-                                initialValue: style_detail.subtitle_color || InitColor,
-                                rules: [
+                                    },
                                     {
-                                        required: true, message: "Required"
+                                        validator: (r, v, callback) => {
+                                            if (v <= 0) {
+                                                callback('The Exchange Rate should be a positive integer!')
+                                            }
+                                            callback()
+                                        }
                                     }
                                 ]
-                            })(<InputColor />)}
-                            <span className={styles.lineSpan}>   text   </span>
+                            })(<InputNumber precision={0} />)}
+                            $
+<Popover content={(<p>Support the network type of ige offer.</p>)}>
+                                <Icon className={styles.workBtn} type="question-circle" />
+                            </Popover>
                         </FormItem>
-                        <FormItem {...noLabelLayout}>
-                            {getFieldDecorator('style_detail.subtitle_background_color', {
-                                initialValue: style_detail.subtitle_background_color || InitColor,
-                            })(<InputColor />)}
-                            <span className={styles.lineSpan}>   bkgd    or   </span>
-                        </FormItem>
-                        {getUnpload('subtitle_background_image')}
-                    </div>
-
-
-                    <Row className={styles.formItemBox}>
-                        <Col span={3} className={styles.boxTitle}>
-                            *Ad text
-                        </Col>
-                        <Col span={15}>
-                            <FormItem {...noLabelLayout}>
-                                {getFieldDecorator('style_detail.ad_title_color', {
-                                    initialValue: style_detail.ad_title_color || InitColor,
+                    }
+                    {
+                        this.usePidtype === 2 && <React.Fragment>
+                            <FormItem {...bigLayout} className={styles.hasImg} label='Select App Wall style'>
+                                {getFieldDecorator('style_id', {
+                                    initialValue: style_id,
                                     rules: [
                                         {
                                             required: true, message: "Required"
                                         }
                                     ]
-                                })(<InputColor />)}
-                                <span className={styles.lineSpan}>   text   </span>
+                                })(
+                                    <Radio.Group
+                                        onChange={this.AppWallCahnge}
+                                    >
+                                        {optionListDb.AppWall.map(c => (
+                                            <div className={styles.GroupBox} key={c.id}>
+                                                <div className={styles.imgBox}><img src={c.url} /></div>
+                                                <Radio value={c.id}>
+                                                    Style{c.id}
+                                                </Radio>
+                                            </div>
+                                        ))}
+                                    </Radio.Group>
+                                )}
                             </FormItem>
-                            <FormItem {...noLabelLayout}>
-                                {getFieldDecorator('style_detail.ad_desc_color', {
-                                    initialValue: style_detail.ad_desc_color || InitColor,
-                                })(<InputColor />)}
-                                <span className={styles.lineSpan}>   decr </span>
+                            <FormItem label='Preview picture'>
+                                <div className={styles.picture}>
+                                    <img src={this.useAppWallUrl} />
+                                </div>
                             </FormItem>
-                        </Col>
-                    </Row>
 
-                    <Row className={styles.formItemBox}>
-                        <Col span={3} className={styles.boxTitle}>
-                            *Ad background
-                            </Col>
-                        <Col span={15}>
-                            <FormItem {...noLabelLayout}>
-                                {getFieldDecorator('style_detail.ad_edge_color', {
-                                    initialValue: style_detail.ad_edge_color || InitColor,
+                            <FormItem label="Title">
+                                {getFieldDecorator('style_detail.title_text', {
+                                    initialValue: style_detail.title_text,
                                     rules: [
                                         {
                                             required: true, message: "Required"
                                         }
                                     ]
-                                })(<InputColor />)}
-                                <span className={styles.lineSpan}>   edge   </span>
+                                })(<Input />)}
                             </FormItem>
-                            <FormItem {...noLabelLayout}>
-                                {getFieldDecorator('style_detail.ad_background_color', {
-                                    initialValue: style_detail.ad_background_color || InitColor,
-                                })(<InputColor />)}
-                                <span className={styles.lineSpan}>   bkgd    or   </span>
-                            </FormItem>
-                            {getUnpload('ad_background_image')}
-                        </Col>
-                    </Row>
+
+                            <div className={`${styles.formItemBox} ${styles.noTitle}`}>
+                                <FormItem {...noLabelLayout}>
+                                    {getFieldDecorator('style_detail.title_text_color', {
+                                        initialValue: style_detail.title_text_color || InitColor,
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
+                                    })(<InputColor />)}
+                                    <span className={styles.lineSpan}>   text   </span>
+                                </FormItem>
+                                <FormItem {...noLabelLayout}>
+                                    {getFieldDecorator('style_detail.title_background_color', {
+                                        initialValue: style_detail.title_background_color || InitColor,
+                                    })(<InputColor onChange={(color) => this.removeFile("title_background_image", color)} />)}
+                                    <span className={styles.lineSpan}>   bkgd    or   </span>
+                                </FormItem>
+
+                                {getUnpload('title_background_image')}
+                            </div>
 
 
-                    <Row className={styles.formItemBox}>
-                        <Col span={3} className={styles.boxTitle}>
-                            *button
-                            </Col>
-                        <Col span={15}>
-                            <FormItem {...noLabelLayout}>
-                                {getFieldDecorator('style_detail.button_text_color', {
-                                    initialValue: style_detail.button_text_color || InitColor,
+                            <FormItem label="Subtitle">
+                                {getFieldDecorator('style_detail.subtitle_text', {
+                                    initialValue: style_detail.subtitle_text,
                                     rules: [
                                         {
                                             required: true, message: "Required"
                                         }
                                     ]
-                                })(<InputColor />)}
-                                <span className={styles.lineSpan}>   text   </span>
-                            </FormItem>
-                            <FormItem {...noLabelLayout}>
-                                {getFieldDecorator('style_detail.button_background_color', {
-                                    initialValue: style_detail.button_background_color || InitColor,
-                                })(<InputColor />)}
-                                <span className={styles.lineSpan}>   bkgd </span>
-                            </FormItem>
-                            <FormItem {...noLabelLayout}>
-                                {getFieldDecorator('style_detail.button_edge_color', {
-                                    initialValue: style_detail.button_edge_color || InitColor,
-                                })(<InputColor />)}
-                                <span className={styles.lineSpan}>   edge </span>
+                                })(<Input />)}
                             </FormItem>
 
-                            <FormItem {...noLabelLayout}>
-                                {getFieldDecorator('style_detail.button_unavail_color', {
-                                    initialValue: style_detail.button_unavail_color || InitColor,
-                                })(<InputColor />)}
-                                <span className={styles.lineSpan}>unavail  or</span>
-                            </FormItem>
-                            {getUnpload('button_background_image')}
+                            <div className={`${styles.formItemBox} ${styles.noTitle}`}>
+                                <FormItem {...noLabelLayout}>
+                                    {getFieldDecorator('style_detail.subtitle_color', {
+                                        initialValue: style_detail.subtitle_color || InitColor,
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
+                                    })(<InputColor />)}
+                                    <span className={styles.lineSpan}>   text   </span>
+                                </FormItem>
+                                <FormItem {...noLabelLayout}>
+                                    {getFieldDecorator('style_detail.subtitle_background_color', {
+                                        initialValue: style_detail.subtitle_background_color || InitColor,
+                                    })(<InputColor onChange={(color) => this.removeFile("subtitle_background_image", color)} />)}
+                                    <span className={styles.lineSpan}>   bkgd    or   </span>
+                                </FormItem>
+                                {getUnpload('subtitle_background_image')}
+                            </div>
+
+
+                            <Row className={styles.formItemBox}>
+                                <Col span={3} className={styles.boxTitle}>
+                                    *Ad text
                         </Col>
-                    </Row>
+                                <Col span={15}>
+                                    <FormItem {...noLabelLayout}>
+                                        {getFieldDecorator('style_detail.ad_title_color', {
+                                            initialValue: style_detail.ad_title_color || InitColor,
+                                            rules: [
+                                                {
+                                                    required: true, message: "Required"
+                                                }
+                                            ]
+                                        })(<InputColor />)}
+                                        <span className={styles.lineSpan}>   text   </span>
+                                    </FormItem>
+                                    <FormItem {...noLabelLayout}>
+                                        {getFieldDecorator('style_detail.ad_desc_color', {
+                                            initialValue: style_detail.ad_desc_color || InitColor,
+                                        })(<InputColor />)}
+                                        <span className={styles.lineSpan}>   decr </span>
+                                    </FormItem>
+                                </Col>
+                            </Row>
 
-                    <FormItem label="Icon">
-                        {getFieldDecorator('style_detail.vc_icon', {
-                            initialValue: style_detail.vc_icon,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Upload {...getProps('vc_icon')}>
-                                {vc_icon ? <img style={{ width: '100px' }} src={vc_icon} alt="avatar" /> : <Icon className={styles.workBtn} type='plus' />}
-                            </Upload>
-                        )}
-                    </FormItem>
-
-
-                    <Row className={styles.formItemBox}>
-                        <Col span={3} className={styles.boxTitle}>
-                            *Big Background
+                            <Row className={styles.formItemBox}>
+                                <Col span={3} className={styles.boxTitle}>
+                                    *Ad background
                             </Col>
-                        <Col span={15}>
-                            <FormItem {...noLabelLayout}>
-                                {getFieldDecorator('style_detail.big_background_color', {
-                                    initialValue: style_detail.big_background_color || InitColor,
-                                })(<InputColor />)}
-                                <span className={styles.lineSpan}>   bkgd </span>
+                                <Col span={15}>
+                                    <FormItem {...noLabelLayout}>
+                                        {getFieldDecorator('style_detail.ad_edge_color', {
+                                            initialValue: style_detail.ad_edge_color || InitColor,
+                                            rules: [
+                                                {
+                                                    required: true, message: "Required"
+                                                }
+                                            ]
+                                        })(<InputColor />)}
+                                        <span className={styles.lineSpan}>   edge   </span>
+                                    </FormItem>
+                                    <FormItem {...noLabelLayout}>
+                                        {getFieldDecorator('style_detail.ad_background_color', {
+                                            initialValue: style_detail.ad_background_color || InitColor,
+                                        })(<InputColor onChange={(color) => this.removeFile("ad_background_image", color)} />)}
+                                        <span className={styles.lineSpan}>   bkgd    or   </span>
+                                    </FormItem>
+                                    {getUnpload('ad_background_image')}
+                                </Col>
+                            </Row>
+
+
+                            <Row className={styles.formItemBox}>
+                                <Col span={3} className={styles.boxTitle}>
+                                    *button
+                            </Col>
+                                <Col span={15}>
+                                    <FormItem {...noLabelLayout}>
+                                        {getFieldDecorator('style_detail.button_text_color', {
+                                            initialValue: style_detail.button_text_color || InitColor,
+                                            rules: [
+                                                {
+                                                    required: true, message: "Required"
+                                                }
+                                            ]
+                                        })(<InputColor />)}
+                                        <span className={styles.lineSpan}>   text   </span>
+                                    </FormItem>
+                                    <FormItem {...noLabelLayout}>
+                                        {getFieldDecorator('style_detail.button_background_color', {
+                                            initialValue: style_detail.button_background_color || InitColor,
+                                        })(<InputColor />)}
+                                        <span className={styles.lineSpan}>   bkgd </span>
+                                    </FormItem>
+                                    <FormItem {...noLabelLayout}>
+                                        {getFieldDecorator('style_detail.button_edge_color', {
+                                            initialValue: style_detail.button_edge_color || InitColor,
+                                        })(<InputColor />)}
+                                        <span className={styles.lineSpan}>   edge </span>
+                                    </FormItem>
+
+                                    <FormItem {...noLabelLayout}>
+                                        {getFieldDecorator('style_detail.button_unavail_color', {
+                                            initialValue: style_detail.button_unavail_color || InitColor,
+                                        })(<InputColor onChange={(color) => this.removeFile("button_background_image", color)} />)}
+                                        <span className={styles.lineSpan}>unavail  or</span>
+                                    </FormItem>
+                                    {getUnpload('button_background_image')}
+                                </Col>
+                            </Row>
+
+                            <FormItem label="Icon">
+                                {getFieldDecorator('style_detail.vc_icon', {
+                                    initialValue: style_detail.vc_icon,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(
+                                    <Upload {...getProps('vc_icon')}>
+                                        {vc_icon ? <img style={{ width: '100px' }} src={vc_icon} alt="avatar" /> : <Icon className={styles.workBtn} type='plus' />}
+                                    </Upload>
+                                )}
                             </FormItem>
-                            {getUnpload('big_background_image')}
-                        </Col>
-                    </Row>
+
+
+                            <Row className={styles.formItemBox}>
+                                <Col span={3} className={styles.boxTitle}>
+                                    *Big Background
+                            </Col>
+                                <Col span={15}>
+                                    <FormItem {...noLabelLayout}>
+                                        {getFieldDecorator('style_detail.big_background_color', {
+                                            initialValue: style_detail.big_background_color || InitColor,
+                                        })(<InputColor onChange={(color) => this.removeFile("big_background_image", color)} />)}
+                                        <span className={styles.lineSpan}>   bkgd </span>
+                                    </FormItem>
+                                    {getUnpload('big_background_image')}
+                                </Col>
+                            </Row>
+                        </React.Fragment>
+                    }
 
                     {
                         this.pidType !== 3 && (
@@ -759,7 +772,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                         <span>VC Reward</span>
                                     </div>
                                 </Col>
-                                <FormItem label="Virtual Currency">
+                                <FormItem label="Virtual Currency" className={styles.vcId}>
                                     {getFieldDecorator('vc_id',
                                         {
                                             initialValue: vc_id,
@@ -805,8 +818,8 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                                     {c.key}
                                                 </Radio>
                                             ))} */}
-                                            <Radio disabled={this.pidType !== 1} value={1}>Dynamic Reward</Radio>
-                                            <Radio disabled={this.pidType === 1} value={2}>Fix Reward</Radio>
+                                            <Radio disabled={this.pidType === 1} value={1}>Dynamic Reward</Radio>
+                                            <Radio disabled={this.pidType !== undefined && this.pidType !== 1} value={2}>Fix Reward</Radio>
                                         </Radio.Group>
                                     )}
                                 </FormItem>

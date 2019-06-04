@@ -11,6 +11,11 @@
   :global(.ant-form-item-control-wrapper){
     white-space: nowrap;
   }
+  .longLabel{
+    :global(.ant-form-item-label){
+      width: 250px;
+    }  
+  }
 }
 
 .btnGroup {

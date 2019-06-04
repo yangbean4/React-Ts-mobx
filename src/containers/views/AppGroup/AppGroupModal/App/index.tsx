@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Input, Select, Radio, Button, message, InputNumber, Upload, Icon as AntIcon, Popover } from 'antd'
+import { Form, Input, Select, Radio, Button, InputNumber, Upload, Icon as AntIcon, Popover } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import * as web from '../../web.config'
 import { ComponentExt } from '@utils/reactExt'
-import AccountModel from './accountModel'
+import AccountModel from './AccountModel'
 import * as styles from './index.scss'
 import Icon from '@components/Icon'
 
@@ -637,7 +637,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                             )}
                         </FormItem>
 
-                        <FormItem label="Contains Native s2s PID types">
+                        <FormItem label="Contains Native s2s PID Types" className={styles.longLabel}>
                             {getFieldDecorator('contains_native_s2s_pid_types', {
                                 initialValue: contains_native_s2s_pid_types,
                                 rules: [

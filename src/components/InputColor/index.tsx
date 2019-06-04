@@ -30,15 +30,19 @@ class InputColor extends React.Component<IProp>  {
     if (!this.pickerVisible) {
       const dom = this.colorBox.current as HTMLElement
       const domRect = dom.getBoundingClientRect()
-      const bigBox = document.getElementsByClassName('Basic')[0].getBoundingClientRect() as DOMRect
-      const style = bigBox.bottom < (domRect.bottom + 360) ? {
-        bottom: '100%',
-      } : {
-          top: '100%'
-        }
-      runInAction('SET_STYLE', () => {
-        this.positionStyle = style
-      })
+      const Basic = document.getElementsByClassName('Basic')[0]
+      if (Basic) {
+        const bigBox = Basic.getBoundingClientRect() as DOMRect
+        const style = bigBox.bottom < (domRect.bottom + 360) ? {
+          bottom: '100%',
+        } : {
+            top: '100%'
+          }
+        runInAction('SET_STYLE', () => {
+          this.positionStyle = style
+        })
+      }
+
     }
     this.pickerVisible = !this.pickerVisible
   }

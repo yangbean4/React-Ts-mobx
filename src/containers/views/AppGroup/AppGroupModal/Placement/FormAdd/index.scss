@@ -3,12 +3,19 @@
   flex-direction: column;
   padding-top: 30px;
   :global(.ant-form-item) {
-    margin-bottom: 30px;
-    // :global(.ant-form-item-control-wrapper) {
-    //   width: 280px;
-    // }
+    margin-bottom: 20px;
+    :global(.ant-form-item-label){
+      width: 200px;
+    }
+    :global(.ant-form-item-control-wrapper) {
+      white-space: nowrap;
+    }
   }
-
+  .vcId{
+    :global(.ant-select-enabled) {
+      float: left;
+    }
+  }
   .btnBox {
     margin-left: 12%;
   }
@@ -66,6 +73,7 @@
   .GroupBox {
     margin-right: 20px;
     float: left;
+    text-align: center;
   }
 }
 .imgBox {

@@ -14,4 +14,5 @@ export const lineSpan: string;
 export const noTitle: string;
 export const picture: string;
 export const tagWrapper: string;
+export const vcId: string;
 export const workBtn: string;
