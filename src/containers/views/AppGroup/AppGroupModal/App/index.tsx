@@ -200,7 +200,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
         const res = await this.api.appGroup.getAppGroupInfo({ id: this.props.Id })
         this.props.setAppGroup(res.data)
         runInAction('SET_APPGroup', () => {
-            this.appGroup = res.data
+            this.appGroup = { ...res.data, nations: res.data.nations.split(',') }
         })
     }
 

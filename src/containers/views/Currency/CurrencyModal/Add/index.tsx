@@ -277,7 +277,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                         })(<Input />)}
                     </FormItem>
 
-                    <FormItem className={styles.btnBox}>
+                    <FormItem className={this.props.type? styles.vcMdoal :styles.btnBox} >
                         <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
                         <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
                     </FormItem>

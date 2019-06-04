@@ -212,7 +212,10 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
         if (id !== undefined) {
             const res = await this.api.appGroup.palcementDetail({ id })
             runInAction('set_p', () => {
-                this.Palcement = res.data
+                this.Palcement = {
+                    ...res.data,
+                    ige_carrier_block: res.data.ige_carrier_block.split(',')
+                }
             })
         }
 

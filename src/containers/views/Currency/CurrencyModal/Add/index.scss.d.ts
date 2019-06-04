@@ -3,3 +3,4 @@
 export const btn2: string;
 export const btnBox: string;
 export const currencyModal: string;
+export const vcMdoal: string;

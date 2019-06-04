@@ -308,8 +308,8 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                 )}
                             </FormItem>
                         }
-                        {
-                            !this.props.type && <FormItem label="Status">
+                        
+                        <FormItem label="Status">
                             {getFieldDecorator('status', {
                                 initialValue: status,
                                 rules: [
@@ -327,7 +327,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                 </Radio.Group>
                             )}
                         </FormItem>
-                        }
+                        
                         <FormItem className={this.props.type? styles.modalBtn :styles.btnBox}>
                             <Button type="primary" className={this.props.type? styles.btn : ''} loading={this.loading} onClick={this.submit}>Submit</Button>
                             {
