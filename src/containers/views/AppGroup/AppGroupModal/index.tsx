@@ -81,7 +81,7 @@ class AppGroupModal extends React.Component<IProps>{
     @action
     onSubmit = (id?) => {
         if (this.activeIndex === tabArr.length - 1) {
-            this.props.routerStore.push('/config')
+            this.props.routerStore.push('/apps')
         } else {
             if (id) {
                 runInAction('SET_StATE', () => {

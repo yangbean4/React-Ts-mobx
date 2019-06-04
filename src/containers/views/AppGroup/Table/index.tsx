@@ -5,7 +5,6 @@ import { inject, observer } from 'mobx-react'
 import { observable, action } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
-import MyIcon from '@components/Icon'
 import { statusOption } from '../web.config'
 
 interface IStoreProps {
@@ -131,9 +130,9 @@ class AppGroupTable extends ComponentExt<IProps> {
                             }
                             {
                                 // this.$checkAuth('Authorization-AppGroup Manage-Delete', (
-                                <a href="javascript:;" onClick={() => this.addAppGroup()}>
-                                    <Icon type='plus' />
-                                </a>
+                                // <a href="javascript:;" onClick={() => this.addAppGroup()}>
+                                //     <Icon type='plus' />
+                                // </a>
                                 // ))
                             }
                         </span>

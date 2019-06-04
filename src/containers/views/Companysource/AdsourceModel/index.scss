@@ -7,10 +7,13 @@
     :global(.ant-form-item-control-wrapper) {
       width: 280px;
     }
+    :global(.ant-form-item-label) {
+      width: 220px;
+    }
   }
 
   .btnBox {
-    margin-left: 16.5%;
+    margin-left: 14%;
   }
   .modalBtn {
     position: relative

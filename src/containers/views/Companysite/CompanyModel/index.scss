@@ -5,6 +5,9 @@
   :global(.ant-form-item) {
     margin-bottom: 25px;
   }
+  :global(.ant-form-item-label) {
+    width: 220px;
+  }
   .companyTag {
     height: 40px;
     width: 106px;
@@ -38,7 +41,7 @@
     left: 432px;
   }
   .btnBox {
-    margin-left: 16.5%;
+    margin-left: 14%;
   }
   .btn2 {
     margin-left: 20px;

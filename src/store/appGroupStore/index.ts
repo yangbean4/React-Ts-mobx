@@ -75,6 +75,14 @@ export class AppGroupStore extends StoreExt {
     }
 
     @action
+    getVCList = async () => {
+        const res = await this.api.appGroup.getVC({ id: this.appGroup.id })
+        runInAction('SET', () => {
+            this.optionListDb.Account = res.data;
+        })
+    }
+
+    @action
     clearCache = () => {
         let target = {}
         Object.keys(this.optionListDb).forEach(key => target[key] = [])
@@ -86,7 +94,9 @@ export class AppGroupStore extends StoreExt {
     @action
     getOptionListDb = async () => {
         const keys = Object.keys(this.optionListDb)
-        const promiseAll = keys.map(key => this.api.appGroup[`get${key}`]())
+        const promiseAll = keys.map(key => this.api.appGroup[`get${key}`](
+            key === 'VC' && this.appGroup ? { id: this.appGroup.id } : undefined
+        ))
         Promise.all(promiseAll).then(data => {
             const target = {}
             keys.forEach((key, index) => {
@@ -125,11 +135,13 @@ export class AppGroupStore extends StoreExt {
     }
 
     createAppGroup = async (appGroup: IAppGroupStore.IAppGroup) => {
+        this.setAppGroup(appGroup)
         return await this.api.appGroup.createAppGroup(appGroup)
     }
 
     @action
     modifyAppGroup = async (appGroup: IAppGroupStore.IAppGroup) => {
+        this.setAppGroup(appGroup)
         return await this.api.appGroup.modifyAppGroup(appGroup)
     }
 

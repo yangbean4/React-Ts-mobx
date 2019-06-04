@@ -6,6 +6,7 @@ export as namespace IAppGroupStore
 export interface AppGroupStore extends AppGroupStoreModel { }
 
 export interface IAppGroup {
+    id?: number | string
     status?: number
     platform?: string
     not_in_appstore?: number

@@ -1,13 +1,20 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Input, Select, Radio, Button, message, InputNumber, Col, Popover, Icon } from 'antd'
+import { Form, Input, Select, Radio, Button, message, InputNumber, Col, Popover, Icon, Upload, Row } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import * as web from '@views/AppGroup/web.config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-
+import InputColor from '@components/InputColor/index'
+import MyIcon from '@components/Icon'
+import VCmodel from './VCmodel';
 const FormItem = Form.Item
+const InitColor = '#FF1D0C';
+
+interface hasResult {
+    result?: string
+}
 
 const formItemLayout = {
     labelCol: {
@@ -22,21 +29,46 @@ const formItemLayout = {
     }
 }
 
+const bigLayout = {
+    labelCol: {
+        xs: { span: 24 },
+        sm: { span: 5 },
+        lg: { span: 3 }
+    },
+    wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 19 },
+        lg: { span: 15 }
+    }
+}
+
+const noLabelLayout = {
+    labelCol: {
+        lg: { span: 0 }
+    },
+    wrapperCol: {
+        lg: { span: 24 },
+    }
+}
 
 interface IStoreProps {
     optionListDb?: IAppGroupStore.OptionListDb
+    getVCList?: () => Promise<any>
+    routerStore?: RouterStore
+    appGroup?: IAppGroupStore.IAppGroup
 }
 
 interface IProps extends IStoreProps {
+    Id?: number | string
     placementID?: number
     onCancel?: () => void
-    onOk?: (id: number) => void
+    onOk?: (id?: number) => void
 }
 @inject(
     (store: IStore): IStoreProps => {
-        const { appGroupStore } = store
-        const { optionListDb } = appGroupStore
-        return { optionListDb }
+        const { appGroupStore, routerStore } = store
+        const { optionListDb, getVCList, appGroup } = appGroupStore
+        return { optionListDb, getVCList, routerStore, appGroup }
     }
 )
 
@@ -49,7 +81,48 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
     private pidType: number
 
     @observable
+    private VcexRate: number | string
+
+    @observable
     private rewardType: number
+
+    @observable
+    private VCShow: boolean = false
+
+    // @observable
+    // private currency: ICurrencyStore.ICurrency
+
+    @observable
+    private imageTarget: object = {}
+
+    @observable
+    private AppWall: number
+
+    @observable
+    private Palcement: IAppGroupStore.Placement = {}
+
+    @computed
+    get useAppWall() {
+        return [this.AppWall, this.Palcement.style_id, this.props.optionListDb.AppWall[0].id].find(ele => ele !== undefined)
+    }
+    @computed
+    get useAppWallUrl() {
+        return this.props.optionListDb.AppWall.find(ele => ele.id === this.useAppWall).url
+    }
+
+    @action
+    toggleVCShow = (type?: boolean) => {
+        const value = type === undefined ? !this.VCShow : type
+
+        runInAction('SHOW', () => {
+            this.VCShow = value
+        })
+    }
+
+    @action
+    AppWallCahnge = (e) => {
+        this.AppWall = e.target.value
+    }
 
     // @observable
     // private pidTypeList: any[] = []
@@ -59,12 +132,9 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
         return [this.pidType, !this.Palcement.pid_type, true].find(ele => ele !== undefined)
     }
 
-    @observable
-    private Palcement: IAppGroupStore.Placement = {}
-
     @computed
     get isAdd() {
-        return !this.props.placementID
+        return this.props.placementID === undefined
     }
 
     @action
@@ -75,6 +145,14 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     pidTypeChange = (type) => {
         this.pidType = type;
+    }
+
+    @action
+    VcChange = (value) => {
+        const VcexRate = this.props.optionListDb.VC.find(ele => ele.id === value).vc_exchange_rate
+        runInAction('VcexRate', () => {
+            this.VcexRate = VcexRate
+        })
     }
 
     @action
@@ -89,49 +167,30 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
         this.props.onCancel()
     }
 
+    VCModelOk = async (id: number) => {
+        await this.props.getVCList()
+        this.props.form.setFieldsValue({// 重新赋值
+            vc_id: id
+        })
+        this.toggleVCShow(false)
+    }
+
     submit = (e?: React.FormEvent<any>): void => {
         if (e) {
             e.preventDefault()
         }
-        const { routerStore, createCurrency, form, modifyCurrency } = this.props
+        const { form, Id, placementID, onOk } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
                     this.toggleLoading()
                     try {
                         if (this.isAdd) {
-                            let data = await createCurrency({ ...values, type: 1 })
-                            message.success(data.message)
-                            const {
-                                pkg_name,
-                                platform
-                            } = values
-                            localStorage.setItem('TargetCurrency', JSON.stringify({
-                                pkg_name,
-                                platform
-                            }))
-                            routerStore.push('/currency/edit')
+                            await this.api.appGroup.addPalcement({ ...values, dev_app_id: Id })
                         } else {
-                            const currencyStr = localStorage.getItem('TargetCurrency') || '{}';
-                            const currency = JSON.parse(currencyStr)
-                            const pre = { ...values, type: 2 }
-                            let data
-                            if (this.props.currency.id) {
-                                data = await modifyCurrency({
-                                    ...pre,
-                                    ...currency,
-                                    id: this.props.currency.id
-                                })
-                            } else {
-                                data = await createCurrency({
-                                    ...pre,
-                                    ...currency,
-                                })
-                            }
-                            message.success(data.message)
-                            this.props.onOk(data.data.id)
-
+                            await this.api.appGroup.editPlacement({ ...values, id: placementID })
                         }
+                        onOk()
                     } catch (err) {
                         //console.log(err);
                     }
@@ -157,7 +216,42 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
         // })
     }
 
+    @action
+    removeFile = (key, andColor?) => {
+        runInAction('SET_URL', () => {
+            this.imageTarget[key] = ''
+        })
+        const colorKey = key.replace('image', 'color')
+        const data = andColor ? {
+            [`style_detail.${key}`]: '',
+            [`style_detail.${colorKey}`]: InitColor
+        } : {
+                [`style_detail.${key}`]: '',
+            }
+        this.props.form.setFieldsValue(data)
+    }
+
+    @action
+    addFile = (key, localUrl, url, andColor?) => {
+        runInAction('SET_URL', () => {
+            this.imageTarget[key] = localUrl
+        })
+        const colorKey = key.replace('image', 'color')
+
+        const data = andColor ? {
+            [`style_detail.${key}`]: url,
+            [`style_detail.${colorKey}`]: ''
+        } : {
+                [`style_detail.${key}`]: url,
+            }
+
+        this.props.form.setFieldsValue(data)
+    }
+
     componentWillMount() {
+        if (this.props.Id === this.props.placementID && this.props.placementID === undefined) {
+            this.props.routerStore.replace('/apps')
+        }
         this.init()
     }
 
@@ -179,10 +273,61 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             reward_type,
             reward_num,
             style_id,
-            style_detail
+            style_detail = {}
         } = this.Palcement
+
+        const getProps = (key, andColor?) => ({
+            showUploadList: false,
+            accept: ".png, .jpg, .jpeg, .gif",
+            name: 'file',
+            // listType: "picture",
+            className: "avatar-uploader",
+            onRemove: () => this.removeFile(key, andColor),
+            customRequest: (data) => {
+                const formData = new FormData()
+                formData.append('file', data.file)
+                this.api.appGroup.uploadIcon(formData).then(res => {
+                    const logo = res.data.url
+                    const fileRender = new FileReader()
+                    fileRender.onload = (ev) => {
+                        const target = ev.target as hasResult
+                        this.addFile(key, target.result, logo, andColor)
+                    }
+                    fileRender.readAsDataURL(data.file)
+                }, this.removeFile).catch(this.removeFile)
+            }
+        })
+        const getUnpload = (key) => {
+            const props = getProps(key, true)
+
+            const img = this.imageTarget[key] || style_detail[key]
+
+            return (
+                <FormItem {...noLabelLayout}>
+                    {getFieldDecorator(`style_detail.${key}`, {
+                        initialValue: style_detail[key],
+                    })(
+                        <Upload {...props}>
+                            {img ? <img style={{ width: '100px' }} src={img} /> : <Icon className={styles.workBtn} type='plus' />}
+                        </Upload>
+                    )}
+                </FormItem>
+            )
+        }
+
+        const vc_icon = this.imageTarget['vc_icon'] || style_detail['vc_icon']
+
         return (
             <div className='sb-form'>
+                <VCmodel
+                    visible={this.VCShow}
+                    currency={{
+                        platform: this.props.appGroup.platform,
+                        pkg_name: this.props.appGroup.pkg_name
+                    }}
+                    onOk={this.VCModelOk}
+                    onCancel={() => this.toggleVCShow(false)}
+                />
                 <Form {...formItemLayout} className={styles.currencyModal} >
                     <Col span={4} className={styles.companyTag}>
                         <div className={styles.tagWrapper}>
@@ -233,7 +378,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
 
                     <FormItem label="IGE Carrier">
-                        {getFieldDecorator('placement_name',
+                        {getFieldDecorator('ige_carrier_block',
                             {
                                 initialValue: ige_carrier_block,
                                 rules: [
@@ -388,6 +533,223 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             <Icon className={styles.workBtn} type="question-circle" />
                         </Popover>
                     </FormItem>
+                    <FormItem {...bigLayout} className={styles.hasImg} label='Select App Wall style'>
+                        {getFieldDecorator('style_id', {
+                            initialValue: this.usePidtype,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(
+                            <Radio.Group
+                                onChange={this.AppWallCahnge}
+                            >
+                                {optionListDb.AppWall.map(c => (
+                                    <div className={styles.GroupBox} key={c.id}>
+                                        <div className={styles.imgBox}><img src={c.url} /></div>
+                                        <Radio value={c.id}>
+                                            Style{c.id}
+                                        </Radio>
+                                    </div>
+                                ))}
+                            </Radio.Group>
+                        )}
+                    </FormItem>
+                    <FormItem label='Preview picture'>
+                        <div className={styles.picture}>
+                            <img src={this.useAppWallUrl} />
+                        </div>
+                    </FormItem>
+
+                    <FormItem label="Title">
+                        {getFieldDecorator('style_detail.title_text', {
+                            initialValue: style_detail.title_text,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(<Input />)}
+                    </FormItem>
+
+                    <div className={`${styles.formItemBox} ${styles.noTitle}`}>
+                        <FormItem {...noLabelLayout}>
+                            {getFieldDecorator('style_detail.title_text_color', {
+                                initialValue: style_detail.title_text_color || InitColor,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(<InputColor />)}
+                            <span className={styles.lineSpan}>   text   </span>
+                        </FormItem>
+                        <FormItem {...noLabelLayout}>
+                            {getFieldDecorator('style_detail.title_background_color', {
+                                initialValue: style_detail.title_background_color || InitColor,
+                            })(<InputColor />)}
+                            <span className={styles.lineSpan}>   bkgd    or   </span>
+                        </FormItem>
+
+                        {getUnpload('title_background_image')}
+                    </div>
+
+
+                    <FormItem label="Subtitle">
+                        {getFieldDecorator('style_detail.subtitle_text', {
+                            initialValue: style_detail.subtitle_text,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(<Input />)}
+                    </FormItem>
+
+                    <div className={`${styles.formItemBox} ${styles.noTitle}`}>
+                        <FormItem {...noLabelLayout}>
+                            {getFieldDecorator('style_detail.subtitle_color', {
+                                initialValue: style_detail.subtitle_color || InitColor,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(<InputColor />)}
+                            <span className={styles.lineSpan}>   text   </span>
+                        </FormItem>
+                        <FormItem {...noLabelLayout}>
+                            {getFieldDecorator('style_detail.subtitle_background_color', {
+                                initialValue: style_detail.subtitle_background_color || InitColor,
+                            })(<InputColor />)}
+                            <span className={styles.lineSpan}>   bkgd    or   </span>
+                        </FormItem>
+                        {getUnpload('subtitle_background_image')}
+                    </div>
+
+
+                    <Row className={styles.formItemBox}>
+                        <Col span={3} className={styles.boxTitle}>
+                            *Ad text
+                        </Col>
+                        <Col span={15}>
+                            <FormItem {...noLabelLayout}>
+                                {getFieldDecorator('style_detail.ad_title_color', {
+                                    initialValue: style_detail.ad_title_color || InitColor,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(<InputColor />)}
+                                <span className={styles.lineSpan}>   text   </span>
+                            </FormItem>
+                            <FormItem {...noLabelLayout}>
+                                {getFieldDecorator('style_detail.ad_desc_color', {
+                                    initialValue: style_detail.ad_desc_color || InitColor,
+                                })(<InputColor />)}
+                                <span className={styles.lineSpan}>   decr </span>
+                            </FormItem>
+                        </Col>
+                    </Row>
+
+                    <Row className={styles.formItemBox}>
+                        <Col span={3} className={styles.boxTitle}>
+                            *Ad background
+                            </Col>
+                        <Col span={15}>
+                            <FormItem {...noLabelLayout}>
+                                {getFieldDecorator('style_detail.ad_edge_color', {
+                                    initialValue: style_detail.ad_edge_color || InitColor,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(<InputColor />)}
+                                <span className={styles.lineSpan}>   edge   </span>
+                            </FormItem>
+                            <FormItem {...noLabelLayout}>
+                                {getFieldDecorator('style_detail.ad_background_color', {
+                                    initialValue: style_detail.ad_background_color || InitColor,
+                                })(<InputColor />)}
+                                <span className={styles.lineSpan}>   bkgd    or   </span>
+                            </FormItem>
+                            {getUnpload('ad_background_image')}
+                        </Col>
+                    </Row>
+
+
+                    <Row className={styles.formItemBox}>
+                        <Col span={3} className={styles.boxTitle}>
+                            *button
+                            </Col>
+                        <Col span={15}>
+                            <FormItem {...noLabelLayout}>
+                                {getFieldDecorator('style_detail.button_text_color', {
+                                    initialValue: style_detail.button_text_color || InitColor,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(<InputColor />)}
+                                <span className={styles.lineSpan}>   text   </span>
+                            </FormItem>
+                            <FormItem {...noLabelLayout}>
+                                {getFieldDecorator('style_detail.button_background_color', {
+                                    initialValue: style_detail.button_background_color || InitColor,
+                                })(<InputColor />)}
+                                <span className={styles.lineSpan}>   bkgd </span>
+                            </FormItem>
+                            <FormItem {...noLabelLayout}>
+                                {getFieldDecorator('style_detail.button_edge_color', {
+                                    initialValue: style_detail.button_edge_color || InitColor,
+                                })(<InputColor />)}
+                                <span className={styles.lineSpan}>   edge </span>
+                            </FormItem>
+
+                            <FormItem {...noLabelLayout}>
+                                {getFieldDecorator('style_detail.button_unavail_color', {
+                                    initialValue: style_detail.button_unavail_color || InitColor,
+                                })(<InputColor />)}
+                                <span className={styles.lineSpan}>unavail  or</span>
+                            </FormItem>
+                            {getUnpload('button_background_image')}
+                        </Col>
+                    </Row>
+
+                    <FormItem label="Icon">
+                        {getFieldDecorator('style_detail.vc_icon', {
+                            initialValue: style_detail.vc_icon,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(
+                            <Upload {...getProps('vc_icon')}>
+                                {vc_icon ? <img style={{ width: '100px' }} src={vc_icon} alt="avatar" /> : <Icon className={styles.workBtn} type='plus' />}
+                            </Upload>
+                        )}
+                    </FormItem>
+
+
+                    <Row className={styles.formItemBox}>
+                        <Col span={3} className={styles.boxTitle}>
+                            *Big Background
+                            </Col>
+                        <Col span={15}>
+                            <FormItem {...noLabelLayout}>
+                                {getFieldDecorator('style_detail.big_background_color', {
+                                    initialValue: style_detail.big_background_color || InitColor,
+                                })(<InputColor />)}
+                                <span className={styles.lineSpan}>   bkgd </span>
+                            </FormItem>
+                            {getUnpload('big_background_image')}
+                        </Col>
+                    </Row>
 
                     {
                         this.pidType !== 3 && (
@@ -408,8 +770,9 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                             ]
                                         })(
                                             <Select
-                                                onChange={this.pidTypeChange}
                                                 showSearch
+                                                disabled={!this.isAdd}
+                                                onChange={this.VcChange}
                                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                             >
                                                 {optionListDb.VC.map(c => (
@@ -419,9 +782,10 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                                 ))}
                                             </Select>
                                         )}
+                                    <MyIcon className={styles.workBtn} onClick={() => this.toggleVCShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
                                 </FormItem>
                                 <FormItem label="Exchange Rate">
-                                    {/* {this.exRate} = 1$ */}
+                                    {this.VcexRate} = 1$
                                 </FormItem>
 
                                 <FormItem label="Reward Type">
@@ -470,8 +834,6 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 }
 
                             </React.Fragment>
-
-
                         )
                     }
 

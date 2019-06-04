@@ -9,7 +9,7 @@ import { conItemTreeItem } from './type'
 // import { SketchPicker } from 'react-color'
 import InputGroup from './InputGroup/index'
 import { _nameCase, typeOf } from '@utils/index'
-import InputColor from './InputColor/index'
+import InputColor from '@components/InputColor/index'
 
 const FormItem = Form.Item
 const RadioGroup = Radio.Group;

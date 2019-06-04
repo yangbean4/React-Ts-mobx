@@ -49,8 +49,8 @@ export default {
   getPidType(): Promise<any> {
     return http.post(`${basePath}pidType`)
   },
-  getVC(): Promise<any> {
-    return http.post(`${basePath}virtualCurrency`)
+  getVC(data): Promise<any> {
+    return http.post(`${basePath}virtualCurrency`, data)
   },
   getAppWall(): Promise<any> {
     return http.post(`${basePath}appWall`)
@@ -71,11 +71,15 @@ export default {
   palcementDetail(data): Promise<any> {
     return http.post(`${basePath}palcementDetail`, data)
   },
-  // addPalcement(): Promise<any> {
-  //   return http.post(`${basePath}addPalcement`)
-  // },
+  editPlacement(data): Promise<any> {
+    return http.post(`${basePath}editPlacement`, data)
+  },
   placementList(data): Promise<any> {
     return http.post(`${basePath}placementList`, data)
+  },
+
+  getPkgnameData(): Promise<any> {
+    return http.post(`${basePath}pkgnameData`)
   },
 
 }

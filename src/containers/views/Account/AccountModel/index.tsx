@@ -177,7 +177,6 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                         message.success(data.message)
                         !this.props.type ? this.Cancel() : this.props.onOk(data.data.id)
                         if (this.props.type) {
-                            console.log('我执行了吗')
                             this.props.form.resetFields()
                         }
                     } catch (err) {
@@ -234,7 +233,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                             </Popover>
                         </FormItem>
 
-                        <FormItem label={this.typeName}>
+                        <FormItem label={this.typeName.trim() =='Company'? 'Subsite Company': this.typeName}>
                             {getFieldDecorator('company', {
                                 initialValue: company,
                                 rules: [
@@ -309,7 +308,8 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                 )}
                             </FormItem>
                         }
-                        <FormItem label="Status">
+                        {
+                            !this.props.type && <FormItem label="Status">
                             {getFieldDecorator('status', {
                                 initialValue: status,
                                 rules: [
@@ -327,6 +327,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                 </Radio.Group>
                             )}
                         </FormItem>
+                        }
                         <FormItem className={this.props.type? styles.modalBtn :styles.btnBox}>
                             <Button type="primary" className={this.props.type? styles.btn : ''} loading={this.loading} onClick={this.submit}>Submit</Button>
                             {

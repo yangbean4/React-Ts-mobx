@@ -7,7 +7,7 @@ import { conItem, conItemTreeItem } from './type'
 import myIcon from '@components/Icon'
 import { typeOf } from '@utils/index'
 import InputGroup from './InputGroup/index'
-import InputColor from './InputColor/index'
+import InputColor from '@components/InputColor/index'
 
 const RadioGroup = Radio.Group
 

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, runInAction } from 'mobx'
 import { Form, Input, Select, Radio, Button, message, InputNumber } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { statusOption, platformOption } from '../../web.config'
@@ -22,6 +22,15 @@ const formItemLayout = {
     }
 }
 
+const miniLayout = {
+    labelCol: {
+        lg: { span: 8 }
+    },
+    wrapperCol: {
+        lg: { span: 12 }
+    }
+}
+
 interface IStoreProps {
     modifyCurrency?: (currency: ICurrencyStore.ICurrency) => Promise<any>
     createCurrency?: (currency: ICurrencyStore.ICurrency) => Promise<any>
@@ -32,6 +41,7 @@ interface IProps extends IStoreProps {
     currency?: ICurrencyStore.ICurrency
     onCancel?: () => void
     onOk?: (id: number) => void
+    type?: string
 }
 @inject(
     (store: IStore): IProps => {
@@ -45,6 +55,9 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private loading: boolean = false
 
+    @observable
+    private pkgnameData: any[] = []
+
     @computed
     get isAdd() {
         return !this.props.currency
@@ -56,20 +69,25 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     Cancel = () => {
-        this.isAdd ? this.props.routerStore.push('/currency') : this.props.onCancel()
+        this.props.type || !this.isAdd ? this.props.onCancel() : this.props.routerStore.push('/currency')
     }
 
     submit = (e?: React.FormEvent<any>): void => {
         if (e) {
             e.preventDefault()
         }
-        const { routerStore, createCurrency, form, modifyCurrency } = this.props
+        const { routerStore, createCurrency, form, modifyCurrency, type, currency } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
                     this.toggleLoading()
                     try {
+
                         if (this.isAdd) {
+                            values = {
+                                ...values,
+                                pkg_name: this.pkgnameData.find(ele => ele.id === values.pkg_name).pkg_name
+                            }
                             let data = await createCurrency({ ...values, type: 1 })
                             message.success(data.message)
                             const {
@@ -83,24 +101,24 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                             routerStore.push('/currency/edit')
                         } else {
                             const currencyStr = localStorage.getItem('TargetCurrency') || '{}';
-                            const currency = JSON.parse(currencyStr)
-                            const pre = { ...values, type: 2 }
+                            const kg = type ? currency : JSON.parse(currencyStr)
+                            // 再Model中新增时需要status的值，在正常添加时用values的值覆盖
+                            const pre = { status: 1, ...values, type: 2 }
                             let data
-                            if (this.props.currency.id) {
+                            if (currency.id) {
                                 data = await modifyCurrency({
                                     ...pre,
-                                    ...currency,
-                                    id: this.props.currency.id
+                                    ...kg,
+                                    id: currency.id
                                 })
                             } else {
                                 data = await createCurrency({
                                     ...pre,
-                                    ...currency,
+                                    ...kg,
                                 })
                             }
                             message.success(data.message)
                             this.props.onOk(data.data.id)
-
                         }
                     } catch (err) {
                         //console.log(err);
@@ -111,10 +129,21 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
         )
     }
 
+    @action
+    init = async () => {
+        const res = await this.api.appGroup.getPkgnameData()
+        runInAction('set_LIST', () => {
+            this.pkgnameData = res.data
+        })
+    }
+
+    componentWillMount() {
+        this.init()
+    }
+
     render() {
         const { currency, form } = this.props
         const { getFieldDecorator } = form
-        let roleValue: (string | number)[] = []
         const {
             platform = 'android',
             vc_name = '',
@@ -127,27 +156,29 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
         } = currency || {}
         return (
             <div className='sb-form'>
-                <Form className={styles.currencyModal} >
-                    <FormItem {...formItemLayout} label="Status">
-                        {getFieldDecorator('status', {
-                            initialValue: status,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Radio.Group>
-                                {statusOption.map(c => (
-                                    <Radio key={c.key} value={c.value}>
-                                        {c.key}
-                                    </Radio>
-                                ))}
-                            </Radio.Group>
-                        )}
-                    </FormItem>
+                <Form {...this.props.type ? miniLayout : formItemLayout} className={styles.currencyModal} >
                     {
-                        this.isAdd && <FormItem {...formItemLayout} label="Pkg Name">
+                        !this.props.type && <FormItem label="Status">
+                            {getFieldDecorator('status', {
+                                initialValue: status,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Radio.Group>
+                                    {statusOption.map(c => (
+                                        <Radio key={c.key} value={c.value}>
+                                            {c.key}
+                                        </Radio>
+                                    ))}
+                                </Radio.Group>
+                            )}
+                        </FormItem>
+                    }
+                    {
+                        this.isAdd && <FormItem label="Pkg Name">
                             {getFieldDecorator('pkg_name', {
                                 initialValue: pkg_name,
                                 rules: [
@@ -155,11 +186,20 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input />)}
+                            })(<Select
+                                showSearch
+                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                            >
+                                {this.pkgnameData.map(c => (
+                                    <Select.Option value={c.id} key={c.id}>
+                                        {c.pkg_name}
+                                    </Select.Option>
+                                ))}
+                            </Select>)}
                         </FormItem>
                     }
                     {
-                        this.isAdd && <FormItem {...formItemLayout} label="Platform">
+                        this.isAdd && <FormItem label="Platform">
                             {getFieldDecorator('platform',
                                 {
                                     initialValue: platform,
@@ -183,7 +223,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                         </FormItem>
                     }
 
-                    <FormItem {...formItemLayout} label="VC Name">
+                    <FormItem label="VC Name">
                         {getFieldDecorator('vc_name', {
                             initialValue: vc_name,
                             rules: [
@@ -194,13 +234,13 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                         })(<Input />)}
                     </FormItem>
 
-                    <FormItem label="VC Description" {...formItemLayout} >
+                    <FormItem label="VC Description"  >
                         {getFieldDecorator('vc_desc', {
                             initialValue: vc_desc,
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
                     </FormItem>
 
-                    <FormItem {...formItemLayout} label="VC Exchange Rate">
+                    <FormItem label="VC Exchange Rate">
                         {getFieldDecorator('vc_exchange_rate', {
                             initialValue: vc_exchange_rate,
                             validateTrigger: 'blur',
@@ -221,7 +261,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                         <span>=1$</span>
                     </FormItem>
 
-                    <FormItem label="VC Callback Url" {...formItemLayout} >
+                    <FormItem label="VC Callback Url"  >
                         {getFieldDecorator('vc_callback_url', {
                             initialValue: vc_callback_url,
                             rules: [
@@ -231,7 +271,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
                     </FormItem>
-                    <FormItem {...formItemLayout} label="VC Secret Key">
+                    <FormItem label="VC Secret Key">
                         {getFieldDecorator('vc_secret_key', {
                             initialValue: vc_secret_key,
                         })(<Input />)}

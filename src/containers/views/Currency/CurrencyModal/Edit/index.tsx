@@ -190,7 +190,7 @@ class PID extends ComponentExt<IStoreProps> {
               <VcTable data={this.thisDataList} onEdit={this.editPid} />
               <div className={style.btnGroup}>
                 {/* <Button type="primary" className={style.submitBtn} onClick={this.submit}>Submit</Button> */}
-                <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
+                {/* <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button> */}
               </div>
             </div> : <div className="formBox">
                 <FormAdd

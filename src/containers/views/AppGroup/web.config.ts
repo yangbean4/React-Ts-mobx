@@ -19,6 +19,17 @@ export const platformOption = [
     value: 'ios'
   }
 ]
+
+export const laji = [
+  {
+    key: 'Yes',
+    value: 1
+  },
+  {
+    key: 'No',
+    value: 0
+  }
+]
 // ----app
 export const YesOrNo = [
   {
@@ -48,11 +59,11 @@ export const screenType = [
 
 export const isBlock = [
   {
-    key: 'Turn off',
+    key: 'Turn Off',
     value: 0
   },
   {
-    key: 'Turn on',
+    key: 'Turn On',
     value: 1
   }
 ]

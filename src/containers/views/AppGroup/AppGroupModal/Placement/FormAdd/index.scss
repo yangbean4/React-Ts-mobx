@@ -4,9 +4,9 @@
   padding-top: 30px;
   :global(.ant-form-item) {
     margin-bottom: 30px;
-    :global(.ant-form-item-control-wrapper) {
-      width: 280px;
-    }
+    // :global(.ant-form-item-control-wrapper) {
+    //   width: 280px;
+    // }
   }
 
   .btnBox {
@@ -53,4 +53,62 @@
   border-radius: 4px;
   color: #667ffd;
   line-height: 40px;
+}
+
+.hasImg {
+  // :global(.ant-radio-wrapper) {
+  //   margin-right: 20px;
+
+  //   :global(.ant-radio){
+
+  //   }
+  // }
+  .GroupBox {
+    margin-right: 20px;
+    float: left;
+  }
+}
+.imgBox {
+  width: 100px;
+  height: 100px;
+  background: rgba(248, 248, 248, 1);
+  border: 1px solid rgba(228, 237, 240, 1);
+  border-radius: 2px;
+}
+.imgTitle {
+  width: 100%;
+  text-align: center;
+  height: 11px;
+  font-size: 12px;
+  font-family: Montserrat-Light;
+  font-weight: 300;
+  color: rgba(154, 151, 174, 1);
+}
+
+.picture {
+  width: 200px;
+  height: 160px;
+  background: rgba(248, 248, 248, 1);
+  border: 1px solid rgba(228, 237, 240, 1);
+  border-radius: 2px;
+}
+
+.formItemBox {
+  &.noTitle {
+    margin-left: 12.5%;
+  }
+  .boxTitle {
+    text-align: right;
+    height: 40px;
+    line-height: 40px;
+    margin-right: 8px;
+  }
+
+  :global(.ant-form-item) {
+    float: left;
+  }
+
+  .lineSpan {
+    margin: 0 14px;
+  }
 }

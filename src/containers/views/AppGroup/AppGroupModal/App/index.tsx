@@ -49,6 +49,7 @@ interface IStoreProps {
     optionListDb?: IAppGroupStore.OptionListDb
     routerStore?: RouterStore
     type?: string
+    setAppGroup?: (Apps: IAppGroupStore.IAppGroup) => void
 }
 
 interface IProps extends IStoreProps {
@@ -60,8 +61,8 @@ interface IProps extends IStoreProps {
 @inject(
     (store: IStore): IStoreProps => {
         const { appGroupStore, routerStore } = store
-        const { createAppGroup, getAccount, getOptionListDb, optionListDb, modifyAppGroup } = appGroupStore
-        return { routerStore, getAccount, createAppGroup, getOptionListDb, optionListDb, modifyAppGroup }
+        const { createAppGroup, getAccount, getOptionListDb, optionListDb, modifyAppGroup, setAppGroup } = appGroupStore
+        return { routerStore, getAccount, createAppGroup, getOptionListDb, optionListDb, modifyAppGroup, setAppGroup }
     }
 )
 @observer
@@ -103,7 +104,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get usePidType() {
-        return [this.pidType, !this.appGroup.contains_native_s2s_pid_types, true].find(ele => ele !== undefined)
+        return [this.pidType, !!this.appGroup.contains_native_s2s_pid_types, false].find(ele => ele !== undefined)
     }
 
     @action
@@ -143,7 +144,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
             })
         }
         runInAction('set_STore', () => {
-            this.pidType = !value
+            this.pidType = !!value
         })
     }
 
@@ -197,6 +198,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     getDetail = async () => {
         const res = await this.api.appGroup.getAppGroupInfo({ id: this.props.Id })
+        this.props.setAppGroup(res.data)
         runInAction('SET_APPGroup', () => {
             this.appGroup = res.data
         })
@@ -645,9 +647,10 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(
                                 <Radio.Group
+                                    disabled={!this.isAdd}
                                     onChange={this.pidTypeChange}
                                 >
-                                    {web.YesOrNo.map(c => (
+                                    {web.laji.map(c => (
                                         <Radio key={c.key} value={c.value}>
                                             {c.key}
                                         </Radio>
@@ -696,7 +699,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                                 >
                                                     {optionListDb.Country.map(c => (
-                                                        <Select.Option key={c.id} value={c.id}>
+                                                        <Select.Option key={c.id} value={c.code2}>
                                                             {c.code2}
                                                         </Select.Option>
                                                     ))}

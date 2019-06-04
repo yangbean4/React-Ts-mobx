@@ -152,6 +152,7 @@ class PID extends ComponentExt<IProps> {
             </div>
           </div> : <div className="formBox">
               <FormAdd
+                Id={this.props.Id}
                 onCancel={this.onCancel}
                 onOk={this.onOK}
                 placementID={this.GJB.id} />
