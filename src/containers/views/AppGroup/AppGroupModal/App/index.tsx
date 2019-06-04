@@ -5,6 +5,7 @@ import { Form, Input, Select, Radio, Button, message, InputNumber, Upload, Icon,
 import { FormComponentProps } from 'antd/lib/form'
 import * as web from '../../web.config'
 import { ComponentExt } from '@utils/reactExt'
+import AccountModel from './AccountModel'
 import * as styles from './index.scss'
 
 const FormItem = Form.Item
@@ -43,8 +44,10 @@ interface IStoreProps {
     modifyAppGroup?: (appGroup: IAppGroupStore.IAppGroup) => Promise<any>
     createAppGroup?: (appGroup: IAppGroupStore.IAppGroup) => Promise<any>
     getOptionListDb?: () => Promise<any>
+    getAccount?: () => Promise<any>
     optionListDb?: IAppGroupStore.OptionListDb
     routerStore?: RouterStore
+    type?: string
 }
 
 interface IProps extends IStoreProps {
@@ -56,8 +59,8 @@ interface IProps extends IStoreProps {
 @inject(
     (store: IStore): IStoreProps => {
         const { appGroupStore, routerStore } = store
-        const { createAppGroup, getOptionListDb, optionListDb, modifyAppGroup } = appGroupStore
-        return { routerStore, createAppGroup, getOptionListDb, optionListDb, modifyAppGroup }
+        const { createAppGroup, getAccount, getOptionListDb, optionListDb, modifyAppGroup } = appGroupStore
+        return { routerStore, getAccount, createAppGroup, getOptionListDb, optionListDb, modifyAppGroup }
     }
 )
 @observer
@@ -67,6 +70,12 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
 
     @observable
     private appGroup: IAppGroupStore.IAppGroup = {}
+
+    @observable
+    private allSenAccount: IAppGroupStore.IAppGroup[] = []
+
+    @observable
+    private accountShow: boolean = false
 
     @observable
     private logo: string
@@ -94,6 +103,11 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
     @computed
     get usePidType() {
         return [this.pidType, !this.appGroup.contains_native_s2s_pid_types, true].find(ele => ele !== undefined)
+    }
+
+    @action
+    toggleAppShow = (type?: boolean) => {
+        this.accountShow = type === undefined ? !this.accountShow : type
     }
 
     @computed
@@ -187,6 +201,14 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
 
+    companyModelOk = async (id: number) => {
+        await this.props.getAccount()
+        this.props.form.setFieldsValue({// 重新赋值
+            account_id: id
+        })
+        this.toggleAppShow(false)
+    }
+
 
     componentWillMount() {
         this.props.getOptionListDb()
@@ -267,33 +289,257 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
             ad_type = 0,
         } = reData
         return (
-            <div className='sb-form'>
-                <Form  {...formItemLayout}>
-                    <FormItem label="Status">
-                        {getFieldDecorator('status', {
-                            initialValue: status,
-                            rules: [
+            <React.Fragment>
+                <AccountModel
+                    visible={this.accountShow}
+                    onCancel={() => this.toggleAppShow(false)}
+                    onOk={(id) => this.companyModelOk(id)}
+                />
+                <div className='sb-form'>
+                    <Form  {...formItemLayout} className={styles.appForm}>
+                        <FormItem label="Status">
+                            {getFieldDecorator('status', {
+                                initialValue: status,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Radio.Group>
+                                    {web.statusOption.map(c => (
+                                        <Radio key={c.key} value={c.value}>
+                                            {c.key}
+                                        </Radio>
+                                    ))}
+                                </Radio.Group>
+                            )}
+                            <Popover content={(<p>Adjust to disable status, may reduce revenue.</p>)}>
+                                <Icon className={styles.workBtn} type="question-circle" />
+                            </Popover>
+                        </FormItem>
+                        <FormItem label="Platform">
+                            {getFieldDecorator('platform',
                                 {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Radio.Group>
-                                {web.statusOption.map(c => (
-                                    <Radio key={c.key} value={c.value}>
-                                        {c.key}
-                                    </Radio>
-                                ))}
-                            </Radio.Group>
-                        )}
-                        <Popover content={(<p>Adjust to disable status, may reduce revenue.</p>)}>
-                            <Icon className={styles.workBtn} type="question-circle" />
-                        </Popover>
-                    </FormItem>
-                    <FormItem label="Platform">
-                        {getFieldDecorator('platform',
-                            {
-                                initialValue: platform,
+                                    initialValue: platform,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(
+                                    <Select
+                                        disabled={!this.isAdd}
+                                        onChange={this.platformChange}
+                                        showSearch
+                                        filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        {web.platformOption.map(c => (
+                                            <Select.Option {...c}>
+                                                {c.key}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                )}
+                        </FormItem>
+
+                        <FormItem label="In the App Store">
+                            {getFieldDecorator('not_in_appstore', {
+                                initialValue: not_in_appstore,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Radio.Group
+                                    onChange={this.inAppstoreChange}
+                                >
+                                    {web.YesOrNo.map(c => (
+                                        <Radio key={c.key} value={c.value}>
+                                            {c.key}
+                                        </Radio>
+                                    ))}
+                                </Radio.Group>
+                            )}
+                        </FormItem>
+                        <FormItem label="Pkg Name">
+                            {getFieldDecorator('pkg_name', {
+                                initialValue: pkg_name,
+                                validateTrigger: 'blur',
+                                rules: [
+                                    {
+                                        required: this.useNot_in_appstore, message: "Required",
+                                    },
+                                    {
+                                        validator: (r, v, callback) => {
+                                            const reg = this.usePlatform === 'android' ? /^com./ : /^[0-9]*$/
+                                            if (!reg.test(v)) {
+                                                callback('Pkgname for android /Ios platform should start with com.xxx/number!')
+                                            }
+                                            callback()
+                                        }
+                                    }
+                                ]
+                            })(<Input disabled={!this.useNot_in_appstore || (!this.isAdd && !!pkg_name)} />)}
+                        </FormItem>
+
+                        <FormItem label="App Name">
+                            {getFieldDecorator('app_name', {
+                                initialValue: app_name,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(<Input />)}
+                            <Popover content={(<p>Enter a temporary app name if the app is not in the app store.</p>)}>
+                                <Icon className={styles.workBtn} type="question-circle" />
+                            </Popover>
+                        </FormItem>
+
+                        <FormItem label="Icon">
+                            {getFieldDecorator('logo', {
+                                initialValue: logo,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Upload {...props}>
+                                    {this.logo || logo ? <img style={{ width: '100px' }} src={this.logo || logo} alt="avatar" /> : <Icon className={styles.workBtn} type='plus' />}
+                                </Upload>
+                            )}
+                        </FormItem>
+
+                        <FormItem label="Spec">
+                            {getFieldDecorator('spec',
+                                {
+                                    initialValue: spec,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(
+                                    <Select
+                                        showSearch
+                                        filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        {optionListDb.Spec.map(c => (
+                                            <Select.Option key={c.id} value={c.id}>
+                                                {c.name}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                )}
+                        </FormItem>
+                        <FormItem label="Category">
+                            {getFieldDecorator('category',
+                                {
+                                    initialValue: category,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(
+                                    <Select
+                                        showSearch
+                                        filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        {optionListDb.Category.map(c => (
+                                            <Select.Option key={c.id} value={c.id}>
+                                                {c.name}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                )}
+                        </FormItem>
+                        <FormItem label="Frame">
+                            {getFieldDecorator('frame',
+                                {
+                                    initialValue: frame,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(
+                                    <Select
+                                        showSearch
+                                        filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        {optionListDb.Frame.map(c => (
+                                            <Select.Option key={c.id} value={c.id}>
+                                                {c.name}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                )}
+                        </FormItem>
+                        <FormItem label="Style">
+                            {getFieldDecorator('style',
+                                {
+                                    initialValue: style,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(
+                                    <Select
+                                        showSearch
+                                        filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        {optionListDb.Style.map(c => (
+                                            <Select.Option key={c.id} value={c.id}>
+                                                {c.name}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                )}
+                        </FormItem>
+                        <FormItem label="Screen Type">
+                            {getFieldDecorator('screen_type', {
+                                initialValue: screen_type,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Radio.Group>
+                                    {web.screenType.map(c => (
+                                        <Radio key={c.key} value={c.value}>
+                                            {c.key}
+                                        </Radio>
+                                    ))}
+                                </Radio.Group>
+                            )}
+                        </FormItem>
+                        <FormItem label="Apply Screen Type">
+                            {getFieldDecorator('apply_screen_type', {
+                                initialValue: apply_screen_type,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Radio.Group>
+                                    {web.screenType.map(c => (
+                                        <Radio key={c.key} value={c.value}>
+                                            {c.key}
+                                        </Radio>
+                                    ))}
+                                </Radio.Group>
+                            )}
+                        </FormItem>
+                        <FormItem label="SEN Account">
+                            {getFieldDecorator('account_id', {
+                                initialValue: account_id,
                                 rules: [
                                     {
                                         required: true, message: "Required"
@@ -301,343 +547,115 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(
                                 <Select
-                                    disabled={!this.isAdd}
-                                    onChange={this.platformChange}
                                     showSearch
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
-                                    {web.platformOption.map(c => (
+                                    {optionListDb.Account.map(c => (
+                                        <Select.Option key={c.id} value={c.id}>
+                                            {c.name}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            )}
+                            <Icon className={styles.workBtn} onClick={() => this.toggleAppShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
+                        </FormItem>
+                        <FormItem label='Preload Number'>
+                            {
+                                ['IGE', 'Video', 'Playicon', 'Recover Offer'].map(key => {
+                                    const rowKey = getKey(key)
+                                    return (
+                                        <FormItem key={key} {...minLayout} label={key}>
+                                            {getFieldDecorator(rowKey, {
+                                                initialValue: reData[rowKey],
+                                                // validateTrigger: 'blur',
+                                                rules: [
+                                                    {
+                                                        required: true, message: "Required",
+                                                    },
+                                                    {
+                                                        validator: (r, v, callback) => {
+                                                            if (v <= 0) {
+                                                                callback('The Exchange Rate should be a positive integer!')
+                                                            }
+                                                            callback()
+                                                        }
+                                                    }
+                                                ]
+                                            })(<InputNumber precision={0} />)}
+                                        </FormItem>
+                                    )
+                                })
+                            }
+                        </FormItem>
+
+                        <FormItem label="Blacklist">
+                            {getFieldDecorator('is_block', {
+                                initialValue: is_block,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Radio.Group>
+                                    {web.isBlock.map(c => (
+                                        <Radio key={c.key} value={c.value}>
+                                            {c.key}
+                                        </Radio>
+                                    ))}
+                                </Radio.Group>
+                            )}
+                            <Popover content={(<p>No conversion has occurred in the past n days,no longer release advertisements to the user.</p>)}>
+                                <Icon className={styles.workBtn} type="question-circle" />
+                            </Popover>
+                        </FormItem>
+                        <FormItem label="Recover Flag">
+                            {getFieldDecorator('recover_flag', {
+                                initialValue: recover_flag,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Select
+                                    showSearch
+                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    {web.recoverFlag.map(c => (
                                         <Select.Option {...c}>
                                             {c.key}
                                         </Select.Option>
                                     ))}
                                 </Select>
                             )}
-                    </FormItem>
-
-                    <FormItem label="In the App Store">
-                        {getFieldDecorator('not_in_appstore', {
-                            initialValue: not_in_appstore,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Radio.Group
-                                onChange={this.inAppstoreChange}
-                            >
-                                {web.YesOrNo.map(c => (
-                                    <Radio key={c.key} value={c.value}>
-                                        {c.key}
-                                    </Radio>
-                                ))}
-                            </Radio.Group>
-                        )}
-                    </FormItem>
-                    <FormItem label="Pkgname">
-                        {getFieldDecorator('pkg_name', {
-                            initialValue: pkg_name,
-                            // validateTrigger: 'blur',
-                            rules: [
-                                {
-                                    required: this.useNot_in_appstore, message: "Required",
-                                },
-                                {
-                                    validator: (r, v, callback) => {
-                                        const reg = this.usePlatform === 'android' ? /^com./ : /^[0-9]*$/
-                                        if (!reg.test(v)) {
-                                            callback('Pkgname for android /Ios platform should start with com.xxx/number!')
-                                        }
-                                        callback()
-                                    }
-                                }
-                            ]
-                        })(<Input disabled={!this.useNot_in_appstore || (!this.isAdd && !!pkg_name)} />)}
-                    </FormItem>
-
-                    <FormItem label="App Name">
-                        {getFieldDecorator('app_name', {
-                            initialValue: app_name,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(<Input />)}
-                        <Popover content={(<p>Enter a temporary app name if the app is not in the app store.</p>)}>
-                            <Icon className={styles.workBtn} type="question-circle" />
-                        </Popover>
-                    </FormItem>
-
-                    <FormItem label="Icon">
-                        {getFieldDecorator('logo', {
-                            initialValue: logo,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Upload {...props}>
-                                {this.logo || logo ? <img style={{ width: '100px' }} src={this.logo || logo} alt="avatar" /> : <Icon className={styles.workBtn} type='plus' />}
-                            </Upload>
-                        )}
-                    </FormItem>
-
-                    <FormItem label="Spec">
-                        {getFieldDecorator('spec',
-                            {
-                                initialValue: spec,
-                                rules: [
-                                    {
-                                        required: true, message: "Required"
-                                    }
-                                ]
-                            })(
-                                <Select
-                                    showSearch
-                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                >
-                                    {optionListDb.Spec.map(c => (
-                                        <Select.Option key={c.id} value={c.id}>
-                                            {c.name}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
-                            )}
-                    </FormItem>
-                    <FormItem label="Category">
-                        {getFieldDecorator('category',
-                            {
-                                initialValue: category,
-                                rules: [
-                                    {
-                                        required: true, message: "Required"
-                                    }
-                                ]
-                            })(
-                                <Select
-                                    showSearch
-                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                >
-                                    {optionListDb.Category.map(c => (
-                                        <Select.Option key={c.id} value={c.id}>
-                                            {c.name}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
-                            )}
-                    </FormItem>
-                    <FormItem label="Frame">
-                        {getFieldDecorator('frame',
-                            {
-                                initialValue: frame,
-                                rules: [
-                                    {
-                                        required: true, message: "Required"
-                                    }
-                                ]
-                            })(
-                                <Select
-                                    showSearch
-                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                >
-                                    {optionListDb.Frame.map(c => (
-                                        <Select.Option key={c.id} value={c.id}>
-                                            {c.name}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
-                            )}
-                    </FormItem>
-                    <FormItem label="Style">
-                        {getFieldDecorator('style',
-                            {
-                                initialValue: style,
-                                rules: [
-                                    {
-                                        required: true, message: "Required"
-                                    }
-                                ]
-                            })(
-                                <Select
-                                    showSearch
-                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                >
-                                    {optionListDb.Style.map(c => (
-                                        <Select.Option key={c.id} value={c.id}>
-                                            {c.name}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
-                            )}
-                    </FormItem>
-                    <FormItem label="Screen Type">
-                        {getFieldDecorator('screen_type', {
-                            initialValue: screen_type,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Radio.Group>
-                                {web.screenType.map(c => (
-                                    <Radio key={c.key} value={c.value}>
-                                        {c.key}
-                                    </Radio>
-                                ))}
-                            </Radio.Group>
-                        )}
-                    </FormItem>
-                    <FormItem label="Apply Screen Type">
-                        {getFieldDecorator('apply_screen_type', {
-                            initialValue: apply_screen_type,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Radio.Group>
-                                {web.screenType.map(c => (
-                                    <Radio key={c.key} value={c.value}>
-                                        {c.key}
-                                    </Radio>
-                                ))}
-                            </Radio.Group>
-                        )}
-                    </FormItem>
-                    <FormItem label="SEN Account">
-                        {getFieldDecorator('account_id', {
-                            initialValue: account_id,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Select
-                                showSearch
-                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >
-                                {optionListDb.Account.map(c => (
-                                    <Select.Option key={c.id} value={c.id}>
-                                        {c.name}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        )}
-                    </FormItem>
-                    <FormItem label='Preload Number'>
-                        {
-                            ['IGE', 'Video', 'Playicon', 'Recover Offer'].map(key => {
-                                const rowKey = getKey(key)
-                                return (
-                                    <FormItem key={key} {...minLayout} label={key}>
-                                        {getFieldDecorator(rowKey, {
-                                            initialValue: reData[rowKey],
-                                            // validateTrigger: 'blur',
-                                            rules: [
-                                                {
-                                                    required: true, message: "Required",
-                                                },
-                                                {
-                                                    validator: (r, v, callback) => {
-                                                        if (v <= 0) {
-                                                            callback('The Exchange Rate should be a positive integer!')
-                                                        }
-                                                        callback()
-                                                    }
-                                                }
-                                            ]
-                                        })(<InputNumber precision={0} />)}
-                                    </FormItem>
-                                )
-                            })
-                        }
-                    </FormItem>
-
-                    <FormItem label="Blacklist">
-                        {getFieldDecorator('is_block', {
-                            initialValue: is_block,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Radio.Group>
-                                {web.isBlock.map(c => (
-                                    <Radio key={c.key} value={c.value}>
-                                        {c.key}
-                                    </Radio>
-                                ))}
-                            </Radio.Group>
-                        )}
-                        <Popover content={(<p>No conversion has occurred in the past n days,no longer release advertisements to the user.</p>)}>
-                            <Icon className={styles.workBtn} type="question-circle" />
-                        </Popover>
-                    </FormItem>
-                    <FormItem label="Recover Flag">
-                        {getFieldDecorator('recover_flag', {
-                            initialValue: recover_flag,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Select
-                                showSearch
-                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >
-                                {web.recoverFlag.map(c => (
-                                    <Select.Option {...c}>
-                                        {c.key}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        )}
-                    </FormItem>
-
-                    <FormItem label="Contains Native s2s PID types">
-                        {getFieldDecorator('contains_native_s2s_pid_types', {
-                            initialValue: contains_native_s2s_pid_types,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Radio.Group
-                                onChange={this.pidTypeChange}
-                            >
-                                {web.YesOrNo.map(c => (
-                                    <Radio key={c.key} value={c.value}>
-                                        {c.key}
-                                    </Radio>
-                                ))}
-                            </Radio.Group>
-                        )}
-                    </FormItem>
-
-                    <div style={{ marginLeft: '10%' }}>
-                        <FormItem label="SDK Token">
-                            {getFieldDecorator('sdk_token', {
-                                initialValue: sdk_token,
-                                rules: [
-                                    {
-                                        required: true, message: "Required",
-                                    },
-                                ]
-                            })(<Input />)}
                         </FormItem>
-                        {
-                            this.usePidType && <FormItem label="S2S Token">
-                                {getFieldDecorator('s2s_token', {
-                                    initialValue: s2s_token,
+
+                        <FormItem label="Contains Native s2s PID types">
+                            {getFieldDecorator('contains_native_s2s_pid_types', {
+                                initialValue: contains_native_s2s_pid_types,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Radio.Group
+                                    onChange={this.pidTypeChange}
+                                >
+                                    {web.YesOrNo.map(c => (
+                                        <Radio key={c.key} value={c.value}>
+                                            {c.key}
+                                        </Radio>
+                                    ))}
+                                </Radio.Group>
+                            )}
+                        </FormItem>
+
+                        <div style={{ marginLeft: '10%' }}>
+                            <FormItem label="SDK Token">
+                                {getFieldDecorator('sdk_token', {
+                                    initialValue: sdk_token,
                                     rules: [
                                         {
                                             required: true, message: "Required",
@@ -645,53 +663,65 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     ]
                                 })(<Input />)}
                             </FormItem>
-                        }
-                    </div>
+                            {
+                                this.usePidType && <FormItem label="S2S Token">
+                                    {getFieldDecorator('s2s_token', {
+                                        initialValue: s2s_token,
+                                        rules: [
+                                            {
+                                                required: true, message: "Required",
+                                            },
+                                        ]
+                                    })(<Input />)}
+                                </FormItem>
+                            }
+                        </div>
 
 
 
-                    <FormItem label="Subsite ID">
-                        {getFieldDecorator('dev_id', {
-                            initialValue: dev_id,
-                            rules: [
-                                {
-                                    required: true, message: "Required",
-                                },
-                            ]
-                        })(<Input disabled={!this.isAdd} />)}
-                    </FormItem>
+                        <FormItem label="Subsite ID">
+                            {getFieldDecorator('dev_id', {
+                                initialValue: dev_id,
+                                rules: [
+                                    {
+                                        required: true, message: "Required",
+                                    },
+                                ]
+                            })(<Input disabled={!this.isAdd} />)}
+                        </FormItem>
 
 
 
-                    <FormItem label="AD Type">
-                        {getFieldDecorator('ad_type', {
-                            initialValue: ad_type,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Select
-                                showSearch
-                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >
-                                {web.adType.map(c => (
-                                    <Select.Option {...c}>
-                                        {c.key}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        )}
-                    </FormItem>
+                        <FormItem label="AD Type">
+                            {getFieldDecorator('ad_type', {
+                                initialValue: ad_type,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Select
+                                    showSearch
+                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    {web.adType.map(c => (
+                                        <Select.Option {...c}>
+                                            {c.key}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            )}
+                        </FormItem>
+                        <FormItem className={styles.btnBox}>
+                            <Button type="primary" className={styles.submitBtn} loading={this.loading} onClick={this.submit}>Submit</Button>
+                            <Button onClick={() => this.Cancel()}>Cancel</Button>
+                        </FormItem>
+                    </Form>
 
-                    <div className={styles.btnGroup}>
-                        <Button type="primary" className={styles.submitBtn} loading={this.loading} onClick={this.submit}>Submit</Button>
-                        <Button onClick={() => this.Cancel()}>Cancel</Button>
-                    </div>
-                </Form>
+                </div>
+            </React.Fragment>
 
-            </div>
         )
     }
 }

@@ -2,7 +2,6 @@ import { observable, action, runInAction } from "mobx"
 import { PaginationConfig } from 'antd/lib/pagination'
 
 import { StoreExt } from '@utils/reactExt'
-import { company } from '@services/api';
 
 
 export class CompanyStore extends StoreExt {
@@ -54,6 +53,7 @@ export class CompanyStore extends StoreExt {
     setCompanyType = (companyType: string) => {
         this.companyType = companyType
         this.changeFilter({})
+        this.pageSize = 10
     }
     /**
      * 加载公司列表

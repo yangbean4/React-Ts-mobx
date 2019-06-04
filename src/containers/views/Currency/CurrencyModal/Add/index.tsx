@@ -147,7 +147,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                         )}
                     </FormItem>
                     {
-                        this.isAdd && <FormItem {...formItemLayout} label="Pkgname">
+                        this.isAdd && <FormItem {...formItemLayout} label="Pkg Name">
                             {getFieldDecorator('pkg_name', {
                                 initialValue: pkg_name,
                                 rules: [

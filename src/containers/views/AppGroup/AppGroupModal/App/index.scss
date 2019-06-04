@@ -7,6 +7,11 @@
 }
 .btnBox {
 }
+.appForm{
+  :global(.ant-form-item-control-wrapper){
+    white-space: nowrap;
+  }
+}
 
 .btnGroup {
   margin-top: 20px;
@@ -28,4 +33,15 @@
   border-radius: 4px;
   color: #667ffd;
   line-height: 40px;
+  vertical-align: top;
+}
+.btnGroup{
+  display: flex;
+  width: 100%;
+}
+.btnBox{
+  margin-left: 16.5%;
+}
+.submitBtn{
+  margin-right:30px;
 }

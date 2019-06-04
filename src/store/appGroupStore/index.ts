@@ -66,6 +66,14 @@ export class AppGroupStore extends StoreExt {
     }
 
     @action
+    getAccount = async () => {
+        const res = await this.api.appGroup.getAccount()
+        runInAction('SET', () => {
+            this.optionListDb.Account = res.data;
+        })
+    }
+
+    @action
     clearCache = () => {
         let target = {}
         Object.keys(this.optionListDb).forEach(key => target[key] = [])

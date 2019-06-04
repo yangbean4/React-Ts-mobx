@@ -24,7 +24,7 @@ const formItemLayout = {
     }
 }
 
-interface IProps {
+interface IpropsStore {
     account?: IAccountStore.IAccount
     createAccount?: (account: IAccountStore.IAccount) => Promise<any>
     modifyAccount?: (account: IAccountStore.IAccount) => Promise<any>
@@ -34,8 +34,14 @@ interface IProps {
     clearAccount?: () => void
 }
 
+interface IProps extends IpropsStore {
+    type?: string
+    onOk?: (id: number) => void
+    onCancel?: () => void
+}
+
 @inject(
-    (store: IStore): IProps => {
+    (store: IStore): IpropsStore => {
         const { accountStore, routerStore } = store
         const { account, createAccount, modifyAccount, clearAccount } = accountStore
         return { clearAccount, routerStore, account, createAccount, modifyAccount }
@@ -62,7 +68,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get accountType() {
-        return this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+        return this.props.type || this.props.routerStore.location.pathname.includes('subsite') ? 'subsite' : 'source'
     }
 
     @computed
@@ -82,7 +88,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get typeName() {
-        return `${camelCase(this.accountType)} Company`
+        return `${this.props.type ? '' : camelCase(this.accountType)} Company`
     }
 
     @action
@@ -125,7 +131,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
         const { routerStore, account = {} } = this.props
         const routerId = routerStore.location.pathname.toString().split('/').pop()
         const Id = Number(routerId)
-        if ((!isNaN(Id) && (!account.id || account.id !== Id))) {
+        if (!this.props.type && (!isNaN(Id) && (!account.id || account.id !== Id))) {
             routerStore.push(`/account/${this.accountType}`)
         } else {
             this.getAllCompany()
@@ -149,14 +155,14 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
                     this.toggleLoading()
                     try {
-                        let data = { message: '' }
+                        let data = { message: '', data: { id: 1 } }
                         if (this.typeIsAdd) {
                             data = await createAccount(values)
                         } else {
                             data = await modifyAccount({ ...values, id: account.id })
                         }
                         message.success(data.message)
-                        this.Cancel()
+                        !this.props.type ? this.Cancel() : this.props.onOk(data.data.id)
                     } catch (err) {
                         console.log(err);
                     }
@@ -233,7 +239,9 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                     ))}
                                 </Select>
                             )}
-                            <Icon className={styles.workBtn} onClick={() => this.toggleCompanyShow(true)} key='iconxinzeng1' type='iconxinzeng1' />
+                            {
+                                !this.props.type && < Icon className={styles.workBtn} onClick={() => this.toggleCompanyShow(true)} key='iconxinzeng1' type='iconxinzeng1' />
+                            }
                         </FormItem>
 
                         <FormItem {...formItemLayout} label="Role Name">
@@ -304,7 +312,9 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                         </FormItem>
                         <FormItem className={styles.btnBox}>
                             <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
-                            <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
+                            {
+                                !this.props.type && <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
+                            }
                         </FormItem>
                     </Form>
                 </div>
