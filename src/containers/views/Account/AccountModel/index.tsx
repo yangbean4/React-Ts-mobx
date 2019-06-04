@@ -23,6 +23,14 @@ const formItemLayout = {
         lg: { span: 5 }
     }
 }
+const formItemLayoutForModel = {
+    labelCol: {
+        lg: { span: 7},
+    },
+    wrapperCol: {
+        lg: { span: 13 }
+    }
+}
 
 interface IpropsStore {
     account?: IAccountStore.IAccount
@@ -64,6 +72,11 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
     @computed
     get typeIsAdd() {
         return !this.props.account || !this.props.account.id
+    }
+
+    @computed
+    get formItemLayout() {
+        return this.props.type ? formItemLayoutForModel : formItemLayout
     }
 
     @computed
@@ -163,6 +176,10 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                         }
                         message.success(data.message)
                         !this.props.type ? this.Cancel() : this.props.onOk(data.data.id)
+                        if (this.props.type) {
+                            console.log('我执行了吗')
+                            this.props.form.resetFields()
+                        }
                     } catch (err) {
                         console.log(err);
                     }
@@ -192,8 +209,8 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                     onOk={(id) => this.companyModelOk(id)}
                 />
                 <div className='sb-form'>
-                    <Form className={styles.accountModal} >
-                        <FormItem {...formItemLayout} label="User Name">
+                    <Form className={styles.accountModal} {...this.formItemLayout}>
+                        <FormItem  label="User Name">
                             {getFieldDecorator('user_name', {
                                 initialValue: user_name,
                                 rules: [
@@ -203,7 +220,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(<Input disabled={!this.typeIsAdd} />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Password">
+                        <FormItem  label="Password">
                             {getFieldDecorator('password', {
                                 rules: this.typeIsAdd ? [
                                     {
@@ -217,7 +234,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                             </Popover>
                         </FormItem>
 
-                        <FormItem {...formItemLayout} label={this.typeName}>
+                        <FormItem label={this.typeName}>
                             {getFieldDecorator('company', {
                                 initialValue: company,
                                 rules: [
@@ -244,7 +261,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                             }
                         </FormItem>
 
-                        <FormItem {...formItemLayout} label="Role Name">
+                        <FormItem label="Role Name">
                             {getFieldDecorator('role_id', {
                                 initialValue: role_id,
                                 rules: [
@@ -268,7 +285,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                             )}
                         </FormItem>
                         {
-                            this.accountType === 'source' && <FormItem {...formItemLayout} label="Account Type">
+                            this.accountType === 'source' && <FormItem label="Account Type">
                                 {getFieldDecorator('account_type', {
                                     initialValue: account_type,
                                     rules: [
@@ -292,7 +309,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                 )}
                             </FormItem>
                         }
-                        <FormItem {...formItemLayout} label="Status">
+                        <FormItem label="Status">
                             {getFieldDecorator('status', {
                                 initialValue: status,
                                 rules: [
@@ -310,8 +327,8 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                 </Radio.Group>
                             )}
                         </FormItem>
-                        <FormItem className={styles.btnBox}>
-                            <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
+                        <FormItem className={this.props.type? styles.modalBtn :styles.btnBox}>
+                            <Button type="primary" className={this.props.type? styles.btn : ''} loading={this.loading} onClick={this.submit}>Submit</Button>
                             {
                                 !this.props.type && <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
                             }

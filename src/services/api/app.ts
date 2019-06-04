@@ -55,6 +55,9 @@ export default {
   getAppWall(): Promise<any> {
     return http.post(`${basePath}appWall`)
   },
+  getCountry(): Promise<any> {
+    return http.post(`${basePath}country`)
+  },
   // -----
 
   uploadIcon(data): Promise<any> {

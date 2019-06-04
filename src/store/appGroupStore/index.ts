@@ -63,6 +63,7 @@ export class AppGroupStore extends StoreExt {
         PidType: [],
         VC: [],
         AppWall: [],
+        Country: []
     }
 
     @action

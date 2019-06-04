@@ -1,12 +1,13 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Input, Select, Radio, Button, message, InputNumber, Upload, Icon, Popover } from 'antd'
+import { Form, Input, Select, Radio, Button, message, InputNumber, Upload, Icon as AntIcon, Popover } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import * as web from '../../web.config'
 import { ComponentExt } from '@utils/reactExt'
-import AccountModel from './AccountModel'
+import AccountModel from './accountModel'
 import * as styles from './index.scss'
+import Icon from '@components/Icon'
 
 const FormItem = Form.Item
 
@@ -166,6 +167,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
                     this.toggleLoading()
                     try {
+                        values = { ...values, nations: values.nations.join(',') }
                         if (this.isAdd) {
                             const res = await createAppGroup(values)
                             this.props.onSubmit(res.data.id)
@@ -287,6 +289,8 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
             s2s_token = '',
             dev_id = '',
             ad_type = 0,
+            offer_limit = '',
+            nations = []
         } = reData
         return (
             <React.Fragment>
@@ -315,7 +319,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 </Radio.Group>
                             )}
                             <Popover content={(<p>Adjust to disable status, may reduce revenue.</p>)}>
-                                <Icon className={styles.workBtn} type="question-circle" />
+                                <AntIcon className={styles.workBtn} type="question-circle" />
                             </Popover>
                         </FormItem>
                         <FormItem label="Platform">
@@ -366,7 +370,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                         <FormItem label="Pkg Name">
                             {getFieldDecorator('pkg_name', {
                                 initialValue: pkg_name,
-                                validateTrigger: 'blur',
+                                validateTrigger: 'onBlur',
                                 rules: [
                                     {
                                         required: this.useNot_in_appstore, message: "Required",
@@ -394,7 +398,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(<Input />)}
                             <Popover content={(<p>Enter a temporary app name if the app is not in the app store.</p>)}>
-                                <Icon className={styles.workBtn} type="question-circle" />
+                                <AntIcon className={styles.workBtn} type="question-circle" />
                             </Popover>
                         </FormItem>
 
@@ -408,7 +412,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(
                                 <Upload {...props}>
-                                    {this.logo || logo ? <img style={{ width: '100px' }} src={this.logo || logo} alt="avatar" /> : <Icon className={styles.workBtn} type='plus' />}
+                                    {this.logo || logo ? <img style={{ width: '100px' }} src={this.logo || logo} alt="avatar" /> : <AntIcon className={styles.workBtn} type='plus' />}
                                 </Upload>
                             )}
                         </FormItem>
@@ -606,7 +610,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 </Radio.Group>
                             )}
                             <Popover content={(<p>No conversion has occurred in the past n days,no longer release advertisements to the user.</p>)}>
-                                <Icon className={styles.workBtn} type="question-circle" />
+                                <AntIcon className={styles.workBtn} type="question-circle" />
                             </Popover>
                         </FormItem>
                         <FormItem label="Recover Flag">
@@ -664,16 +668,55 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 })(<Input />)}
                             </FormItem>
                             {
-                                this.usePidType && <FormItem label="S2S Token">
-                                    {getFieldDecorator('s2s_token', {
-                                        initialValue: s2s_token,
-                                        rules: [
+                                this.usePidType && <React.Fragment>
+                                    <FormItem label="S2S Token">
+                                        {getFieldDecorator('s2s_token', {
+                                            initialValue: s2s_token,
+                                            rules: [
+                                                {
+                                                    required: true, message: "Required",
+                                                },
+                                            ]
+                                        })(<Input />)}
+                                    </FormItem>
+
+                                    <FormItem label="GEO">
+                                        {getFieldDecorator('nations',
                                             {
-                                                required: true, message: "Required",
-                                            },
-                                        ]
-                                    })(<Input />)}
-                                </FormItem>
+                                                initialValue: nations,
+                                                rules: [
+                                                    {
+                                                        required: true, message: "Required"
+                                                    }
+                                                ]
+                                            })(
+                                                <Select
+                                                    showSearch
+                                                    mode="multiple"
+                                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                                >
+                                                    {optionListDb.Country.map(c => (
+                                                        <Select.Option key={c.id} value={c.id}>
+                                                            {c.code2}
+                                                        </Select.Option>
+                                                    ))}
+                                                </Select>
+                                            )}
+                                    </FormItem>
+
+                                    <FormItem label="Offer Limit">
+                                        {getFieldDecorator('offer_limit', {
+                                            initialValue: offer_limit,
+                                            rules: [
+                                                {
+                                                    required: true, message: "Required",
+                                                },
+                                            ]
+                                        })(<Input />)}
+                                    </FormItem>
+                                </React.Fragment>
+
+
                             }
                         </div>
 

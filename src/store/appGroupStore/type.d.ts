@@ -30,6 +30,8 @@ export interface IAppGroup {
     sdk_token?: string
     s2s_token?: string
     ad_type?: string
+    offer_limit?: string
+    nations?: string[]
 }
 
 export interface IAppGroupForList {
@@ -57,6 +59,7 @@ export interface OptionListDb {
     PidType?: any[],
     VC?: any[],
     AppWall?: any[],
+    Country?: any[]
 }
 
 export interface PlacementForList {

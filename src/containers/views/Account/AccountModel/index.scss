@@ -3,9 +3,9 @@
   flex-direction: column;
   padding-top: 30px;
   :global(.ant-form-item) {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     :global(.ant-form-item-control-wrapper) {
-      width: 280px;
+      // width: 280px;
     }
   }
 
@@ -17,7 +17,13 @@
     margin-left: 20px;
   }
 }
-
+.modalBtn {
+  position: relative
+}
+.btn{
+  position: absolute;
+  left: 432px;
+}
 .workBtn {
   width: 40px;
   height: 40px;
