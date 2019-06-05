@@ -80,6 +80,7 @@ class AppGroupSearch extends ComponentExt<IStoreProps & FormComponentProps> {
               {getFieldDecorator('platform')(
                 <Select
                   allowClear
+                  mode='multiple'
                   showSearch
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
@@ -100,6 +101,7 @@ class AppGroupSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   allowClear
                   showSearch
+                  mode='multiple'
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >

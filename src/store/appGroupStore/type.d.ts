@@ -46,8 +46,8 @@ export interface IAppGroupForList {
 
 export interface SearchParams {
     pkg_name?: string,
-    platform?: string,
-    status?: number | string
+    platform?: string[],
+    status?: (number | string)[]
 }
 
 

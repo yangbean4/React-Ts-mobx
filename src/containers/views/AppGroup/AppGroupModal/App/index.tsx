@@ -125,14 +125,16 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     inAppstoreChange = (e) => {
         const value = e.target.value
-        if (!value) {
-            this.props.form.setFieldsValue({
-                pkg_name: ''
-            })
-        }
         runInAction('set_STore', () => {
             this.not_in_appstore = !value
         })
+        if (value) {
+            setImmediate(() => {
+                this.props.form.setFieldsValue({
+                    pkg_name: ''
+                })
+            })
+        }
     }
 
     @action
@@ -168,7 +170,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
                     this.toggleLoading()
                     try {
-                        values = { ...values, nations: values.nations.join(',') }
+                        values = { ...values, nations: (values.nations || []).join(',') }
                         if (this.isAdd) {
                             const res = await createAppGroup(values)
                             this.props.onSubmit(res.data.id)
@@ -177,7 +179,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                             this.props.onSubmit()
                         }
                     } catch (err) {
-                        //console.log(err);
+                        console.log(err)
                     }
                     this.toggleLoading()
                 }
@@ -373,9 +375,9 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                             {getFieldDecorator('pkg_name', {
                                 initialValue: pkg_name,
                                 validateTrigger: 'onBlur',
-                                rules: [
+                                rules: this.useNot_in_appstore ? [
                                     {
-                                        required: this.useNot_in_appstore, message: "Required",
+                                        required: true, message: "Required",
                                     },
                                     {
                                         validator: (r, v, callback) => {
@@ -386,7 +388,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                             callback()
                                         }
                                     }
-                                ]
+                                ] : undefined
                             })(<Input disabled={!this.useNot_in_appstore || (!this.isAdd && !!pkg_name)} />)}
                         </FormItem>
 

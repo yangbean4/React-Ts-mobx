@@ -37,9 +37,9 @@ class VcTable extends ComponentExt<TableProps> {
           key="placement_name"
           title="Placement Name"
           dataIndex="placement_name"
-          render={(_) => (
-            `${_}=1$`
-          )}
+          // render={(_) => (
+          //   `${_}=1$`
+          // )}
           width={200} />
         <Table.Column<IAppGroupStore.PlacementForList> key="placement_id" title="PID" dataIndex="placement_id" width={200} />
         <Table.Column<IAppGroupStore.PlacementForList>

@@ -125,7 +125,7 @@ class AppGroupTable extends ComponentExt<IProps> {
                             }
                             {
                                 // this.$checkAuth('Apps-Virtual AppGroup-Edit&Apps-Virtual AppGroup-Add', (
-                                <Divider key='Divider' type="vertical" />
+                                // <Divider key='Divider' type="vertical" />
                                 // ))
                             }
                             {

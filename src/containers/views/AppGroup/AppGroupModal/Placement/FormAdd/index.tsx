@@ -145,11 +145,13 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     pidTypeChange = (type) => {
         this.pidType = type;
+        let data = {} as IAppGroupStore.Placement
         if (type === 1 || type === 3) {
-            this.props.form.setFieldsValue({
-                offer_num: 1, min_offer_num: 1,
-            })
+            data.offer_num = 1;
+            data.min_offer_num = 1;
         }
+        data.reward_type = type !== 1 ? 1 : 2
+        this.props.form.setFieldsValue(data)
     }
 
     @action
@@ -588,6 +590,13 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             </FormItem>
 
                             <div className={`${styles.formItemBox} ${styles.noTitle}`}>
+
+                                <FormItem {...noLabelLayout}>
+                                    {getFieldDecorator('style_detail.title_font', {
+                                        initialValue: style_detail.title_font,
+                                    })(<Input />)}
+                                    <span className={styles.lineSpan}>   font   </span>
+                                </FormItem>
                                 <FormItem {...noLabelLayout}>
                                     {getFieldDecorator('style_detail.title_text_color', {
                                         initialValue: style_detail.title_text_color || InitColor,
@@ -646,7 +655,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             <Row className={styles.formItemBox}>
                                 <Col span={3} className={styles.boxTitle}>
                                     *Ad text
-                        </Col>
+                                </Col>
                                 <Col span={15}>
                                     <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.ad_title_color', {
@@ -657,13 +666,19 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                                 }
                                             ]
                                         })(<InputColor />)}
-                                        <span className={styles.lineSpan}>   text   </span>
+                                        <span className={styles.lineSpan}>   title   </span>
                                     </FormItem>
                                     <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.ad_desc_color', {
                                             initialValue: style_detail.ad_desc_color || InitColor,
                                         })(<InputColor />)}
                                         <span className={styles.lineSpan}>   decr </span>
+                                    </FormItem>
+                                    <FormItem {...noLabelLayout}>
+                                        {getFieldDecorator('style_detail.ad_edge_color', {
+                                            initialValue: style_detail.ad_edge_color || InitColor,
+                                        })(<InputColor />)}
+                                        <span className={styles.lineSpan}>   edge </span>
                                     </FormItem>
                                 </Col>
                             </Row>
@@ -734,7 +749,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 </Col>
                             </Row>
 
-                            <FormItem label="Icon">
+                            <FormItem label="VC Icon">
                                 {getFieldDecorator('style_detail.vc_icon', {
                                     initialValue: style_detail.vc_icon,
                                     rules: [
@@ -764,11 +779,17 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     {getUnpload('big_background_image')}
                                 </Col>
                             </Row>
+
+                            <FormItem label='Content Font'>
+                                {getFieldDecorator('style_detail.content_font', {
+                                    initialValue: style_detail.content_font,
+                                })(<Input />)}
+                            </FormItem>
                         </React.Fragment>
                     }
 
                     {
-                        this.pidType !== 3 && (
+                        this.usePidtype !== 3 && (
                             <React.Fragment>
                                 <Col span={4} className={styles.companyTag}>
                                     <div className={styles.tagWrapper}>
@@ -821,13 +842,13 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                                     {c.key}
                                                 </Radio>
                                             ))} */}
-                                            <Radio disabled={this.pidType === 1} value={1}>Dynamic Reward</Radio>
-                                            <Radio disabled={this.pidType !== undefined && this.pidType !== 1} value={2}>Fix Reward</Radio>
+                                            <Radio disabled={this.usePidtype === 1} value={1}>Dynamic Reward</Radio>
+                                            <Radio disabled={this.usePidtype !== undefined && this.usePidtype !== 1} value={2}>Fix Reward</Radio>
                                         </Radio.Group>
                                     )}
                                 </FormItem>
                                 {
-                                    this.pidType === 1 && (
+                                    this.usePidtype === 1 && (
                                         <FormItem label="Number Of Reward">
                                             {getFieldDecorator('reward_num', {
                                                 initialValue: reward_num,

@@ -118,6 +118,11 @@ export class AppGroupStore extends StoreExt {
     getAppGroup = async () => {
         this.getAppGroupLoading = true
         try {
+            // const filters = {
+            //     ...this.filters,
+            //     status: this.filters.status ? this.filters.status.join(',') : undefined,
+            //     platform: this.filters.platform ? this.filters.platform.join(',') : undefined,
+            // }
             const res = await this.api.appGroup.getAppGroup({ page: this.page, pageSize: this.pageSize, ...this.filters })
             runInAction('SET_USER_LIST', () => {
                 this.appGroupList = res.data
