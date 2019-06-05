@@ -119,6 +119,9 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                             }
                             message.success(data.message)
                             this.props.onOk(data.data.id)
+                            if(this.props.type) {
+                                this.props.form.resetFields()
+                            }
                         }
                     } catch (err) {
                         //console.log(err);

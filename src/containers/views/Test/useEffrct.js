@@ -5,21 +5,17 @@ function Example() {
 
   // 类似componentDidMount 和 componentDidUpdate:
   useEffect(() => {
-    debugger
     console.log('13345')
     // Update the document title using the browser API
     document.title = `You clicked ${count} times`;
     return () => {
       console.log('go ')
-      debugger
       document.title = `one title`
     }
   });
 
   const handelCK = () => {
-    debugger
     setCount(count + 1)
-    debugger
   }
 
   return (

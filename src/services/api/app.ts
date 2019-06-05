@@ -66,7 +66,7 @@ export default {
 
   // ---------------Placement
   addPalcement(data): Promise<any> {
-    return http.post(`${basePath}addPlalcement`, data)
+    return http.post(`${basePath}addPlacement`, data)
   },
   palcementDetail(data): Promise<any> {
     return http.post(`${basePath}placementDetail`, data)

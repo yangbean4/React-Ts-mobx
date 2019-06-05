@@ -73,6 +73,11 @@ class SiderMenu extends ComponentExt<IStoreProps> {
     }
 
     @computed
+    get allRouterAndMenu() {
+        return [].concat.call(this.addSideBar, routerAndMenu)
+    }
+
+    @computed
     get menuConfig() {
         return [].concat.call(menu, this.addSideBar)
     }
@@ -193,15 +198,16 @@ class SiderMenu extends ComponentExt<IStoreProps> {
         const menuItems = this.getMenus(this.menuTree)
         // 寻找选中路由
         let currentMenu: IMenu = null
-        for (const item of routerAndMenu) {
-            if (item.path && pathToRegexp(item.path).exec(this.currentRoute)) {
+        const reg = pathToRegexp(this.currentRoute)
+        for (const item of this.allRouterAndMenu) {
+            if (item.path && reg.exec(item.path)) {
                 currentMenu = item
                 break
             }
         }
         let selectedKeys: string[] = null
         if (currentMenu) {
-            selectedKeys = this.getPathArray(routerAndMenu, currentMenu)
+            selectedKeys = this.getPathArray(this.allRouterAndMenu, currentMenu)
         }
         if (!selectedKeys) {
             selectedKeys = ['1']
