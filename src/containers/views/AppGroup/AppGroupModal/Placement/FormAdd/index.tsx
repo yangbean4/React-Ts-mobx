@@ -156,7 +156,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     VcChange = (value) => {
-        const VcexRate = this.props.optionListDb.VC.find(ele => ele.id === value).vc_exchange_rate
+        const VcexRate = (this.props.optionListDb.VC.find(ele => ele.id === value) || {}).vc_exchange_rate
         runInAction('VcexRate', () => {
             this.VcexRate = VcexRate
         })
@@ -179,6 +179,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
         this.props.form.setFieldsValue({// 重新赋值
             vc_id: id
         })
+        this.VcChange(id)
         this.toggleVCShow(false)
     }
 
@@ -278,7 +279,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             frequency_num,
             frequency_time,
             accept_cpm, // 新增
-            pid_type = this.props.appGroup.contains_native_s2s_pid_types === 1 ? 5 : undefined,
+            pid_type = this.props.appGroup && this.props.appGroup.contains_native_s2s_pid_types === 1 ? 5 : undefined,
             min_offer_num,
             offer_num,
             budget,
@@ -493,7 +494,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(
                                 <Select
-                                    disabled={!this.isAdd || this.props.appGroup.contains_native_s2s_pid_types === 1}
+                                    disabled={!this.isAdd || this.props.appGroup && this.props.appGroup.contains_native_s2s_pid_types === 1}
                                     onChange={this.pidTypeChange}
                                     showSearch
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
@@ -838,8 +839,8 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                             >
                                                 {optionListDb.VC.map(c => (
-                                                    <Select.Option key={c.id} value={c.name}>
-                                                        {c.id}
+                                                    <Select.Option key={c.id} value={c.id}>
+                                                        {c.name}
                                                     </Select.Option>
                                                 ))}
                                             </Select>

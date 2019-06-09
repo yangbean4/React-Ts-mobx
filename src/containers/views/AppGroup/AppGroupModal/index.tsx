@@ -6,7 +6,6 @@ import { inject, observer } from 'mobx-react'
 import { camelCase } from '@utils/index'
 import PageLoading from '@components/PageLoading'
 import * as styles from './index.scss'
-import { resolve } from 'url';
 const TabPane = Tabs.TabPane;
 const loadComponent = (loader: () => Promise<any>) =>
     loadable({
@@ -45,7 +44,7 @@ class AppGroupModal extends React.Component<IProps>{
     private activeKey: string = tabArr[0]
 
     @observable
-    private hasGo = new Set(tabArr[0])
+    private hasGo = new Set([tabArr[0]])
 
     @observable
     private isAdd: boolean
@@ -92,7 +91,16 @@ class AppGroupModal extends React.Component<IProps>{
 
 
     @action
-    cardChange = (e) => {
+    cardChange = (val) => {
+        this.hasGo.add(this.activeKey)
+        this.hasGo.add(val)
+        runInAction('UP_ACTIVEKEY', () => {
+            this.activeKey = val
+        })
+    }
+
+    @action
+    cardChange1 = (e) => {
         const val = e.target.value
         if (val !== this.activeKey) {
             this.lastStep().then(() => {
@@ -173,19 +181,7 @@ class AppGroupModal extends React.Component<IProps>{
         return (
             <div className="AppGroupModal">
                 <div className={styles.box}>
-                    {/* {
-                        <Tabs type="card" onTabClick={this.onTabClick} activeKey={this.activeKey} onChange={val => this.cardChange(val)}>
-                            {
-                                tabArr.map(item => (
-                                    <TabPane tab={camelCase(item)} key={item} disabled={this.compuDis(item)}>
-                                        {this.getBox(item)}
-                                    </TabPane>
-                                ))
-                            }
-                        </Tabs>
-                    } */}
-
-                    <Radio.Group onChange={this.cardChange} value={this.activeKey}>
+                    <Radio.Group onChange={this.cardChange1} value={this.activeKey}>
                         {
                             tabArr.map(item => (
                                 <Radio.Button key={item} disabled={this.compuDis(item)} value={item}>{camelCase(item)}</Radio.Button>
@@ -193,11 +189,15 @@ class AppGroupModal extends React.Component<IProps>{
                         }
                     </Radio.Group>
                     {
-                        tabArr.filter(item => item !== this.delCacheKey).map(item => (
-                            <div key={`${item}-box`} style={{ display: item === this.activeKey ? 'block' : 'none' }}>
-                                {this.getBox(item)}
-                            </div>
-                        ))
+                        <Tabs type="card" onTabClick={this.onTabClick} activeKey={this.activeKey} onChange={val => this.cardChange(val)}>
+                            {
+                                tabArr.filter(item => item !== this.delCacheKey).map(item => (
+                                    <TabPane tab={camelCase(item)} key={item} disabled={this.compuDis(item)}>
+                                        {this.getBox(item)}
+                                    </TabPane>
+                                ))
+                            }
+                        </Tabs>
                     }
                 </div>
             </div>

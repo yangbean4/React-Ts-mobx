@@ -3,6 +3,9 @@
   height: max-content;
   :global {
     .ant-tabs-bar {
+      display: none;
+    }
+    .ant-tabs-bar {
       margin: 0;
     }
     .sb-form {

@@ -92,7 +92,7 @@ class Bread extends React.Component<IStoreProps> {
       }
     }
     getPath(current)
-    console.log(result)
+    // console.log(result)
     return result
   }
   goto = (ele, index, arr) => {

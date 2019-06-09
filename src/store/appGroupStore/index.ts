@@ -24,7 +24,7 @@ export class AppGroupStore extends StoreExt {
     appGroupList: IAppGroupStore.IAppGroupForList[] = []
 
     @observable
-    appGroup: IAppGroupStore.IAppGroup
+    appGroup: IAppGroupStore.IAppGroup = {}
     /**
      * table page
      *
@@ -78,7 +78,7 @@ export class AppGroupStore extends StoreExt {
     getVCList = async () => {
         const res = await this.api.appGroup.getVC({ id: this.appGroup.id })
         runInAction('SET', () => {
-            this.optionListDb.Account = res.data;
+            this.optionListDb.VC = res.data;
         })
     }
 
@@ -92,10 +92,10 @@ export class AppGroupStore extends StoreExt {
     }
 
     @action
-    getOptionListDb = async () => {
+    getOptionListDb = async (id: number) => {
         const keys = Object.keys(this.optionListDb)
         const promiseAll = keys.map(key => this.api.appGroup[`get${key}`](
-            key === 'VC' && this.appGroup ? { id: this.appGroup.id } : undefined
+            key === 'VC' && this.appGroup ? { id: this.appGroup.id || id } : undefined
         ))
         Promise.all(promiseAll).then(data => {
             const target = {}
@@ -175,7 +175,7 @@ export class AppGroupStore extends StoreExt {
     }
     @action
     clearAppGroup = () => {
-        this.appGroup = undefined
+        this.appGroup = {}
     }
 
     handleTableChange = (pagination: PaginationConfig) => {

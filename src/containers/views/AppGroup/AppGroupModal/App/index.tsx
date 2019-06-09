@@ -44,7 +44,7 @@ interface hasResult {
 interface IStoreProps {
     modifyAppGroup?: (appGroup: IAppGroupStore.IAppGroup) => Promise<any>
     createAppGroup?: (appGroup: IAppGroupStore.IAppGroup) => Promise<any>
-    getOptionListDb?: () => Promise<any>
+    getOptionListDb?: (id: number) => Promise<any>
     getAccount?: () => Promise<any>
     optionListDb?: IAppGroupStore.OptionListDb
     routerStore?: RouterStore
@@ -217,7 +217,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
 
 
     componentWillMount() {
-        this.props.getOptionListDb()
+        this.props.getOptionListDb(this.props.Id)
         if (this.props.Id) {
             this.getDetail()
         }
