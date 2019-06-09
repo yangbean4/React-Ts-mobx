@@ -171,7 +171,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                     this.toggleLoading()
                     try {
                         values = { ...values, nations: (values.nations || []).join(',') }
-                        if (this.isAdd) {
+                        if (!this.props.Id) {
                             const res = await createAppGroup(values)
                             this.props.onSubmit(res.data.id)
                         } else {
@@ -202,7 +202,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
         const res = await this.api.appGroup.getAppGroupInfo({ id: this.props.Id })
         this.props.setAppGroup(res.data)
         runInAction('SET_APPGroup', () => {
-            this.appGroup = { ...res.data, nations: res.data.nations.split(',') }
+            this.appGroup = { ...res.data }
         })
     }
 
@@ -416,7 +416,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(
                                 <Upload {...props}>
-                                    {this.logo || logo ? <img style={{ width: '100px' }} src={this.logo || logo} alt="avatar" /> : <AntIcon className={styles.workBtn} type='plus' />}
+                                    {this.logo || logo ? <img style={{ width: '100px' }} src={this.logo || logo} alt="avatar" /> : <AntIcon className={styles.workPlus} type='plus' />}
                                 </Upload>
                             )}
                         </FormItem>
@@ -565,7 +565,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     ))}
                                 </Select>
                             )}
-                            <Icon className={styles.workBtn} onClick={() => this.toggleAppShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
+                            <Icon className={styles.uploadICON} onClick={() => this.toggleAppShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
                         </FormItem>
                         <FormItem label='Preload Number'>
                             {

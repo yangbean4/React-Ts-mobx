@@ -277,7 +277,8 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             ige_carrier_block = [],
             frequency_num,
             frequency_time,
-            pid_type,
+            accept_cpm, // 新增
+            pid_type = this.props.appGroup.contains_native_s2s_pid_types === 1 ? 5 : undefined,
             min_offer_num,
             offer_num,
             budget,
@@ -320,7 +321,11 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                         initialValue: style_detail[key],
                     })(
                         <Upload {...props}>
-                            {img ? <img style={{ width: '100px' }} src={img} /> : <Icon className={styles.workBtn} type='plus' />}
+                            {img ? <img style={{ width: '100px' }} src={img} />
+                                : <Button className={styles.uploadBtn}>
+                                    <Icon className={styles.colorFont} type='upload' /><span className={styles.text}>Upload Image</span>
+                                </Button>
+                            }
                         </Upload>
                     )}
                 </FormItem>
@@ -452,7 +457,24 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<InputNumber precision={0} />)}&nbsp;&nbsp;&nbsp;&nbsp;seconds
                     </FormItem>
-
+                    <FormItem label="Lowest eCPM">
+                        $&nbsp;{getFieldDecorator('accept_cpm', {
+                            initialValue: accept_cpm,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                },
+                                {
+                                    validator: (r, v, callback) => {
+                                        if (v <= 0) {
+                                            callback('TheLowest eCPM should be a positive integer!')
+                                        }
+                                        callback()
+                                    }
+                                }
+                            ]
+                        })(<InputNumber precision={0} />)}
+                    </FormItem>
 
                     <Col span={4} className={styles.companyTag}>
                         <div className={styles.tagWrapper}>
@@ -471,7 +493,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(
                                 <Select
-                                    disabled={!this.isAdd}
+                                    disabled={!this.isAdd || this.props.appGroup.contains_native_s2s_pid_types === 1}
                                     onChange={this.pidTypeChange}
                                     showSearch
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
@@ -563,7 +585,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     >
                                         {optionListDb.AppWall.map(c => (
                                             <div className={styles.GroupBox} key={c.id}>
-                                                <div className={styles.imgBox}><img src={c.url} /></div>
+                                                <div className={styles.imgBox} style={{ backgroundImage: 'url(' + c.url + ')' }}></div>
                                                 <Radio value={c.id}>
                                                     Style{c.id}
                                                 </Radio>
@@ -573,9 +595,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 )}
                             </FormItem>
                             <FormItem label='Preview picture'>
-                                <div className={styles.picture}>
-                                    <img src={this.useAppWallUrl} />
-                                </div>
+                                <div className={styles.picture} style={{ backgroundImage: 'url(' + this.useAppWallUrl + ')' }}></div>
                             </FormItem>
 
                             <FormItem label="Title">
@@ -588,15 +608,14 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     ]
                                 })(<Input />)}
                             </FormItem>
-
                             <div className={`${styles.formItemBox} ${styles.noTitle}`}>
 
-                                <FormItem {...noLabelLayout}>
+                                {/* <FormItem {...noLabelLayout}>
                                     {getFieldDecorator('style_detail.title_font', {
                                         initialValue: style_detail.title_font,
                                     })(<Input />)}
                                     <span className={styles.lineSpan}>   font   </span>
-                                </FormItem>
+                                </FormItem> */}
                                 <FormItem {...noLabelLayout}>
                                     {getFieldDecorator('style_detail.title_text_color', {
                                         initialValue: style_detail.title_text_color || InitColor,
@@ -612,7 +631,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     {getFieldDecorator('style_detail.title_background_color', {
                                         initialValue: style_detail.title_background_color || InitColor,
                                     })(<InputColor onChange={(color) => this.removeFile("title_background_image", color)} />)}
-                                    <span className={styles.lineSpan}>   bkgd    or   </span>
+                                    <span className={styles.lineSpanOr}>bkgd&nbsp;&nbsp;&nbsp;&nbsp;or</span>
                                 </FormItem>
 
                                 {getUnpload('title_background_image')}
@@ -646,7 +665,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     {getFieldDecorator('style_detail.subtitle_background_color', {
                                         initialValue: style_detail.subtitle_background_color || InitColor,
                                     })(<InputColor onChange={(color) => this.removeFile("subtitle_background_image", color)} />)}
-                                    <span className={styles.lineSpan}>   bkgd    or   </span>
+                                    <span className={styles.lineSpanOr}>bkgd&nbsp;&nbsp;&nbsp;&nbsp;or</span>
                                 </FormItem>
                                 {getUnpload('subtitle_background_image')}
                             </div>
@@ -686,7 +705,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             <Row className={styles.formItemBox}>
                                 <Col span={3} className={styles.boxTitle}>
                                     *Ad background
-                            </Col>
+                                </Col>
                                 <Col span={15}>
                                     <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.ad_edge_color', {
@@ -703,7 +722,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                         {getFieldDecorator('style_detail.ad_background_color', {
                                             initialValue: style_detail.ad_background_color || InitColor,
                                         })(<InputColor onChange={(color) => this.removeFile("ad_background_image", color)} />)}
-                                        <span className={styles.lineSpan}>   bkgd    or   </span>
+                                        <span className={styles.lineSpanOr}>bkgd&nbsp;&nbsp;&nbsp;&nbsp;or</span>
                                     </FormItem>
                                     {getUnpload('ad_background_image')}
                                 </Col>
@@ -743,7 +762,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                         {getFieldDecorator('style_detail.button_unavail_color', {
                                             initialValue: style_detail.button_unavail_color || InitColor,
                                         })(<InputColor onChange={(color) => this.removeFile("button_background_image", color)} />)}
-                                        <span className={styles.lineSpan}>unavail  or</span>
+                                        <span className={styles.lineSpanOr}>unavail&nbsp;&nbsp;&nbsp;&nbsp;or</span>
                                     </FormItem>
                                     {getUnpload('button_background_image')}
                                 </Col>
@@ -759,7 +778,13 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     ]
                                 })(
                                     <Upload {...getProps('vc_icon')}>
-                                        {vc_icon ? <img style={{ width: '100px' }} src={vc_icon} alt="avatar" /> : <Icon className={styles.workBtn} type='plus' />}
+                                        {
+                                            vc_icon ? <img style={{ width: '100px' }} src={vc_icon} alt="avatar" />
+                                                : <Button className={styles.uploadBtn}>
+                                                    <Icon className={styles.colorFont} type='upload' />
+                                                    <span className={styles.text}>Upload</span>
+                                                </Button>
+                                        }
                                     </Upload>
                                 )}
                             </FormItem>
@@ -813,13 +838,13 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                             >
                                                 {optionListDb.VC.map(c => (
-                                                    <Select.Option key={c.id} value={c.id}>
-                                                        {c.name}
+                                                    <Select.Option key={c.id} value={c.name}>
+                                                        {c.id}
                                                     </Select.Option>
                                                 ))}
                                             </Select>
                                         )}
-                                    <MyIcon className={styles.workBtn} onClick={() => this.toggleVCShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
+                                    <MyIcon className={styles.uploadICON} onClick={() => this.toggleVCShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
                                 </FormItem>
                                 <FormItem label="Exchange Rate">
                                     {this.VcexRate} = 1$

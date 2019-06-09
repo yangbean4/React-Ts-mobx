@@ -168,6 +168,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
                     this.toggleLoading()
                     try {
+                        this.props.type ? (values.status =1) : values.status // 弹窗提交默认给status添加状态为1
                         let data = { message: '', data: { id: 1 } }
                         if (this.typeIsAdd) {
                             data = await createAccount(values)
@@ -308,26 +309,26 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                 )}
                             </FormItem>
                         }
-                        
-                        <FormItem label="Status">
-                            {getFieldDecorator('status', {
-                                initialValue: status,
-                                rules: [
-                                    {
-                                        required: true, message: "Required"
-                                    }
-                                ]
-                            })(
-                                <Radio.Group>
-                                    {statusOption.map(c => (
-                                        <Radio key={c.key} value={c.value}>
-                                            {c.key}
-                                        </Radio>
-                                    ))}
-                                </Radio.Group>
-                            )}
-                        </FormItem>
-                        
+                        {
+                            !this.props.type && <FormItem label="Status">
+                                {getFieldDecorator('status', {
+                                    initialValue: status,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(
+                                    <Radio.Group>
+                                        {statusOption.map(c => (
+                                            <Radio key={c.key} value={c.value}>
+                                                {c.key}
+                                            </Radio>
+                                        ))}
+                                    </Radio.Group>
+                                )}
+                            </FormItem>
+                        }
                         <FormItem className={this.props.type? styles.modalBtn :styles.btnBox}>
                             <Button type="primary" className={this.props.type? styles.btn : ''} loading={this.loading} onClick={this.submit}>Submit</Button>
                             {

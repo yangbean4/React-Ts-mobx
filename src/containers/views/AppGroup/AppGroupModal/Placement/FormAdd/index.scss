@@ -4,14 +4,20 @@
   padding-top: 30px;
   :global(.ant-form-item) {
     margin-bottom: 20px;
-    :global(.ant-form-item-label){
+    :global(.ant-form-item-label) {
       width: 200px;
+      height: 30px;
+      line-height: 30px;
     }
     :global(.ant-form-item-control-wrapper) {
       white-space: nowrap;
+      line-height: 30px;
+      :global(.ant-form-item-control) {
+        line-height: 30px;
+      }
     }
   }
-  .vcId{
+  .vcId {
     :global(.ant-select-enabled) {
       float: left;
     }
@@ -52,14 +58,9 @@
 }
 
 .workBtn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
   margin-left: 10px;
-  background: rgba(237, 240, 255, 1);
   border-radius: 4px;
   color: #667ffd;
-  line-height: 40px;
 }
 
 .hasImg {
@@ -82,6 +83,9 @@
   background: rgba(248, 248, 248, 1);
   border: 1px solid rgba(228, 237, 240, 1);
   border-radius: 2px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
 }
 .imgTitle {
   width: 100%;
@@ -99,16 +103,49 @@
   background: rgba(248, 248, 248, 1);
   border: 1px solid rgba(228, 237, 240, 1);
   border-radius: 2px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.uploadBtn {
+  width: 130px;
+  height: 30px;
+  line-height: 30px;
+  background: rgba(237, 240, 255, 1);
+  color: #667ffd;
+  font-family: Montserrat-Light;
+  font-weight: 500;
+}
+.uploadICON {
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  vertical-align: middle;
+  margin-left: 10px;
+  font-size: 12px;
+  transform: scale(0.8);
+  border-radius: 12.5px;
+  background: rgba(237, 240, 255, 1);
+  color: rgba(102, 127, 253, 1);
+}
+.colorFont {
+  color: #667ffd;
+  font-weight: 500;
+}
+.text {
+  margin-left: 5px;
+  color: #667ffd;
 }
 
 .formItemBox {
   &.noTitle {
-    margin-left: 12.5%;
+    margin-left: 13%;
   }
   .boxTitle {
     text-align: right;
-    height: 40px;
-    line-height: 40px;
+    height: 30px;
+    line-height: 30px;
     margin-right: 8px;
   }
 
@@ -117,6 +154,15 @@
   }
 
   .lineSpan {
+    display: inline-block;
+    text-align: center;
+    width: 30px;
+    margin: 0 14px;
+  }
+  .lineSpanOr {
+    display: inline-block;
+    text-align: center;
+    width: 60px;
     margin: 0 14px;
   }
 }

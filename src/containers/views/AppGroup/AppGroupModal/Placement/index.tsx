@@ -108,12 +108,15 @@ class PID extends ComponentExt<IProps> {
 
   @action
   initDetail = async () => {
-    if (this.props.Id !== undefined) {
+    if (this.props.isAdd) {
+      this.editPid()
+    } else if (this.props.Id !== undefined) {
       const res = await this.api.appGroup.placementList({ id: this.props.Id })
       runInAction('SETLIST', () => {
         this.thisDataList = res.data
       })
     }
+
   }
 
 

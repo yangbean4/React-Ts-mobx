@@ -9,6 +9,20 @@ interface IProp {
   onChange?: (data: any) => void
 }
 
+const fromClassName = (dom, className) => {
+  let temp = null;
+  while (dom) {
+    if (('className' in dom) && (dom.className.split(" ").indexOf(className) >= 0)) {
+      temp = dom; break
+    } else if (dom.nodeName.toLocaleUpperCase() == "HTML") {
+      break;
+    } else {
+      dom = dom.parentNode;
+    }
+  }
+  return temp;
+}
+
 @observer
 class InputColor extends React.Component<IProp>  {
 
@@ -30,7 +44,7 @@ class InputColor extends React.Component<IProp>  {
     if (!this.pickerVisible) {
       const dom = this.colorBox.current as HTMLElement
       const domRect = dom.getBoundingClientRect()
-      const Basic = document.getElementsByClassName('Basic')[0]
+      const Basic = fromClassName(dom, 'Basic')
       if (Basic) {
         const bigBox = Basic.getBoundingClientRect() as DOMRect
         const style = bigBox.bottom < (domRect.bottom + 360) ? {

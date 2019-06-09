@@ -153,7 +153,10 @@ class SiderMenu extends ComponentExt<IStoreProps> {
         }
         return map[key] || []
     }
-
+    // 选中给子节点添加上active的样式
+    addActive = (item, key, domEvent) => {
+        
+    }
     // 递归生成菜单
     getMenus = (menuTree: IMenuInTree[]) => {
         return menuTree.map(item => {

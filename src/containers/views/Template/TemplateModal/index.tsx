@@ -1,11 +1,13 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, } from 'mobx'
-import { Form, Input, Button, message, Modal, Upload } from 'antd'
+import { Form, Input, Button, message, Modal, Upload, Radio } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import Icon from '@components/Icon'
+import { playicon_template, coins_animation } from '../default.config'
+import { _nameCase } from '@utils/index'
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -159,7 +161,8 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
         const { getFieldDecorator } = form
         const {
             template_name = '',
-            version = ''
+            version = '',
+            template_type = undefined
         } = template || {}
         const _this = this
         const props = {
@@ -268,6 +271,54 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                                     </React.Fragment>
                                 )
                             : null
+                    }
+                    {
+                        this.props.template_pname && _nameCase(this.props.template_pname || '') === 'playicon_template' && (
+                            <FormItem {...formItemLayout} label="Template Type">
+                                {getFieldDecorator('template_type', {
+                                    initialValue: template_type,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(
+                                    <Radio.Group
+                                        disabled={!this.typeIsAdd}
+                                    >
+                                        {playicon_template.map(c => (
+                                            <Radio key={c.key} value={c.value}>
+                                                {c.key}
+                                            </Radio>
+                                        ))}
+                                    </Radio.Group>
+                                )}
+                            </FormItem>
+                        )
+                    }
+                    {
+                        this.props.template_pname && _nameCase(this.props.template_pname || '') === 'coins_animation' && (
+                            <FormItem {...formItemLayout} label="Template Type">
+                                {getFieldDecorator('template_type', {
+                                    initialValue: template_type,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(
+                                    <Radio.Group
+                                        disabled={!this.typeIsAdd}
+                                    >
+                                        {coins_animation.map(c => (
+                                            <Radio key={c.key} value={c.value}>
+                                                {c.key}
+                                            </Radio>
+                                        ))}
+                                    </Radio.Group>
+                                )}
+                            </FormItem>
+                        )
                     }
                 </Form>
             </Modal>

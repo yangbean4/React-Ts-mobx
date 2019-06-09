@@ -5,7 +5,14 @@
   body {
     width: 100%;
     height: 100%;
+    :global(.ant-form-item-label) {
+      // width: 220px;
+    }
+    :global(.ant-form-item-control) {
+
+    }
   }
+ 
 
   #app {
     width: 100%;

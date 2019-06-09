@@ -74,12 +74,14 @@ class VcTable extends ComponentExt<TableProps> {
 
 interface IStoreProps {
   routerStore: RouterStore
+  setBreadcrumbArr?: (menus?: IGlobalStore.menu[]) => void
 }
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { routerStore } = store
-    return { routerStore }
+    const { routerStore, globalStore } = store
+    const { setBreadcrumbArr } = globalStore
+    return { routerStore, setBreadcrumbArr }
   }
 )
 
@@ -102,8 +104,27 @@ class PID extends ComponentExt<IStoreProps> {
   private thisDataList: ICurrencyStore.ICurrency[]
 
   @action
-  toggleIsTable = () => {
-    this.isTable = !this.isTable
+  toggleIsTable = (type?: boolean) => {
+    const value = type === undefined ? !this.isTable : type
+    let arr = [
+      {
+        title: 'Virtual Currency',
+        path: "/currency"
+      },
+      {
+        title: 'Edit Virtual Currency',
+        onClick: () => {
+          this.toggleIsTable(true)
+        }
+      }
+    ] as IGlobalStore.menu[]
+    if (!value) {
+      arr.push({
+        title: this.GJB.id ? `Edit ${this.GJB.vc_name}` : 'Add'
+      })
+    }
+    this.props.setBreadcrumbArr(arr)
+    this.isTable = value
   }
 
   @action
@@ -159,6 +180,10 @@ class PID extends ComponentExt<IStoreProps> {
 
   componentWillMount() {
     this.initDetail()
+  }
+
+  componentWillUnmount() {
+    this.props.setBreadcrumbArr()
   }
 
   render() {

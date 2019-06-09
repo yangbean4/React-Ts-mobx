@@ -5,4 +5,6 @@ export const btnBox: string;
 export const btnGroup: string;
 export const longLabel: string;
 export const submitBtn: string;
+export const uploadICON: string;
 export const workBtn: string;
+export const workPlus: string;

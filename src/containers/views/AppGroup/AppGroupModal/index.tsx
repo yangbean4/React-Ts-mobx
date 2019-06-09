@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { Tabs } from 'antd'
+import { Tabs, Radio, Modal } from 'antd'
 import loadable from 'react-loadable'
 import { observable, action, computed, runInAction } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import { camelCase } from '@utils/index'
 import PageLoading from '@components/PageLoading'
 import * as styles from './index.scss'
+import { resolve } from 'url';
 const TabPane = Tabs.TabPane;
 const loadComponent = (loader: () => Promise<any>) =>
     loadable({
@@ -38,6 +39,7 @@ interface IStoreProps {
 @observer
 class AppGroupModal extends React.Component<IProps>{
 
+    private confirmModal
 
     @observable
     private activeKey: string = tabArr[0]
@@ -51,18 +53,60 @@ class AppGroupModal extends React.Component<IProps>{
     @observable
     private Id: string
 
+    @observable
+    private delCacheKey: string
+
     @computed
     get activeIndex() {
         return tabArr.findIndex(item => item === this.activeKey)
     }
 
     @action
-    cardChange = (val) => {
-        this.hasGo.add(this.activeKey)
-        this.hasGo.add(val)
-        runInAction('UP_ACTIVEKEY', () => {
-            this.activeKey = val
+    setDelCacheKey(delCacheKey) {
+        this.delCacheKey = delCacheKey
+    }
+
+    lastStep = () => {
+        return new Promise((resolve, reject) => {
+            this.confirmModal = Modal.confirm({
+                okText: 'Yes',
+                cancelText: 'No',
+                content: 'Save the Settings of this page?',
+                onCancel: () => {
+                    this.setDelCacheKey(this.activeKey)
+                    setImmediate(() => {
+                        this.setDelCacheKey('')
+                        this.confirmModal.destroy()
+                        resolve()
+                    })
+                },
+                onOk: () => {
+                    setImmediate(() => {
+                        this.confirmModal.destroy()
+                        resolve()
+                    })
+                }
+            })
         })
+    }
+
+
+    @action
+    cardChange = (e) => {
+        const val = e.target.value
+        if (val !== this.activeKey) {
+            this.lastStep().then(() => {
+                this.hasGo.add(this.activeKey)
+                this.hasGo.add(val)
+                runInAction('UP_ACTIVEKEY', () => {
+                    this.activeKey = val
+                })
+            })
+        }
+    }
+    onTabClick = (a) => {
+        console.log(a)
+        return false;
     }
 
     compuDis = (val) => {
@@ -117,6 +161,7 @@ class AppGroupModal extends React.Component<IProps>{
         })
     }
 
+
     componentWillMount() {
         this.runInit()
     }
@@ -128,8 +173,8 @@ class AppGroupModal extends React.Component<IProps>{
         return (
             <div className="AppGroupModal">
                 <div className={styles.box}>
-                    {
-                        <Tabs type="card" activeKey={this.activeKey} onChange={val => this.cardChange(val)}>
+                    {/* {
+                        <Tabs type="card" onTabClick={this.onTabClick} activeKey={this.activeKey} onChange={val => this.cardChange(val)}>
                             {
                                 tabArr.map(item => (
                                     <TabPane tab={camelCase(item)} key={item} disabled={this.compuDis(item)}>
@@ -138,6 +183,21 @@ class AppGroupModal extends React.Component<IProps>{
                                 ))
                             }
                         </Tabs>
+                    } */}
+
+                    <Radio.Group onChange={this.cardChange} value={this.activeKey}>
+                        {
+                            tabArr.map(item => (
+                                <Radio.Button key={item} disabled={this.compuDis(item)} value={item}>{camelCase(item)}</Radio.Button>
+                            ))
+                        }
+                    </Radio.Group>
+                    {
+                        tabArr.filter(item => item !== this.delCacheKey).map(item => (
+                            <div key={`${item}-box`} style={{ display: item === this.activeKey ? 'block' : 'none' }}>
+                                {this.getBox(item)}
+                            </div>
+                        ))
                     }
                 </div>
             </div>

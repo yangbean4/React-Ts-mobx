@@ -9,16 +9,18 @@ import * as styles from './style.scss'
 interface IStoreProps {
   routerStore?: RouterStore
   tmpSidebar?: IAuthStore.Sidebar[]
+  breadcrumbArr?: IGlobalStore.menu[]
 }
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { routerStore, authStore } = store
+    const { routerStore, authStore, globalStore } = store
     const { tmpSidebar } = authStore
-
+    const { breadcrumbArr } = globalStore
     return {
       routerStore,
       tmpSidebar,
+      breadcrumbArr
     }
   }
 )
@@ -76,6 +78,9 @@ class Bread extends React.Component<IStoreProps> {
 
   @computed
   get getPathArray() {
+    if (this.props.breadcrumbArr.length > 0) {
+      return this.props.breadcrumbArr
+    }
     const array = this.allConfig
     const current = this.currentMenu
     const result = []
@@ -87,13 +92,15 @@ class Bread extends React.Component<IStoreProps> {
       }
     }
     getPath(current)
-    // //console.log(result)
-    // result.shift()
+    console.log(result)
     return result
   }
   goto = (ele, index, arr) => {
     if (arr.length > 1 && index === 0 && ele.path) {
       this.props.routerStore.push(ele.path)
+    }
+    if (ele.onClick) {
+      ele.onClick()
     }
   }
 
@@ -103,7 +110,7 @@ class Bread extends React.Component<IStoreProps> {
         <Breadcrumb separator=">">
           {
             this.getPathArray.map((ele, index, arr) => (
-              <Breadcrumb.Item onClick={() => this.goto(ele, index, arr)} key={ele.id}>{ele.title}</Breadcrumb.Item>
+              <Breadcrumb.Item onClick={() => this.goto(ele, index, arr)} key={ele.id || ele.title}>{ele.title}</Breadcrumb.Item>
             ))
           }
         </Breadcrumb>

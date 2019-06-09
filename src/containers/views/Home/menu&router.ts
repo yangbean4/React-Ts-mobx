@@ -125,69 +125,30 @@ export const routerAndMenu: IRouter[] = [
         id: 521,
         pid: 52,
         isMenu: false,
+        // exact: true,
         path: '/currency/edit',
         title: 'Edit Virtual Currency',
         component: 'CurrencyEdit',
     },
-    {
-        id: 7,
-        isMenu: true,
-        title: 'Account',
-        icon: 'iconlog',
-        authName: 'Account'
-    },
-    {
-        pid: 7,
-        isMenu: true,
-        id: 71,
-        title: 'Subsite Account',
-        path: '/account/subsite',
-        authName: 'Account-Subsite Account',
-        component: 'Account',
-        exact: true,
-    },
-    {
-        id: 7101,
-        pid: 71,
-        path: '/account/subsite/add',
-        title: 'Add Account',
-        component: 'AccountModel',
-        isMenu: false
-    },
-    {
-        id: 7102,
-        pid: 71,
-        path: '/account/subsite/edit/:id',
-        title: 'Edit Account',
-        component: 'AccountModel',
-        isMenu: false
-    },
-    {
-        pid: 7,
-        isMenu: true,
-        id: 72,
-        title: 'Source Account',
-        path: '/account/source',
-        authName: 'Account-Source Account',
-        component: 'Account',
-        exact: true,
-    },
-    {
-        id: 7201,
-        pid: 72,
-        path: '/account/source/add',
-        title: 'Add Account',
-        component: 'AccountModel',
-        isMenu: false
-    },
-    {
-        id: 7202,
-        pid: 72,
-        path: '/account/source/edit/:id',
-        title: 'Edit Account',
-        component: 'AccountModel',
-        isMenu: false
-    },
+    // {
+    //     id: 523,
+    //     pid: 52,
+    //     isMenu: false,
+    //     exact: true,
+    //     path: '/currency/edit/add',
+    //     title: 'Add',
+    //     component: 'CurrencyEdit',
+    // },
+    // {
+    //     id: 524,
+    //     pid: 52,
+    //     isMenu: false,
+    //     exact: true,
+    //     path: '/currency/edit/edit',
+    //     title: 'Edit',
+    //     component: 'CurrencyEdit',
+    // },
+    /********* Company*********/
     {
         id: 6,
         isMenu: true,
@@ -248,6 +209,66 @@ export const routerAndMenu: IRouter[] = [
         title: 'Edit Subsite Company',
         component: 'CompanyModel',
         isMenu: false,
+    },
+    /************Account***************/
+    {
+        id: 7,
+        isMenu: true,
+        title: 'Account',
+        icon: 'iconlog',
+        authName: 'Account'
+    },
+    {
+        pid: 7,
+        isMenu: true,
+        id: 71,
+        title: 'Subsite Account',
+        path: '/account/subsite',
+        authName: 'Account-Subsite Account',
+        component: 'Account',
+        exact: true,
+    },
+    {
+        id: 7101,
+        pid: 71,
+        path: '/account/subsite/add',
+        title: 'Add Account',
+        component: 'AccountModel',
+        isMenu: false
+    },
+    {
+        id: 7102,
+        pid: 71,
+        path: '/account/subsite/edit/:id',
+        title: 'Edit Account',
+        component: 'AccountModel',
+        isMenu: false
+    },
+    {
+        pid: 7,
+        isMenu: true,
+        id: 72,
+        title: 'Source Account',
+        path: '/account/source',
+        authName: 'Account-Source Account',
+        component: 'Account',
+        exact: true,
+    },
+    {
+        id: 7201,
+        pid: 72,
+        path: '/account/source/add',
+        title: 'Add Account',
+        component: 'AccountModel',
+        isMenu: false
+    },
+    {
+        id: 7202,
+        pid: 72,
+        path: '/account/source/edit/:id',
+        title: 'Edit Account',
+        component: 'AccountModel',
+        isMenu: false
     },
 
     // {
@@ -399,6 +420,7 @@ export const routerAndMenu: IRouter[] = [
         component: 'PermissionModal',
         isMenu: false
     },
+    /********log********** */
     {
         id: 4,
         isMenu: true,
@@ -426,8 +448,8 @@ export const routerAndMenu: IRouter[] = [
         pid: 4,
         isMenu: true,
         hasBread: false,
-        title: 'Account',
-        path: '/log/account',
+        title: 'Company',
+        path: '/log/company',
         exact: true,
         component: 'Logs'
     },
@@ -436,8 +458,8 @@ export const routerAndMenu: IRouter[] = [
         pid: 4,
         isMenu: true,
         hasBread: false,
-        title: 'Company',
-        path: '/log/company',
+        title: 'Account',
+        path: '/log/account',
         exact: true,
         component: 'Logs'
     },
@@ -455,57 +477,73 @@ export const routerAndMenu: IRouter[] = [
         hasBread: false,
         title: 'Authorization',
     },
-     /****************** */
+
     {
         id: 411,
         pid: 41,
+        isMenu: true,
+        title: 'Apps Manage',
+        component: 'Logs',
+    },
+    {
+        id: 4111,
+        pid: 411,
+        isMenu: true,
+        path: '/log/app',
+        title: 'App',
+        component: 'Logs',
+    },
+    {
+        id: 4112,
+        pid: 411,
         isMenu: true,
         path: '/log/placement',
         title: 'placement',
         component: 'Logs',
     },
-   
+
     {
         id: 412,
         pid: 41,
         isMenu: true,
         path: '/log/virtual_currency',
-        title: 'virtual_currency',
+        title: 'Virtual Currency',
+        component: 'Logs',
+        exact: true,
+    },
+    {
+        id: 421,
+        pid: 42,
+        isMenu: true,
+        path: '/log/companysubsite',
+        title: 'Subsite Company',
         component: 'Logs',
     },
-    // {
-    //     id: 421,
-    //     pid: 42,
-    //     isMenu: true,
-    //     path: '/log/account',
-    //     title: 'Subsite Account',
-    //     component: 'Logs',
-    // },
-    // {
-    //     id: 422,
-    //     pid: 42,
-    //     isMenu: true,
-    //     path: '/log/account',
-    //     title: 'Source Account',
-    //     component: 'Logs',
-    // },
-    // {
-    //     id: 431,
-    //     pid: 43,
-    //     isMenu: true,
-    //     path: '/log/companysubsite',
-    //     title: 'Subsite Company',
-    //     component: 'Logs',
-    // },
-    // {
-    //     id: 432,
-    //     pid: 43,
-    //     isMenu: true,
-    //     path: '/log/companysource',
-    //     title: 'Source Company',
-    //     component: 'Logs',
-    // },
-    
+    {
+        id: 422,
+        pid: 42,
+        isMenu: true,
+        path: '/log/companysource',
+        title: 'Source Company',
+        component: 'Logs',
+    },
+    {
+        id: 431,
+        pid: 43,
+        isMenu: true,
+        path: '/log/accountsubsite',
+        title: 'Subsite Account',
+        component: 'Logs',
+    },
+    {
+        id: 432,
+        pid: 43,
+        isMenu: true,
+        path: '/log/accountsource',
+        title: 'Source Account',
+        component: 'Logs',
+    },
+
     {
         id: 441,
         pid: 44,
