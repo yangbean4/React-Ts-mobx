@@ -28,4 +28,5 @@ export interface ICurrencyForList {
 export interface SearchParams {
     pkg_name?: string,
     platform?: string,
+    app_name?: string
 }

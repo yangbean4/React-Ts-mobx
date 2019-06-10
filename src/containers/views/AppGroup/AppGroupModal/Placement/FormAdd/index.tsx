@@ -153,6 +153,9 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             data.offer_num = 1;
             data.min_offer_num = 1;
         }
+        runInAction('clear_image', () => {
+            this.imageTarget = {}
+        })
         data.reward_type = type !== 1 ? 1 : 2
         this.props.form.setFieldsValue(data)
     }
