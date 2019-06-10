@@ -345,7 +345,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                     visible={this.VCShow}
                     currency={{
                         platform: this.props.appGroup.platform,
-                        pkg_name: this.props.appGroup.pkg_name
+                        app_name: this.props.appGroup.app_name
                     }}
                     onOk={this.VCModelOk}
                     onCancel={() => this.toggleVCShow(false)}

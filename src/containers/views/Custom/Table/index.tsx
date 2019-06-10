@@ -10,12 +10,12 @@ import CustomModal from '../CustomModal'
 
 const statusOption = [
     {
-        key: 'Disabled',
-        value: 0
-    },
-    {
         key: 'Enable',
         value: 1
+    },
+    {
+        key: 'Disabled',
+        value: 0
     }
 ]
 
