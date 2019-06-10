@@ -5,6 +5,7 @@ export as namespace ICurrencyStore
 export interface CurrencyStore extends CurrencyStoreModel { }
 
 export interface ICurrency {
+    app_name?: string
     pkg_name?: string
     app_id?: string
     platform?: string

@@ -56,11 +56,25 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
     private loading: boolean = false
 
     @observable
+    private platform: boolean = false
+
+
+    @observable
     private pkgnameData: any[] = []
 
     @computed
     get isAdd() {
         return !this.props.currency
+    }
+
+    @computed
+    get usePlatform() {
+        return this.platform || 'android'
+    }
+
+    @computed
+    get usePkgnameData() {
+        return this.pkgnameData.filter(ele => ele.platform === this.usePlatform)
     }
 
     @action
@@ -84,47 +98,57 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                     try {
 
                         if (this.isAdd) {
+                            const {
+                                app_name,
+                                pkg_name
+                            } = this.pkgnameData.find(ele => ele.id === values.app_name)
                             values = {
                                 ...values,
-                                pkg_name: this.pkgnameData.find(ele => ele.id === values.pkg_name).pkg_name
+                                app_name
                             }
                             let data = await createCurrency({ ...values, type: 1 })
                             message.success(data.message)
                             const {
-                                pkg_name,
                                 platform
                             } = values
                             localStorage.setItem('TargetCurrency', JSON.stringify({
+                                app_name,
                                 pkg_name,
                                 platform
                             }))
                             routerStore.push('/currency/edit')
                         } else {
                             const currencyStr = localStorage.getItem('TargetCurrency') || '{}';
-                            const kg = type ? currency : JSON.parse(currencyStr)
+                            const kg = (type ? currency : JSON.parse(currencyStr)) as ICurrencyStore.ICurrencyForList
+                            const {
+                                app_name,
+                                platform
+                            } = kg;
                             // 再Model中新增时需要status的值，在正常添加时用values的值覆盖
                             const pre = { status: 1, ...values, type: 2 }
                             let data
                             if (currency.id) {
                                 data = await modifyCurrency({
                                     ...pre,
-                                    ...kg,
+                                    app_name,
+                                    platform,
                                     id: currency.id
                                 })
                             } else {
                                 data = await createCurrency({
                                     ...pre,
-                                    ...kg,
+                                    app_name,
+                                    platform,
                                 })
                             }
                             message.success(data.message)
                             this.props.onOk(data.data.id)
-                            if(this.props.type) {
+                            if (this.props.type) {
                                 this.props.form.resetFields()
                             }
                         }
                     } catch (err) {
-                        //console.log(err);
+                        console.log(err);
                     }
                     this.toggleLoading()
                 }
@@ -140,6 +164,11 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
         })
     }
 
+    @action
+    setPlatform = (type) => {
+        this.platform = type
+    }
+
     componentWillMount() {
         this.init()
     }
@@ -150,7 +179,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
         const {
             platform = 'android',
             vc_name = '',
-            pkg_name = "",
+            app_name = "",
             vc_exchange_rate = '',
             vc_callback_url = '',
             vc_desc = '',
@@ -180,27 +209,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                             )}
                         </FormItem>
                     }
-                    {
-                        this.isAdd && <FormItem label="Pkg Name">
-                            {getFieldDecorator('pkg_name', {
-                                initialValue: pkg_name,
-                                rules: [
-                                    {
-                                        required: true, message: "Required"
-                                    }
-                                ]
-                            })(<Select
-                                showSearch
-                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >
-                                {this.pkgnameData.map(c => (
-                                    <Select.Option value={c.id} key={c.id}>
-                                        {c.pkg_name}
-                                    </Select.Option>
-                                ))}
-                            </Select>)}
-                        </FormItem>
-                    }
+
                     {
                         this.isAdd && <FormItem label="Platform">
                             {getFieldDecorator('platform',
@@ -214,6 +223,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                                 })(
                                     <Select
                                         showSearch
+                                        onChange={(val) => this.setPlatform(val)}
                                         filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
                                         {platformOption.map(c => (
@@ -225,6 +235,29 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                                 )}
                         </FormItem>
                     }
+
+                    {
+                        this.isAdd && <FormItem label="App Name">
+                            {getFieldDecorator('app_name', {
+                                initialValue: app_name,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(<Select
+                                showSearch
+                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                            >
+                                {this.usePkgnameData.map(c => (
+                                    <Select.Option value={c.id} key={c.id}>
+                                        {c.app_name}
+                                    </Select.Option>
+                                ))}
+                            </Select>)}
+                        </FormItem>
+                    }
+
 
                     <FormItem label="VC Name">
                         {getFieldDecorator('vc_name', {
@@ -280,7 +313,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                         })(<Input />)}
                     </FormItem>
 
-                    <FormItem className={this.props.type? styles.vcMdoal :styles.btnBox} >
+                    <FormItem className={this.props.type ? styles.vcMdoal : styles.btnBox} >
                         <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
                         <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
                     </FormItem>

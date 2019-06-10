@@ -194,6 +194,14 @@ class PID extends ComponentExt<IStoreProps> {
           <div className={style.head}>
             <div className={style.row}>
               <div className={style.title}>
+                App Name
+                    </div>
+              <div className={style.value}>
+                {this.targetCurrency.app_name}
+              </div>
+            </div>
+            <div className={style.row}>
+              <div className={style.title}>
                 Pkg Name
                     </div>
               <div className={style.value}>

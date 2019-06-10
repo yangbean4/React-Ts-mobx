@@ -106,25 +106,28 @@ class PID extends ComponentExt<IProps> {
     this.loading = !this.loading
   }
 
-  @action
   initDetail = async () => {
     if (this.props.isAdd) {
       this.editPid()
     } else if (this.props.Id !== undefined) {
-      const res = await this.api.appGroup.placementList({ id: this.props.Id })
-      runInAction('SETLIST', () => {
-        this.thisDataList = res.data
-      })
+      this.getPlacementList()
     }
 
   }
 
+  @action
+  getPlacementList = async () => {
+    const res = await this.api.appGroup.placementList({ id: this.props.Id })
+    runInAction('SETLIST', () => {
+      this.thisDataList = res.data
+    })
+  }
 
   onCancel = () => {
     this.toggleIsTable()
   }
   onOK = (id: number) => {
-    this.initDetail()
+    this.getPlacementList()
     this.toggleIsTable()
   }
 

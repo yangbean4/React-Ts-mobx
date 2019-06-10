@@ -56,11 +56,13 @@ class CurrencyTable extends ComponentExt<IProps> {
         this.props.setCurrency(currency)
         const {
             app_name,
-            platform
+            platform,
+            pkg_name
         } = currency
         localStorage.setItem('TargetCurrency', JSON.stringify({
             platform,
-            pkg_name: app_name
+            app_name,
+            pkg_name,
         }))
         this.props.routerStore.push({
             pathname: '/currency/edit',
@@ -106,7 +108,8 @@ class CurrencyTable extends ComponentExt<IProps> {
                 }}
                 onChange={handleTableChange}
             >
-                <Table.Column<ICurrencyStore.ICurrencyForList> key="app_name" title="Pkg Name" dataIndex="app_name" width={200} />
+                <Table.Column<ICurrencyStore.ICurrencyForList> key="app_name" title="App name" dataIndex="app_name" width={200} />
+                <Table.Column<ICurrencyStore.ICurrencyForList> key="pkg_name" title="Pkg Name" dataIndex="pkg_name" width={200} />
                 <Table.Column<ICurrencyStore.ICurrencyForList> key="Platform" title="Platform" dataIndex="platform" width={100} />
                 <Table.Column<ICurrencyStore.ICurrencyForList>
                     key="action"
