@@ -140,8 +140,9 @@ export class AppGroupStore extends StoreExt {
     }
 
     createAppGroup = async (appGroup: IAppGroupStore.IAppGroup) => {
-        this.setAppGroup(appGroup)
-        return await this.api.appGroup.createAppGroup(appGroup)
+        const res = await this.api.appGroup.createAppGroup(appGroup)
+        this.setAppGroup({ ...appGroup, id: res.data.id })
+        return res
     }
 
     @action
