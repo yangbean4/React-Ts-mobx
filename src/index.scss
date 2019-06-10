@@ -7,9 +7,12 @@
     height: 100%;
     :global(.ant-form-item-label) {
       // width: 220px;
+      height: 30px;
+      line-height: 30px;
     }
     :global(.ant-form-item-control) {
-
+      height: 30px;
+      line-height: 30px;
     }
   }
  
@@ -43,9 +46,12 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    .anticon {
+      vertical-align: middle;
+    }
   }
   .childLeftSearch > * {
     float: left;
-    height: 40px !important;
+    height: 30px!important;
   }
 }
