@@ -698,12 +698,12 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                         })(<InputColor />)}
                                         <span className={styles.lineSpan}>   decr </span>
                                     </FormItem>
-                                    <FormItem {...noLabelLayout}>
+                                    {/* <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.ad_edge_color', {
                                             initialValue: style_detail.ad_edge_color || InitColor,
                                         })(<InputColor />)}
                                         <span className={styles.lineSpan}>   edge </span>
-                                    </FormItem>
+                                    </FormItem> */}
                                 </Col>
                             </Row>
 
@@ -753,7 +753,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.button_background_color', {
                                             initialValue: style_detail.button_background_color || InitColor,
-                                        })(<InputColor />)}
+                                        })(<InputColor onChange={(color) => this.removeFile("button_background_image", color)} />)}
                                         <span className={styles.lineSpan}>   bkgd </span>
                                     </FormItem>
                                     <FormItem {...noLabelLayout}>
@@ -766,7 +766,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.button_unavail_color', {
                                             initialValue: style_detail.button_unavail_color || InitColor,
-                                        })(<InputColor onChange={(color) => this.removeFile("button_background_image", color)} />)}
+                                        })(<InputColor />)}
                                         <span className={styles.lineSpanOr}>unavail&nbsp;&nbsp;&nbsp;&nbsp;or</span>
                                     </FormItem>
                                     {getUnpload('button_background_image')}
