@@ -101,7 +101,7 @@ export interface Placement {
     status?: number
     placement_id?: string
     placement_name?: string
-    ige_carrier_block?: string[]
+    ige_carrier_support?: string[]
     frequency_num?: number
     frequency_time?: number
     accept_cpm?: number // 新增

@@ -114,6 +114,7 @@ class AccountSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   allowClear
                   showSearch
+                  mode='multiple'
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >

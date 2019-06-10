@@ -77,11 +77,13 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
           </Col>
           <Col span={span}>
             <FormItem label="Platform" className='minInput'>
-              {getFieldDecorator('platform')(
+              {getFieldDecorator('platform', {
+                initialValue: filters.platform
+              })(
                 <Select
                   allowClear
                   showSearch
-
+                  mode='multiple'
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {platformOption.map(c => (

@@ -498,7 +498,7 @@ export const routerAndMenu: IRouter[] = [
         pid: 411,
         isMenu: true,
         path: '/log/placement',
-        title: 'placement',
+        title: 'Placement',
         component: 'Logs',
     },
 

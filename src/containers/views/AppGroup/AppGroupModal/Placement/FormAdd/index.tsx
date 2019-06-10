@@ -129,7 +129,10 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get usePidtype() {
-        return [this.pidType, this.Palcement.pid_type].find(ele => ele !== undefined)
+        const prov = this.props.appGroup && this.props.appGroup.contains_native_s2s_pid_types === 1 ? 5 : undefined
+        const value = [this.pidType, this.Palcement.pid_type, prov].find(ele => ele !== undefined)
+        console.log(value)
+        return value
     }
 
     @computed
@@ -190,7 +193,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
         const { form, Id, placementID, onOk } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
-                values = { ...values, ige_carrier_block: values.ige_carrier_block.join(',') }
+                values = { ...values, ige_carrier_support: values.ige_carrier_support.join(',') }
                 if (!err) {
                     this.toggleLoading()
                     try {
@@ -217,7 +220,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             runInAction('set_p', () => {
                 this.Palcement = {
                     ...res.data,
-                    ige_carrier_block: res.data.ige_carrier_block.split(',')
+                    ige_carrier_support: res.data.ige_carrier_support.split(',')
                 }
             })
         }
@@ -275,11 +278,12 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             status = 1,
             placement_id = '',
             placement_name = "",
-            ige_carrier_block = [],
+            ige_carrier_support = [],
             frequency_num,
             frequency_time,
             accept_cpm, // 新增
-            pid_type = this.props.appGroup && this.props.appGroup.contains_native_s2s_pid_types === 1 ? 5 : undefined,
+            // pid_type = this.props.appGroup && this.props.appGroup.contains_native_s2s_pid_types === 1 ? 5 : undefined,
+            pid_type = this.usePidtype,
             min_offer_num,
             offer_num,
             budget,
@@ -396,9 +400,9 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
 
                     <FormItem label="IGE Carrier">
-                        {getFieldDecorator('ige_carrier_block',
+                        {getFieldDecorator('ige_carrier_support',
                             {
-                                initialValue: ige_carrier_block,
+                                initialValue: ige_carrier_support,
                                 rules: [
                                     {
                                         required: true, message: "Required"
@@ -474,7 +478,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={0} />)}
+                        })(<InputNumber precision={2} />)}
                     </FormItem>
 
                     <Col span={4} className={styles.companyTag}>
@@ -611,12 +615,12 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             </FormItem>
                             <div className={`${styles.formItemBox} ${styles.noTitle}`}>
 
-                                {/* <FormItem {...noLabelLayout}>
+                                <FormItem {...noLabelLayout}>
                                     {getFieldDecorator('style_detail.title_font', {
                                         initialValue: style_detail.title_font,
-                                    })(<Input />)}
+                                    })(<Input style={{ width: '60%' }} />)}
                                     <span className={styles.lineSpan}>   font   </span>
-                                </FormItem> */}
+                                </FormItem>
                                 <FormItem {...noLabelLayout}>
                                     {getFieldDecorator('style_detail.title_text_color', {
                                         initialValue: style_detail.title_text_color || InitColor,
@@ -845,7 +849,9 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                                 ))}
                                             </Select>
                                         )}
-                                    <MyIcon className={styles.uploadICON} onClick={() => this.toggleVCShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
+                                    {
+                                        this.isAdd && <MyIcon className={styles.uploadICON} onClick={() => this.toggleVCShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
+                                    }
                                 </FormItem>
                                 <FormItem label="Exchange Rate">
                                     {this.VcexRate} = 1$

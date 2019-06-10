@@ -17,5 +17,5 @@ export interface IAccount {
 }
 export interface SearchParams {
     company_name?: string,
-    status?: 0 | 1
+    status?: (0 | 1)[]
 }

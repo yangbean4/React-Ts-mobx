@@ -5,6 +5,23 @@
     .ant-tabs-bar {
       display: none;
     }
+    .tab-item {
+      width: 100px;
+      height: 40px;
+      text-align: center;
+      line-height: 40px;
+      font-size: 14px;
+      color:rgba(62,54,100,1);
+      &:global(.ant-radio-button-wrapper-checked){
+        background-color:rgba(242,244,254,1);
+        height: 40px;
+        color:rgba(102,127,253,1);
+        border:1px solid rgba(228,237,240,1);
+        border-bottom: 2px solid rgba(102,127,253,1);
+        box-shadow: none;
+      }
+    }
+    
     .ant-tabs-bar {
       margin: 0;
     }

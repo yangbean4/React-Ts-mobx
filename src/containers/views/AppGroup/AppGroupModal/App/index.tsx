@@ -53,7 +53,7 @@ interface IStoreProps {
 }
 
 interface IProps extends IStoreProps {
-    Id?: string | number
+    Id?: number
     onCancel?: () => void
     isAdd?: boolean
     onSubmit?: (data?: number) => void
@@ -379,15 +379,16 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     {
                                         required: true, message: "Required",
                                     },
-                                    {
-                                        validator: (r, v, callback) => {
-                                            const reg = this.usePlatform === 'android' ? /^com./ : /^[0-9]*$/
-                                            if (!reg.test(v)) {
-                                                callback('Pkgname for android /Ios platform should start with com.xxx/number!')
-                                            }
-                                            callback()
-                                        }
-                                    }
+                                    // {
+                                    //     validator: (r, v, callback) => {
+                                    //         const reg = this.usePlatform === 'android' ? /^com./ : /^[0-9]*$/
+                                    //         if (!reg.test(v)) {
+                                    //             const msg = this.usePlatform === 'android' 
+                                    //             callback('Pkgname for android /Ios platform should start with com.xxx/number!')
+                                    //         }
+                                    //         callback()
+                                    //     }
+                                    // }
                                 ] : undefined
                             })(<Input disabled={!this.useNot_in_appstore || (!this.isAdd && !!pkg_name)} />)}
                         </FormItem>

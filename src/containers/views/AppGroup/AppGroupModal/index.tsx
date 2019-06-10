@@ -104,9 +104,9 @@ class AppGroupModal extends React.Component<IProps>{
         const val = e.target.value
         if (val !== this.activeKey) {
             this.lastStep().then(() => {
-                this.hasGo.add(this.activeKey)
-                this.hasGo.add(val)
                 runInAction('UP_ACTIVEKEY', () => {
+                    this.hasGo.add(this.activeKey)
+                    this.hasGo.add(val)
                     this.activeKey = val
                 })
             })
@@ -184,7 +184,7 @@ class AppGroupModal extends React.Component<IProps>{
                     <Radio.Group onChange={this.cardChange1} value={this.activeKey}>
                         {
                             tabArr.map(item => (
-                                <Radio.Button key={item} disabled={this.compuDis(item)} value={item}>{camelCase(item)}</Radio.Button>
+                                <Radio.Button key={item} className="tab-item" disabled={this.compuDis(item)} value={item}>{camelCase(item)}</Radio.Button>
                             ))
                         }
                     </Radio.Group>
