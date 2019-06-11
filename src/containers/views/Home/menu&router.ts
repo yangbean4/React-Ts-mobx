@@ -10,23 +10,23 @@ const loadComponent = (loader: () => Promise<any>) =>
 
 export const asynchronousComponents = {
     //------------------Apps
-    Apps: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppGroup')),
-    AppsModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppGroup/AppGroupModal')),
+    Apps: loadComponent(() => import(/* webpackChunkName: "Apps" */ '@views/AppGroup')),
+    AppsModel: loadComponent(() => import(/* webpackChunkName: "AppsModel" */ '@views/AppGroup/AppGroupModal')),
 
     Currency: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency')),
-    CurrencyAdd: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency/CurrencyModal/Add')),
-    CurrencyEdit: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency/CurrencyModal/Edit')),
+    CurrencyAdd: loadComponent(() => import(/* webpackChunkName: "CurrencyAdd" */ '@views/Currency/CurrencyModal/Add')),
+    CurrencyEdit: loadComponent(() => import(/* webpackChunkName: "CurrencyEdit" */ '@views/Currency/CurrencyModal/Edit')),
 
-    Account: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Account')),
-    AccountModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Account/AccountModel')),
+    Account: loadComponent(() => import(/* webpackChunkName: "Account" */ '@views/Account')),
+    AccountModel: loadComponent(() => import(/* webpackChunkName: "AccountModel" */ '@views/Account/AccountModel')),
 
     CompanySite: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Companysite')),
     CompanySource: loadComponent(() => import(/* webpackChunkName: "CompanySource" */ '@views/Companysource')),
     CompanyModel: loadComponent(() => import(/* webpackChunkName: "CompanyModel" */ '@views/Companysite/CompanyModel')),
-    CompanysourceModel: loadComponent(() => import(/* webpackChunkName: "CompanyModel" */ '@views/Companysource/AdsourceModel')),
+    CompanysourceModel: loadComponent(() => import(/* webpackChunkName: "CompanysourceModel" */ '@views/Companysource/AdsourceModel')),
 
     Config: loadComponent(() => import(/* webpackChunkName: "Config" */ '@views/Config')),
-    ConfigModel: loadComponent(() => import(/* webpackChunkName: "Config" */ '@views/Config/ConfigModal')),
+    ConfigModel: loadComponent(() => import(/* webpackChunkName: "ConfigModel" */ '@views/Config/ConfigModal')),
 
     Users: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Users')),
     UserModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/Users/UserModal')),
@@ -43,6 +43,11 @@ export const asynchronousComponents = {
     Logs: loadComponent(() => import(/* webpackChunkName: "Logs" */ '@views/Log')),
 
     Test: loadComponent(() => import(/* webpackChunkName: "Test" */ '@views/Test/useEffrct.js')),
+
+
+    Endcard: loadComponent(() => import(/* webpackChunkName: "Endcard" */ '@views/Endcard')),
+    EndcardAdd: loadComponent(() => import(/* webpackChunkName: "EndcardAdd" */ '@views/Endcard/EndcardModal/Add')),
+    EndcardEdit: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/Endcard/EndcardModal/Edit')),
 }
 
 // 所有路由的key
@@ -131,24 +136,6 @@ export const routerAndMenu: IRouter[] = [
         title: 'Edit Virtual Currency',
         component: 'CurrencyEdit',
     },
-    // {
-    //     id: 523,
-    //     pid: 52,
-    //     isMenu: false,
-    //     exact: true,
-    //     path: '/currency/edit/add',
-    //     title: 'Add',
-    //     component: 'CurrencyEdit',
-    // },
-    // {
-    //     id: 524,
-    //     pid: 52,
-    //     isMenu: false,
-    //     exact: true,
-    //     path: '/currency/edit/edit',
-    //     title: 'Edit',
-    //     component: 'CurrencyEdit',
-    // },
     // --------Offer-----------
     {
         id: 8,
@@ -184,9 +171,27 @@ export const routerAndMenu: IRouter[] = [
         exact: true,
         title: 'Endcard',
         authName: 'Offers-Endcard',
-        component: 'Apps',
+        component: 'Endcard',
         path: '/endcard'
     },
+    {
+        id: 521,
+        pid: 52,
+        isMenu: false,
+        path: '/endcard/add',
+        title: 'Add Endcard',
+        component: 'EndcardAdd',
+    },
+    {
+        id: 521,
+        pid: 52,
+        isMenu: false,
+        // exact: true,
+        path: '/endcard/edit/:id',
+        title: 'Edit Endcard',
+        component: 'EndcardEdit',
+    },
+
     {
         id: 84,
         pid: 8,

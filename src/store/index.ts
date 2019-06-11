@@ -29,3 +29,6 @@ export { default as currencyStore } from './currencyStore'
 export { default as accountStore } from './accountStore'
 
 export { default as appGroupStore } from './appGroupStore'
+
+export { default as endcardStore } from './endcardStore'
+

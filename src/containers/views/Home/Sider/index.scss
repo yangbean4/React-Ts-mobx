@@ -8,10 +8,14 @@
 }
 
 .logoBox {
+  height: 80px;
   padding: 10px 0;
-  font-size: 50px;
   text-align: center;
-
+  background-image: url("../../../../assets/images/logo.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-origin: content-box;
   &.dark {
     color: rgba(white, 0.65);
   }
