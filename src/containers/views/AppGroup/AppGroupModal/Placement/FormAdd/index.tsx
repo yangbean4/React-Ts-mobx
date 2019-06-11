@@ -618,12 +618,12 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             </FormItem>
                             <div className={`${styles.formItemBox} ${styles.noTitle}`}>
 
-                                <FormItem {...noLabelLayout}>
+                                {/* <FormItem {...noLabelLayout}>
                                     {getFieldDecorator('style_detail.title_font', {
                                         initialValue: style_detail.title_font,
                                     })(<Input style={{ width: '60%' }} />)}
                                     <span className={styles.lineSpan}>   font   </span>
-                                </FormItem>
+                                </FormItem> */}
                                 <FormItem {...noLabelLayout}>
                                     {getFieldDecorator('style_detail.title_text_color', {
                                         initialValue: style_detail.title_text_color || InitColor,
@@ -813,11 +813,11 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 </Col>
                             </Row>
 
-                            <FormItem label='Content Font'>
+                            {/* <FormItem label='Content Font'>
                                 {getFieldDecorator('style_detail.content_font', {
                                     initialValue: style_detail.content_font,
                                 })(<Input />)}
-                            </FormItem>
+                            </FormItem> */}
                         </React.Fragment>
                     }
 
