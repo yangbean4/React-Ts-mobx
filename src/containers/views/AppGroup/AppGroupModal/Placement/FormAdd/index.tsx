@@ -841,7 +841,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                         })(
                                             <Select
                                                 showSearch
-                                                disabled={!this.isAdd}
+                                                disabled={!this.isAdd && !!vc_id}
                                                 onChange={this.VcChange}
                                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                             >
@@ -853,7 +853,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                             </Select>
                                         )}
                                     {
-                                        this.isAdd && <MyIcon className={styles.uploadICON} onClick={() => this.toggleVCShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
+                                        (this.isAdd || !vc_id) && <MyIcon className={styles.uploadICON} onClick={() => this.toggleVCShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
                                     }
                                 </FormItem>
                                 <FormItem label="Exchange Rate">
