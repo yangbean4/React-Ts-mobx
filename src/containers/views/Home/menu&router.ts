@@ -70,6 +70,7 @@ export interface IRouter extends IMenu {
 export const templateId = 2
 export const logId = 442
 export const routerAndMenu: IRouter[] = [
+    // -------Apps-----------
     {
         id: 5,
         isMenu: true,
@@ -148,7 +149,65 @@ export const routerAndMenu: IRouter[] = [
     //     title: 'Edit',
     //     component: 'CurrencyEdit',
     // },
-    /********* Company*********/
+    // --------Offer-----------
+    {
+        id: 8,
+        isMenu: true,
+        title: 'Offers',
+        icon: 'iconlog',
+        authName: 'Offers'
+    },
+    {
+        id: 81,
+        pid: 8,
+        isMenu: true,
+        exact: true,
+        title: 'Apps Manage',
+        authName: 'Offers-Apps Manage',
+        component: 'Apps',
+        path: '/offers'
+    },
+    {
+        id: 82,
+        pid: 8,
+        isMenu: true,
+        exact: true,
+        title: 'Creatives',
+        authName: 'Offers-Creatives',
+        component: 'Apps',
+        path: '/creatives'
+    },
+    {
+        id: 83,
+        pid: 8,
+        isMenu: true,
+        exact: true,
+        title: 'Endcard',
+        authName: 'Offers-Endcard',
+        component: 'Apps',
+        path: '/endcard'
+    },
+    {
+        id: 84,
+        pid: 8,
+        isMenu: true,
+        exact: true,
+        title: 'Comments',
+        authName: 'Offers-Comments',
+        component: 'Apps',
+        path: '/comments'
+    },
+    {
+        id: 85,
+        pid: 8,
+        isMenu: true,
+        exact: true,
+        title: 'Campaigns',
+        authName: 'Offers-Campaigns',
+        component: 'Apps',
+        path: '/campaigns'
+    },
+    // --------Company---------------
     {
         id: 6,
         isMenu: true,
@@ -270,14 +329,6 @@ export const routerAndMenu: IRouter[] = [
         component: 'AccountModel',
         isMenu: false
     },
-
-    // {
-    //     id: 8,
-    //     isMenu: true,
-    //     title: 'Offers',
-    //     icon: 'iconlog',
-    //     authName: 'Offers'
-    // },
     // ----------------------------------------
     {
         id: 1,
