@@ -114,6 +114,10 @@ export const IGE = [
   {
     key: '4g',
     value: '4g'
+  },
+  {
+    key: '5g',
+    value: '5g'
   }
 ]
 

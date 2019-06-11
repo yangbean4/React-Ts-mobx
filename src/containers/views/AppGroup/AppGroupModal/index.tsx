@@ -103,13 +103,13 @@ class AppGroupModal extends React.Component<IProps>{
     cardChange1 = (e) => {
         const val = e.target.value
         if (val !== this.activeKey) {
-            this.lastStep().then(() => {
-                runInAction('UP_ACTIVEKEY', () => {
-                    this.hasGo.add(this.activeKey)
-                    this.hasGo.add(val)
-                    this.activeKey = val
-                })
+            // this.lastStep().then(() => {
+            runInAction('UP_ACTIVEKEY', () => {
+                this.hasGo.add(this.activeKey)
+                this.hasGo.add(val)
+                this.activeKey = val
             })
+            // })
         }
     }
     onTabClick = (a) => {
