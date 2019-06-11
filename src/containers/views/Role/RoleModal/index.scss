@@ -6,6 +6,9 @@
     margin-bottom: 30px;
     :global(.ant-form-item-control-wrapper) {
       width: 280px;
+      :global(.ant-form-item-control){
+        height: auto;
+      }
     }
   }
 
