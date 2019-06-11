@@ -364,7 +364,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     onChange={this.inAppstoreChange}
                                 >
                                     {web.YesOrNo.map(c => (
-                                        <Radio key={c.key} value={c.value}>
+                                        <Radio disabled={c.value && !this.isAdd && !not_in_appstore} key={c.key} value={c.value}>
                                             {c.key}
                                         </Radio>
                                     ))}
