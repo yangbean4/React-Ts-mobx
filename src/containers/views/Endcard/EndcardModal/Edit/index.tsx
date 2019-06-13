@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { observable, action, runInAction } from 'mobx'
-import { Button, Table, Icon, Popover } from 'antd'
+import { Button, Table, Icon, Popover, Divider } from 'antd'
 import { ComponentExt } from '@utils/reactExt'
 import { statusOption } from '@config/web'
 import FormAdd from '../Add'
@@ -50,7 +50,7 @@ class VcTable extends ComponentExt<TableProps> {
               <Popover
                 placement="top"
                 trigger="click"
-                content={(<img src={_} />)}
+                content={(<img style={{ width: 100, height: 100 }} src={_} />)}
               >
                 <a href="javascript:;" key='btn-edit' >
                   <Icon type="eye" />
@@ -65,9 +65,6 @@ class VcTable extends ComponentExt<TableProps> {
           key="status"
           title="Status"
           dataIndex="status"
-          render={(_) => (
-            statusOption.find(item => item.value === _).key
-          )}
           width={200} />
 
         <Table.Column<IEndcardStore.IEndcard>
@@ -79,6 +76,7 @@ class VcTable extends ComponentExt<TableProps> {
               <a href="javascript:;" onClick={() => onEdit(index)}>
                 <Icon type="form" />
               </a>
+              <Divider key='Divider1' type="vertical" />
               <a href="javascript:;" onClick={() => onCopy(index)}>
                 <Icon type="copy" />
               </a>
@@ -194,7 +192,7 @@ class PID extends ComponentExt<IStoreProps> {
   }
 
   editPid = (index?) => {
-    const data = index === undefined ? {} : this.thisDataList[index]
+    const data = index === undefined ? this.targetEndcard : this.thisDataList[index]
     runInAction('set_GJB', () => {
       this.GJB = data
     })
@@ -253,6 +251,7 @@ class PID extends ComponentExt<IStoreProps> {
                 <FormAdd
                   onCancel={this.onCancel}
                   onOk={this.onOK}
+                  endcardId={this.GJB.id}
                   endcard={this.GJB} />
               </div>
           }

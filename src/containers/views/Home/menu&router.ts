@@ -188,7 +188,7 @@ export const routerAndMenu: IRouter[] = [
         component: 'Endcard',
         path: '/endcard'
     },
-    // -------Comments--------
+
     {
         id: 832,
         pid: 83,
@@ -211,12 +211,11 @@ export const routerAndMenu: IRouter[] = [
         id: 8311,
         pid: 831,
         isMenu: false,
-        // exact: true,
         path: '/endcard/edit/:id',
         title: 'Edit Endcard',
         component: 'EndcardEdit',
     },
-
+    // -------Comments--------
     {
         id: 84,
         pid: 8,

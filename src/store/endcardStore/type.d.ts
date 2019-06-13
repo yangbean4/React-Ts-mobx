@@ -22,6 +22,7 @@ export interface IEndcard {
     automatic_jump?: number
     is_show?: number
     id?: number
+    endcard_image_url_web_show?: string
 }
 
 export interface IEndcardForList {

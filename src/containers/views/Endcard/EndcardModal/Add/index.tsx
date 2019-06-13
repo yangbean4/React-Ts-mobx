@@ -84,7 +84,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     private platform: string
 
     @observable
-    private appId: string
+    private appId: string = this.props.endcard.app_id
 
     @observable
     private endcardTarget: IEndcardStore.IEndcard = {}
@@ -112,7 +112,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get appName() {
-        return this.usePkgnameData.find(ele => ele.app_id === this.appId).app_name
+        return (this.usePkgnameData.find(ele => ele.app_id === this.appId) || {}).app_name
     }
 
     @computed
@@ -170,19 +170,19 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
                     this.toggleLoading()
                     try {
-                        const app_id = this.appId
-                        values = {
-                            ...values,
-                            app_id,
-                        }
 
                         if (this.isAdd) {
                             if (endcard) {
                                 values = {
-                                    ...this.endcardTarget,
+                                    ...endcard,
                                     ...values,
                                 }
                             } else {
+                                const app_id = this.appId
+                                values = {
+                                    ...values,
+                                    app_id,
+                                }
                                 localStorage.setItem('TargetEndcard', JSON.stringify(
                                     {
                                         app_id,
@@ -192,9 +192,10 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                             }
                             let data = await createEndcard(values)
                             message.success(data.message)
-                            routerStore.push(`/endcard/edit/${data.app_key}`)
+                            endcard ? this.props.onOk(data.data.id) : routerStore.push(`/endcard/edit/${data.data.app_key}`)
                         } else {
                             const data = await modifyEndcard({
+                                ...this.endcardTarget,
                                 ...values,
                                 id: endcardId
                             })
@@ -235,7 +236,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     getDetail = async () => {
-        const res = await this.api.appGroup.getAppGroupInfo({ id: this.props.endcardId })
+        const res = await this.api.endcard.getEndcardInfo({ id: this.props.endcardId })
         runInAction('SET_APPGroup', () => {
             this.endcardTarget = { ...res.data }
         })
@@ -347,9 +348,9 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
             status = 1,
         } = this.endcardTarget
 
-        const endcard_image = this.imageTarget['endcard_image_url'] || endcard_image_url
+        const endcard_image = this.imageTarget['endcard_image_url'] || this.endcardTarget.endcard_image_url_web_show
         const ctaPic = this.imageTarget['cta_pic'] || cta_pic
-        console.log(ctaPic);
+
         return (
             <div className='sb-form'>
                 <Form {...this.props.type ? miniLayout : formItemLayout} className={styles.endcardModal} >
@@ -363,7 +364,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                     {
                         !this.props.type && <FormItem label="Status">
                             {getFieldDecorator('status', {
-                                initialValue: status,
+                                initialValue: Number(status),
                                 rules: [
                                     {
                                         required: true, message: "Required"
@@ -382,7 +383,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                     }
 
                     {
-                        this.isAdd && <FormItem label="Platform">
+                        !this.props.endcard && <FormItem label="Platform">
                             {getFieldDecorator('platform',
                                 {
                                     initialValue: platform,
@@ -408,7 +409,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                     }
 
                     {
-                        this.isAdd && <FormItem label="App ID">
+                        !this.props.endcard && <FormItem label="App ID">
                             {getFieldDecorator('app_id', {
                                 initialValue: app_id,
                                 rules: [
