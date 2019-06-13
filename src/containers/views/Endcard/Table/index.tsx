@@ -53,8 +53,18 @@ class EndcardTable extends ComponentExt<IProps> {
 
     @action
     modifyEndcard = (endcard: IEndcardStore.IEndcardForList, type?) => {
+        const {
+            app_id,
+            platform
+        } = endcard
+        localStorage.setItem('TargetEndcard', JSON.stringify(
+            {
+                app_id,
+                platform
+            }
+        ))
         this.props.routerStore.push({
-            pathname: `/endcard/edit/${endcard.id}`,
+            pathname: `/endcard/edit/${endcard.app_key}`,
             state: {
                 type
             }

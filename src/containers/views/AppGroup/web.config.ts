@@ -71,15 +71,15 @@ export const isBlock = [
 export const recoverFlag = [
   {
     key: 'Only Cover',
-    value: 1
+    value: 0
   },
   {
     key: 'Video+Cover',
-    value: 2
+    value: 1
   },
   {
     key: 'Both',
-    value: 3
+    value: 2
   }
 ]
 

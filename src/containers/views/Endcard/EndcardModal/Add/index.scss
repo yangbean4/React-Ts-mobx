@@ -4,9 +4,9 @@
   padding-top: 30px;
   :global(.ant-form-item) {
     margin-bottom: 30px;
-    :global(.ant-form-item-control-wrapper) {
-      width: 280px;
-    }
+    // :global(.ant-form-item-control-wrapper) {
+    //   width: 280px;
+    // }
   }
 
   .btnBox {
@@ -21,13 +21,7 @@
 }
 
 .hasImg {
-  // :global(.ant-radio-wrapper) {
-  //   margin-right: 20px;
-
-  //   :global(.ant-radio){
-
-  //   }
-  // }
+  height: 120px;
   .GroupBox {
     margin-right: 20px;
     float: left;
@@ -51,4 +45,74 @@
   font-size: 12px;
   font-weight: 300;
   color: rgba(154, 151, 174, 1);
+}
+
+.UploadBox {
+  .title {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(154, 151, 174, 1);
+    & > div {
+      width: max-content;
+    }
+  }
+  .imgbox {
+    width: max-content;
+    height: max-content;
+  }
+  .sunjiao {
+    background-color: #fafbff;
+    border: 1px solid rgba(228, 237, 240, 1);
+    :global(img) {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .heng {
+    width: 192px;
+    height: 108px;
+  }
+  .shu {
+    height: 192px;
+    width: 108px;
+  }
+}
+
+.autoHeight {
+  height: max-content;
+  :global {
+    .ant-form-item-children {
+      height: max-content;
+    }
+    .ant-form-item-control {
+      height: max-content;
+    }
+  }
+}
+
+.btnUploadGroup {
+  & > :global(div) {
+    float: left;
+  }
+  .btnUpload {
+    width: 211px;
+    height: 31px;
+    border: 1px solid rgba(228, 237, 240, 1);
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    :global(img) {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .btnUploadTitle {
+    height: 31px;
+    line-height: 31px;
+    color: rgba(154, 151, 174, 1);
+    margin-left: 10px;
+  }
 }

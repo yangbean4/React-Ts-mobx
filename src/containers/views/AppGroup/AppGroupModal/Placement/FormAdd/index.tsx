@@ -6,10 +6,10 @@ import { FormComponentProps } from 'antd/lib/form'
 import * as web from '@views/AppGroup/web.config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-import InputColor from '@components/InputColor/index'
 import MyIcon from '@components/Icon'
 import VCmodel from './VCmodel';
 const FormItem = Form.Item
+import InputColor from '@components/InputColor/index'
 const InitColor = '#FF1D0C';
 
 interface hasResult {

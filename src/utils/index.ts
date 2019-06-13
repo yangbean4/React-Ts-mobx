@@ -323,3 +323,22 @@ export const getGuId = (): string => {
         return v.toString(16);
     }).toUpperCase();
 }
+
+export const testSize = (target: File, maxWidth, maxHeight) => {
+    return new Promise((resolve, reject) => {
+        const objectURL = window.createObjectURL != undefined
+            ? window.createObjectURL(target) : window.URL != undefined
+                ? window.URL.createObjectURL(target) : window.webkitURL != undefined
+                    ? window.webkitURL.createObjectURL(target) : null
+        const imageCopy = new Image()
+        imageCopy.src = objectURL
+        imageCopy.onload = () => {
+            const width = imageCopy.width
+            const height = imageCopy.height
+            if (width !== maxWidth || height !== maxHeight) {
+                reject()
+            }
+            resolve()
+        }
+    })
+}

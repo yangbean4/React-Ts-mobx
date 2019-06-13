@@ -21,7 +21,7 @@ export interface IEndcard {
     cta_pic?: string
     automatic_jump?: number
     is_show?: number
-    id?: string
+    id?: number
 }
 
 export interface IEndcardForList {
@@ -30,7 +30,9 @@ export interface IEndcardForList {
     endcard_image_url?: string
     template_id?: string
     status?: number
-    id?: string
+    app_id?: string
+    platform?: string
+    app_key?: string
 }
 
 export interface SearchParams {
@@ -52,5 +54,6 @@ export interface OptionListDb {
     template?: ({
         id?: string | number
         template_url?: string
+        template_image?: string
     })[],
 }

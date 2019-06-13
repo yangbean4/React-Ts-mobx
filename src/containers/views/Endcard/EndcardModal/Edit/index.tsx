@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { observable, action, runInAction } from 'mobx'
-import { Button, Table, Icon } from 'antd'
+import { Button, Table, Icon, Popover } from 'antd'
 import { ComponentExt } from '@utils/reactExt'
 import { statusOption } from '@config/web'
 import FormAdd from '../Add'
@@ -9,6 +9,7 @@ import * as style from './index.scss'
 
 interface TableProps {
   onEdit: (index: number) => void
+  onCopy: (index: number) => void
   data: any[]
 }
 
@@ -17,7 +18,7 @@ interface TableProps {
 class VcTable extends ComponentExt<TableProps> {
 
   render() {
-    const { data, onEdit } = this.props;
+    const { data, onEdit, onCopy } = this.props;
 
     return (
       <Table<IEndcardStore.IEndcard>
@@ -29,20 +30,37 @@ class VcTable extends ComponentExt<TableProps> {
         scroll={{ y: scrollY }}
       >
         <Table.Column<IEndcardStore.IEndcard>
-          key="vc_name"
-          title="VC Name"
-          dataIndex="vc_name"
+          key="endcard_name"
+          title="Endcard Name"
+          dataIndex="endcard_name"
           width={200}
         />
         <Table.Column<IEndcardStore.IEndcard>
-          key="vc_exchange_rate"
-          title="VC Exchang Rate"
-          dataIndex="vc_exchange_rate"
+          key="language"
+          title="Endcard Language"
+          dataIndex="language"
+          width={200} />
+
+        <Table.Column<IEndcardStore.IEndcard>
+          key="endcard_image_url_web_show"
+          title="Cover Image"
+          dataIndex="endcard_image_url_web_show"
           render={(_) => (
-            `${_}=1$`
+            <span>
+              <Popover
+                placement="top"
+                trigger="click"
+                content={(<img src={_} />)}
+              >
+                <a href="javascript:;" key='btn-edit' >
+                  <Icon type="eye" />
+                </a>
+              </Popover>
+            </span>
           )}
           width={200} />
-        <Table.Column<IEndcardStore.IEndcard> key="vc_callback_url" title="VC Callback Url" dataIndex="vc_callback_url" width={200} />
+
+        <Table.Column<IEndcardStore.IEndcard> key="template_id" title="Endcard Template" dataIndex="template_id" width={200} />
         <Table.Column<IEndcardStore.IEndcard>
           key="status"
           title="Status"
@@ -60,6 +78,9 @@ class VcTable extends ComponentExt<TableProps> {
             <span>
               <a href="javascript:;" onClick={() => onEdit(index)}>
                 <Icon type="form" />
+              </a>
+              <a href="javascript:;" onClick={() => onCopy(index)}>
+                <Icon type="copy" />
               </a>
             </span>
           )}
@@ -120,7 +141,7 @@ class PID extends ComponentExt<IStoreProps> {
     ] as IGlobalStore.menu[]
     if (!value) {
       arr.push({
-        title: this.GJB.id ? `Edit ${this.GJB.vc_name}` : 'Add'
+        title: this.GJB.id ? `Edit ${this.GJB.endcard_name}` : 'Add'
       })
     }
     this.props.setBreadcrumbArr(arr)
@@ -137,18 +158,24 @@ class PID extends ComponentExt<IStoreProps> {
     try {
       const endcardStr = localStorage.getItem('TargetEndcard') || '{}';
       const endcard = JSON.parse(endcardStr)
+      const { routerStore } = this.props
+
       runInAction('Change_', () => {
         this.targetEndcard = endcard
       })
-      const state = this.props.routerStore.location.state
-      if (state && state.type) {
-        this.editPid()
-      } else {
-        const Detail = await this.api.endcard.getEndcardInfo(endcard)
-        runInAction('Change_', () => {
-          this.thisDataList = Detail.data
-        })
-      }
+      // const state = routerStore.location.state
+      // if (state && state.type) {
+      //   // this.editPid()
+      // } else {
+
+      // }
+
+      const routerId = routerStore.location.pathname.toString().split('/').pop()
+      const Detail = await this.api.endcard.getEndcard({ app_key: routerId })
+      runInAction('Change_', () => {
+        this.thisDataList = Detail.data
+      })
+
     } catch (error) {
       this.props.routerStore.push('/endcard');
     }
@@ -174,6 +201,9 @@ class PID extends ComponentExt<IStoreProps> {
     this.toggleIsTable()
   }
 
+  onCopy = (index: number) => {
+
+  }
   lastStep = () => {
     this.props.routerStore.push('/endcard');
   }
@@ -194,18 +224,10 @@ class PID extends ComponentExt<IStoreProps> {
           <div className={style.head}>
             <div className={style.row}>
               <div className={style.title}>
-                App Name
+                App ID
                     </div>
               <div className={style.value}>
-                {this.targetEndcard.app_name}
-              </div>
-            </div>
-            <div className={style.row}>
-              <div className={style.title}>
-                Pkg Name
-                    </div>
-              <div className={style.value}>
-                {this.targetEndcard.pkg_name}
+                {this.targetEndcard.app_id}
               </div>
             </div>
             <div className={style.row}>
@@ -220,7 +242,8 @@ class PID extends ComponentExt<IStoreProps> {
           {
             this.isTable ? <div className="tableBox">
               <Button type="primary" className={style.addbtn} onClick={() => this.editPid()}>+ Add</Button>
-              <VcTable data={this.thisDataList} onEdit={this.editPid} />
+
+              <VcTable data={this.thisDataList} onEdit={this.editPid} onCopy={this.onCopy} />
               <div className={style.btnGroup}>
                 {/* <Button type="primary" className={style.submitBtn} onClick={this.submit}>Submit</Button> */}
                 {/* <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button> */}
@@ -229,7 +252,7 @@ class PID extends ComponentExt<IStoreProps> {
                 <FormAdd
                   onCancel={this.onCancel}
                   onOk={this.onOK}
-                  endcard={this.GJB} />
+                  endcardId={this.GJB.id} />
               </div>
           }
         </div>
