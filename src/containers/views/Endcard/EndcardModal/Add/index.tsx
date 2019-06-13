@@ -60,6 +60,7 @@ interface IStoreProps {
 
 interface IProps extends IStoreProps {
     endcardId?: number
+    endcard?: IEndcardStore.IEndcard
     onCancel?: () => void
     onOk?: (id: number) => void
     type?: string
@@ -163,7 +164,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
         if (e) {
             e.preventDefault()
         }
-        const { routerStore, createEndcard, form, modifyEndcard, endcardId } = this.props
+        const { routerStore, createEndcard, form, modifyEndcard, endcardId, endcard } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
@@ -174,16 +175,24 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                             ...values,
                             app_id,
                         }
+
                         if (this.isAdd) {
-                            let data = await createEndcard(values)
-                            localStorage.setItem('TargetEndcard', JSON.stringify(
-                                {
-                                    app_id,
-                                    platform: values.platform
+                            if (endcard) {
+                                values = {
+                                    ...this.endcardTarget,
+                                    ...values,
                                 }
-                            ))
+                            } else {
+                                localStorage.setItem('TargetEndcard', JSON.stringify(
+                                    {
+                                        app_id,
+                                        platform: values.platform
+                                    }
+                                ))
+                            }
+                            let data = await createEndcard(values)
                             message.success(data.message)
-                            routerStore.push('/endcard/edit')
+                            routerStore.push(`/endcard/edit/${data.app_key}`)
                         } else {
                             const data = await modifyEndcard({
                                 ...values,

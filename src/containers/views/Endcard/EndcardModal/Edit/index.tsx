@@ -201,8 +201,9 @@ class PID extends ComponentExt<IStoreProps> {
     this.toggleIsTable()
   }
 
-  onCopy = (index: number) => {
-
+  onCopy = async (index: number) => {
+    await this.api.endcard.copyEndcard({ id: this.thisDataList[index].id })
+    this.initDetail()
   }
   lastStep = () => {
     this.props.routerStore.push('/endcard');
@@ -252,7 +253,7 @@ class PID extends ComponentExt<IStoreProps> {
                 <FormAdd
                   onCancel={this.onCancel}
                   onOk={this.onOK}
-                  endcardId={this.GJB.id} />
+                  endcard={this.GJB} />
               </div>
           }
         </div>

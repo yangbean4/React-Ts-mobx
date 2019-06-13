@@ -101,13 +101,13 @@ export class EndcardStore extends StoreExt {
 
     createEndcard = async (endcard: IEndcardStore.IEndcard) => {
         const res = await this.api.endcard.createEndcard(endcard)
-        this.changepage(1)
+        // this.changepage(1)
         return res
     }
 
     modifyEndcard = async (endcard: IEndcardStore.IEndcard) => {
         const res = await this.api.endcard.modifyEndcard(endcard)
-        this.changepage(1)
+        // this.changepage(1)
         return res
     }
 

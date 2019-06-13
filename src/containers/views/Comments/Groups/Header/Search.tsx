@@ -1,0 +1,122 @@
+import * as React from 'react'
+import { inject, observer } from 'mobx-react'
+import { observable, action, runInAction, autorun } from 'mobx'
+import { Form, Input, Row, Col, Button } from 'antd'
+import { FormComponentProps } from 'antd/lib/form'
+import { ComponentExt } from '@utils/reactExt'
+
+const FormItem = Form.Item
+
+const span = 6
+const layout = {
+  labelCol: {
+    span: 7,
+  },
+  wrapperCol: {
+    span: 17
+  }
+}
+
+
+interface IStoreProps {
+  changeFilter?: (params: ICommentStore.SearchParams) => void
+  filters?: ICommentStore.SearchParams
+  routerStore?: RouterStore
+  setCommentType?: (str: string) => void
+}
+
+
+
+@inject(
+  (store: IStore): IStoreProps => {
+    const { routerStore, commentStore } = store
+    const { changeFilter, filters, setCommentType } = commentStore
+    return { changeFilter, filters, routerStore, setCommentType }
+  }
+)
+@observer
+class CommentSearch extends ComponentExt<IStoreProps & FormComponentProps> {
+  @observable
+  private loading: boolean = false
+
+  @observable
+  private companyType: string = ''
+
+  private IReactionDisposer: () => void
+  @action
+  toggleLoading = () => {
+    this.loading = !this.loading
+  }
+
+  constructor(props) {
+    super(props)
+    this.IReactionDisposer = autorun(
+      () => {
+        const companyType = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+        if (companyType !== this.companyType) {
+          runInAction('SET_TYPE', () => {
+            this.companyType = companyType
+          })
+          this.props.form.resetFields()
+          this.props.setCommentType(companyType)
+          return true
+        }
+        return false
+      }
+    )
+  }
+
+  submit = (e?: React.FormEvent<any>): void => {
+    if (e) {
+      e.preventDefault()
+    }
+    const { changeFilter, form } = this.props
+    form.validateFields(
+      async (err, values): Promise<any> => {
+        if (!err) {
+          this.toggleLoading()
+          try {
+            changeFilter(values)
+          } catch (err) { }
+          this.toggleLoading()
+        }
+      }
+    )
+  }
+  componentDidMount() {
+    this.IReactionDisposer()
+  }
+
+  render() {
+    const { form, filters } = this.props
+    const { getFieldDecorator } = form
+    return (
+      <Form {...layout} >
+        <Row>
+            <Col span={span}>
+                <FormItem label="Group ID">
+                {getFieldDecorator('id', {
+                    initialValue: filters.id
+                })(<Input />)}
+                </FormItem>
+            </Col>
+            <Col span={span}>
+                <FormItem label="Group Language">
+                {getFieldDecorator('group_language', {
+                    initialValue: filters.language
+                })(<Input />)}
+                </FormItem>
+            </Col>
+            <Col span={3} offset={1}>
+                <Button type="primary" onClick={this.submit}>Search</Button>
+            </Col>
+            <Col span={3} offset={1}>
+              <span id='companyAddBtn'></span>
+            </Col>
+        </Row>
+      </Form>
+    )
+  }
+}
+
+export default Form.create<IStoreProps>()(CommentSearch)

@@ -9,6 +9,11 @@ const loadComponent = (loader: () => Promise<any>) =>
     })
 
 export const asynchronousComponents = {
+    //------------------Comments
+    CommentsTpl: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Comments/Template')),
+    CommentTplModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Comments/Template/CommentModel')),
+    CommentGroup: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Comments/Groups')),
+    CommentGroupModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Comments/Groups/CommentModel')),
     //------------------Apps
     Apps: loadComponent(() => import(/* webpackChunkName: "Apps" */ '@views/AppGroup')),
     AppsModel: loadComponent(() => import(/* webpackChunkName: "AppsModel" */ '@views/AppGroup/AppGroupModal')),
@@ -63,6 +68,7 @@ export interface IMenu {
     exact?: boolean
     authName?: string
     hasBread?: boolean
+    breadcrumbRoot?: boolean
 }
 
 export interface IMenuInTree extends IMenu {
@@ -170,21 +176,40 @@ export const routerAndMenu: IRouter[] = [
         isMenu: true,
         exact: true,
         title: 'Endcard',
+    },
+
+    {
+        id: 831,
+        pid: 83,
+        isMenu: true,
+        exact: true,
+        title: 'Endcard',
+        authName: 'Offers-Endcard',
+        component: 'Endcard',
+        path: '/endcard'
+    },
+    // -------Comments--------
+    {
+        id: 832,
+        pid: 83,
+        isMenu: true,
+        exact: true,
+        title: 'Endcard Template',
         authName: 'Offers-Endcard',
         component: 'Endcard',
         path: '/endcard'
     },
     {
-        id: 521,
-        pid: 52,
+        id: 8312,
+        pid: 831,
         isMenu: false,
         path: '/endcard/add',
         title: 'Add Endcard',
         component: 'EndcardAdd',
     },
     {
-        id: 521,
-        pid: 52,
+        id: 8311,
+        pid: 831,
         isMenu: false,
         // exact: true,
         path: '/endcard/edit/:id',
@@ -196,12 +221,60 @@ export const routerAndMenu: IRouter[] = [
         id: 84,
         pid: 8,
         isMenu: true,
-        exact: true,
         title: 'Comments',
-        authName: 'Offers-Comments',
-        component: 'Apps',
-        path: '/comments'
+        hasBread: false,
     },
+    {
+        id: 841,
+        pid: 84,
+        isMenu: true,
+        title: 'Comment Tempaltes',
+        component: 'CommentsTpl',
+        path: '/comments/template',
+        exact: true
+    },
+    {
+        id: 8411,
+        pid: 841,
+        path: '/comments/template/add',
+        title: 'Add Comment ',
+        component: 'CommentTplModel',
+        isMenu: false
+    },
+    {
+        id: 8412,
+        pid: 841,
+        path: '/comments/template/edit/:id',
+        title: 'Edit Comment ',
+        component: 'CommentTplModel',
+        isMenu: false
+    },
+    {
+        id: 842,
+        pid: 84,
+        isMenu: true,
+        title: 'Comment Groups',
+        component: 'CommentGroup',
+        path: '/comments/groups',
+        exact: true
+    },
+    {
+        id: 8421,
+        pid: 842,
+        path: '/comments/groups/add',
+        title: 'Add Comment ',
+        component: 'CommentGroupModel',
+        isMenu: false
+    },
+    {
+        id: 8421,
+        pid: 842,
+        path: '/comments/groups/edit/:id',
+        title: 'Edit Comment ',
+        component: 'CommentGroupModel',
+        isMenu: false
+    },
+    // ---------Campaigns--------------
     {
         id: 85,
         pid: 8,

@@ -32,3 +32,4 @@ export { default as appGroupStore } from './appGroupStore'
 
 export { default as endcardStore } from './endcardStore'
 
+export { default as commentStore } from './commenttplStore'
