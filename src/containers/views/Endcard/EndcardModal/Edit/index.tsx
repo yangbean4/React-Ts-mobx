@@ -108,6 +108,9 @@ interface IStoreProps {
 class PID extends ComponentExt<IStoreProps> {
 
   @observable
+  private app_key: string
+
+  @observable
   private targetEndcard: IEndcardStore.IEndcardForList = {}
 
   @observable
@@ -169,9 +172,11 @@ class PID extends ComponentExt<IStoreProps> {
       // }
 
       const routerId = routerStore.location.pathname.toString().split('/').pop()
+
       const Detail = await this.api.endcard.getEndcard({ app_key: routerId })
       runInAction('Change_', () => {
         this.thisDataList = Detail.data
+        this.app_key = routerId
       })
 
     } catch (error) {
@@ -252,6 +257,7 @@ class PID extends ComponentExt<IStoreProps> {
                   onCancel={this.onCancel}
                   onOk={this.onOK}
                   endcardId={this.GJB.id}
+                  app_key={this.app_key}
                   endcard={this.GJB} />
               </div>
           }

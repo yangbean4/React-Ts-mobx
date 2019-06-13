@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Input, Select, Radio, Button, message, InputNumber, Icon as AntIcon, Upload, Icon } from 'antd'
+import { Form, Input, Select, Radio, Button, message, Icon, Upload } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { statusOption, platformOption } from '@config/web'
 import { Jump, IGE } from '../../config'
@@ -61,6 +61,7 @@ interface IStoreProps {
 interface IProps extends IStoreProps {
     endcardId?: number
     endcard?: IEndcardStore.IEndcard
+    app_key?: string
     onCancel?: () => void
     onOk?: (id: number) => void
     type?: string
@@ -84,7 +85,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     private platform: string
 
     @observable
-    private appId: string = this.props.endcard.app_id
+    private appId: string = this.props.endcard ? this.props.endcard.app_id : undefined
 
     @observable
     private endcardTarget: IEndcardStore.IEndcard = {}
@@ -164,7 +165,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
         if (e) {
             e.preventDefault()
         }
-        const { routerStore, createEndcard, form, modifyEndcard, endcardId, endcard } = this.props
+        const { routerStore, createEndcard, form, modifyEndcard, endcardId, endcard, app_key } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
@@ -172,20 +173,15 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                     try {
 
                         if (this.isAdd) {
-                            if (endcard) {
+                            if (app_key) {
                                 values = {
-                                    ...endcard,
+                                    app_key,
                                     ...values,
                                 }
                             } else {
-                                const app_id = this.appId
-                                values = {
-                                    ...values,
-                                    app_id,
-                                }
                                 localStorage.setItem('TargetEndcard', JSON.stringify(
                                     {
-                                        app_id,
+                                        app_id: this.appId,
                                         platform: values.platform
                                     }
                                 ))
@@ -219,8 +215,8 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
-    setAppid = (index) => {
-        this.appId = this.usePkgnameData[index].app_id
+    setAppid = (app_key) => {
+        this.appId = this.usePkgnameData.find(ele => ele.app_key === app_key).app_id
         this.removeFile('endcard_image_url')
     }
 
@@ -331,7 +327,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
 
         const {
             platform = 'android',
-            app_id = '',
+            app_key = '',
             version = "",
             order_id = '',
             endcard_name = '',
@@ -410,8 +406,8 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
 
                     {
                         !this.props.endcard && <FormItem label="App ID">
-                            {getFieldDecorator('app_id', {
-                                initialValue: app_id,
+                            {getFieldDecorator('app_key', {
+                                initialValue: app_key,
                                 rules: [
                                     {
                                         required: true, message: "Required"
@@ -422,9 +418,9 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                                 onChange={this.setAppid}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
-                                {this.usePkgnameData.map((c, index) => (
-                                    <Select.Option value={index} key={index}>
-                                        {c.app_id}
+                                {this.usePkgnameData.map((c) => (
+                                    <Select.Option value={c.app_key} key={c.app_key}>
+                                        {c.app_id_key}
                                     </Select.Option>
                                 ))}
                             </Select>)}

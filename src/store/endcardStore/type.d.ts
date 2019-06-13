@@ -7,6 +7,7 @@ export interface EndcardStore extends EndcardStoreModel { }
 export interface IEndcard {
     status?: int
     platform?: string
+    app_key?: string
     app_id?: string
     version?: string
     order_id?: number

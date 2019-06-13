@@ -15,4 +15,10 @@ export default {
   uploadIcon(data): Promise<any> {
     return http.post(`${basePath}uploadIcon`, data || {})
   },
+  uploadTemplate(data): Promise<any> {
+    return http.post(`${basePath}uploadTemplate`, data || {})
+  },
+  uploadTemplateImage(data): Promise<any> {
+    return http.post(`${basePath}uploadTemplateImage `, data || {})
+  },
 }

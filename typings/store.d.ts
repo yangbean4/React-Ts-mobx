@@ -1,6 +1,7 @@
 declare interface IStore {
     commentGroupStore: ICommentGroupStore.CommentGroupStore
     endcardStore: IEndcardStore.EndcardStore
+    endcardTemplateStore: IEndcardTemplateStore.EndcardTemplateStore
     commentStore: ICommentStore.CommentStore
     appGroupStore: IAppGroupStore.AppGroupStore
     accountStore: ICurrencyStore.AccountStore

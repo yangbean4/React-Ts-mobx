@@ -53,6 +53,7 @@ export const asynchronousComponents = {
     Endcard: loadComponent(() => import(/* webpackChunkName: "Endcard" */ '@views/Endcard')),
     EndcardAdd: loadComponent(() => import(/* webpackChunkName: "EndcardAdd" */ '@views/Endcard/EndcardModal/Add')),
     EndcardEdit: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/Endcard/EndcardModal/Edit')),
+    endcardTemplate: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/EndcardTemplate')),
 }
 
 // 所有路由的key
@@ -196,8 +197,8 @@ export const routerAndMenu: IRouter[] = [
         exact: true,
         title: 'Endcard Template',
         authName: 'Offers-Endcard',
-        component: 'Endcard',
-        path: '/endcard'
+        component: 'endcardTemplate',
+        path: '/endcardTemplate'
     },
     {
         id: 8312,
