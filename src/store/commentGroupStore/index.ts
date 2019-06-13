@@ -15,6 +15,11 @@ export class CommentGroupStore extends StoreExt {
 
     @observable
     commentType: string
+
+    @observable
+    optionListDb: ICommentStore.OptionListDb = {
+        language: []
+    }
     /**
      * 用户列表
      *
@@ -53,6 +58,14 @@ export class CommentGroupStore extends StoreExt {
 
     @observable
     filters: ICommentGroupStore.SearchGroup = {}
+
+    @action
+    getOptionListDb = async () => {
+        const res = await this.api.comment.getGroupLanguage({})
+        runInAction('SET', () => {
+            this.optionListDb.language = res.data
+        })
+    }
 
     @action
     setCommentType = (commentType: string) => {

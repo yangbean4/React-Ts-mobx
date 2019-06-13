@@ -86,6 +86,7 @@ class CommentTable extends ComponentExt<IProps> {
                     className="center-table"
                     style={{ width: '100%' }}
                     bordered
+                    rowSelection={this.rowSelection}
                     rowKey="id"
                     loading={getcommentsLoading}
                     dataSource={comments}

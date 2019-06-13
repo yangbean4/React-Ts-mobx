@@ -17,3 +17,7 @@ export interface SearchGroup {
     id?: number
     group_language?: string
 }
+
+export interface OptionListDb {
+    language?: string[]
+ }

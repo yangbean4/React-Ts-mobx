@@ -5,9 +5,9 @@ import { Form, Input, Button, message, Upload, Icon as AntIcon, Popover, Col, Ra
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-import { file } from '@babel/types'
 import EmojiPicker from '@components/Emoji'
 import * as web from '../web.config'
+import { reject } from 'q';
 // 封装表单域组件
 const FormItem = Form.Item
 
@@ -130,6 +130,15 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         this.props.clearComment()
     }
 
+    checkImageWH = (file, width, height) => {
+        return new Promise((resolve, reject) => {
+            let filereader = new FileReader()
+            filereader.onload = e => {
+                let src = e.target.result
+            }
+        })
+    }
+
     submit = (e?: React.FormEvent<any>): void => {
         if (e) {
             e.preventDefault()
@@ -142,9 +151,6 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                     try {
                         let data = {
                             message: '',
-                            // data: {
-                            //     id: ''
-                            // }
                         }
                         values = {
                             ...values,
@@ -168,6 +174,12 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                 }
             }
         )
+    }
+
+    setCom_talk = (e)=>{
+        this.props.form.setFieldsValue({
+            com_talk:e.target.innerHTML
+        })
     }
 
     render() {
@@ -203,7 +215,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
             language = 'en',
             head_portrait = '',
             com_name = '',
-            com_talk = 'morendfdfdafdsfdsafasdfdsfsafdsfsdfdsfdsfsdafafdsfdsfasdfsdfasfwerewfasdfdsfasdfsdfdsafasf'
+            com_talk = ''
         } = comment || {}
         return (
             <div className='sb-form'>
@@ -301,7 +313,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                     placement="top">
                                     <AntIcon className={styles.workPlus} onClick={this.showEmojiPicker} type="plus" />
                                 </Popover>
-                                <div className={styles.textBox} contentEditable={true}></div>
+                                <div className={styles.textBox} onInput={this.setCom_talk} contentEditable={true}></div>
                             </div>
                         )}
                     </FormItem>

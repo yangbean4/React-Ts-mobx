@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
-import { observable, action, computed } from 'mobx'
-import { Form, Input, Button, message, Select, Icon as AntIcon, Table } from 'antd'
+import { observable, action, computed, runInAction } from 'mobx'
+import { Form, Input, Button, message, Select, Icon as AntIcon, Table, Radio } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
+import * as web from '../web.config'
 // 封装表单域组件
 const FormItem = Form.Item
 
@@ -19,6 +20,14 @@ const formItemLayout = {
         sm: { span: 15 },
         lg: { span: 6 }
     }
+}
+const tableWidth = {
+    labelCol: {
+        lg: { span: 6 }
+    },
+    wrapperCol: {
+        lg: { span: 15 }
+    } 
 }
 const formItemLayoutForModel = {
     labelCol: {
@@ -35,11 +44,15 @@ const formItemLayoutForModel = {
 
 interface IStoreProps {
     comment?: ICommentGroupStore.IGroup
+    comments?: ICommentStore.IComment[]
     createComment?: (company: ICommentGroupStore.IGroup) => Promise<any>
     modifyComment?: (company: ICommentGroupStore.IGroup) => Promise<any>
+    getComments?: () => Promise<any>
     changepage?: (page: number) => void
     routerStore?: RouterStore
     clearComment?: () => void
+    optionListDb?: ICommentGroupStore.OptionListDb
+    getOptionListDb?: ({}) => Promise<any>
 }
 
 interface IProps extends IStoreProps {
@@ -50,9 +63,10 @@ interface IProps extends IStoreProps {
 
 @inject(
     (store: IStore): IProps => {
-        const { commentGroupStore, routerStore } = store
-        const { comment, createComment, modifyComment, clearComment } = commentGroupStore
-        return { clearComment, comment, routerStore, createComment, modifyComment }
+        const { commentGroupStore, routerStore, commentStore } = store
+        const { getComments, comments } = commentStore
+        const { comment, createComment, modifyComment, clearComment, optionListDb, getOptionListDb } = commentGroupStore
+        return { clearComment, comment, comments, routerStore, createComment, modifyComment, getComments, optionListDb, getOptionListDb }
     }
 )
 @observer
@@ -64,7 +78,9 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     private template: [] = []
 
     @observable
-    private head_portrait: string
+    private selectedRowKeys: number[] = this.props.comment ? this.props.comment.group_template_ids.split(',').map(ele=>Number(ele)) :[]
+
+    
 
     @computed
     get formItemLayout() {
@@ -85,13 +101,25 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         this.loading = !this.loading
     }
 
+    @action
+    rowSelection =() => {
+        return {}
+    }
+    @action
+    languageChange = () => {
+
+    }
     componentWillMount() {
+        this.props.getOptionListDb({})
         const { routerStore, comment = {} } = this.props
         const routerId = routerStore.location.pathname.toString().split('/').pop()
         const Id = Number(routerId)
-        // if ((!isNaN(Id) && (!comment.id || comment.id !== Id)) && !this.props.type) {
-        //     routerStore.push('/companysite')
-        // }
+        if ((!isNaN(Id) && (!comment.id || comment.id !== Id)) && !this.props.type) {
+            routerStore.push('/comments/groups')
+        }
+    }
+    componentDidMount() {
+        console.log(this.props.comment)
     }
     componentWillUnmount() {
         this.props.clearComment()
@@ -101,7 +129,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         if (e) {
             e.preventDefault()
         }
-        const { routerStore, comment, createComment, modifyComment, form } = this.props
+        const { routerStore, createComment, modifyComment, form } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
@@ -109,9 +137,6 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                     try {
                         let data = {
                             message: '',
-                            data: {
-                                id: ''
-                            }
                         }
                         values = {
                             ...values,
@@ -119,14 +144,13 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                         if (this.isAdd) {
                             data = await createComment(values)
                         } else {
-                            data = await modifyComment({ ...values, id: comment })
+                            data = await modifyComment({ ...values })
                         }
                         message.success(data.message)
                         if (this.props.type) {
-                            this.props.onOk(data.data.id)
                             this.props.form.resetFields()
                         } else {
-                            routerStore.push('/companysite')
+                            routerStore.push('/comments/groups')
                         }
                     } catch (err) {
                         //console.log(err);
@@ -138,13 +162,26 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     render() {
-        const { comment, form } = this.props
+        // let TselectedRowKeys = this.props.comment.group_template_ids.split(',')||[]
+        // console.log(this.selectedRowKeys)
+        const rowSelection = {
+            selectedRowKeys:this.selectedRowKeys,
+            onChange: (selectedRowKeys) => {
+                runInAction('SET_SELECT',()=>{
+                    this.selectedRowKeys = selectedRowKeys
+                })
+                this.props.form.setFieldsValue({
+                    group_template_ids:selectedRowKeys.join(',')
+                })
+            }
+        }
+        const { comment, comments, form, optionListDb } = this.props
         const { getFieldDecorator } = form
         const {
             id = '',
             status = 1,
             group_name = '',
-            group_language = '',
+            group_language = 'en',
             group_template_ids = '',
         } = comment || {}
         return (
@@ -169,7 +206,15 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input />)}
+                        })(
+                            <Radio.Group>
+                                {web.statusOption.map(c => (
+                                    <Radio key={c.key} value={c.value}>
+                                        {c.key}
+                                    </Radio>
+                                ))}
+                            </Radio.Group>
+                        )}
                     </FormItem>
                     <FormItem label="Group Name" >
                         {getFieldDecorator('group_name', {
@@ -188,7 +233,20 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ],
-                        })(<Input />)}
+                        })(<Select
+                            showSearch
+                            onChange={this.languageChange}
+                            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                        >
+                            {
+                                optionListDb.language.map(c => {
+                                    <Select.Option key={c} value={c}>
+                                        console.log({c})
+                                        {c}
+                                    </Select.Option>
+                                })
+                            }
+                        </Select>)}
                     </FormItem>
                     <FormItem label="Comment Template" >
                         {getFieldDecorator('group_template_ids', {
@@ -198,20 +256,27 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ],
-                        })(<Input />)}
+                        })(<Input disabled={true} />)}
                     </FormItem>
-                    <FormItem className={styles.tableBox}>
+                    <FormItem className={styles.tableBox} {...tableWidth}>
                         <div>
-                            <Table
+                            <Table<ICommentStore.IComment>
                                 className="center-table"
                                 style={{ width: '100%' }}
                                 bordered
                                 rowKey="id"
+                                rowSelection={rowSelection}
                                 showHeader={false}
-                                dataSource={this.template}
+                                pagination={false}
+                                dataSource={comments}
                             >
                                 <Table.Column<ICommentStore.IComment> key="id" title="ID" dataIndex="id" width={50} />
-                                <Table.Column<ICommentStore.IComment> key="head_portrait" title="head_portrait" dataIndex="head_portrait" width={80} />
+                                <Table.Column<ICommentStore.IComment>
+                                    key="head_portrait" 
+                                    title="head_portrait" 
+                                    dataIndex="head_portrait" 
+                                    width={80}
+                                    render={(record) => <img src={record} alt="" width="40"  height="40" />} />
                                 <Table.Column<ICommentStore.IComment> key="com_name" title="com_name" dataIndex="com_name" width={80} />
                                 <Table.Column<ICommentStore.IComment> key="com_talk" title="com_talk" dataIndex="com_talk" width={200} />
                             </Table>
@@ -221,7 +286,6 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                         <Button className={this.props.type? styles.btn : ''} type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
                     </FormItem>
                 </Form>
-
             </div>
         )
     }
