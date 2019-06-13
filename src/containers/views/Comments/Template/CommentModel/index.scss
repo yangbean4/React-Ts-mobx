@@ -8,6 +8,9 @@
   :global(.ant-form-item-label) {
     width: 220px;
   }
+  :global(.ant-form-item-control) {
+    height: auto;
+  }
   .modalBtn {
     position: relative
   }
@@ -32,5 +35,18 @@
     line-height: 30px;
     font-size: 16px;
     cursor: pointer;
+  }
+  .textBox{
+    width: 420px;
+    padding: 5px;
+    box-sizing: border-box;
+    font-size: 12px;
+    color: #645e84;
+    min-height: 50px;
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #e4edf0;
+    text-indent: 20px;
+    margin-top: 30px;
   }
 }

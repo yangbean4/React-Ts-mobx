@@ -34,9 +34,9 @@ const formItemLayoutForModel = {
 }
 
 interface IStoreProps {
-    comment?: ICommentStore.IComment
-    createComment?: (company: ICommentStore.IComment) => Promise<any>
-    modifyComment?: (company: ICommentStore.IComment) => Promise<any>
+    comment?: ICommentGroupStore.IGroup
+    createComment?: (company: ICommentGroupStore.IGroup) => Promise<any>
+    modifyComment?: (company: ICommentGroupStore.IGroup) => Promise<any>
     changepage?: (page: number) => void
     routerStore?: RouterStore
     clearComment?: () => void
@@ -50,8 +50,8 @@ interface IProps extends IStoreProps {
 
 @inject(
     (store: IStore): IProps => {
-        const { commentStore, routerStore } = store
-        const { comment, createComment, modifyComment, clearComment } = commentStore
+        const { commentGroupStore, routerStore } = store
+        const { comment, createComment, modifyComment, clearComment } = commentGroupStore
         return { clearComment, comment, routerStore, createComment, modifyComment }
     }
 )
@@ -114,7 +114,6 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                             }
                         }
                         values = {
-                            type: 1,
                             ...values,
                         }
                         if (this.isAdd) {
@@ -144,10 +143,9 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         const {
             id = '',
             status = 1,
-            language = '',
-            head_portrait = '',
-            com_name = '',
-            com_talk = ''
+            group_name = '',
+            group_language = '',
+            group_template_ids = '',
         } = comment || {}
         return (
             <div className='sb-form'>
@@ -175,7 +173,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
                     <FormItem label="Group Name" >
                         {getFieldDecorator('group_name', {
-                            initialValue: language,
+                            initialValue: group_name,
                             rules: [{
                                 required: true, message: "Required"
                             }
@@ -184,7 +182,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
                     <FormItem label="Group Language" >
                         {getFieldDecorator('group_language', {
-                            initialValue: head_portrait,
+                            initialValue: group_language,
                             rules: [
                                 {
                                     required: true, message: "Required"
@@ -194,7 +192,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
                     <FormItem label="Comment Template" >
                         {getFieldDecorator('group_template_ids', {
-                            initialValue: com_name,
+                            initialValue: group_template_ids,
                             rules: [
                                 {
                                     required: true, message: "Required"

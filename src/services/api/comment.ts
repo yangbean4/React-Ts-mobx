@@ -19,4 +19,7 @@ export default {
     modifyCommentGroup(data): Promise<any> {
         return http.post('api/comment/editCommentGroup', data || {})
     },
+    getCommentLanguage(data): Promise<any> {
+        return http.post('api/comment/commentLanguage', data || {})
+    }
 }

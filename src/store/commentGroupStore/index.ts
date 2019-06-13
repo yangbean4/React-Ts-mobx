@@ -3,40 +3,34 @@ import { PaginationConfig } from 'antd/lib/pagination'
 
 import { StoreExt } from '@utils/reactExt'
 
-export class CommentStore extends StoreExt {
+export class CommentGroupStore extends StoreExt {
     /**
-     * 加载用户列表时的loading
+     * 加载comments-loading
      *
      * @type {boolean}
-     * @memberof commentStore
+     * @memberof commentGroupStore
      */
     @observable
     getcommentsLoading: boolean = false
 
     @observable
     commentType: string
-
-    @observable
-    optionListDb: ICommentStore.OptionListDb = {
-        language: []
-    }
-
     /**
      * 用户列表
      *
-     * @type {ICommentStore.IComment[]}
-     * @memberof commentStore
+     * @type {ICommentStore.IGroup[]}
+     * @memberof commentGroupStore
      */
     @observable
-    comments: ICommentStore.IComment[] = []
+    comments: ICommentGroupStore.IGroup[] = []
 
     @observable
-    comment: ICommentStore.IComment
+    comment: ICommentGroupStore.IGroup
     /**
      * table page
      *
      * @type {number}
-     * @memberof commentStore
+     * @memberof commentGroupStore
      */
     @observable
     page: number = 1
@@ -44,7 +38,7 @@ export class CommentStore extends StoreExt {
      * table pageSize
      *
      * @type {number}
-     * @memberof commentStore
+     * @memberof commentGroupStore
      */
     @observable
     pageSize: number = 10
@@ -52,13 +46,13 @@ export class CommentStore extends StoreExt {
      * accounts total
      *
      * @type {number}
-     * @memberof commentStore
+     * @memberof commentGroupStore
      */
     @observable
     total: number = 0
 
     @observable
-    filters: ICommentStore.SearchParams = {}
+    filters: ICommentGroupStore.SearchGroup = {}
 
     @action
     setCommentType = (commentType: string) => {
@@ -66,21 +60,11 @@ export class CommentStore extends StoreExt {
         this.changeFilter({})
         this.pageSize = 10
     }
+
     /**
-     * 获取语言列表
-     * 
-     */
-    @action
-    getOptionListDb = async () => {
-        const res = await this.api.comment.getCommentLanguage({})
-        runInAction('SET', () => {
-            this.optionListDb.language = res.data
-        })
-    }
-    /**
-     * 加载评论列表
+     * 加载用户列表
      *
-     * @memberof AccountStore
+     * @memberof commentGroupStore
      */
 
     @action
@@ -91,7 +75,7 @@ export class CommentStore extends StoreExt {
                 page: this.page, pageSize: this.pageSize, ...this.filters,
                 // type: this.accountType === 'source' ? 1 : 2
             }
-            const res = await this.api.comment.getCommentTplList(data)
+            const res = await this.api.comment.getCommentGroup(data)
             runInAction('SET_COMMENT_LIST', () => {
                 this.comments = res.data
                 this.total = res.total
@@ -107,15 +91,15 @@ export class CommentStore extends StoreExt {
         })
     }
 
-    createComment = async (comment: ICommentStore.IComment) => {
-        const res = await this.api.comment.addCommentItem(comment)
+    createComment = async (comment: ICommentGroupStore.IGroup) => {
+        const res = await this.api.comment.addCommentGroup(comment)
         this.changepage(1)
         return res
     }
 
     @action
-    modifyComment = async (comment: IAccountStore.IAccount) => {
-        const res = await this.api.comment.modifyCommentItem(comment)
+    modifyComment = async (comment: ICommentGroupStore.IGroup) => {
+        const res = await this.api.comment.modifyCommentGroup(comment)
         this.changepage(1)
         return res
     }
@@ -133,13 +117,13 @@ export class CommentStore extends StoreExt {
     }
 
     @action
-    changeFilter = (data: ICommentStore.SearchParams) => {
+    changeFilter = (data: ICommentGroupStore.SearchGroup) => {
         this.filters = data
         this.changepage(1)
     }
 
     @action
-    setComment = (comment: ICommentStore.IComment) => {
+    setComment = (comment: ICommentGroupStore.IGroup) => {
         this.comment = comment
     }
     @action
@@ -158,4 +142,4 @@ export class CommentStore extends StoreExt {
     }
 }
 
-export default new CommentStore()
+export default new CommentGroupStore()

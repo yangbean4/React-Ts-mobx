@@ -1,0 +1,19 @@
+import { CommentGroupStore as CommentGroupStoreModel } from './index'
+
+export as namespace ICommentGroupStore
+
+export interface CommentGroupStore extends CommentGroupStoreModel { }
+
+// 定义Group
+export interface IGroup {
+    id?: number
+    status?: 0 | 1
+    group_name?: string
+    group_language?: string
+    group_template_ids?: string
+}
+
+export interface SearchGroup {
+    id?: number
+    group_language?: string
+}

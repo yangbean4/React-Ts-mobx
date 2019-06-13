@@ -2,7 +2,7 @@ import React from 'react'
 import { emojiList } from './emojiconfig'
 import { observable, action, runInAction } from 'mobx'
 import { observer } from 'mobx-react'
-import * as style from './index.scss'
+import * as styles from './index.scss'
 
 interface IProp {
   onChange?: (data: any) => void
@@ -10,26 +10,14 @@ interface IProp {
 
 @observer
 class EmojiPicker extends React.Component<IProp>{
-  @observable
-  private pickerVisiable: boolean = false
-
-  @observable
-  private url: string
-
-  @action
-  toggleEmojiPicker = () => {
-    this.pickerVisiable = !this.pickerVisiable
-  }
-
   @action
   insertEmoji = (event) => {
-    this.toggleEmojiPicker()
-  }
 
+  }
   render() {
     return (
-      <div className="sen-emoji-wrap">
-        <ul className="sen-emojis">
+      <div className={styles.senEmojiWrap}>
+        <ul className={styles.senEmojis}>
           {
             emojiList.map((item, index) => {
               return (

@@ -1,4 +1,4 @@
-.sen-emoji-wrap {
+.senEmojiWrap {
   position: relative;
   width: 210px;
   height: 220px;
@@ -16,7 +16,7 @@
   }
 }
 
-.sen-emojis {
+.senEmojis {
   box-sizing: border-box;
   width: 220px;
   height: 195px;
@@ -26,6 +26,7 @@
   overflow: auto;
   li {
     display: block;
+    list-style: none;
     float: left;
     width: 30px;
     height: 30px;

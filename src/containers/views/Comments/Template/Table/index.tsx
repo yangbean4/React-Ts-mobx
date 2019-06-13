@@ -6,6 +6,7 @@ import { observable, action, runInAction } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { statusOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
+import * as styles from './index.scss'
 
 
 interface IStoreProps {
@@ -56,7 +57,7 @@ class CommentTable extends ComponentExt<IProps> {
     @action
     modifyComment = (comment: ICommentStore.IComment) => {
         this.props.setComment(comment)
-        // this.props.routerStore.replace(`/companysite/edit/${comment.id}`)
+        this.props.routerStore.replace(`/comments/template/edit/${comment.id}`)
     }
     // 去请求数据
     componentDidMount() {
@@ -86,7 +87,6 @@ class CommentTable extends ComponentExt<IProps> {
                     style={{ width: '100%' }}
                     bordered
                     rowKey="id"
-                    rowSelection={this.rowSelection}
                     loading={getcommentsLoading}
                     dataSource={comments}
                     scroll={{ y: scrollY }}
@@ -102,21 +102,22 @@ class CommentTable extends ComponentExt<IProps> {
                     <Table.Column<ICommentStore.IComment> key="language" title="language" dataIndex="language" width={50} />
                     <Table.Column<ICommentStore.IComment>
                         key="head_portrait"
+                        className={styles.Avatar}
                         title="Head Portrait"
                         dataIndex="head_portrait"
                         width={100}
-                        render={(record) => <img src={record} alt="" width="100" height="" />}
+                        render={(record) => <img src={record} alt="" width="40"  height="40" />}
                     />
-                    <Table.Column<ICommentStore.IComment> key="com_name" title="Comment Name" dataIndex="com_name" width={80} />
-                    <Table.Column<ICommentStore.IComment> key="com_talk" title="Comment Talk" dataIndex="com_talk" width={200} />
+                    <Table.Column<ICommentStore.IComment> key="com_name" title="Comment Name" dataIndex="com_name" width={100} />
+                    <Table.Column<ICommentStore.IComment> key="com_talk" title="Comment Talk" className={styles.longText} dataIndex="com_talk" width={220} />
                     <Table.Column<ICommentStore.IComment>
                         key="status"
                         title="Status"
                         dataIndex="status"
-                        width={100}
-                        render={(_) => (
-                            statusOption.find(item => item.value === _).key
-                        )}
+                        width={80}
+                        // render={(_) => (
+                        //     statusOption.find(item => item.value === _).key
+                        // )}
                     />
                     <Table.Column<ICommentStore.IComment>
                         key="action"
