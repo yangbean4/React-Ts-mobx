@@ -37,3 +37,5 @@ export { default as endcardTemplateStore } from './endcardTemplate'
 export { default as commentStore } from './commenttplStore'
 
 export { default as commentGroupStore } from './commentGroupStore'
+
+export { default as creativeStore } from './creativeStore'

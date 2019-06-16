@@ -77,7 +77,6 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
         this.fileName = name;
     }
 
-
     submit = (e?: React.FormEvent<any>): void => {
         if (e) {
             e.preventDefault()

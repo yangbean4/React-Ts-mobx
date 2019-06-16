@@ -1,4 +1,5 @@
 declare interface IStore {
+    creativeStore: ICreativeStore.CreativeStore
     commentGroupStore: ICommentGroupStore.CommentGroupStore
     endcardStore: IEndcardStore.EndcardStore
     endcardTemplateStore: IEndcardTemplateStore.EndcardTemplateStore

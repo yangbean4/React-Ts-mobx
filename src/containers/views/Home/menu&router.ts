@@ -49,11 +49,14 @@ export const asynchronousComponents = {
 
     Test: loadComponent(() => import(/* webpackChunkName: "Test" */ '@views/Test/useEffrct.js')),
 
-
     Endcard: loadComponent(() => import(/* webpackChunkName: "Endcard" */ '@views/Endcard')),
     EndcardAdd: loadComponent(() => import(/* webpackChunkName: "EndcardAdd" */ '@views/Endcard/EndcardModal/Add')),
     EndcardEdit: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/Endcard/EndcardModal/Edit')),
     endcardTemplate: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/EndcardTemplate')),
+
+    Creative: loadComponent(() => import(/* webpackChunkName: "Creative" */ '@views/Creative')),
+    CreativeAdd: loadComponent(() => import(/* webpackChunkName: "CreativeAdd" */ '@views/Creative/CreativeModal/Add')),
+    CreativeEdit: loadComponent(() => import(/* webpackChunkName: "CreativeEdit" */ '@views/Creative/CreativeModal/Edit'))
 }
 
 // 所有路由的key
@@ -161,6 +164,7 @@ export const routerAndMenu: IRouter[] = [
         component: 'Apps',
         path: '/offers'
     },
+    // creative
     {
         id: 82,
         pid: 8,
@@ -168,9 +172,26 @@ export const routerAndMenu: IRouter[] = [
         exact: true,
         title: 'Creatives',
         authName: 'Offers-Creatives',
-        component: 'Apps',
-        path: '/creatives'
+        component: 'Creative',
+        path: '/creative'
     },
+    {
+        id: 822,
+        pid: 82,
+        isMenu: false,
+        path: '/creative/add',
+        title: 'Add Creatives',
+        component: 'CreativeAdd',
+    },
+    {
+        id: 821,
+        pid: 82,
+        isMenu: false,
+        path: '/creative/edit/:id',
+        title: 'Edit Creatives',
+        component: 'CreativeEdit',
+    },
+    // ------------------Endcard
     {
         id: 83,
         pid: 8,
@@ -178,7 +199,6 @@ export const routerAndMenu: IRouter[] = [
         exact: true,
         title: 'Endcard',
     },
-
     {
         id: 831,
         pid: 83,
