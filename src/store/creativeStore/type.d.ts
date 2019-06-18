@@ -22,10 +22,10 @@ export interface ICreative {
     creative_type?: string
 
     videoUrl?: string
-    video_type?: string | number
-
+    video_type?: string
+    lead_video_type?: string
     videoUrl?: string
-    video_type?: string | number
+    video_type?: string
     leadVideoUrl?: string
     ige_portrait_offline_url?: string | number
     ige_landscape_offline_url?: string | number

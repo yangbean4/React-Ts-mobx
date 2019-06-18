@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Input, Select, Radio, Button, message, Icon, Upload, InputNumber } from 'antd'
+import { Form, Input, Select, Radio, Button, message, Icon, Upload, InputNumber, Row, Col } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { statusOption, platformOption } from '@config/web'
 import { showComment, videoType, descriptionOption, skipToOption, igeFlag, igeOption, igeScene } from '../../config'
@@ -90,13 +90,16 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     private appId: string = this.props.creative ? this.props.creative.app_id : undefined
 
     @observable
-    private skipTo: string = this.creativeTarget ? this.creativeTarget.skip_to : 'ige'
+    private skipTo: string = this.creativeTarget.skip_to || 'ige'
 
     @observable
     private CreativeType: number
 
     @observable
-    private videoType: string = this.creativeTarget ? this.creativeTarget.video_type.toString() : 'landscape'
+    private videoType: string = this.creativeTarget.video_type || 'landscape'
+
+    @observable
+    private lead_video_type: string = this.creativeTarget.lead_video_type || 'landscape'
 
     @computed
     get useCreativeType() {
@@ -135,8 +138,16 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         this.removeFile()
     }
     @action
+    skipToChange = (e) => {
+        this.skipTo = e.target.value
+    }
+    @action
     setVideoType = (value) => {
         this.videoType = value
+    }
+    @action
+    setLeadVideoType = (value) => {
+        this.lead_video_type = value
     }
 
     languageChange = (language) => {
@@ -355,7 +366,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             status = 1,
             videoUrl = '',
             skip_to = 'ige',
-            video_type = 'landscape',
+            video_type = this.videoType,
+            lead_video_type = this.lead_video_type,
             appwall_description = '',
             ige_pkgname = '',
             ige_leadvideo_flag = undefined,
@@ -584,14 +596,14 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                 {this.videoType}
                                             </div>
                                             <div className="right">
-                                                {this.videoType === 'Portrait' ? '9:16' : '16:9'}
+                                                {this.videoType === 'portrait' ? '9:16' : '16:9'}
                                             </div>
                                         </div>
                                         <div>
                                             <Upload {...theVideoUrlProps}>
                                                 {
 
-                                                    <div className={this.videoType === 'Portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`} >
+                                                    <div className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`} >
                                                         {
                                                             theVideoUrl && <video src={theVideoUrl} />
                                                         }
@@ -629,7 +641,370 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                     }
                     {
                         this.useCreativeType === 3 && <React.Fragment>
+                            <FormItem label="IGE Video">
+                                {getFieldDecorator('video_type',
+                                    {
+                                        initialValue: video_type,
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
+                                    })(
+                                        <Select
+                                            showSearch
+                                            onChange={(val) => this.setVideoType(val)}
+                                            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        >
+                                            {videoType.map(c => (
+                                                <Select.Option {...c}>
+                                                    {c.key}
+                                                </Select.Option>
+                                            ))}
+                                        </Select>
+                                    )}
+                            </FormItem>
+                            <FormItem className={styles.autoHeight}>
+                                {getFieldDecorator('videoUrl', {
+                                    initialValue: videoUrl,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(
+                                    <div className={styles.UploadBox}>
+                                        <div className={styles.title}>
+                                            <div className="left">
+                                                {this.videoType}
+                                            </div>
+                                            <div className="right">
+                                                {this.videoType === 'portrait' ? '9:16' : '16:9'}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <Upload {...theVideoUrlProps}>
+                                                {
 
+                                                    <div className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`} >
+                                                        {
+                                                            theVideoUrl && <video src={theVideoUrl} />
+                                                        }
+                                                    </div>
+                                                }
+                                            </Upload>
+                                        </div>
+                                    </div>
+                                )}
+                            </FormItem>
+
+                            <FormItem label="IGE Leadvideo">
+                                {getFieldDecorator('lead_video_type',
+                                    {
+                                        initialValue: lead_video_type,
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
+                                    })(
+                                        <Select
+                                            showSearch
+                                            onChange={(val) => this.setVideoType(val)}
+                                            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        >
+                                            {videoType.map(c => (
+                                                <Select.Option {...c}>
+                                                    {c.key}
+                                                </Select.Option>
+                                            ))}
+                                        </Select>
+                                    )}
+                            </FormItem>
+                            <FormItem className={styles.autoHeight}>
+                                {getFieldDecorator('videoUrl', {
+                                    initialValue: videoUrl,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(
+                                    <div className={styles.UploadBox}>
+                                        <div className={styles.title}>
+                                            <div className="left">
+                                                {this.lead_video_type}
+                                            </div>
+                                            <div className="right">
+                                                {this.lead_video_type === 'portrait' ? '9:16' : '16:9'}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <Upload {...theVideoUrlProps}>
+                                                {
+
+                                                    <div className={this.lead_video_type === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`} >
+                                                        {
+                                                            theVideoUrl && <video src={theVideoUrl} />
+                                                        }
+                                                    </div>
+                                                }
+                                            </Upload>
+                                        </div>
+                                    </div>
+                                )}
+                            </FormItem>
+                            {/* ige-----load-------box */}
+                            <Row>
+                                <Col span={3}>
+                                    <p style={{ textAlign: 'right', marginRight: '12px' }}>IGE Carousel Video:</p>
+                                </Col>
+                                <Col span={8}>
+                                    <div className={styles.wang}>
+                                        <div className={styles.UploadBox}>
+                                            <div className={styles.title}>
+                                                <div className="left">
+                                                    {this.videoType}
+                                                </div>
+                                                <div className="right">
+                                                    {this.videoType === 'portrait' ? '9:16' : '16:9'}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <Upload {...theVideoUrlProps}>
+                                                    {
+
+                                                        <div className={`${styles.sunjiao} ${styles.shu}`} >
+                                                            {
+                                                                theVideoUrl && <video src={theVideoUrl} />
+                                                            }
+                                                        </div>
+                                                    }
+                                                </Upload>
+                                            </div>
+                                        </div>
+                                        <div className={styles.UploadBox}>
+                                            <div className={styles.title}>
+                                                <div className="left">
+                                                    {this.videoType}
+                                                </div>
+                                                <div className="right">
+                                                    {this.videoType === 'portrait' ? '9:16' : '16:9'}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <Upload {...theVideoUrlProps}>
+                                                    {
+
+                                                        <div className={`${styles.sunjiao} ${styles.heng}`} >
+                                                            {
+                                                                theVideoUrl && <video src={theVideoUrl} />
+                                                            }
+                                                        </div>
+                                                    }
+                                                </Upload>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className={styles.wang}>
+                                        <div className={styles.UploadBox}>
+                                            <div className={styles.title}>
+                                                <div className="left">
+                                                    {this.videoType}
+                                                </div>
+                                                <div className="right">
+                                                    {this.videoType === 'portrait' ? '9:16' : '16:9'}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <Upload {...theVideoUrlProps}>
+                                                    {
+
+                                                        <div className={`${styles.sunjiao} ${styles.shu}`} >
+                                                            {
+                                                                theVideoUrl && <video src={theVideoUrl} />
+                                                            }
+                                                        </div>
+                                                    }
+                                                </Upload>
+                                            </div>
+                                        </div>
+                                        <div className={styles.UploadBox}>
+                                            <div className={styles.title}>
+                                                <div className="left">
+                                                    {this.videoType}
+                                                </div>
+                                                <div className="right">
+                                                    {this.videoType === 'portrait' ? '9:16' : '16:9'}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <Upload {...theVideoUrlProps}>
+                                                    {
+
+                                                        <div className={`${styles.sunjiao} ${styles.heng}`} >
+                                                            {
+                                                                theVideoUrl && <video src={theVideoUrl} />
+                                                            }
+                                                        </div>
+                                                    }
+                                                </Upload>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Col>
+                            </Row>
+                            <FormItem label="IGE Pkgname"  >
+                                {getFieldDecorator('ige_pkgname', {
+                                    initialValue: ige_pkgname,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(<Input />)}
+                            </FormItem>
+                            <FormItem label="GE Leadvideo Flag">
+                                {getFieldDecorator('ige_leadvideo_flag',
+                                    {
+                                        initialValue: ige_leadvideo_flag,
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
+                                    })(
+                                        <Select
+                                            showSearch
+                                            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        >
+                                            {igeFlag.map(c => (
+                                                <Select.Option {...c}>
+                                                    {c.key}
+                                                </Select.Option>
+                                            ))}
+                                        </Select>
+                                    )}
+                            </FormItem>
+                            <FormItem label="IGE Recoverlist Opps">
+                                {getFieldDecorator('ige_recoverlist_opps', {
+                                    initialValue: Number(ige_recoverlist_opps),
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(
+                                    <Radio.Group>
+                                        {igeOption.map(c => (
+                                            <Radio key={c.key} value={c.value}>
+                                                {c.key}
+                                            </Radio>
+                                        ))}
+                                    </Radio.Group>
+                                )}
+                            </FormItem>
+                            <FormItem label="IGE Close To Confirm">
+                                {getFieldDecorator('ige_recoverlist_re_en', {
+                                    initialValue: Number(ige_recoverlist_re_en),
+                                })(
+                                    <Radio.Group>
+                                        {igeOption.map(c => (
+                                            <Radio key={c.key} value={c.value}>
+                                                {c.key}
+                                            </Radio>
+                                        ))}
+                                    </Radio.Group>
+                                )}
+                            </FormItem>
+
+                            <FormItem label="IGE Switch Scene">
+                                {getFieldDecorator('ige_switch_scene',
+                                    {
+                                        initialValue: ige_switch_scene,
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
+                                    })(
+                                        <Select
+                                            showSearch
+                                            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        >
+                                            {igeScene.map(c => (
+                                                <Select.Option {...c}>
+                                                    {c.key}
+                                                </Select.Option>
+                                            ))}
+                                        </Select>
+                                    )}
+                            </FormItem>
+                            <FormItem label="Minimum Playing Time">
+                                {getFieldDecorator('playback_time', {
+                                    initialValue: playback_time,
+                                    validateTrigger: 'blur',
+                                    rules: [
+                                        {
+                                            required: true, message: "Required",
+                                        },
+                                        {
+                                            validator: (r, v, callback) => {
+                                                if (v <= 0) {
+                                                    callback('The Exchange Rate should be a positive integer!')
+                                                }
+                                                callback()
+                                            }
+                                        }
+                                    ]
+                                })(<InputNumber precision={0} />)}
+                                <span>seconds</span>
+
+                            </FormItem>
+                            <FormItem label="Maximum Play Time">
+                                {getFieldDecorator('long_play_time', {
+                                    initialValue: long_play_time,
+                                    validateTrigger: 'blur',
+                                    rules: [
+                                        {
+                                            required: true, message: "Required",
+                                        },
+                                        {
+                                            validator: (r, v, callback) => {
+                                                if (v <= 0) {
+                                                    callback('The Exchange Rate should be a positive integer!')
+                                                }
+                                                callback()
+                                            }
+                                        }
+                                    ]
+                                })(<InputNumber precision={0} />)}
+                                <span>seconds</span>
+                            </FormItem>
+
+                            <FormItem label="Appwall Description">
+                                {getFieldDecorator('appwall_description',
+                                    {
+                                        initialValue: appwall_description,
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
+                                    })(
+                                        <Select
+                                            showSearch
+                                            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        >
+                                            {this.descriptionOption.map(c => (
+                                                <Select.Option {...c}>
+                                                    {c.key}
+                                                </Select.Option>
+                                            ))}
+                                        </Select>
+                                    )}
+                            </FormItem>
                         </React.Fragment>
                     }
                     {
@@ -677,7 +1052,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         }
                                     ]
                                 })(
-                                    <Radio.Group>
+                                    <Radio.Group
+                                        onChange={(e) => this.skipToChange(e)}
+                                    >
                                         {skipToOption.map(c => (
                                             <Radio {...c}>
                                                 {c.key}

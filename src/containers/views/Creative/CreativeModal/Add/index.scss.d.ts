@@ -17,3 +17,4 @@ export const shu: string;
 export const sunjiao: string;
 export const title: string;
 export const vcMdoal: string;
+export const wang: string;
