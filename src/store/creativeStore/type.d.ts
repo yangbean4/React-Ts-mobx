@@ -20,7 +20,7 @@ export interface ICreative {
     app_description?: string
     if_show_comment?: string
     creative_type?: string
-
+    ige_prefail?: number
     videoUrl?: string
     video_type?: string
     lead_video_type?: string

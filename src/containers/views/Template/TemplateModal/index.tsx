@@ -165,7 +165,6 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
             version = '',
             template_type = undefined
         } = template || {}
-        const _this = this
         const type = ".html, .mp4";
         const props = {
             showUploadList: false,

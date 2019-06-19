@@ -4,10 +4,11 @@ import { observable, action, computed, runInAction } from 'mobx'
 import { Form, Input, Select, Radio, Button, message, Icon, Upload, InputNumber, Row, Col } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { statusOption, platformOption } from '@config/web'
-import { showComment, videoType, descriptionOption, skipToOption, igeFlag, igeOption, igeScene } from '../../config'
+import { showComment, videoType, descriptionOption, skipToOption, igeFlag, igeOption, igeScene, igePrefailOption } from '../../config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-import { typeOf, testSize } from '@utils/index';
+import { typeOf, testSize } from '@utils/index' 
+
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -382,7 +383,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             ige_portrait_offline_url = '',
             ige_landscape_offline_url = '',
             ige_portrait_video_cover_url = '',
-            ige_landscape_video_cover_url = ''
+            ige_landscape_video_cover_url = '',
+            ige_prefail
         } = this.creativeTarget
 
         const theVideoUrlPropsForVideoOrIge = this.getUploadprops(this.api.creative.uploadVideo, 'videoUrl', {
@@ -1322,6 +1324,27 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                             </Radio.Group>
                         )}
                     </FormItem>
+
+                    {
+                        this.useCreativeType !== 2 && <FormItem label="IGE First Frame Prefail">
+                            {getFieldDecorator('ige_prefail', {
+                                initialValue: Number(ige_prefail),
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Radio.Group>
+                                    {igePrefailOption.map(c => (
+                                        <Radio key={c.key} value={c.value}>
+                                            {c.key}
+                                        </Radio>
+                                    ))}
+                                </Radio.Group>
+                            )}
+                        </FormItem>
+                    }
 
                     <FormItem label="App Name"  >
                         {getFieldDecorator('app_name', {

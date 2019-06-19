@@ -88,3 +88,13 @@ export const igeScene = [
   }
 ]
 
+export const igePrefailOption = [
+  {
+    key: 'video',
+    value: 0
+  },
+  {
+    key: 'ige',
+    value: 1
+  },
+]
