@@ -7,7 +7,6 @@ import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import EmojiPicker from '@components/Emoji'
 import * as web from '../web.config'
-import { reject } from 'q';
 // 封装表单域组件
 const FormItem = Form.Item
 
@@ -134,7 +133,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         return new Promise((resolve, reject) => {
             let filereader = new FileReader()
             filereader.onload = e => {
-                let src = e.target.result
+                let src = e.target as hasResult
             }
         })
     }
@@ -313,7 +312,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                     placement="top">
                                     <AntIcon className={styles.workPlus} onClick={this.showEmojiPicker} type="plus" />
                                 </Popover>
-                                <div className={styles.textBox} onInput={this.setCom_talk} contentEditable={true}></div>
+                                <div className={styles.textBox} onInput={this.setCom_talk} contentEditable={true}>{com_talk ? com_talk : ''}</div>
                             </div>
                         )}
                     </FormItem>

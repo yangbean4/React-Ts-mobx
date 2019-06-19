@@ -124,6 +124,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                             ...this.comTemplate,
                             version: values.version,
                             template_name: values.template_name,
+                            template_type: values.template_type
                         }
 
                         if (this.typeIsAdd) {

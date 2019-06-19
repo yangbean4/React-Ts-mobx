@@ -9,6 +9,13 @@ const loadComponent = (loader: () => Promise<any>) =>
     })
 
 export const asynchronousComponents = {
+    //------------------Apps Manage
+    AppManages: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppMange')),
+    AppManagesModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppMange/AppMangeModal')),
+    //------------------Compaigns
+    Campaigns: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns')),
+    CampaignsAdd: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns/CampaignsModel/Add')),
+    CampaignsEdit: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns/CampaignsModel/Edit')),
     //------------------Comments
     CommentsTpl: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Comments/Template')),
     CommentTplModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Comments/Template/CommentModel')),
@@ -154,6 +161,7 @@ export const routerAndMenu: IRouter[] = [
         icon: 'iconlog',
         authName: 'Offers'
     },
+    // ---------Apps manage--------------
     {
         id: 81,
         pid: 8,
@@ -161,8 +169,24 @@ export const routerAndMenu: IRouter[] = [
         exact: true,
         title: 'Apps Manage',
         authName: 'Offers-Apps Manage',
-        component: 'Apps',
-        path: '/offers'
+        component: 'AppManages',
+        path: '/offer'
+    },
+    {
+        id: 851,
+        pid: 81,
+        isMenu: false,
+        path: '/offer/add',
+        title: 'Add App ',
+        component: 'AppManagesModel',
+    },
+    {
+        id: 851,
+        pid: 81,
+        isMenu: false,
+        path: '/offer/edit',
+        title: 'Edit App',
+        component: 'AppManagesModel',
     },
     // creative
     {
@@ -302,8 +326,24 @@ export const routerAndMenu: IRouter[] = [
         exact: true,
         title: 'Campaigns',
         authName: 'Offers-Campaigns',
-        component: 'Apps',
+        component: 'Campaigns',
         path: '/campaigns'
+    },
+    {
+        id: 851,
+        pid: 85,
+        isMenu: false,
+        path: '/campaigns/add',
+        title: 'Add Campaign ',
+        component: 'CampaignsAdd',
+    },
+    {
+        id: 851,
+        pid: 85,
+        isMenu: false,
+        path: '/campaigns/edit',
+        title: 'Edit Campaign',
+        component: 'CampaignsEdit',
     },
     // --------Company---------------
     {

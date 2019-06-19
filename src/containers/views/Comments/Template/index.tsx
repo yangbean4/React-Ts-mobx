@@ -10,7 +10,7 @@ interface IProps {
     fullTemplate?: () => Promise<any>
 }
 
-class Company extends React.Component<IProps> {
+class CommentsTpl extends React.Component<IProps> {
     render() {
         return (
             <div className={styles.container}>
@@ -20,4 +20,4 @@ class Company extends React.Component<IProps> {
         ) 
     }
 }
-export default Company
+export default CommentsTpl

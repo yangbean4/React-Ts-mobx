@@ -162,8 +162,6 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     render() {
-        // let TselectedRowKeys = this.props.comment.group_template_ids.split(',')||[]
-        // console.log(this.selectedRowKeys)
         const rowSelection = {
             selectedRowKeys:this.selectedRowKeys,
             onChange: (selectedRowKeys) => {

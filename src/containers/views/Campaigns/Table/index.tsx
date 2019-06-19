@@ -10,11 +10,11 @@ import * as styles from './index.scss'
 
 
 interface IStoreProps {
-    getcommentsLoading?: boolean
-    comments?: ICommentStore.IComment[]
-    setComment?: (comment: ICommentStore.IComment) => void
-    getComments?: () => Promise<any>
-    setCommentType?: (string) => void
+    getCampaignsLoading?: boolean
+    campaigns?: ICampaignStore.ICampaignGroup[]
+    setCampaingn?: (comment: ICampaignStore.ICampaignGroup) => void
+    getCampaigns?: () => Promise<any>
+    setCampaignType?: (string) => void
     handleTableChange?: (pagination: PaginationConfig) => void
     page?: number
     pageSize?: number
@@ -28,36 +28,35 @@ interface IProps extends IStoreProps {
 
 @inject(
     (store: IStore): IStoreProps => {
-        const { routerStore, commentStore } = store
+        const { routerStore, campaignStore } = store
         const {
-            getcommentsLoading,
-            setComment,
-            getComments,
-            comments,
+            getCampaignsLoading,
+            setCampaingn,
+            getCampaigns,
+            campaigns,
             handleTableChange,
             page,
             pageSize,
-            setCommentType,
+            setCampaignType,
             total
-        } = commentStore
-        return { routerStore, getcommentsLoading, setComment, getComments, comments, handleTableChange, page, pageSize, setCommentType, total }
+        } = campaignStore
+        return { routerStore, getCampaignsLoading, setCampaingn, getCampaigns, campaigns, handleTableChange, page, pageSize, setCampaignType, total }
     }
 )
 @observer
-class CommentTable extends ComponentExt<IProps> {
+class CampaignsTable extends ComponentExt<IProps> {
 
     @observable
     private commentType: string = ''
 
-    @observable
-    private rowSelection: object = {
-
-    }
-
     @action
-    modifyComment = (comment: ICommentStore.IComment) => {
-        this.props.setComment(comment)
-        this.props.routerStore.replace(`/comments/template/edit/${comment.id}`)
+    modifyComment = (campaign: ICampaignStore.ICampaignGroup) => {
+        const { app_key } = campaign
+        localStorage.setItem('offer_app_key', JSON.stringify({
+            app_key 
+        }))
+        this.props.setCampaingn(campaign)
+        this.props.routerStore.replace(`/campaigns/edit`)
     }
     // 去请求数据
     componentDidMount() {
@@ -67,14 +66,14 @@ class CommentTable extends ComponentExt<IProps> {
                 this.commentType = companyType
             })
         }
-        this.props.setCommentType(companyType)
+        this.props.setCampaignType(companyType)
     }
 
     render() {
         const {
             scrollY,
-            getcommentsLoading,
-            comments,
+            getCampaignsLoading,
+            campaigns,
             handleTableChange,
             page,
             pageSize,
@@ -82,14 +81,13 @@ class CommentTable extends ComponentExt<IProps> {
         } = this.props
         return (
             <React.Fragment>
-                <Table<ICommentStore.IComment>
+                <Table<ICampaignStore.ICampaignGroup>
                     className="center-table"
                     style={{ width: '100%' }}
                     bordered
-                    rowSelection={this.rowSelection}
-                    rowKey="comment_id"
-                    loading={getcommentsLoading}
-                    dataSource={comments}
+                    rowKey="record_id"
+                    loading={getCampaignsLoading}
+                    dataSource={campaigns}
                     scroll={{ y: scrollY }}
                     pagination={{
                         current: page,
@@ -99,28 +97,10 @@ class CommentTable extends ComponentExt<IProps> {
                     }}
                     onChange={handleTableChange}
                 >
-                    <Table.Column<ICommentStore.IComment> key="id" title="ID" dataIndex="id" width={50} />
-                    <Table.Column<ICommentStore.IComment> key="language" title="language" dataIndex="language" width={50} />
-                    <Table.Column<ICommentStore.IComment>
-                        key="head_portrait"
-                        className={styles.Avatar}
-                        title="Head Portrait"
-                        dataIndex="head_portrait"
-                        width={100}
-                        render={(record) => <img src={record} alt="" width="40"  height="40" />}
-                    />
-                    <Table.Column<ICommentStore.IComment> key="com_name" title="Comment Name" dataIndex="com_name" width={100} />
-                    <Table.Column<ICommentStore.IComment> key="com_talk" title="Comment Talk" className={styles.longText} dataIndex="com_talk" width={220} />
-                    <Table.Column<ICommentStore.IComment>
-                        key="status"
-                        title="Status"
-                        dataIndex="status"
-                        width={80}
-                        render={(_) => (
-                            statusOption.find(item => item.value === _).key
-                        )}
-                    />
-                    <Table.Column<ICommentStore.IComment>
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="app_key" title="Appkey" dataIndex="app_key" width={80} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="app_id" title="App ID" dataIndex="app_id" width={200} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="platform" title="Platform" dataIndex="platform" width={100} />
+                    <Table.Column<ICampaignStore.ICampaignGroup>
                         key="action"
                         title="Operate"
                         width={80}
@@ -142,4 +122,4 @@ class CommentTable extends ComponentExt<IProps> {
     }
 }
 
-export default CommentTable
+export default CampaignsTable

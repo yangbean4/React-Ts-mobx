@@ -1,5 +1,7 @@
 declare interface IStore {
+    appManageStore: IAppManageStore.AppManageStore
     creativeStore: ICreativeStore.CreativeStore
+    campaignStore: ICampaignStore.CampaignStore
     commentGroupStore: ICommentGroupStore.CommentGroupStore
     endcardStore: IEndcardStore.EndcardStore
     endcardTemplateStore: IEndcardTemplateStore.EndcardTemplateStore

@@ -14,16 +14,19 @@ export default {
     return http.post(`${basePath}editApp`, data || {})
   },
 
-  // deleteAppsManage(data): Promise<any> {
-  //   return http.post(`${basePath}delAppsManage`, data || {})
-  // },
-
-  // fullAppsManage(): Promise<any> {
-  //   return http.post(`${basePath}appList`)
-  // },
-
+  modifyAppsManageInfo(data): Promise<any> {
+    return http.post(`${basePath}info`, data || {})
+  },
   senAppList(data): Promise<any> {
     return http.post(`${basePath}senAppList`, data)
+  },
+
+  checkAppsStatus(data): Promise<any> {
+    return http.post(`${basePath}checkApp`, data)
+  },
+
+  showGrabMessage(data): Promise<any> {
+    return http.post(`${basePath}grabMessage`, data)
   },
 
 }

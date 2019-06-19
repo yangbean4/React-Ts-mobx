@@ -39,3 +39,7 @@ export { default as commentStore } from './commenttplStore'
 export { default as commentGroupStore } from './commentGroupStore'
 
 export { default as creativeStore } from './creativeStore'
+
+export { default as campaignStore } from './campaignStore'
+
+export { default as appManageStore } from './appManageStore'

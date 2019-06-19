@@ -4,7 +4,7 @@ import { PaginationConfig } from 'antd/lib/pagination'
 import { inject, observer } from 'mobx-react'
 import { observable, action, runInAction } from 'mobx'
 import PageConfig from '@components/Pagination'
-// import { statusOption } from '../web.config'
+import { statusOption } from '../web.config'
 import { FormatNumber } from '@utils/transRender'
 import { ComponentExt } from '@utils/reactExt'
 
@@ -90,7 +90,7 @@ class CommentTable extends ComponentExt<IProps> {
                     className="center-table"
                     style={{ width: '100%' }}
                     bordered
-                    rowKey="id"
+                    rowKey="group_id"
                     loading={getcommentsLoading}
                     dataSource={comments}
                     scroll={{ y: scrollY }}
@@ -152,9 +152,9 @@ class CommentTable extends ComponentExt<IProps> {
                         title="Status"
                         dataIndex="status"
                         width={100}
-                        // render={(_) => (
-                        //     statusOption.find(item => item.value === _).key
-                        // )}
+                        render={(_) => (
+                            statusOption.find(item => item.value === _).key
+                        )}
                     />
                     <Table.Column<ICommentGroupStore.IGroup>
                         key="action"
