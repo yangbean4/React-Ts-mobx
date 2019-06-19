@@ -166,17 +166,19 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
             template_type = undefined
         } = template || {}
         const _this = this
+        const type = ".html, .mp4";
         const props = {
             showUploadList: false,
-            accept: ".html",
+            accept: type,
             name: 'file',
             onRemove: this.removeFile,
             beforeUpload: (file) => {
-                const isHtml = file.type === 'text/html';
+                const houz = file.name.split('.').pop()
+                const isHtml = type.includes(houz)
                 if (!isHtml) {
-                    message.error('Upload failed! The file must be in HTML format.');
+                    message.error('Upload failed! The file must be in HTML or MP4 format.');
                 }
-                const isLt2M = file.size / 1024 / 1024 < 2;
+                const isLt2M = file.size / 1024 / 1024 < 3;
                 if (!isLt2M) {
                     message.error('Image must smaller than 2MB!');
                 }

@@ -261,13 +261,13 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!isLt2M) {
                     message.error(`Image must smaller than ${size}kb!`);
                 }
-                // if (isHtml && isLt2M) {
-                //     return testSize(file, width, height).catch(() => {
-                //         message.error(`Image must be width:${width}px height:${height}px`);
-                //         return Promise.reject()
-                //     })
-                // }
-                return isHtml && isLt2M;
+                if (isHtml && isLt2M) {
+                    return testSize(file, width, height).catch(() => {
+                        message.error(`Image must be width:${width}px height:${height}px`);
+                        return Promise.reject()
+                    })
+                }
+                // return isHtml && isLt2M;
             },
             customRequest: (data) => {
                 const formData = new FormData()
@@ -471,7 +471,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                         })(<Input disabled={true} />)}
                     </FormItem>
 
-                    <FormItem {...bigLayout} className={styles.hasImg} label='Endcard Template'>
+                    <FormItem {...bigLayout} className={styles.hasImg + ` ${styles.autoHeight}`} label='Endcard Template'>
                         {getFieldDecorator('template_id', {
                             initialValue: template_id,
                             rules: [

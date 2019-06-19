@@ -1,6 +1,4 @@
 
-
-
 export function dateFormat(date, format) {
     if (!format || typeof format !== 'string') {
         console.error('format is undefiend or type is Error');
@@ -324,21 +322,20 @@ export const getGuId = (): string => {
     }).toUpperCase();
 }
 
-export const testSize = (target: File, maxWidth, maxHeight) => {
+export const testSize = (target: File, maxWidth, maxHeight, isScale: boolean = false, type: string = 'img') => {
     return new Promise((resolve, reject) => {
-        const objectURL = window.createObjectURL != undefined
-            ? window.createObjectURL(target) : window.URL != undefined
-                ? window.URL.createObjectURL(target) : window.webkitURL != undefined
-                    ? window.webkitURL.createObjectURL(target) : null
-        const imageCopy = new Image()
+        const objectURL = createObjectURL != undefined
+            ? createObjectURL(target) : URL != undefined
+                ? window.URL.createObjectURL(target) : webkitURL != undefined
+                    ? webkitURL.createObjectURL(target) : null
+        // TODO:
+        const imageCopy: HTMLVideoElement | HTMLImageElement = type === 'img' ? new Image() : type === 'video' ? document.createElement('video') : null
         imageCopy.src = objectURL
         imageCopy.onload = () => {
-            const width = imageCopy.width
-            const height = imageCopy.height
-            if (width !== maxWidth || height !== maxHeight) {
-                reject()
-            }
-            resolve()
+            const width = imageCopy.width || imageCopy.videoHeight
+            const height = imageCopy.height || imageCopy.videoWidth
+            const is = isScale ? width / maxWidth === height / maxHeight : width === maxWidth && height === maxHeight
+            is ? resolve() : reject();
         }
     })
 }

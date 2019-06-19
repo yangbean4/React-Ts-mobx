@@ -81,7 +81,6 @@
 
 .autoHeight {
   height: max-content;
-  margin-left: 12.5%;
   :global {
     .ant-form-item-children {
       height: max-content;
@@ -90,6 +89,9 @@
       height: max-content;
     }
   }
+}
+.nolabel {
+  margin-left: 12.5%;
 }
 
 .btnUploadGroup {

@@ -13,6 +13,7 @@ export const heng: string;
 export const imgBox: string;
 export const imgTitle: string;
 export const imgbox: string;
+export const nolabel: string;
 export const shu: string;
 export const sunjiao: string;
 export const title: string;

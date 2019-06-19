@@ -49,6 +49,12 @@ interface hasResult {
     result?: string
 }
 
+interface Whs {
+    width: number
+    height: number
+    isScale?: boolean
+}
+
 interface IStoreProps {
     modifyCreative?: (creative: ICreativeStore.ICreative) => Promise<any>
     createCreative?: (creative: ICreativeStore.ICreative) => Promise<any>
@@ -103,7 +109,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get useCreativeType() {
-        return [this.CreativeType, this.creativeTarget.creative_type, this.props.optionListDb.CreativeType[0] && this.props.optionListDb.CreativeType[0].id].find(ele => ele !== undefined)
+        return [this.CreativeType, this.creativeTarget.creative_type, 3].find(ele => ele !== undefined)
     }
 
     @computed
@@ -262,22 +268,32 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         })
     }
 
+    /**
+     * fun 上传API
+     * key 对应的formKey
+     * width 检测宽
+     * height 检查高
+     * size 检测大小
+     * cb 回调
+     * type 文件类型
+     */
 
-    getUploadprops = (fun: Function, key: string, width: number,
-        height: number, size: number, preData?,
-        cb?: Function, type = ".png, .jpg, .jpeg, .gif") => {
+    getUploadprops = (fun: Function, key: string,
+        whs?: Whs,
+        size?: number, preData?,
+        type = ".png, .jpg, .jpeg, .gif", cb?: Function) => {
 
         const errorCb = (error) => { console.log(error); this.removeFile(key) };
         return {
             showUploadList: false,
-            accept: ".png, .jpg, .jpeg, .gif",
+            accept: type === 'video' ? 'video/*' : type,
             name: 'file',
             // listType: "picture",
             className: "avatar-uploader",
             onRemove: this.removeFile,
             beforeUpload: (file) => {
                 const houz = file.name.split('.').pop()
-                const isHtml = type.includes(houz)
+                const isHtml = type === 'video' || type.includes(houz)
                 if (!isHtml) {
                     message.error(`Upload failed! The file must be in ${type} format.`);
                 }
@@ -285,12 +301,13 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!isLt2M) {
                     message.error(`Image must smaller than ${size}kb!`);
                 }
-                // if (isHtml && isLt2M) {
-                //     return testSize(file, width, height).catch(() => {
-                //         message.error(`Image must be width:${width}px height:${height}px`);
-                //         return Promise.reject()
-                //     })
-                // }
+                if (isHtml && isLt2M && whs) {
+                    const { width, height, isScale = false } = whs;
+                    return testSize(file, width, height, isScale).catch(() => {
+                        message.error(`Image must be width:${width}px height:${height}px`);
+                        return Promise.reject()
+                    })
+                }
                 return isHtml && isLt2M;
             },
             customRequest: (data) => {
@@ -335,22 +352,6 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     render() {
         const { form, optionListDb } = this.props
         const { getFieldDecorator } = form
-        const { uploadCoverImage, uploadIcon } = this.api.util
-        // const { width, height } = this.isHeng ? {
-        //     width: 1920, height: 1080
-        // } : {
-        //         height: 1920, width: 1080
-        //     }
-        const theVideoUrlProps = this.getUploadprops(uploadCoverImage, 'videoUrl', 100, 100, 200, {
-            platform: this.usePlatform,
-            app_id: this.appId
-        })
-        const ctaPicProps = this.getUploadprops(this.api.util.uploadIcon, 'cta_pic', 422, 62, 10)
-
-        const playIconVideoProps = this.getUploadprops(this.api.util.uploadIcon, 'videoUrl', 422, 62, 10)
-
-
-
         const {
             platform = 'android',
             app_key = '',
@@ -376,10 +377,101 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             ige_switch_scene,
             playback_time,
             long_play_time,
+            playicon_creative_offline_url = '',
+            leadVideoUrl = '',
+            ige_portrait_offline_url = '',
+            ige_landscape_offline_url = '',
+            ige_portrait_video_cover_url = '',
+            ige_landscape_video_cover_url = ''
         } = this.creativeTarget
 
-        const theVideoUrl = this.imageTarget['videoUrl'] || this.creativeTarget.videoUrl
-        const ctaPic = this.imageTarget['creative_icon_url'] || creative_icon_url
+        const theVideoUrlPropsForVideoOrIge = this.getUploadprops(this.api.creative.uploadVideo, 'videoUrl', {
+            width: this.videoType === 'portrait' ? 9 : 16,
+            height: this.videoType === 'portrait' ? 16 : 9,
+            isScale: true
+        }, 4000, {
+                type: this.useCreativeType === 2 ? 3 : 4,
+                video_type: this.videoType === 'portrait' ? 2 : 1,
+                app_name: this.appName
+            }, 'video')
+        const theVideoUrlPropsForVideoOrIge_url = this.imageTarget['videoUrl'] || videoUrl
+
+        const igeLeadVideoUrlProps = this.getUploadprops(this.api.creative.uploadVideo, 'leadVideoUrl', {
+            width: this.lead_video_type === 'portrait' ? 9 : 16,
+            height: this.lead_video_type === 'portrait' ? 16 : 9,
+            isScale: true
+        }, 4000, {
+                type: 5,
+                video_type: this.lead_video_type === 'portrait' ? 2 : 1,
+                app_name: this.appName
+            }, 'video')
+
+        const igeLeadVideoUrlProps_url = this.imageTarget['leadVideoUrl'] || leadVideoUrl
+
+        const igeCarouselVideoUrlPropsPortrait = this.getUploadprops(this.api.creative.uploadVideo, 'ige_portrait_offline_url', {
+            width: 9,
+            height: 16,
+            isScale: true
+        }, 4000, {
+                type: 6,
+                video_type: 2,
+                app_name: this.appName
+            }, 'video')
+        const igeCarouselVideoUrlPropsPortrait_url = this.imageTarget['ige_portrait_offline_url'] || ige_portrait_offline_url
+
+        const igeCarouselVideoUrlPropsLandscape = this.getUploadprops(this.api.creative.uploadVideo, 'ige_landscape_offline_url', {
+            width: 16,
+            height: 9,
+            isScale: true
+        }, 4000, {
+                type: 7,
+                video_type: 1,
+                app_name: this.appName
+            }, 'video')
+        const igeCarouselVideoUrlPropsLandscape_url = this.imageTarget['ige_landscape_offline_url'] || ige_landscape_offline_url
+
+        const theVideoUrlPropsForPlayicon = this.getUploadprops(this.api.creative.uploadVideo, 'playicon_creative_offline_url', {
+            width: 1,
+            height: 1,
+            isScale: true
+        }, 4000, {
+                type: 8,
+                // video_type: this.videoType === 'portrait' ? 2 : 1,
+                app_name: this.appName
+            }, 'video')
+
+        const theVideoUrlPropsForPlayicon_url = this.imageTarget['playicon_creative_offline_url'] || playicon_creative_offline_url
+
+
+
+        const creativeIconProps = this.getUploadprops(this.api.creative.handleUploadImg, 'creative_icon_url', {
+            width: 180,
+            height: 180,
+        }, 20, {
+                type: 2,
+                app_name: this.appName
+            })
+        const creativeIconProps_url = this.imageTarget['creative_icon_url'] || creative_icon_url
+
+
+        const igePortraitCover = this.getUploadprops(this.api.creative.handleUploadImg, 'ige_portrait_video_cover_url', {
+            width: 180,
+            height: 180,
+        }, 20, {
+                type: 3,
+                app_name: this.appName
+            })
+        const igePortraitCover_url = this.imageTarget['ige_portrait_video_cover_url'] || ige_portrait_video_cover_url
+
+        const igeLandscapeCover = this.getUploadprops(this.api.creative.handleUploadImg, 'ige_landscape_video_cover_url', {
+            width: 180,
+            height: 180,
+        }, 20, {
+                type: 3,
+                app_name: this.appName
+            })
+        const igeLandscapeCover_url = this.imageTarget['ige_landscape_video_cover_url'] || ige_landscape_video_cover_url
+
 
         return (
             <div className='sb-form'>
@@ -505,9 +597,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                         })(<Input disabled={true} />)}
                     </FormItem>
 
-                    <FormItem label="Icon" >
+                    <FormItem label="Icon" className={styles.autoHeight}>
                         {getFieldDecorator('creative_icon_url', {
-                            initialValue: creative_icon_url,
+                            initialValue: creativeIconProps_url,
                             rules: [
                                 {
                                     required: true, message: "Required"
@@ -516,11 +608,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                         })(
                             <div className={styles.UploadBox}>
                                 <div>
-                                    <Upload {...ctaPicProps}>
+                                    <Upload {...creativeIconProps}>
                                         <div className={styles.btnUploadGroup}>
                                             <div className={styles.btnUpload} >
                                                 {
-                                                    ctaPic ? <img src={ctaPic} alt="avatar" />
+                                                    creativeIconProps_url ? <img src={creativeIconProps_url} alt="avatar" />
                                                         : <Icon type='plus' />
                                                 }
                                             </div>
@@ -581,9 +673,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         </Select>
                                     )}
                             </FormItem>
-                            <FormItem className={styles.autoHeight}>
+                            <FormItem className={styles.autoHeight + ` ${styles.nolabel}`}>
                                 {getFieldDecorator('videoUrl', {
-                                    initialValue: videoUrl,
+                                    initialValue: theVideoUrlPropsForVideoOrIge_url,
                                     rules: [
                                         {
                                             required: true, message: "Required"
@@ -600,12 +692,12 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             </div>
                                         </div>
                                         <div>
-                                            <Upload {...theVideoUrlProps}>
+                                            <Upload {...theVideoUrlPropsForVideoOrIge}>
                                                 {
 
                                                     <div className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`} >
                                                         {
-                                                            theVideoUrl && <video src={theVideoUrl} />
+                                                            theVideoUrlPropsForVideoOrIge_url && <video src={theVideoUrlPropsForVideoOrIge_url} />
                                                         }
                                                     </div>
                                                 }
@@ -664,7 +756,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         </Select>
                                     )}
                             </FormItem>
-                            <FormItem className={styles.autoHeight}>
+                            <FormItem className={styles.autoHeight + ` ${styles.nolabel}`}>
                                 {getFieldDecorator('videoUrl', {
                                     initialValue: videoUrl,
                                     rules: [
@@ -683,12 +775,12 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             </div>
                                         </div>
                                         <div>
-                                            <Upload {...theVideoUrlProps}>
+                                            <Upload {...theVideoUrlPropsForVideoOrIge}>
                                                 {
 
                                                     <div className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`} >
                                                         {
-                                                            theVideoUrl && <video src={theVideoUrl} />
+                                                            theVideoUrlPropsForVideoOrIge_url && <video src={theVideoUrlPropsForVideoOrIge_url} />
                                                         }
                                                     </div>
                                                 }
@@ -721,9 +813,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         </Select>
                                     )}
                             </FormItem>
-                            <FormItem className={styles.autoHeight}>
-                                {getFieldDecorator('videoUrl', {
-                                    initialValue: videoUrl,
+                            <FormItem className={styles.autoHeight + ` ${styles.nolabel}`}>
+                                {getFieldDecorator('leadVideoUrl', {
+                                    initialValue: igeLeadVideoUrlProps_url,
                                     rules: [
                                         {
                                             required: true, message: "Required"
@@ -740,12 +832,12 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             </div>
                                         </div>
                                         <div>
-                                            <Upload {...theVideoUrlProps}>
+                                            <Upload {...igeLeadVideoUrlProps}>
                                                 {
 
                                                     <div className={this.lead_video_type === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`} >
                                                         {
-                                                            theVideoUrl && <video src={theVideoUrl} />
+                                                            igeLeadVideoUrlProps_url && <video src={igeLeadVideoUrlProps_url} />
                                                         }
                                                     </div>
                                                 }
@@ -764,45 +856,50 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         <div className={styles.UploadBox}>
                                             <div className={styles.title}>
                                                 <div className="left">
-                                                    {this.videoType}
+                                                    Portrait
                                                 </div>
                                                 <div className="right">
-                                                    {this.videoType === 'portrait' ? '9:16' : '16:9'}
+                                                    9:16
                                                 </div>
                                             </div>
                                             <div>
-                                                <Upload {...theVideoUrlProps}>
-                                                    {
+                                                {getFieldDecorator('ige_portrait_offline_url')(
+                                                    <Upload {...igeCarouselVideoUrlPropsPortrait}>
+                                                        {
 
-                                                        <div className={`${styles.sunjiao} ${styles.shu}`} >
-                                                            {
-                                                                theVideoUrl && <video src={theVideoUrl} />
-                                                            }
-                                                        </div>
-                                                    }
-                                                </Upload>
+                                                            <div className={`${styles.sunjiao} ${styles.shu}`} >
+                                                                {
+                                                                    igeCarouselVideoUrlPropsPortrait_url && <video src={igeCarouselVideoUrlPropsPortrait_url} />
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </Upload>
+                                                )
+                                                }
                                             </div>
                                         </div>
                                         <div className={styles.UploadBox}>
                                             <div className={styles.title}>
                                                 <div className="left">
-                                                    {this.videoType}
+                                                    Landscape
                                                 </div>
                                                 <div className="right">
-                                                    {this.videoType === 'portrait' ? '9:16' : '16:9'}
+                                                    16:9
                                                 </div>
                                             </div>
                                             <div>
-                                                <Upload {...theVideoUrlProps}>
-                                                    {
+                                                {getFieldDecorator('ige_portrait_offline_url')(
+                                                    <Upload {...igeCarouselVideoUrlPropsLandscape}>
+                                                        {
 
-                                                        <div className={`${styles.sunjiao} ${styles.heng}`} >
-                                                            {
-                                                                theVideoUrl && <video src={theVideoUrl} />
-                                                            }
-                                                        </div>
-                                                    }
-                                                </Upload>
+                                                            <div className={`${styles.sunjiao} ${styles.heng}`} >
+                                                                {
+                                                                    igeCarouselVideoUrlPropsLandscape_url && <video src={igeCarouselVideoUrlPropsLandscape_url} />
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </Upload>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -811,45 +908,50 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         <div className={styles.UploadBox}>
                                             <div className={styles.title}>
                                                 <div className="left">
-                                                    {this.videoType}
+                                                    Portrait
                                                 </div>
                                                 <div className="right">
-                                                    {this.videoType === 'portrait' ? '9:16' : '16:9'}
+                                                    9:16
                                                 </div>
                                             </div>
                                             <div>
-                                                <Upload {...theVideoUrlProps}>
-                                                    {
+                                                {getFieldDecorator('ige_portrait_video_cover_url')(
+                                                    <Upload {...igePortraitCover}>
+                                                        {
 
-                                                        <div className={`${styles.sunjiao} ${styles.shu}`} >
-                                                            {
-                                                                theVideoUrl && <video src={theVideoUrl} />
-                                                            }
-                                                        </div>
-                                                    }
-                                                </Upload>
+                                                            <div className={`${styles.sunjiao} ${styles.shu}`} >
+                                                                {
+                                                                    igePortraitCover_url && <img src={igePortraitCover_url} />
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </Upload>
+                                                )
+                                                }
                                             </div>
                                         </div>
                                         <div className={styles.UploadBox}>
                                             <div className={styles.title}>
                                                 <div className="left">
-                                                    {this.videoType}
+                                                    Landscape
                                                 </div>
                                                 <div className="right">
-                                                    {this.videoType === 'portrait' ? '9:16' : '16:9'}
+                                                    16:9
                                                 </div>
                                             </div>
                                             <div>
-                                                <Upload {...theVideoUrlProps}>
-                                                    {
+                                                {getFieldDecorator('ige_landscape_video_cover_url')(
+                                                    <Upload {...igeLandscapeCover}>
+                                                        {
 
-                                                        <div className={`${styles.sunjiao} ${styles.heng}`} >
-                                                            {
-                                                                theVideoUrl && <video src={theVideoUrl} />
-                                                            }
-                                                        </div>
-                                                    }
-                                                </Upload>
+                                                            <div className={`${styles.sunjiao} ${styles.heng}`} >
+                                                                {
+                                                                    igeLandscapeCover_url && <img src={igeLandscapeCover_url} />
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </Upload>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -1009,9 +1111,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                     }
                     {
                         this.useCreativeType === 4 && <React.Fragment>
-                            <FormItem className={styles.autoHeight}>
-                                {getFieldDecorator('videoUrl', {
-                                    initialValue: videoUrl,
+                            <FormItem className={styles.autoHeight + ` ${styles.nolabel}`}>
+                                {getFieldDecorator('playicon_creative_offline_url', {
+                                    initialValue: theVideoUrlPropsForPlayicon_url,
                                     rules: [
                                         {
                                             required: true, message: "Required"
@@ -1028,12 +1130,12 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             </div>
                                         </div>
                                         <div>
-                                            <Upload {...playIconVideoProps}>
+                                            <Upload {...theVideoUrlPropsForPlayicon}>
                                                 {
 
                                                     <div>
                                                         {
-                                                            theVideoUrl && <video src={theVideoUrl} />
+                                                            theVideoUrlPropsForPlayicon_url && <video src={theVideoUrlPropsForPlayicon_url} />
                                                         }
                                                     </div>
                                                 }

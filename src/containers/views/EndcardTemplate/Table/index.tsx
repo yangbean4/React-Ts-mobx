@@ -90,7 +90,7 @@ class EndcardTemplateTable extends ComponentExt<IProps> {
                     className="center-table"
                     style={{ width: '100%' }}
                     bordered
-                    rowKey="template_id"
+                    rowKey="id"
                     loading={getEndcardTemplatesloading}
                     dataSource={endcardTemplates}
                     scroll={{ y: scrollY }}
@@ -102,7 +102,7 @@ class EndcardTemplateTable extends ComponentExt<IProps> {
                     }}
                     onChange={handleTableChange}
                 >
-                    <Table.Column<IEndcardTemplateStore.IEndcardTemplate> key="template_id" title="Template ID" dataIndex="template_id" width={200} />
+                    <Table.Column<IEndcardTemplateStore.IEndcardTemplate> key="template_id" title="Template ID" dataIndex="id" width={200} />
 
                     <Table.Column<IEndcardTemplateStore.IEndcardTemplate> key="template_name" title="Template Name" dataIndex="template_name" width={200} />
                     <Table.Column<IEndcardTemplateStore.IEndcardTemplate> key="md5" title="MD5" dataIndex="md5" width={200} />

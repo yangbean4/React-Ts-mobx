@@ -8,6 +8,8 @@ import * as styles from './index.scss'
 import Icon from '@components/Icon'
 import { _nameCase } from '@utils/index'
 import { statusOption } from '../default.config'
+import { typeOf, testSize } from '@utils/index';
+
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -120,26 +122,47 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
         })
     }
 
-    getUploadprops = (fun: Function, key: string, type = ".png, .jpg, .jpeg, .gif", size?: number, cb?: Function) => {
+    getUploadprops = (fun: Function, key: string, type = '.png, .jpg, .jpeg, .gif', size?: number, cb?: Function, libao?: boolean) => {
         const errorCb = (error) => { console.log(error); this.removeFile(key) };
         return {
             showUploadList: false,
             accept: type,
             name: 'file',
-            className: "avatar-uploader",
+            className: 'avatar-uploader',
             onRemove: this.removeFile,
             beforeUpload: (file) => {
                 const houz = file.name.split('.').pop()
                 const isHtml = type.includes(houz)
                 if (!isHtml) {
-                    message.error(`
-                    Please upload the file in ${type} format`);
+                    message.error(`The Endcard template file should be a  ${type}`);
                 }
                 const isLt2M = !size || file.size / 1024 < size;
                 if (!isLt2M) {
                     message.error(`Failure，The file size cannot exceed ${size}kb`);
                 }
-                return isHtml && isLt2M;
+                if (isHtml && isLt2M && libao) {
+                    const target = file;
+                    return new Promise((resolve, reject) => {
+                        const objectURL = window.createObjectURL != undefined
+                            ? window.createObjectURL(target) : window.URL != undefined
+                                ? window.URL.createObjectURL(target) : window.webkitURL != undefined
+                                    ? window.webkitURL.createObjectURL(target) : null
+                        const imageCopy = new Image()
+                        imageCopy.src = objectURL
+                        imageCopy.onload = () => {
+                            const width = imageCopy.width
+                            const height = imageCopy.height
+                            if ((width === 167 && height === 300) || (width === 168 && height === 293)) {
+                                resolve()
+                            } else {
+                                message.error('Please upload image at 167*300px or 168*293px!')
+                                reject()
+                            }
+                        }
+                    })
+                } else {
+                    return isHtml && isLt2M
+                }
             },
             customRequest: (data) => {
                 const formData = new FormData()
@@ -169,7 +192,7 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
             template_image = '',
             status = 1
         } = endcardTemplate || {}
-        const imageProps = this.getUploadprops(this.api.util.uploadTemplateImage, 'template_image', '.png, .jpg, .jpeg, .gif', 15)
+        const imageProps = this.getUploadprops(this.api.util.uploadTemplateImage, 'template_image', '.png, .jpg', 15, undefined, true)
         const templateProps = this.getUploadprops(this.api.util.uploadTemplate, 'template_url', '.zip', undefined, (data) => {
             this.md5 = data.md5
         })
@@ -197,7 +220,7 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: status,
                             rules: [
                                 {
-                                    required: true, message: "Required"
+                                    required: true, message: 'Required'
                                 }
                             ]
                         })(
@@ -216,7 +239,7 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: template_name,
                             rules: [
                                 {
-                                    required: true, message: "Required"
+                                    required: true, message: 'Required'
                                 }
                             ]
                         })(<Input disabled={!this.typeIsAdd} />)}
@@ -227,7 +250,7 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: template_url,
                             rules: [
                                 {
-                                    required: true, message: "Required"
+                                    required: true, message: 'Required'
                                 }
                             ]
                         })(
@@ -241,7 +264,7 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
                                 }
                             </Upload>) : (<div>
                                 <span style={{ marginRight: 10 }}>{urlName}</span>
-                                <Icon type='iconguanbi' onClick={() => this.removeFile('template_url')} />
+                                <Icon type="iconguanbi" onClick={() => this.removeFile('template_url')} />
                             </div>)
                         )
                         }
@@ -252,7 +275,7 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: template_image,
                             rules: [
                                 {
-                                    required: true, message: "Required"
+                                    required: true, message: 'Required'
                                 }
                             ]
                         })(
@@ -262,7 +285,7 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
                                     </Button>
                             </Upload>) : (<div>
                                 <span style={{ marginRight: 10 }}>{imageName}</span>
-                                <Icon type='iconguanbi' onClick={() => this.removeFile('template_image')} />
+                                <Icon type="iconguanbi" onClick={() => this.removeFile('template_image')} />
                             </div>)
                         )
                         }
