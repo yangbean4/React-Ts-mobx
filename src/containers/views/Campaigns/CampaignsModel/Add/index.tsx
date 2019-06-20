@@ -6,6 +6,7 @@ import { FormComponentProps } from 'antd/lib/form'
 import { statusOption, platformOption, adTypeOption, bidTypeOption } from '../../web.config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
+import moment from 'moment'
 
 const FormItem = Form.Item
 
@@ -37,6 +38,7 @@ interface IStoreProps {
     optionListDb?: ICampaignStore.OptionListDb
     getTargetCode?: () => Promise<any>
     getCommentsGroupId?: () => Promise<any>
+    setCampaingn?:(Apps: ICampaignStore.ICampaignGroup) => void
     routerStore?: RouterStore
 }
 
@@ -49,8 +51,8 @@ interface IProps extends IStoreProps {
 @inject(
     (store: IStore): IProps => {
         const { campaignStore, routerStore } = store
-        const { createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId } = campaignStore
-        return { routerStore, createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId }
+        const { createCampaingn,setCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId } = campaignStore
+        return { routerStore,setCampaingn, createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId }
     }
 )
 
@@ -72,10 +74,12 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private appIdKey: string
 
+    @observable
+    private CampaignGroup: ICampaignStore.ICampaignGroup = {}
 
     @computed
     get appTarget() {
-        return this.userAppID.find(ele => ele.app_id_key === this.appIdKey) || {}
+        return this.userAppID.find(ele => ele.app_key === this.appIdKey) || {}
     }
 
     @computed
@@ -104,10 +108,17 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
+    getDetail = async () => {
+        const res = await this.api.campaigns.editBeforeCampaigns({ id: this.props.campaign.id })
+        this.props.setCampaingn(res.data)
+        runInAction('SET_APPManage', () => {
+            this.CampaignGroup = { ...res.data }
+        })
+    }
+
+    @action
     AppIdChange = (value) => {
         this.appIdKey = value
-        console.log(this.appIdKey+'####')
-        console.log(this.appTarget)
     }
 
     Cancel = () => {
@@ -124,52 +135,32 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
                     this.toggleLoading()
                     try {
-
-                        if (this.isAdd) {
-                            const {
-                                app_name,
-                                pkg_name
-                            } = this.userAppID.find(ele => ele.id === values.app_name)
-                            values = {
-                                ...values,
-                                app_name
-                            }
-                            let data = await createCampaingn({ ...values, type: 1 })
+                        values = {
+                            ...values,
+                            'start_time': values['start_time'].format('YYYY-MM-DD HH:mm:ss'),
+                            'end_time': values['end_time'].format('YYYY-MM-DD HH:mm:ss')
+                        }
+                        if (values.id === undefined) {
+                            // const {
+                            //     app_name,
+                            //     pkg_name
+                            // } = this.userAppID.find(ele => ele.id === values.app_name)
+                            
+                            let data = await createCampaingn({ ...values })
                             message.success(data.message)
-                            const {
-                                platform
-                            } = values
-                            localStorage.setItem('TargetCurrency', JSON.stringify({
-                                app_name,
-                                pkg_name,
-                                platform
-                            }))
-                            routerStore.push('/currency/edit')
+                            // const {
+                            //     platform
+                            // } = values
+                            // localStorage.setItem('TargetCurrency', JSON.stringify({
+                            //     app_name,
+                            //     pkg_name,
+                            //     platform
+                            // }))
+                            routerStore.push('/campaigns')
                         } else {
-                            const currencyStr = localStorage.getItem('TargetCurrency') || '{}';
-                            const kg = (type ? campaign : JSON.parse(currencyStr)) as ICurrencyStore.ICurrencyForList
-                            const {
-                                app_name,
-                                platform
-                            } = kg;
-                            // 再Model中新增时需要status的值，在正常添加时用values的值覆盖
-                            const pre = { status: 1, ...values, type: 2 }
-                            let data
-                            if (campaign.id) {
-                                data = await modifyCampaingn({
-                                    ...pre,
-                                    app_name,
-                                    platform,
-                                    id: campaign.id
-                                })
-                            } else {
-                                data = await createCampaingn({
-                                    ...pre,
-                                    app_name,
-                                    platform,
-                                })
-                            }
+                            let data = await modifyCampaingn({ ...values })
                             message.success(data.message)
+                            routerStore.push('/campaigns/edit')
                             this.props.onOk(data.data.id)
                             if (this.props.type) {
                                 this.props.form.resetFields()
@@ -205,26 +196,31 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         this.props.getTargetCode()
         this.props.getCommentsGroupId()
         this.init()
+        if(this.props.campaign) {
+            this.getDetail()
+        }
     }
     componentDidMount() {
         console.log(this.userAppID)
     }
 
     render() {
-        const { campaign, form, optionListDb } = this.props
+        const reData = this.CampaignGroup
+        const { form, optionListDb } = this.props
         const { getFieldDecorator } = form
         const {
-            status = 1,
+            id = '',
+            status = 'published',
             platform = 'android',
             app_key = '',
-            campaign_name= '',
+            campaign_name = '',
             target_code = "",
             bid_type = 'CPI',
             bid = '',
             total_budget = '',
             daily_budget = '',
-            start_time = '',
-            end_time = '',
+            start_time = '2019-6-20',
+            end_time = '2019-6-20',
             comment_group_id = '',
             ad_type = 1,
             tracking_url = '',
@@ -233,18 +229,33 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
             endcard_id = '',
             default_cpm = '0.01',
             kpi = '',
-        } = campaign || {}
+        } = reData || {}
         const startTimeConfig = {
-            initialValue: start_time,
+            initialValue: moment(start_time),
             rules: [{ type: 'object', required: true, message: 'Please select time!' }]
         }
         const endTimeConfig = {
-            initialValue: end_time,
-            rules: [{ type: 'object', required: false, message: 'Please select time!' }],
+            initialValue: moment(end_time),
+            rules: [{ type: 'object', required: false}],
         }
         return (
             <div className='sb-form'>
                 <Form {...this.props.type ? miniLayout : formItemLayout} className={styles.currencyModal} >
+                    {
+                        id  && <FormItem label="ID">
+                            {getFieldDecorator('id', {
+                                initialValue: id,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Input disabled={true} />
+                            )}
+                        </FormItem>
+                    }
+
                     {
                         !this.props.type && <FormItem label="Status">
                             {getFieldDecorator('status', {
@@ -308,14 +319,14 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                     {this.userAppID.map(c => (
-                                        <Select.Option value={c.app_id_key} key={c.app_key}>
+                                        <Select.Option value={c.app_key} key={c.app_key}>
                                             {c.app_id_key}
                                         </Select.Option>
                                     ))}
                                 </Select>
                             )}
                         </FormItem>
-                    } 
+                    }
                     <FormItem label="Campaign Name">
                         {getFieldDecorator('campaign_name', {
                             initialValue: campaign_name,
@@ -348,7 +359,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             </Select>
                         )}
                     </FormItem>
- 
+
                     <FormItem label="Bid Type">
                         {getFieldDecorator('bid_type', {
                             initialValue: bid_type,
@@ -392,7 +403,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<InputNumber precision={0} />)}
                     </FormItem>
-                   
+
                     <FormItem label="Total Budget">
                         <span style={{ marginRight: "5px" }}>$</span>
                         {getFieldDecorator('total_budget', {
@@ -404,7 +415,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<InputNumber />)}
                     </FormItem>
-                    
+
                     <FormItem label="Daily Budget">
                         <span style={{ marginRight: "5px" }}>$</span>
                         {getFieldDecorator('daily_budget', {
@@ -416,17 +427,17 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<InputNumber />)}
                     </FormItem>
-                     
+
                     <FormItem label="Start Time">
                         {getFieldDecorator('start_time', startTimeConfig)
-                        (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
+                            (<DatePicker showTime />)}
                     </FormItem>
 
                     <FormItem label="End Time">
                         {getFieldDecorator('end_time', endTimeConfig)
-                        (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
+                            (<DatePicker showTime />)}
                     </FormItem>
-               
+
                     <FormItem label="Comment Group">
                         {getFieldDecorator('comment_group_id', {
                             initialValue: comment_group_id,
@@ -460,7 +471,6 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         })(
                             <Select
                                 showSearch
-                                onChange={(val) => this.setPlatform(val)}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {adTypeOption.map(c => (
@@ -505,7 +515,6 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         })(
                             <Select
                                 showSearch
-                                onChange={(val) => this.setPlatform(val)}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {this.creatives && this.creatives.map(c => (
@@ -528,7 +537,6 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         })(
                             <Select
                                 showSearch
-                                onChange={(val) => this.setPlatform(val)}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {this.endcards && this.endcards.map(c => (

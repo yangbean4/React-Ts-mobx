@@ -3,6 +3,9 @@ import http from '@services/http'
 const basePath = '/api/campaigns/'
 export default {
   getCampaigns(data): Promise<any> {
+    return http.post(`${basePath}appList`, data || {})
+  },
+  getCampaignsList(data): Promise<any> {
     return http.post(`${basePath}campaignsList`, data || {})
   },
   createCampaigns(data): Promise<any> {

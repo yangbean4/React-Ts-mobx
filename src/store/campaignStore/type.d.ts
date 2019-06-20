@@ -40,8 +40,8 @@ export interface SearchParams {
 }
 
 export interface ICampainginForList {
-    pkg_name?: string
-    app_name?: string
+    app_key?: string
+    app_id?: string
     platform?: string
     id?: string
 }

@@ -1,14 +1,15 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { observable, action, runInAction } from 'mobx'
-import { Button, Table, Icon } from 'antd'
+import { Button, Table, Icon, Divider, message } from 'antd'
 import { ComponentExt } from '@utils/reactExt'
 import { statusOption } from '../../web.config'
 import FormAdd from '../Add'
 import * as style from './index.scss'
-
+import { routerStore } from 'store';
 interface TableProps {
   onEdit: (index: number) => void
+  copyData: (index: number) => void
   data: any[]
 }
 
@@ -17,7 +18,7 @@ interface TableProps {
 class VcTable extends ComponentExt<TableProps> {
 
   render() {
-    const { data, onEdit } = this.props;
+    const { data, onEdit, copyData } = this.props;
 
     return (
       <Table<ICampaignStore.ICampaignGroup>
@@ -41,9 +42,9 @@ class VcTable extends ComponentExt<TableProps> {
           key="status"
           title="Status"
           dataIndex="status"
-          // render={(_) => (
-          //   statusOption.find(item => item.value === _).key
-          // )}
+          render={(_) => (
+            statusOption.find(item => item.value === _).key
+          )}
           width={200} />
 
         <Table.Column<ICampaignStore.ICampaignGroup>
@@ -52,9 +53,23 @@ class VcTable extends ComponentExt<TableProps> {
           width={120}
           render={(_, record, index) => (
             <span>
-              <a href="javascript:;" onClick={() => onEdit(index)}>
-                <Icon type="form" />
-              </a>
+              {
+                this.$checkAuth('Authorization-User Manage-Edit', [
+                  <a href="javascript:;" onClick={() => onEdit(index)}>
+                    <Icon type="form" />
+                  </a>
+                ])         
+              }
+              {
+                <Divider key='Divider' type="vertical" />
+              }
+              {
+                this.$checkAuth('Authorization-User', (
+                  <a href="javascript:;" onClick={() => copyData(index)}>
+                      <Icon type='form' />
+                  </a>
+                ))
+              }
             </span>
           )}
         />
@@ -69,11 +84,13 @@ class VcTable extends ComponentExt<TableProps> {
 interface IStoreProps {
   routerStore: RouterStore
   setBreadcrumbArr?: (menus?: IGlobalStore.menu[]) => void
+  setCampaingn?:(Apps: ICampaignStore.ICampaignGroup) => void
 }
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { routerStore, globalStore } = store
+    const { routerStore, globalStore, campaignStore } = store
+    const { setCampaingn } = campaignStore
     const { setBreadcrumbArr } = globalStore
     return { routerStore, setBreadcrumbArr }
   }
@@ -83,7 +100,7 @@ interface IStoreProps {
 class PID extends ComponentExt<IStoreProps> {
 
   @observable
-  private targetCurrency: ICampaignStore.I = {}
+  private targetCampaigns: ICampaignStore.ICampainginForList = {}
 
   @observable
   private GJB: ICampaignStore.ICampaignGroup
@@ -102,11 +119,11 @@ class PID extends ComponentExt<IStoreProps> {
     const value = type === undefined ? !this.isTable : type
     let arr = [
       {
-        title: 'Virtual Currency',
-        path: "/currency"
+        title: 'Campaigns',
+        path: "/campaigns"
       },
       {
-        title: 'Edit Virtual Currency',
+        title: 'Edit Campaigns',
         onClick: () => {
           this.toggleIsTable(true)
         }
@@ -114,7 +131,7 @@ class PID extends ComponentExt<IStoreProps> {
     ] as IGlobalStore.menu[]
     if (!value) {
       arr.push({
-        title: this.GJB.id ? `Edit ${this.GJB.vc_name}` : 'Add'
+        title: this.GJB.id ? `Edit ${this.GJB.campaign_name}` : 'Add'
       })
     }
     this.props.setBreadcrumbArr(arr)
@@ -129,27 +146,27 @@ class PID extends ComponentExt<IStoreProps> {
   @action
   initDetail = async () => {
     try {
-      const offer_app_key = localStorage.getItem('offer_app_key') || '{}';
-      const currency = JSON.parse(offer_app_key)
+      const TargetCampaign = localStorage.getItem('TargetCampaign') || '{}';
+      const campaingn = JSON.parse(TargetCampaign)
       runInAction('Change_', () => {
-        this.targetCurrency = offer_app_key
+        this.targetCampaigns = campaingn
       })
       const state = this.props.routerStore.location.state
       if (state && state.type) {
         this.editPid()
       } else {
-        const Detail = await this.api.campaigns.getCampaigns(currency)
+        const Detail = await this.api.campaigns.getCampaignsList(campaingn)
         runInAction('Change_', () => {
           this.thisDataList = Detail.data
         })
       }
     } catch (error) {
-      this.props.routerStore.push('/currency');
+      this.props.routerStore.push('/campaigns');
     }
   }
 
   submit = () => {
-    this.props.routerStore.push('/currency');
+    this.props.routerStore.push('/campaigns');
   }
 
   onCancel = () => {
@@ -168,8 +185,17 @@ class PID extends ComponentExt<IStoreProps> {
     this.toggleIsTable()
   }
 
+  copyPid = async(index) => {
+    const id = index === undefined ? '' : this.thisDataList[index].id
+    const res = await this.api.campaigns.copyCampaignsSubmit({id: id})
+    if (res.errorcode === 0) {
+      this.initDetail()
+      message.success(res.message)
+    }
+  }
+
   lastStep = () => {
-    this.props.routerStore.push('/currency');
+    this.props.routerStore.push('/campaigns');
   }
 
   componentWillMount() {
@@ -191,30 +217,30 @@ class PID extends ComponentExt<IStoreProps> {
                 App Name
                     </div>
               <div className={style.value}>
-                {this.targetCurrency.app_name}
+                {this.targetCampaigns.app_id}
               </div>
             </div>
-            <div className={style.row}>
+            {/* <div className={style.row}>
               <div className={style.title}>
                 Pkg Name
                     </div>
               <div className={style.value}>
-                {this.targetCurrency.pkg_name}
+                {this.targetCampaigns.pkg_name}
               </div>
-            </div>
+            </div> */}
             <div className={style.row}>
               <div className={style.title}>
                 Platform
                     </div>
               <div className={style.value}>
-                {this.targetCurrency.platform}
+                {this.targetCampaigns.platform}
               </div>
             </div>
           </div>
           {
             this.isTable ? <div className="tableBox">
               <Button type="primary" className={style.addbtn} onClick={() => this.editPid()}>+ Add</Button>
-              <VcTable data={this.thisDataList} onEdit={this.editPid} />
+              <VcTable data={this.thisDataList} onEdit={this.editPid} copyData={this.copyPid} />
               <div className={style.btnGroup}>
                 {/* <Button type="primary" className={style.submitBtn} onClick={this.submit}>Submit</Button> */}
                 {/* <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button> */}
@@ -223,7 +249,7 @@ class PID extends ComponentExt<IStoreProps> {
                 <FormAdd
                   onCancel={this.onCancel}
                   onOk={this.onOK}
-                  currency={this.GJB} />
+                  campaign={this.GJB} />
               </div>
           }
         </div>

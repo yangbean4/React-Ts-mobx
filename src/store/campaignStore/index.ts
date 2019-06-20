@@ -22,10 +22,10 @@ export class CampaignStore extends StoreExt {
      * @memberof CampaignStore
      */
     @observable
-    campaigns: ICampaignStore.ICampaignGroup[] = []
+    campaigns: ICampaignStore.ICampainginForList[] = []
 
     @observable
-    campaign: ICampaignStore.ICampaignGroup
+    campaign: ICampaignStore.ICampainginForList
     /**
      * table page
      *
@@ -129,7 +129,7 @@ export class CampaignStore extends StoreExt {
             let data = {
                 page: this.page, pageSize: this.pageSize, ...this.filters,
             }
-            const res = await this.api.appsManage.getAppsManage(data)
+            const res = await this.api.campaigns.getCampaigns(data)
             runInAction('SET_CAMPAIGN_LIST', () => {
                 this.campaigns = res.data
                 this.total = res.total
@@ -177,7 +177,7 @@ export class CampaignStore extends StoreExt {
     }
 
     @action
-    setCampaingn = (campaign: ICampaignStore.ICampaignGroup) => {
+    setCampaingn = (campaign: ICampaignStore.ICampainginForList) => {
         this.campaign = campaign
     }
     @action

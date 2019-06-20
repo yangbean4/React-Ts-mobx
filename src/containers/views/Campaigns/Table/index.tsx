@@ -9,8 +9,8 @@ import { ComponentExt } from '@utils/reactExt'
 
 interface IStoreProps {
     getCampaignsLoading?: boolean
-    campaigns?: ICampaignStore.ICampaignGroup[]
-    setCampaingn?: (comment: ICampaignStore.ICampaignGroup) => void
+    campaigns?: ICampaignStore.ICampainginForList[]
+    setCampaingn?: (campaign: ICampaignStore.ICampainginForList) => void
     getCampaigns?: () => Promise<any>
     setCampaignType?: (string) => void
     handleTableChange?: (pagination: PaginationConfig) => void
@@ -29,16 +29,16 @@ interface IProps extends IStoreProps {
         const { routerStore, campaignStore } = store
         const {
             getCampaignsLoading,
-            setCampaingn,
             getCampaigns,
             campaigns,
             handleTableChange,
             page,
             pageSize,
+            setCampaingn,
             setCampaignType,
             total
         } = campaignStore
-        return { routerStore, getCampaignsLoading, setCampaingn, getCampaigns, campaigns, handleTableChange, page, pageSize, setCampaignType, total }
+        return { routerStore, setCampaingn, getCampaignsLoading, getCampaigns, campaigns, handleTableChange, page, pageSize, setCampaignType, total }
     }
 )
 @observer
@@ -48,12 +48,24 @@ class CampaignsTable extends ComponentExt<IProps> {
     private commentType: string = ''
 
     @action
-    modifyComment = (campaign: ICampaignStore.ICampaignGroup) => {
-        const { app_key } = campaign
-        localStorage.setItem('offer_app_key', JSON.stringify({
-            app_key 
-        }))
+    modifyComment = (campaign: ICampaignStore.ICampainginForList, type?) => {
         this.props.setCampaingn(campaign)
+        const { 
+            app_id,
+            platform,
+            app_key
+         } = campaign
+        localStorage.setItem('TargetCampaign', JSON.stringify({
+            app_id,
+            platform,
+            app_key
+        }))
+        this.props.routerStore.push({
+            pathname: '/campaigns/edit',
+            state: {
+                type
+            }
+        })
         this.props.routerStore.replace(`/campaigns/edit`)
     }
     // 去请求数据
@@ -79,7 +91,7 @@ class CampaignsTable extends ComponentExt<IProps> {
         } = this.props
         return (
             <React.Fragment>
-                <Table<ICampaignStore.ICampaignGroup>
+                <Table<ICampaignStore.ICampainginForList>
                     className="center-table"
                     style={{ width: '100%' }}
                     bordered
@@ -95,10 +107,10 @@ class CampaignsTable extends ComponentExt<IProps> {
                     }}
                     onChange={handleTableChange}
                 >
-                    <Table.Column<ICampaignStore.ICampaignGroup> key="app_key" title="Appkey" dataIndex="app_key" width={80} />
-                    <Table.Column<ICampaignStore.ICampaignGroup> key="app_id" title="App ID" dataIndex="app_id" width={200} />
-                    <Table.Column<ICampaignStore.ICampaignGroup> key="platform" title="Platform" dataIndex="platform" width={100} />
-                    <Table.Column<ICampaignStore.ICampaignGroup>
+                    <Table.Column<ICampaignStore.ICampainginForList> key="app_key" title="Appkey" dataIndex="app_key" width={80} />
+                    <Table.Column<ICampaignStore.ICampainginForList> key="app_id" title="App ID" dataIndex="app_id" width={200} />
+                    <Table.Column<ICampaignStore.ICampainginForList> key="platform" title="Platform" dataIndex="platform" width={100} />
+                    <Table.Column<ICampaignStore.ICampainginForList>
                         key="action"
                         title="Operate"
                         width={80}
