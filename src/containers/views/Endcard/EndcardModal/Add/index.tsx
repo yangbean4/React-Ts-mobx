@@ -339,8 +339,8 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
             cta_bkgd = '#0087ff',
             cta_edge = '#0087ff',
             cta_pic = '',
-            automatic_jump = 0,
-            is_show = 1,
+            is_automatic_jump = 0,
+            ige_recoverlist_endcard = 1,
             status = 1,
         } = this.endcardTarget
 
@@ -612,8 +612,8 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
 
 
                     <FormItem label="Automatic Jump">
-                        {getFieldDecorator('automatic_jump', {
-                            initialValue: automatic_jump,
+                        {getFieldDecorator('is_automatic_jump', {
+                            initialValue: is_automatic_jump,
                             rules: [
                                 {
                                     required: true, message: "Required"
@@ -630,8 +630,8 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                         )}
                     </FormItem>
                     <FormItem label="IGE Recoverlist Endcard">
-                        {getFieldDecorator('is_show', {
-                            initialValue: is_show,
+                        {getFieldDecorator('ige_recoverlist_endcard', {
+                            initialValue: ige_recoverlist_endcard,
                             rules: [
                                 {
                                     required: true, message: "Required"

@@ -20,8 +20,8 @@ export interface IEndcard {
     cta_bkgd?: string
     cta_edge?: string
     cta_pic?: string
-    automatic_jump?: number
-    is_show?: number
+    is_automatic_jump?: number
+    ige_recoverlist_endcard?: number
     id?: number
     endcard_image_url_web_show?: string
 }
