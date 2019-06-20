@@ -413,7 +413,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             width: this.lead_video_type === 'portrait' ? 9 : 16,
             height: this.lead_video_type === 'portrait' ? 16 : 9,
             isScale: true
-        }, 4000, {
+        }, 2500, {
                 type: 5,
                 video_type: this.lead_video_type === 'portrait' ? 2 : 1,
                 app_name: this.appName
@@ -425,7 +425,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             width: 9,
             height: 16,
             isScale: true
-        }, 4000, {
+        }, 1000, {
                 type: 6,
                 video_type: 2,
                 app_name: this.appName
@@ -436,7 +436,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             width: 16,
             height: 9,
             isScale: true
-        }, 4000, {
+        }, 1000, {
                 type: 7,
                 video_type: 1,
                 app_name: this.appName
@@ -470,7 +470,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         const igePortraitCover = this.getUploadprops(this.api.creative.handleUploadImg, 'ige_portrait_video_cover_url', {
             width: 180,
             height: 180,
-        }, 20, {
+        }, 50, {
                 type: 3,
                 app_name: this.appName
             })
@@ -479,7 +479,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         const igeLandscapeCover = this.getUploadprops(this.api.creative.handleUploadImg, 'ige_landscape_video_cover_url', {
             width: 180,
             height: 180,
-        }, 20, {
+        }, 50, {
                 type: 3,
                 app_name: this.appName
             })
