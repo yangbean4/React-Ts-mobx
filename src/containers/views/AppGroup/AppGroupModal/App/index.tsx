@@ -380,19 +380,19 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     {
                                         required: true, message: "Required",
                                     },
-                                    {
-                                        validator: (r, v, callback) => {
-                                            const reg = this.usePlatform === 'android' ? /^com./ : /^[0-9]*$/
-                                            if (!reg.test(v)) {
-                                                const msg = this.usePlatform === 'android'
-                                                callback('Pkgname for android /Ios platform should start with com.xxx/number!')
-                                            }
-                                            callback()
-                                        }
-                                    }
+                                    // {
+                                    //     validator: (r, v, callback) => {
+                                    //         const reg = this.usePlatform === 'android' ? /^com./ : /^[0-9]*$/
+                                    //         if (!reg.test(v)) {
+                                    //             const msg = this.usePlatform === 'android'
+                                    //             callback('Pkgname for android /Ios platform should start with com.xxx/number!')
+                                    //         }
+                                    //         callback()
+                                    //     }
+                                    // }
                                 ]
                                 //  disabled={!this.useNot_in_appstore || (!this.isAdd && !!pkg_name)}
-                            })(<Input />)}
+                            })(<Input disabled={!this.isAdd && !!pkg_name} />)}
                         </FormItem>
 
                         <FormItem label="App Name">
