@@ -1,4 +1,5 @@
 import { EndcardTemplateStore as EndcardTemplateStoreModel } from './index'
+import { number } from 'prop-types';
 
 export as namespace IEndcardTemplateStore
 
@@ -13,6 +14,7 @@ export interface IEndcardTemplate {
   template_image?: string
   template_url?: string
   status?: number
+  template_type?: number
 }
 
 export interface SearchParams {

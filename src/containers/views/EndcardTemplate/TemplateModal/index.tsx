@@ -51,11 +51,14 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
 
     private md5: string = (this.props.endcardTemplate || {}).md5
 
+    private template_type: number = (this.props.endcardTemplate || {}).template_type
+
     @observable
     private fileTarget: object = {}
 
     @observable
     private fileName: string
+
     @computed
     get typeIsAdd() {
         return !this.props.endcardTemplate || !this.props.endcardTemplate.id
@@ -91,7 +94,10 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
                         this.toggleLoading(true)
                         let data = { message: '' }
                         const md5 = this.md5 || endcardTemplate.md5
+                        const template_type = this.template_type || endcardTemplate.template_type
                         values = md5 ? { ...values, md5 } : values
+                        values = template_type ? { ...values, template_type } : values
+
                         if (this.typeIsAdd) {
                             data = await createEndcardTemplate(values)
                         } else {
@@ -136,28 +142,36 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!isHtml) {
                     message.error(`The Endcard template file should be a  ${type}`);
                 }
-                const isLt2M = !size || file.size / 1024 < size;
+                let isLt2M = !size || file.size / 1024 < size;
                 if (!isLt2M) {
                     message.error(`Failure，The file size cannot exceed ${size}kb`);
                 }
                 if (isHtml && isLt2M && libao) {
                     const target = file;
+                    console.log(123)
                     return new Promise((resolve, reject) => {
-                        const objectURL = window.createObjectURL != undefined
-                            ? window.createObjectURL(target) : window.URL != undefined
-                                ? window.URL.createObjectURL(target) : window.webkitURL != undefined
-                                    ? window.webkitURL.createObjectURL(target) : null
-                        const imageCopy = new Image()
-                        imageCopy.src = objectURL
-                        imageCopy.onload = () => {
-                            const width = imageCopy.width
-                            const height = imageCopy.height
-                            if ((width === 167 && height === 300) || (width === 168 && height === 293)) {
-                                resolve()
-                            } else {
-                                message.error('Please upload image at 167*300px or 168*293px!')
-                                reject()
+                        try {
+                            const objectURL = window.createObjectURL !== undefined
+                                ? window.createObjectURL(target) : window.URL !== undefined
+                                    ? window.URL.createObjectURL(target) : window.webkitURL !== undefined
+                                        ? window.webkitURL.createObjectURL(target) : null
+                            const imageCopy = new Image()
+                            imageCopy.src = objectURL
+                            imageCopy.onload = () => {
+                                const width = imageCopy.width
+                                const height = imageCopy.height
+                                console.log(width, height)
+                                if ((width === 300 && height === 167) || (width === 167 && height === 300)) {
+                                    this.template_type = Number(width === 167 && height === 300) + 1
+                                    resolve()
+                                } else {
+                                    this.template_type = undefined
+                                    message.error('Please upload image at 300*167px or 167*300px!')
+                                    reject()
+                                }
                             }
+                        } catch (error) {
+                            console.log(error);
                         }
                     })
                 } else {
@@ -192,7 +206,7 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
             template_image = '',
             status = 1
         } = endcardTemplate || {}
-        const imageProps = this.getUploadprops(this.api.util.uploadTemplateImage, 'template_image', '.png, .jpg', 15, undefined, true)
+        const imageProps = this.getUploadprops(this.api.util.uploadTemplateImage, 'template_image', '.png, .jpg', 1500, undefined, true)
         const templateProps = this.getUploadprops(this.api.util.uploadTemplate, 'template_url', '.zip', undefined, (data) => {
             this.md5 = data.md5
         })

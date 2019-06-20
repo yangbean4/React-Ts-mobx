@@ -35,8 +35,6 @@ interface IStoreProps {
     modifyCampaingn?: (campaign: ICampaignStore.ICampaignGroup) => Promise<any>
     createCampaingn?: (campaign: ICampaignStore.ICampaignGroup) => Promise<any>
     optionListDb?: ICampaignStore.OptionListDb
-    getTargetCode?: () => Promise<any>
-    getCommentsGroupId?: () => Promise<any>
     routerStore?: RouterStore
 }
 
@@ -49,19 +47,21 @@ interface IProps extends IStoreProps {
 @inject(
     (store: IStore): IProps => {
         const { campaignStore, routerStore } = store
-        const { createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId } = campaignStore
-        return { routerStore, createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId }
+        const { createCampaingn, modifyCampaingn, optionListDb } = campaignStore
+        return { routerStore, createCampaingn, modifyCampaingn, optionListDb }
     }
 )
-
 @observer
 class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
-
     @observable
     private loading: boolean = false
 
     @observable
     private platform: string = 'android'
+
+    
+    @observable
+    private campaignTarget :ICampaignStore.ICampaignGroup= {}
 
     @observable
     private appIDAndroid: any = []
@@ -70,21 +70,23 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     private appIDIOS: any = []
 
     @observable
-    private appIdKey: string
-
+    private appIdKey: string = this.campaignTarget.app_key ||''
+    
 
     @computed
-    get appTarget() {
-        return this.userAppID.find(ele => ele.app_id_key === this.appIdKey) || {}
+    get appTarget(){
+        return this.userAppID.find(ele=>ele.app_key === this.appIdKey) || {}
     }
 
+
+
     @computed
-    get endcards() {
+    get endcards(){
         return this.appTarget.endcards
     }
 
     @computed
-    get creatives() {
+    get creatives(){
         return this.appTarget.creatives
     }
 
@@ -104,10 +106,8 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
-    AppIdChange = (value) => {
+    AppIdChange = (value)=>{
         this.appIdKey = value
-        console.log(this.appIdKey+'####')
-        console.log(this.appTarget)
     }
 
     Cancel = () => {
@@ -197,17 +197,12 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
-    setPlatform = (value) => {
-        this.platform = value
+    setPlatform = (type) => {
+        this.platform = type
     }
 
     componentWillMount() {
-        this.props.getTargetCode()
-        this.props.getCommentsGroupId()
         this.init()
-    }
-    componentDidMount() {
-        console.log(this.userAppID)
     }
 
     render() {
@@ -216,32 +211,23 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         const {
             status = 1,
             platform = 'android',
-            app_key = '',
-            campaign_name= '',
+            campaign_name = '',
             target_code = "",
-            bid_type = 'CPI',
+            bid_type = '',
             bid = '',
             total_budget = '',
             daily_budget = '',
             start_time = '',
             end_time = '',
             comment_group_id = '',
-            ad_type = 1,
+            ad_type = '',
             tracking_url = '',
             impression_url = '',
             creative_id = '',
             endcard_id = '',
-            default_cpm = '0.01',
+            default_cpm = '',
             kpi = '',
         } = campaign || {}
-        const startTimeConfig = {
-            initialValue: start_time,
-            rules: [{ type: 'object', required: true, message: 'Please select time!' }]
-        }
-        const endTimeConfig = {
-            initialValue: end_time,
-            rules: [{ type: 'object', required: false, message: 'Please select time!' }],
-        }
         return (
             <div className='sb-form'>
                 <Form {...this.props.type ? miniLayout : formItemLayout} className={styles.currencyModal} >
@@ -283,7 +269,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                         filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
                                         {platformOption.map(c => (
-                                            <Select.Option key={c.key} value={c.value}>
+                                            <Select.Option {...c}>
                                                 {c.key}
                                             </Select.Option>
                                         ))}
@@ -293,32 +279,32 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                     }
 
                     {
-                        <FormItem label="App ID">
+                        this.isAdd && <FormItem label="App ID">
                             {getFieldDecorator('app_key', {
-                                initialValue: app_key,
+                                initialValue: campaign_name,
                                 rules: [
                                     {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(
-                                <Select
-                                    showSearch
-                                    onChange={(val) => this.AppIdChange(val)}
-                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                >
-                                    {this.userAppID.map(c => (
-                                        <Select.Option value={c.app_id_key} key={c.app_key}>
-                                            {c.app_id_key}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
-                            )}
+                            })(<Select
+                                showSearch
+                                onChange={this.AppIdChange}
+                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                            >
+                                {this.userAppID.map(c => (
+                                    <Select.Option value={c.app_id_key} key={c.app_id}>
+                                        {c.app_id_key}
+                                    </Select.Option>
+                                ))}
+                            </Select>)}
                         </FormItem>
-                    } 
+                    }
+
+
                     <FormItem label="Campaign Name">
-                        {getFieldDecorator('campaign_name', {
-                            initialValue: campaign_name,
+                        {getFieldDecorator('vc_name', {
+                            initialValue: target_code,
                             rules: [
                                 {
                                     required: true, message: "Required"
@@ -330,25 +316,13 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem label="Target Code"  >
                         {getFieldDecorator('target_code', {
                             initialValue: target_code,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Select
-                                showSearch
-                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >
-                                {optionListDb.TargetCode.map(c => (
-                                    <Select.Option key={c.id} value={c.code2}>
-                                        {c.code2}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        )}
+                        })(<Select
+                            showSearch
+                        >
+                
+                        </Select>)}
                     </FormItem>
- 
+
                     <FormItem label="Bid Type">
                         {getFieldDecorator('bid_type', {
                             initialValue: bid_type,
@@ -356,29 +330,18 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             rules: [
                                 {
                                     required: true, message: "Required",
-                                },
-                                {
-                                    validator: (r, v, callback) => {
-                                        if (v <= 0) {
-                                            callback('The Exchange Rate should be a positive integer!')
-                                        }
-                                        callback()
-                                    }
                                 }
                             ]
-                        })(
-                            <Select
-                                showSearch
-                                onChange={(val) => this.setPlatform(val)}
-                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >
-                                {bidTypeOption.map(c => (
-                                    <Select.Option key={c.key} value={c.value}>
-                                        {c.key}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        )}
+                        })(<Select
+                            showSearch
+                            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                        >
+                             {platformOption.map(c => (
+                                            <Select.Option {...c}>
+                                                {c.key}
+                                            </Select.Option>
+                                        ))}
+                        </Select>)}
                     </FormItem>
 
                     <FormItem label="Bid"  >
@@ -390,165 +353,106 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<InputNumber precision={0} />)}
+                        })(<InputNumber />)}
                     </FormItem>
-                   
+
                     <FormItem label="Total Budget">
                         <span style={{ marginRight: "5px" }}>$</span>
                         {getFieldDecorator('total_budget', {
                             initialValue: total_budget,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
                         })(<InputNumber />)}
                     </FormItem>
-                    
+
                     <FormItem label="Daily Budget">
                         <span style={{ marginRight: "5px" }}>$</span>
                         {getFieldDecorator('daily_budget', {
                             initialValue: daily_budget,
-                            rules: [
-                                {
-                                    required: false, message: "Required"
-                                }
-                            ]
                         })(<InputNumber />)}
                     </FormItem>
-                     
+
                     <FormItem label="Start Time">
-                        {getFieldDecorator('start_time', startTimeConfig)
-                        (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
+                        {getFieldDecorator('start_time', {
+                            initialValue: start_time,
+                        })(<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
                     </FormItem>
 
                     <FormItem label="End Time">
-                        {getFieldDecorator('end_time', endTimeConfig)
-                        (<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
+                        {getFieldDecorator('end_time', {
+                            initialValue: end_time,
+                        })(<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />)}
                     </FormItem>
-               
+
                     <FormItem label="Comment Group">
                         {getFieldDecorator('comment_group_id', {
                             initialValue: comment_group_id,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Select
-                                showSearch
-                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >
-                                {optionListDb.CommentID.map(c => (
-                                    <Select.Option key={c.id} value={c.id}>
-                                        {c.name}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        )}
+                        })(<Select></Select>)}
                     </FormItem>
 
                     <FormItem label="Ad Type">
                         {getFieldDecorator('ad_type', {
                             initialValue: ad_type,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Select
-                                showSearch
-                                onChange={(val) => this.setPlatform(val)}
-                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >
-                                {adTypeOption.map(c => (
-                                    <Select.Option key={c.key} value={c.value}>
-                                        {c.key}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        )}
+                        })(<Select
+                            showSearch
+                            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                        >
+                             {platformOption.map(c => (
+                                            <Select.Option {...c}>
+                                                {c.key}
+                                            </Select.Option>
+                                        ))}
+                        </Select>)}
                     </FormItem>
 
                     <FormItem label="Tracking Url">
                         {getFieldDecorator('tracking_url', {
                             initialValue: tracking_url,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
                     </FormItem>
 
                     <FormItem label="Impression Url">
                         {getFieldDecorator('impression_url', {
                             initialValue: impression_url,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
                     </FormItem>
 
                     <FormItem label="Creative">
                         {getFieldDecorator('creative_id', {
                             initialValue: creative_id,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Select
-                                showSearch
-                                onChange={(val) => this.setPlatform(val)}
-                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >
-                                {this.creatives && this.creatives.map(c => (
-                                    <Select.Option key={c.id} value={c.id}>
+                        })(<Select
+                            showSearch
+                            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                        >
+                            {
+                                this.creatives && this.creatives.map(c=>{
+                                    <Select.Option value={c.name} key={c.id}>
                                         {c.name}
                                     </Select.Option>
-                                ))}
-                            </Select>
-                        )}
+                                }) 
+                            } 
+                        </Select>)}
                     </FormItem>
 
                     <FormItem label="Endcard">
                         {getFieldDecorator('endcard_id', {
                             initialValue: endcard_id,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(
-                            <Select
-                                showSearch
-                                onChange={(val) => this.setPlatform(val)}
-                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >
-                                {this.endcards && this.endcards.map(c => (
-                                    <Select.Option key={c.id} value={c.id}>
+                        })(<Select
+                            showSearch
+                            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                        >
+                            {
+                                this.endcards && this.endcards.map(c=>{
+                                    <Select.Option value={c.name} key={c.id}>
                                         {c.name}
                                     </Select.Option>
-                                ))}
-                            </Select>
-                        )}
+                                })  
+                            }    
+                        </Select>)}
                     </FormItem>
 
                     <FormItem label="Default cpm">
                         <span style={{ marginRight: "5px" }}>$</span>
                         {getFieldDecorator('default_cpm', {
                             initialValue: default_cpm,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
                         })(<InputNumber />)}
                     </FormItem>
 

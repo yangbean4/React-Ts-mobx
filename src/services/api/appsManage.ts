@@ -27,6 +27,6 @@ export default {
 
   showGrabMessage(data): Promise<any> {
     return http.post(`${basePath}grabMessage`, data)
-  },
+  }
 
 }

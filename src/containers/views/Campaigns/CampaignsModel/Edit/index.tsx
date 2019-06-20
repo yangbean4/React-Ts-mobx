@@ -33,6 +33,7 @@ class VcTable extends ComponentExt<TableProps> {
         <Table.Column<ICampaignStore.ICampaignGroup> key="target_code" title="Target Code" dataIndex="target_code" width={200} />
         <Table.Column<ICampaignStore.ICampaignGroup> key="bid" title="Bid" dataIndex="bid" width={200} />
         <Table.Column<ICampaignStore.ICampaignGroup> key="total_budget" title="Total Budget" dataIndex="total_budget" width={200} />
+        <Table.Column<ICampaignStore.ICampaignGroup> key="daily_budget" title="Daily Budge" dataIndex="daily_budget" width={200} />
         <Table.Column<ICampaignStore.ICampaignGroup> key="user_name" title="SEN Account" dataIndex="user_name" width={200} />        
         <Table.Column<ICampaignStore.ICampaignGroup> key="start_time" title="Start Time" dataIndex="start_time" width={200} />
         <Table.Column<ICampaignStore.ICampaignGroup> key="end_time" title="End  Time" dataIndex="end_time" width={200} />

@@ -218,6 +218,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
 
     componentWillMount() {
         this.props.getOptionListDb(this.props.Id)
+        console.log(this.props.Id)
         if (this.props.Id) {
             this.getDetail()
         }

@@ -1,11 +1,11 @@
 export const statusOption = [
   {
-    key: 'Published',
-    value: 1
+    key: 'Enable',
+    value: 'published'
   },
   {
-    key: 'Suspend',
-    value: 0
+    key: 'Disable',
+    value: 'suspend'
   }
 ]
 
@@ -17,5 +17,27 @@ export const platformOption = [
   {
     key: 'iOS',
     value: 'ios'
+  }
+]
+
+export const adTypeOption = [
+  {
+    key: 'Normal',
+    value: 0
+  },
+  {
+    key: 'Test',
+    value: 1
+  },
+  {
+    key: 'New',
+    value: 2
+  }
+]
+
+export const bidTypeOption = [
+  {
+    key: 'CPI',
+    value: 'CPI'
   }
 ]

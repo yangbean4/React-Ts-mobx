@@ -28,7 +28,7 @@ interface IStoreProps {
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { changeFilter, filters } = store.appGroupStore
+    const { changeFilter, filters } = store.appManageStore
     return { changeFilter, filters }
   }
 )
@@ -97,7 +97,7 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
           </Col>
           <Col span={span}>
             <FormItem label="Status">
-              {getFieldDecorator('pkg_name', {
+              {getFieldDecorator('status', {
                 initialValue: filters.status
               })(
                 <Select

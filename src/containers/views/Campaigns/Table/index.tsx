@@ -1,12 +1,10 @@
 import * as React from 'react'
-import { Table, message, Icon } from 'antd'
+import { Table, Icon } from 'antd'
 import { PaginationConfig } from 'antd/lib/pagination'
 import { inject, observer } from 'mobx-react'
 import { observable, action, runInAction } from 'mobx'
 import PageConfig from '@components/Pagination'
-import { statusOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
-import * as styles from './index.scss'
 
 
 interface IStoreProps {

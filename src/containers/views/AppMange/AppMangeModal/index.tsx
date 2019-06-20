@@ -39,6 +39,7 @@ interface hasResult {
 
 interface IStoreProps {
     optionListDb?: IAppManageStore.OptionListDb
+    appManage?: IAppManageStore.IAppMange
     getOptionListDb?: (id: number) => Promise<any>
     getAccount?: () => Promise<any>
     createAppManage?: (appManage: IAppManageStore.IAppMange) => Promise<any>
@@ -48,18 +49,15 @@ interface IStoreProps {
 }
 
 interface IProps extends IStoreProps {
-    appKey?: number
     onCancel?: () => void
-    isAdd?: boolean
     onOk?: (id: number) => void
     type?: string
-    onSubmit?: (data?: number) => void
 }
 @inject(
     (store: IStore): IProps => {
         const { appManageStore, routerStore } = store
-        const { createAppManage, modifyAppManage, getAccount, getOptionListDb, optionListDb, setAppManage } = appManageStore
-        return { routerStore, createAppManage, modifyAppManage, getOptionListDb, optionListDb, getAccount, setAppManage }
+        const { createAppManage, modifyAppManage, getAccount, getOptionListDb, optionListDb, setAppManage, appManage } = appManageStore
+        return { routerStore, createAppManage, modifyAppManage, getOptionListDb, optionListDb, getAccount, setAppManage, appManage }
     }
 )
 @observer
@@ -74,6 +72,9 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     private manageGroup: IAppManageStore.IAppMange = {}
 
     @observable
+    private manageStore: IAppManageStore.IAppGplist = {}
+
+    @observable
     private accountShow: boolean = false
 
     @observable
@@ -82,10 +83,11 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private logo: string
 
-    @computed
-    get isAdd() {
-        return this.props.isAdd
-    }
+    @observable
+    private isAdd: boolean
+
+    @observable
+    private Id: number
 
     @computed
     get usePlatform() {
@@ -109,10 +111,24 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     getDetail = async () => {
-        const res = await this.api.appsManage.modifyAppsManageInfo({ app_key: this.props.appKey })
+        const res = await this.api.appsManage.modifyAppsManageInfo({ app_key: this.Id })
         this.props.setAppManage(res.data)
         runInAction('SET_APPManage', () => {
             this.manageGroup = { ...res.data }
+        })
+    }
+
+    runInit = () => {
+        const location = this.props.routerStore.location;
+        const isAdd = location.pathname.includes('add')
+        let Id;
+        if (!isAdd) {
+            const routerId = location.pathname.split('/').pop()
+            Id = Number(routerId)
+        }
+        runInAction('SET_StATE', () => {
+            this.isAdd = isAdd;
+            this.Id = Id
         })
     }
 
@@ -128,6 +144,16 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
         this.props.type || !this.isAdd ? this.props.onCancel() : this.props.routerStore.push('/currency')
     }
 
+    getAppStoreInfo = async () => {
+        const res = await this.api.appsManage.showGrabMessage({
+            platform: this.props.form.getFieldValue('platform'),
+            appstore_url: this.props.form.getFieldValue('appstore_url')
+        })
+        runInAction('SET_APPGP', () => {
+            this.manageStore = { ...res.data }
+        })
+    }
+
     submit = (e?: React.FormEvent<any>): void => {
         if (e) {
             e.preventDefault()
@@ -138,13 +164,23 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
                     this.toggleLoading()
                     try {
-                        values = {...values}
-                        if (!this.props.appKey) {
-                            const res = await createAppManage(values)
-                            this.props.onSubmit(res.data.id)
+                        let data = {
+                            message: '',
+                            data: {
+                                id: ''
+                            }
+                        }
+                        values = { ...values }
+                        if (this.isAdd) {
+                            data = await createAppManage(values)
                         } else {
-                            await modifyAppManage({ ...values })
-                            this.props.onSubmit()
+                            data = await modifyAppManage({ ...values })
+                        }
+                        message.success(data.message)
+                        if (this.props.type) {
+                            this.props.form.resetFields()
+                        } else {
+                            routerStore.push('/offer')
                         }
                     } catch (error) {
                         console.log(err)
@@ -169,8 +205,9 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     componentWillMount() {
-        this.props.getOptionListDb(this.props.appKey)
-        if (this.props.appKey) {
+        this.runInit()
+        this.props.getOptionListDb(this.Id)
+        if (this.Id) {
             this.getDetail()
         }
         this.init()
@@ -215,24 +252,25 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
             }
         }
         const { form, optionListDb } = this.props
-        const reData = this.manageGroup
+        const data = this.manageGroup
+        const reData = this.manageStore ? { data, ...this.manageGroup } : this.manageGroup
         const { getFieldDecorator } = form
         const {
             platform = 'android',
-            status = 1,
+            status = 'published',
             app_key = '',
-            app_name = "",
+            title = "",
             appstore_url = '',
             app_id = '',
             account_id = '',
             screen_type = '',
             logo = '',
-            rate = '',
+            rating = '',
             downloads = '',
             category_id = '',
             frame_id = '',
             specs_id = '',
-            type_id = ''
+            style_id = ''
         } = reData || {}
         return (
             <React.Fragment>
@@ -244,7 +282,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                 <div className='sb-form'>
                     <Form {...this.props.type ? miniLayout : formItemLayout} className={styles.currencyModal} >
                         {
-                            this.isAdd && <FormItem label="Appkey">
+                            !this.isAdd && <FormItem label="Appkey">
                                 {getFieldDecorator('app_key', {
                                     initialValue: app_key,
                                     rules: [
@@ -257,66 +295,65 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                 </span>)}
                             </FormItem>
                         }
-                        {
-                            !this.props.type && <FormItem label="Status">
-                                {getFieldDecorator('status', {
-                                    initialValue: status,
+
+                        <FormItem label="Status">
+                            {getFieldDecorator('status', {
+                                initialValue: status,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Radio.Group>
+                                    {statusOption.map(c => (
+                                        <Radio key={c.key} value={c.value}>
+                                            {c.key}
+                                        </Radio>
+                                    ))}
+                                </Radio.Group>
+                            )}
+                            <Popover content={(<p>Adjust to disable status, all campaigns under this app will be suspended.</p>)}>
+                                <AntIcon className={styles.workBtn} type="question-circle" />
+                            </Popover>
+                        </FormItem>
+
+                        <FormItem label="Platform">
+                            {getFieldDecorator('platform',
+                                {
+                                    initialValue: platform,
                                     rules: [
                                         {
                                             required: true, message: "Required"
                                         }
                                     ]
                                 })(
-                                    <Radio.Group>
-                                        {statusOption.map(c => (
-                                            <Radio key={c.key} value={c.value}>
+                                    <Select
+                                        showSearch
+                                        disabled={!this.isAdd}
+                                        onChange={(val) => this.setPlatform(val)}
+                                        filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        {platformOption.map(c => (
+                                            <Select.Option {...c}>
                                                 {c.key}
-                                            </Radio>
+                                            </Select.Option>
                                         ))}
-                                    </Radio.Group>
+                                    </Select>
                                 )}
-                                <Popover content={(<p>Adjust to disable status, all campaigns under this app will be suspended.</p>)}>
-                                    <AntIcon className={styles.workBtn} type="question-circle" />
-                                </Popover>
-                            </FormItem>
-                        }
+                        </FormItem>
 
-                        {
-                            this.isAdd && <FormItem label="Platform">
-                                {getFieldDecorator('platform',
+
+                        <FormItem label="Appstore Url">
+                            {getFieldDecorator('appstore_url', {
+                                initialValue: appstore_url,
+                                rules: [
                                     {
-                                        initialValue: platform,
-                                        rules: [
-                                            {
-                                                required: true, message: "Required"
-                                            }
-                                        ]
-                                    })(
-                                        <Select
-                                            showSearch
-                                            onChange={(val) => this.setPlatform(val)}
-                                            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                        >
-                                            {platformOption.map(c => (
-                                                <Select.Option {...c}>
-                                                    {c.key}
-                                                </Select.Option>
-                                            ))}
-                                        </Select>
-                                    )}
-                            </FormItem>
-                        }
-
-                            <FormItem label="Appstore Url">
-                                {getFieldDecorator('appstore_url', {
-                                    initialValue: appstore_url,
-                                    rules: [
-                                        {
-                                            required: true, message: "Required"
-                                        }
-                                    ]
-                                })(<Input />)}<Button type="primary" className={styles.importBtn}>Import</Button>
-                            </FormItem>
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(<Input disabled={!this.isAdd} />)}<Button type="primary" onClick={this.getAppStoreInfo} className={styles.importBtn}>Import</Button>
+                        </FormItem>
 
                         <FormItem label="Logo">
                             {getFieldDecorator('logo', {
@@ -341,23 +378,23 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input disabled={this.platform} />)}
+                            })(<Input disabled={!this.isAdd} />)}
                         </FormItem>
 
                         <FormItem label="App Name">
-                            {getFieldDecorator('app_name', {
-                                initialValue: app_name,
+                            {getFieldDecorator('title', {
+                                initialValue: title,
                                 rules: [
                                     {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input />)}
+                            })(<Input disabled={!this.isAdd} />)}
                         </FormItem>
 
                         <FormItem label="Rate">
-                            {getFieldDecorator('rate', {
-                                initialValue: rate,
+                            {getFieldDecorator('rating', {
+                                initialValue: rating,
                                 rules: [
                                     {
                                         required: true, message: "Required"
@@ -441,8 +478,8 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                         </FormItem>
 
                         <FormItem label="Style"  >
-                            {getFieldDecorator('type_id', {
-                                initialValue: type_id,
+                            {getFieldDecorator('style_id', {
+                                initialValue: style_id,
                                 rules: [
                                     {
                                         required: true, message: "Required"

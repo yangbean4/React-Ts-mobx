@@ -23,14 +23,14 @@ export const platformOption = [
 export const screenOption = [
   {
     key: 'Landscape',
-    value: 'landscape'
+    value: '0'
   },
   {
     key: 'Portrait',
-    value: 'portrait'
+    value: '1'
   },
   {
     key: 'Both',
-    value: 'both'
+    value: '2'
   }
 ]

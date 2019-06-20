@@ -27,6 +27,18 @@
     float: left;
     text-align: center;
   }
+  :global {
+    .ant-form-item-children {
+      height: 130px;
+      width: 100% !important;
+      overflow-x: scroll;
+      display: block;
+      #template_id {
+        height: 100%;
+        width: max-content;
+      }
+    }
+  }
 }
 .imgBox {
   width: 100px;

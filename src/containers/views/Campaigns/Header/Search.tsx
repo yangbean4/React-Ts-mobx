@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, runInAction, autorun } from 'mobx'
-import { Form, Input, Row, Col, Button } from 'antd'
+import { Form, Input, Row, Col, Button, Select } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
+import { platformOption } from '../web.config'
 
 const FormItem = Form.Item
 
@@ -104,7 +105,20 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <FormItem label="Platform">
                 {getFieldDecorator('platform', {
                     initialValue: filters.platform
-                })(<Input />)}
+                })(
+                  <Select
+                  allowClear
+                  showSearch
+                  mode='multiple'
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {platformOption.map(c => (
+                    <Select.Option {...c}>
+                      {c.key}
+                    </Select.Option>
+                  ))}
+                </Select>
+                )}
                 </FormItem>
             </Col>
             <Col span={3} offset={1}>

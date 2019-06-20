@@ -103,7 +103,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get isHeng() {
-        return (Number(this.useAppWall) & 1) === 1
+        return (this.props.optionListDb.template.find(ele => ele.id === this.useAppWall) || {}).template_type === 1
     }
 
     @computed
@@ -262,7 +262,8 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                     message.error(`Image must smaller than ${size}kb!`);
                 }
                 if (isHtml && isLt2M) {
-                    return testSize(file, width, height).catch(() => {
+                    return testSize(file, width, height).catch((err) => {
+                        console.log(err)
                         message.error(`Image must be width:${width}px height:${height}px`);
                         return Promise.reject()
                     })
@@ -508,7 +509,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                             <div className={styles.UploadBox}>
                                 <div className={styles.title}>
                                     <div className="left">
-                                        Landscape
+                                        {this.isHeng ? 'Landscape' : 'Portrait'}
                                     </div>
                                     <div className="right">
                                         {this.isHeng ? '1920*1080px' : '1080*1920px'}

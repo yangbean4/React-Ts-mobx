@@ -324,11 +324,10 @@ export const getGuId = (): string => {
 
 export const testSize = (target: File, maxWidth, maxHeight, isScale: boolean = false, type: string = 'img') => {
     return new Promise((resolve, reject) => {
-        const objectURL = createObjectURL != undefined
-            ? createObjectURL(target) : URL != undefined
-                ? window.URL.createObjectURL(target) : webkitURL != undefined
-                    ? webkitURL.createObjectURL(target) : null
-        // TODO:
+        const objectURL = window.createObjectURL != undefined
+            ? window.createObjectURL(target) : URL != undefined
+                ? window.URL.createObjectURL(target) : window.webkitURL != undefined
+                    ? window.webkitURL.createObjectURL(target) : null
         const imageCopy: HTMLVideoElement | HTMLImageElement = type === 'img' ? new Image() : type === 'video' ? document.createElement('video') : null
         imageCopy.src = objectURL
         imageCopy.onload = () => {

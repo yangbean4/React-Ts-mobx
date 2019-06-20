@@ -184,7 +184,7 @@ export const routerAndMenu: IRouter[] = [
         id: 851,
         pid: 81,
         isMenu: false,
-        path: '/offer/edit',
+        path: '/offer/edit/:id',
         title: 'Edit App',
         component: 'AppManagesModel',
     },

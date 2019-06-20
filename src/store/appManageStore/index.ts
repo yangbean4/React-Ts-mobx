@@ -122,7 +122,7 @@ export class AppManageStore extends StoreExt {
     }
 
     createAppManage = async (appGroup: IAppManageStore.IAppMange) => {
-        const res = await this.api.appGroup.createAppGroup(appGroup)
+        const res = await this.api.appsManage.createAppsManage(appGroup)
         this.setAppManage({ ...appGroup })
         return res
     }

@@ -58,9 +58,6 @@ export class CampaignStore extends StoreExt {
     optionListDb: ICampaignStore.OptionListDb = {
         TargetCode: [],
         CommentID: [],
-        AdType: [],
-        Creative: [],
-        Endcard: [],
     }
     
     @action
@@ -72,11 +69,10 @@ export class CampaignStore extends StoreExt {
     }
 
     @action
-    clearCache = () => {
-        let target = {}
-        Object.keys(this.optionListDb).forEach(key => target[key] = [])
-        runInAction('CLEAR', () => {
-            this.optionListDb = target
+    getCommentID = async () => {
+        const res = await this.api.comment.getCommentGroupId()
+        runInAction('SET', () => {
+            this.optionListDb.CommentID = res.data;
         })
     }
 
@@ -89,21 +85,29 @@ export class CampaignStore extends StoreExt {
     }
 
     @action
-    getOptionListDb = async (id: number) => {
-        const keys = Object.keys(this.optionListDb)
-        const promiseAll = keys.map(key => this.api.campaigns[`get${key}`](
-            key === 'VC' && this.campaign ? { id: this.campaign.id || id } : undefined
-        ))
-        Promise.all(promiseAll).then(data => {
-            const target = {}
-            keys.forEach((key, index) => {
-                target[key] = data[index].data
-            })
-            runInAction('SET', () => {
-                this.optionListDb = target
-            })
+    clearCache = () => {
+        let target = {}
+        Object.keys(this.optionListDb).forEach(key => target[key] = [])
+        runInAction('CLEAR', () => {
+            this.optionListDb = target
         })
     }
+    // @action
+    // getOptionListDb = async (id: number) => {
+    //     const keys = Object.keys(this.optionListDb)
+    //     const promiseAll = keys.map(key => this.api.campaigns[`get${key}`](
+    //         key === 'VC' && this.campaign ? { id: this.campaign.id || id } : undefined
+    //     ))
+    //     Promise.all(promiseAll).then(data => {
+    //         const target = {}
+    //         keys.forEach((key, index) => {
+    //             target[key] = data[index].data
+    //         })
+    //         runInAction('SET', () => {
+    //             this.optionListDb = target
+    //         })
+    //     })
+    // }
 
     @action
     setCampaignType = (campaignsType: string) => {

@@ -1,5 +1,6 @@
 import { AppManageStore as AppManageStoreModel } from './index'
 import { number } from 'prop-types';
+import { title } from '@views/AppGroup/AppGroupModal/Placement/index.scss';
 
 export as namespace IAppManageStore
 
@@ -14,22 +15,24 @@ export interface IAppMange {
     account_id?: number
     screen_type?: string
     logo?: string
-    app_name?: string
-    rate?: string
+    title?: string
+    rating?: string
     downloads?: number | string
     category_id?: string
     frame_id?: string
     specs_id?: string
-    type_id?: string
+    style_id?: string,
+    
 }
 
-export interface IAppGroupForList {
-    pkg_name?: string
-    platform?: string
-    id?: string
-    status?: number
-    app_name?: string
-    sdk_token?: string
+export interface IAppGplist {
+    title?: string
+    logo?: string
+    desc?: string
+    rating?: number
+    os_version?: string
+    category?: string
+    appstore_url?: string
 }
 
 export interface SearchParams {

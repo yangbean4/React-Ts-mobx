@@ -57,5 +57,6 @@ export interface OptionListDb {
         id?: string | number
         template_url?: string
         template_image?: string
+        template_type?:number
     })[],
 }

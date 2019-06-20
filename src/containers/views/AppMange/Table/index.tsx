@@ -45,6 +45,7 @@ interface IProps extends IStoreProps {
 class AppsManageTable extends ComponentExt<IProps> {
     @action
     modifyEndcard = (appManage: IAppManageStore.IAppMange) => {
+        this.props.setAppManage(appManage)
         this.props.routerStore.push({
             pathname: `/offer/edit/${appManage.app_key}`,
         })
@@ -87,8 +88,13 @@ class AppsManageTable extends ComponentExt<IProps> {
                 onChange={handleTableChange}
             >
                 <Table.Column<IAppManageStore.IAppMange> key="app_key" title="Appkey" dataIndex="app_key" width={200} />
+                <Table.Column<IAppManageStore.IAppMange> key="title" title="App Name" dataIndex="title" width={200} />
                 <Table.Column<IAppManageStore.IAppMange> key="app_id" title="App ID" dataIndex="app_id" width={200} />
                 <Table.Column<IAppManageStore.IAppMange> key="platform" title="Platform" dataIndex="platform" width={100} />
+                <Table.Column<IAppManageStore.IAppMange> key="category_name" title="Category" dataIndex="category_name" width={200} />
+                <Table.Column<IAppManageStore.IAppMange> key="screen_type" title="Screen type" dataIndex="screen_type" width={200} />
+                <Table.Column<IAppManageStore.IAppMange> key="rating" title="downloads" dataIndex="rating" width={200} />
+                <Table.Column<IAppManageStore.IAppMange> key="status" title="Status" dataIndex="status" width={200} />
                 <Table.Column<IAppManageStore.IAppMange>
                     key="action"
                     title="Operate"
