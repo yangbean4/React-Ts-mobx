@@ -324,17 +324,37 @@ export const getGuId = (): string => {
 
 export const testSize = (target: File, maxWidth, maxHeight, isScale: boolean = false, type: string = 'img') => {
     return new Promise((resolve, reject) => {
-        const objectURL = window.createObjectURL != undefined
-            ? window.createObjectURL(target) : URL != undefined
-                ? window.URL.createObjectURL(target) : window.webkitURL != undefined
-                    ? window.webkitURL.createObjectURL(target) : null
-        const imageCopy: HTMLVideoElement | HTMLImageElement = type === 'img' ? new Image() : type === 'video' ? document.createElement('video') : null
-        imageCopy.src = objectURL
-        imageCopy.onload = () => {
-            const width = imageCopy.width || imageCopy.videoHeight
-            const height = imageCopy.height || imageCopy.videoWidth
-            const is = isScale ? width / maxWidth === height / maxHeight : width === maxWidth && height === maxHeight
-            is ? resolve() : reject();
+        try {
+            const objectURL = window.createObjectURL != undefined
+                ? window.createObjectURL(target) : URL != undefined
+                    ? window.URL.createObjectURL(target) : window.webkitURL != undefined
+                        ? window.webkitURL.createObjectURL(target) : null
+            const imageCopy: HTMLVideoElement | HTMLImageElement = type === 'img' ? new Image() : type === 'video' ? document.createElement('video') : null
+            imageCopy.src = objectURL
+
+            // const imageCopy: HTMLVideoElement | HTMLImageElement = type === 'img' ? new Image() : type === 'video' ? document.createElement('video') : null
+            // const fileRender = new FileReader()
+            // fileRender.readAsDataURL(target)
+            // fileRender.onload = (ev) => {
+            //     imageCopy.src = ev.target.result
+            // }
+            const cb = () => {
+                const width = imageCopy.width || imageCopy.videoWidth
+                const height = imageCopy.height || imageCopy.videoHeight
+                const is = isScale ? width / maxWidth === height / maxHeight : width === maxWidth && height === maxHeight
+                is ? resolve() : reject();
+            }
+            if (type === 'img') {
+                imageCopy.onload = cb
+            } else {
+                imageCopy.addEventListener('canplay', cb)
+            }
+
+        } catch (error) {
+            console.log(error)
         }
+
+
+
     })
 }

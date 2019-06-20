@@ -7,7 +7,7 @@ import { statusOption, platformOption } from '@config/web'
 import { showComment, videoType, descriptionOption, skipToOption, igeFlag, igeOption, igeScene, igePrefailOption } from '../../config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-import { typeOf, testSize } from '@utils/index' 
+import { typeOf, testSize } from '@utils/index'
 
 const FormItem = Form.Item
 
@@ -236,13 +236,19 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     setPlatform = (type) => {
         this.platform = type
-        this.removeFile('creative_image_url')
+        this.removeFile()
     }
 
     @action
     setAppid = (app_key) => {
         this.appId = this.usePkgnameData.find(ele => ele.app_key === app_key).app_id
-        this.removeFile('creative_image_url')
+        setImmediate(() => {
+            const data = this.props.form.getFieldsValue(['version', 'order_id', 'language'])
+            this.props.form.setFieldsValue({
+                creative_name: `${this.appName}_${data.order_id}_${data.version}_${data.language}`
+            })
+        })
+        this.removeFile()
     }
 
     @action
@@ -285,31 +291,36 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         type = ".png, .jpg, .jpeg, .gif", cb?: Function) => {
 
         const errorCb = (error) => { console.log(error); this.removeFile(key) };
+        const isVideo = type === 'video'
+        const fileName = isVideo ? 'Video' : 'Image'
+
         return {
             showUploadList: false,
-            accept: type === 'video' ? 'video/*' : type,
+            accept: isVideo ? 'video/*' : type,
             name: 'file',
             // listType: "picture",
             className: "avatar-uploader",
-            onRemove: this.removeFile,
+            onRemove: () => this.removeFile(key),
             beforeUpload: (file) => {
                 const houz = file.name.split('.').pop()
-                const isHtml = type === 'video' || type.includes(houz)
+                const isHtml = isVideo || type.includes(houz)
                 if (!isHtml) {
                     message.error(`Upload failed! The file must be in ${type} format.`);
                 }
                 const isLt2M = file.size / 1024 < size;
                 if (!isLt2M) {
-                    message.error(`Image must smaller than ${size}kb!`);
+                    message.error(`${fileName} must smaller than ${size}kb!`);
                 }
+                console.log(isHtml, isLt2M, whs)
                 if (isHtml && isLt2M && whs) {
                     const { width, height, isScale = false } = whs;
-                    return testSize(file, width, height, isScale).catch(() => {
-                        message.error(`Image must be width:${width}px height:${height}px`);
+                    return testSize(file, width, height, isScale, isVideo ? 'video' : 'img').catch(() => {
+                        const msg = isScale ? `Please upload ${fileName} at ${width}/${height}` : `${fileName} must be width:${width}px height:${height}px`
+                        message.error(msg);
                         return Promise.reject()
                     })
                 }
-                return isHtml && isLt2M;
+                return isHtml && isLt2M
             },
             customRequest: (data) => {
                 const formData = new FormData()
@@ -1135,7 +1146,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             <Upload {...theVideoUrlPropsForPlayicon}>
                                                 {
 
-                                                    <div>
+                                                    <div className={`${styles.sunjiao} ${styles.heng}`}>
                                                         {
                                                             theVideoUrlPropsForPlayicon_url && <video src={theVideoUrlPropsForPlayicon_url} />
                                                         }
