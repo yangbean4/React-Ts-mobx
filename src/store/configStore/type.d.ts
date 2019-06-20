@@ -32,3 +32,8 @@ export interface SearchParams {
   pkg_name?: string,
   platform?: string
 }
+
+export interface iosAndAnd {
+  ios?: string[]
+  android?: string[]
+}

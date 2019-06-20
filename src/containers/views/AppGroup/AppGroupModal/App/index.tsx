@@ -372,26 +372,27 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 </Radio.Group>
                             )}
                         </FormItem>
-                        <FormItem label="Pkg Name">
+                        <FormItem label={!this.useNot_in_appstore && this.usePlatform === 'ios' ? 'Bundle Id' : "Pkg Name"}>
                             {getFieldDecorator('pkg_name', {
                                 initialValue: pkg_name,
                                 validateTrigger: 'onBlur',
-                                rules: this.useNot_in_appstore ? [
+                                rules: [
                                     {
                                         required: true, message: "Required",
                                     },
-                                    // {
-                                    //     validator: (r, v, callback) => {
-                                    //         const reg = this.usePlatform === 'android' ? /^com./ : /^[0-9]*$/
-                                    //         if (!reg.test(v)) {
-                                    //             const msg = this.usePlatform === 'android' 
-                                    //             callback('Pkgname for android /Ios platform should start with com.xxx/number!')
-                                    //         }
-                                    //         callback()
-                                    //     }
-                                    // }
-                                ] : undefined
-                            })(<Input disabled={!this.useNot_in_appstore || (!this.isAdd && !!pkg_name)} />)}
+                                    {
+                                        validator: (r, v, callback) => {
+                                            const reg = this.usePlatform === 'android' ? /^com./ : /^[0-9]*$/
+                                            if (!reg.test(v)) {
+                                                const msg = this.usePlatform === 'android'
+                                                callback('Pkgname for android /Ios platform should start with com.xxx/number!')
+                                            }
+                                            callback()
+                                        }
+                                    }
+                                ]
+                                //  disabled={!this.useNot_in_appstore || (!this.isAdd && !!pkg_name)}
+                            })(<Input />)}
                         </FormItem>
 
                         <FormItem label="App Name">
