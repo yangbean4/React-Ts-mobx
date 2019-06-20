@@ -2,6 +2,11 @@
 import http from '@services/http'
 const basePath = '/api/endcard/'
 export default {
+
+  getAppsManage(data): Promise<any> {
+    return http.post(`${basePath}appList`, data || {})
+  },
+
   getEndcard(data): Promise<any> {
     return http.post(`${basePath}endcardList`, data || {})
   },

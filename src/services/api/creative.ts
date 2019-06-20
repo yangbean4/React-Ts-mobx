@@ -2,6 +2,11 @@
 import http from '@services/http'
 const basePath = '/api/creative/'
 export default {
+
+  getAppsManage(data): Promise<any> {
+    return http.post(`${basePath}appList`, data || {})
+  },
+
   getCreative(data): Promise<any> {
     return http.post(`${basePath}detail`, data || {})
   },

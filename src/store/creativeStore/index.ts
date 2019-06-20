@@ -82,7 +82,7 @@ export class CreativeStore extends StoreExt {
     getCreative = async () => {
         this.getCreativeLoading = true
         try {
-            const res = await this.api.appsManage.getAppsManage({ page: this.page, pageSize: this.pageSize, ...this.filters })
+            const res = await this.api.creative.getAppsManage({ page: this.page, pageSize: this.pageSize, ...this.filters })
             runInAction('SET_USER_LIST', () => {
                 this.creativeList = res.data
                 this.total = res.total
