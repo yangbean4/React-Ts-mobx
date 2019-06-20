@@ -1,11 +1,16 @@
 .tree {
-  :global(.ant-form-item-children) {
-    width: 240px;
-    height: 173px;
-    border: 1px solid rgba(228, 237, 240, 1);
-    border-radius: 4px;
-    overflow: auto;
-    display: block;
+  :global {
+    .ant-form-item-control {
+      height: unset;
+    }
+    .ant-form-item-children {
+      width: 240px;
+      height: 173px;
+      border: 1px solid rgba(228, 237, 240, 1);
+      border-radius: 4px;
+      overflow: auto;
+      display: block;
+    }
   }
 }
 .errmsg {
