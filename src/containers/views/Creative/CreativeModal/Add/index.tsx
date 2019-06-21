@@ -54,6 +54,7 @@ interface Whs {
     width: number
     height: number
     isScale?: boolean
+    time?: number
 }
 
 interface IStoreProps {
@@ -311,8 +312,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!isLt2M) {
                     message.error(`${fileName} must smaller than ${size}kb!`);
                 }
-                console.log(isHtml, isLt2M, whs)
-                if (isHtml && isLt2M && whs) {
+                if (isHtml && isLt2M && whs && !isVideo) {
                     const { width, height, isScale = false } = whs;
                     return testSize(file, width, height, isScale, isVideo ? 'video' : 'img').catch(() => {
                         const msg = isScale ? `Please upload ${fileName} at ${width}/${height}` : `${fileName} must be width:${width}px height:${height}px`
@@ -401,7 +401,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         const theVideoUrlPropsForVideoOrIge = this.getUploadprops(this.api.creative.uploadVideo, 'videoUrl', {
             width: this.videoType === 'portrait' ? 9 : 16,
             height: this.videoType === 'portrait' ? 16 : 9,
-            isScale: true
+            isScale: true,
+            time: 30,
         }, 4000, {
                 type: this.useCreativeType === 2 ? 3 : 4,
                 video_type: this.videoType === 'portrait' ? 2 : 1,
@@ -412,7 +413,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         const igeLeadVideoUrlProps = this.getUploadprops(this.api.creative.uploadVideo, 'leadVideoUrl', {
             width: this.lead_video_type === 'portrait' ? 9 : 16,
             height: this.lead_video_type === 'portrait' ? 16 : 9,
-            isScale: true
+            isScale: true,
+            time: 8
         }, 2500, {
                 type: 5,
                 video_type: this.lead_video_type === 'portrait' ? 2 : 1,

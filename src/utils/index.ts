@@ -341,6 +341,7 @@ export const testSize = (target: File, maxWidth, maxHeight, isScale: boolean = f
             const cb = () => {
                 const width = imageCopy.width || imageCopy.videoWidth
                 const height = imageCopy.height || imageCopy.videoHeight
+                console.log(width, height, maxWidth, maxHeight, isScale)
                 const is = isScale ? width / maxWidth === height / maxHeight : width === maxWidth && height === maxHeight
                 is ? resolve() : reject();
             }
