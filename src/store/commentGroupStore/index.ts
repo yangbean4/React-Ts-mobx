@@ -15,11 +15,6 @@ export class CommentGroupStore extends StoreExt {
 
     @observable
     commentType: string
-
-    @observable
-    optionListDb: ICommentStore.OptionListDb = {
-        language: []
-    }
     /**
      * 用户列表
      *
@@ -60,14 +55,6 @@ export class CommentGroupStore extends StoreExt {
     filters: ICommentGroupStore.SearchGroup = {}
 
     @action
-    getOptionListDb = async () => {
-        const res = await this.api.comment.getGroupLanguage({})
-        runInAction('SET', () => {
-            this.optionListDb.language = res.data
-        })
-    }
-
-    @action
     setCommentType = (commentType: string) => {
         this.commentType = commentType
         this.changeFilter({})
@@ -81,12 +68,11 @@ export class CommentGroupStore extends StoreExt {
      */
 
     @action
-    getComments = async () => {
+    getCommentGroups = async () => {
         this.getcommentsLoading = true
         try {
             let data = {
                 page: this.page, pageSize: this.pageSize, ...this.filters,
-                // type: this.accountType === 'source' ? 1 : 2
             }
             const res = await this.api.comment.getCommentGroup(data)
             runInAction('SET_COMMENT_LIST', () => {
@@ -120,13 +106,13 @@ export class CommentGroupStore extends StoreExt {
     @action
     changepage = (page: number) => {
         this.page = page
-        this.getComments()
+        this.getCommentGroups()
     }
 
     @action
     changePageSize = (pageSize: number) => {
         this.pageSize = pageSize
-        this.getComments()
+        this.getCommentGroups()
     }
 
     @action

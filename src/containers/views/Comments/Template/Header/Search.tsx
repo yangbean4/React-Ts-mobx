@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, runInAction, autorun } from 'mobx'
-import { Form, Input, Row, Col, Button } from 'antd'
+import { Form, Input, Row, Col, Button, Select } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 
@@ -43,9 +43,20 @@ class CommentSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   private companyType: string = ''
 
   private IReactionDisposer: () => void
+
+  @observable
+  private langauge: string[]
   @action
   toggleLoading = () => {
     this.loading = !this.loading
+  }
+
+  @action
+  getLanaugeDetail = async() => {
+    const res = await this.api.comment.getCommentLanguage() 
+    runInAction('SET_LANGAUE', () => {
+      this.langauge = res.data
+    })
   }
 
   constructor(props) {
@@ -64,6 +75,10 @@ class CommentSearch extends ComponentExt<IStoreProps & FormComponentProps> {
         return false
       }
     )
+  }
+
+  componentWillMount() {
+    this.getLanaugeDetail()
   }
 
   submit = (e?: React.FormEvent<any>): void => {
@@ -104,7 +119,21 @@ class CommentSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <FormItem label="Comment Language">
                 {getFieldDecorator('language', {
                     initialValue: filters.language
-                })(<Input />)}
+                })(
+                  <Select
+                    showSearch
+                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    mode="multiple"
+                  >
+                    {
+                      this.langauge && this.langauge.map((c, index) => (
+                        <Select.Option key={index} value={c}>
+                          {c}
+                        </Select.Option>
+                      ))
+                    }
+                  </Select>
+                )}
                 </FormItem>
             </Col>
             <Col span={3} offset={1}>

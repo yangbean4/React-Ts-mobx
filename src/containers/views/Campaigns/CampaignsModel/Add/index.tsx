@@ -10,6 +10,10 @@ import moment from 'moment'
 
 const FormItem = Form.Item
 
+const DateFormat = 'YYYY-MM-DD'
+const Now = moment().format(DateFormat)
+console.log(Now)
+
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
@@ -137,25 +141,14 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                     try {
                         values = {
                             ...values,
-                            'start_time': values['start_time'].format('YYYY-MM-DD'),
-                            'end_time': values['end_time'].format('YYYY-MM-DD')
+                            'start_time': values['start_time'].format(DateFormat),
+                            'end_time': values['end_time'].format(DateFormat),
+                            'target_code': values.target_code.join(',')
                         }
                         if (values.id === undefined) {
-                            // const {
-                            //     app_name,
-                            //     pkg_name
-                            // } = this.userAppID.find(ele => ele.id === values.app_name)
                             
                             let data = await createCampaingn({ ...values })
                             message.success(data.message)
-                            // const {
-                            //     platform
-                            // } = values
-                            // localStorage.setItem('TargetCurrency', JSON.stringify({
-                            //     app_name,
-                            //     pkg_name,
-                            //     platform
-                            // }))
                             routerStore.push('/campaigns')
                         } else {
                             let data = await modifyCampaingn({ ...values })
@@ -214,13 +207,13 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
             platform = 'android',
             app_key = '',
             campaign_name = '',
-            target_code = undefined,
+            target_code = [],
             bid_type = 'CPI',
             bid = '',
             total_budget = '',
             daily_budget = '',
-            start_time = '2019-6-20',
-            end_time = '2019-6-20',
+            start_time = Now,
+            end_time = '2019-07-02',
             comment_group_id = '',
             ad_type = 1,
             tracking_url = '',
@@ -230,14 +223,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
             default_cpm = '0.01',
             kpi = '',
         } = reData || {}
-        const startTimeConfig = {
-            initialValue: moment(start_time),
-            rules: [{ type: 'object', required: true, message: 'Please select time!' }]
-        }
-        const endTimeConfig = {
-            initialValue: moment(end_time),
-            rules: [{ type: 'object', required: false}],
-        }
+        
         return (
             <div className='sb-form'>
                 <Form {...this.props.type ? miniLayout : formItemLayout} className={styles.currencyModal} >
@@ -400,6 +386,14 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             rules: [
                                 {
                                     required: true, message: "Required"
+                                },
+                                {
+                                    validator: (r, v, callback) => {
+                                        if (v <= 0) {
+                                            callback('The Exchange Rate should be a positive integer!')
+                                        }
+                                        callback()
+                                    }
                                 }
                             ]
                         })(<InputNumber precision={0} />)}
@@ -412,6 +406,14 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             rules: [
                                 {
                                     required: true, message: "Required"
+                                },
+                                {
+                                    validator: (r, v, callback) => {
+                                        if (v <= 0) {
+                                            callback('The Exchange Rate should be a positive integer!')
+                                        }
+                                        callback()
+                                    }
                                 }
                             ]
                         })(<InputNumber />)}
@@ -424,19 +426,35 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             rules: [
                                 {
                                     required: false, message: "Required"
+                                },
+                                {
+                                    validator: (r, v, callback) => {
+                                        if (v <= 0) {
+                                            callback('The Exchange Rate should be a positive integer!')
+                                        }
+                                        callback()
+                                    }
                                 }
                             ]
                         })(<InputNumber />)}
                     </FormItem>
 
                     <FormItem label="Start Time">
-                        {getFieldDecorator('start_time', startTimeConfig)
-                            (<DatePicker showTime />)}
+                        {getFieldDecorator('start_time', 
+                            {
+                                initialValue: moment(start_time),
+                                rules: [{ type: 'object', required: true, message: 'Please select time!' }]
+                            }
+                        )(<DatePicker />)}
                     </FormItem>
 
                     <FormItem label="End Time">
-                        {getFieldDecorator('end_time', endTimeConfig)
-                            (<DatePicker showTime />)}
+                        {getFieldDecorator('end_time', 
+                            {
+                                initialValue: moment(end_time),
+                                rules: [{ type: 'object', required: false}],
+                            }
+                        )(<DatePicker />)}
                     </FormItem>
 
                     <FormItem label="Comment Group">
@@ -556,6 +574,14 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             rules: [
                                 {
                                     required: true, message: "Required"
+                                },
+                                {
+                                    validator: (r, v, callback) => {
+                                        if (v <= 0) {
+                                            callback('The Exchange Rate should be a positive integer!')
+                                        }
+                                        callback()
+                                    }
                                 }
                             ]
                         })(<InputNumber disabled={id && !this.isAdd} />)}

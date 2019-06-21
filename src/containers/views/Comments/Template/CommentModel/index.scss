@@ -36,7 +36,21 @@
     font-size: 16px;
     cursor: pointer;
   }
+  .workBtn {
+    float:left;
+    // width: 40px;
+    // height: 40px;
+    border-radius: 50%;
+    margin-top: 20px;
+    margin-left: 10px;
+    // background: rgba(237, 240, 255, 1);
+    border-radius: 4px;
+    color: #667ffd;
+    position: absolute;
+    line-height: 40px;
+  }
   .textBox{
+    float: left;
     width: 420px;
     padding: 5px;
     box-sizing: border-box;

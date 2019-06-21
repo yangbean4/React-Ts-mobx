@@ -15,12 +15,6 @@ export class CommentStore extends StoreExt {
 
     @observable
     commentType: string
-
-    @observable
-    optionListDb: ICommentStore.OptionListDb = {
-        language: []
-    }
-
     /**
      * 用户列表
      *
@@ -66,17 +60,7 @@ export class CommentStore extends StoreExt {
         this.changeFilter({})
         this.pageSize = 10
     }
-    /**
-     * 获取语言列表
-     * 
-     */
-    @action
-    getOptionListDb = async () => {
-        const res = await this.api.comment.getCommentLanguage({})
-        runInAction('SET', () => {
-            this.optionListDb.language = res.data
-        })
-    }
+    
     /**
      * 加载评论列表
      *
@@ -84,7 +68,7 @@ export class CommentStore extends StoreExt {
      */
 
     @action
-    getComments = async () => {
+    getCommentTplList = async () => {
         this.getcommentsLoading = true
         try {
             let data = {
@@ -123,13 +107,13 @@ export class CommentStore extends StoreExt {
     @action
     changepage = (page: number) => {
         this.page = page
-        this.getComments()
+        this.getCommentTplList()
     }
 
     @action
     changePageSize = (pageSize: number) => {
         this.pageSize = pageSize
-        this.getComments()
+        this.getCommentTplList()
     }
 
     @action

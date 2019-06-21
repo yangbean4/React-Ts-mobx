@@ -6,4 +6,5 @@ export const btn2: string;
 export const btnBox: string;
 export const modalBtn: string;
 export const textBox: string;
+export const workBtn: string;
 export const workPlus: string;

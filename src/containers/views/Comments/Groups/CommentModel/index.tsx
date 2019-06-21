@@ -6,6 +6,7 @@ import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import * as web from '../web.config'
+import { async } from 'q';
 // 封装表单域组件
 const FormItem = Form.Item
 
@@ -44,15 +45,12 @@ const formItemLayoutForModel = {
 
 interface IStoreProps {
     comment?: ICommentGroupStore.IGroup
-    comments?: ICommentStore.IComment[]
     createComment?: (company: ICommentGroupStore.IGroup) => Promise<any>
     modifyComment?: (company: ICommentGroupStore.IGroup) => Promise<any>
-    getComments?: () => Promise<any>
+    getCommentTplList?: () => Promise<any>
     changepage?: (page: number) => void
     routerStore?: RouterStore
     clearComment?: () => void
-    optionListDb?: ICommentGroupStore.OptionListDb
-    getOptionListDb?: ({}) => Promise<any>
 }
 
 interface IProps extends IStoreProps {
@@ -63,10 +61,9 @@ interface IProps extends IStoreProps {
 
 @inject(
     (store: IStore): IProps => {
-        const { commentGroupStore, routerStore, commentStore } = store
-        const { getComments, comments } = commentStore
-        const { comment, createComment, modifyComment, clearComment, optionListDb, getOptionListDb } = commentGroupStore
-        return { clearComment, comment, comments, routerStore, createComment, modifyComment, getComments, optionListDb, getOptionListDb }
+        const { commentGroupStore, routerStore } = store
+        const { comment, createComment, modifyComment, clearComment } = commentGroupStore
+        return { clearComment, comment, routerStore, createComment, modifyComment }
     }
 )
 @observer
@@ -75,11 +72,13 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     private loading: boolean = false
 
     @observable
-    private template: [] = []
+    private language: string[] = ['en'];
 
     @observable
     private selectedRowKeys: number[] = this.props.comment ? this.props.comment.group_template_ids.split(',').map(ele=>Number(ele)) :[]
 
+    @observable
+    private commentList: ICommentStore.IComment[] = []
     
 
     @computed
@@ -102,6 +101,14 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
+    getComments = async () => {
+        const res = await this.api.comment.getCommentTplList({})
+        runInAction('SET_COMMENT', () => {
+            this.commentList = res.data
+        })
+    }
+
+    @action
     rowSelection =() => {
         return {}
     }
@@ -110,7 +117,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
 
     }
     componentWillMount() {
-        this.props.getOptionListDb({})
+        this.getComments()
         const { routerStore, comment = {} } = this.props
         const routerId = routerStore.location.pathname.toString().split('/').pop()
         const Id = Number(routerId)
@@ -173,7 +180,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                 })
             }
         }
-        const { comment, comments, form, optionListDb } = this.props
+        const { comment, form } = this.props
         const { getFieldDecorator } = form
         const {
             id = '',
@@ -237,7 +244,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                             filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                         >
                             {
-                                optionListDb.language.map(c => {
+                                this.language.map(c => {
                                     <Select.Option key={c} value={c}>
                                         console.log({c})
                                         {c}
@@ -246,7 +253,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                             }
                         </Select>)}
                     </FormItem>
-                    <FormItem label="Comment Template" >
+                    <FormItem label="Comment Template ID" >
                         {getFieldDecorator('group_template_ids', {
                             initialValue: group_template_ids,
                             rules: [
@@ -266,7 +273,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                 rowSelection={rowSelection}
                                 showHeader={false}
                                 pagination={false}
-                                dataSource={comments}
+                                dataSource={this.commentList}
                             >
                                 <Table.Column<ICommentStore.IComment> key="id" title="ID" dataIndex="id" width={50} />
                                 <Table.Column<ICommentStore.IComment>

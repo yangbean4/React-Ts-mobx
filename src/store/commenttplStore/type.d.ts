@@ -14,7 +14,7 @@ export interface IComment {
 }
 export interface SearchParams {
     id?: number
-    language?: string
+    language?: string[]
 }
 
 export interface OptionListDb {

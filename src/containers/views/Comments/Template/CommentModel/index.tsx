@@ -47,7 +47,6 @@ interface IStoreProps {
     changepage?: (page: number) => void
     routerStore?: RouterStore
     clearComment?: () => void
-    optionListDb?: ICommentStore.OptionListDb
 }
 
 interface IProps extends IStoreProps {
@@ -59,8 +58,8 @@ interface IProps extends IStoreProps {
 @inject(
     (store: IStore): IProps => {
         const { commentStore, routerStore } = store
-        const { comment, createComment, modifyComment, clearComment, getOptionListDb, optionListDb } = commentStore
-        return { clearComment, comment, routerStore, createComment, modifyComment, getOptionListDb, optionListDb }
+        const { comment, createComment, modifyComment, clearComment } = commentStore
+        return { clearComment, comment, routerStore, createComment, modifyComment }
     }
 )
 @observer
@@ -73,6 +72,9 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
 
     @observable
     private head_portrait: string
+
+    @observable 
+    private language: string[] = ['en']
 
     @computed
     get formItemLayout() {
@@ -117,7 +119,6 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     componentWillMount() {
-        this.props.getOptionListDb({})
         const { routerStore, comment = {} } = this.props
         const routerId = routerStore.location.pathname.toString().split('/').pop()
         const Id = Number(routerId)
@@ -206,7 +207,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
             }
 
         }
-        const { comment, form, optionListDb } = this.props
+        const { comment, form } = this.props
         const { getFieldDecorator } = form
         const {
             id = '',
@@ -262,7 +263,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {
-                                    optionListDb.language.map(c => {
+                                    this.language.map(c => {
                                         <Select.Option key={c} value={c}>
                                             console.log({c})
                                             {c}
@@ -312,7 +313,13 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                     placement="top">
                                     <AntIcon className={styles.workPlus} onClick={this.showEmojiPicker} type="plus" />
                                 </Popover>
-                                <div className={styles.textBox} onInput={this.setCom_talk} contentEditable={true}>{com_talk ? com_talk : ''}</div>
+                                <div>
+                                    <div className={styles.textBox} onInput={this.setCom_talk} contentEditable={true}>{com_talk ? com_talk : ''}</div>
+                                    <Popover content={(<p>At least 80 characters.</p>)}>
+                                        <AntIcon className={styles.workBtn} type="question-circle" />
+                                    </Popover>
+                                </div>
+                                
                             </div>
                         )}
                     </FormItem>

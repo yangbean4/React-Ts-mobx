@@ -26,12 +26,12 @@ export default {
         return http.post(`${basePath}editCommentGroup`, data || {})
     },
     // tpl language
-    getCommentLanguage(data): Promise<any> {
-        return http.post(`${basePath}commentLanguage`, data || {})
+    getCommentLanguage(): Promise<any> {
+        return http.post(`${basePath}commentLanguage`)
     },
     // group language
-    getGroupLanguage(data): Promise<any> {
-        return http.post(`${basePath}groupLanguage`, data || {})
+    getGroupLanguage(): Promise<any> {
+        return http.post(`${basePath}groupLanguage`)
     },
     // select template
     selectTemplate(data): Promise<any> {

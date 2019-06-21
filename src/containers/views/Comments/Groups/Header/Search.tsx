@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, runInAction, autorun } from 'mobx'
-import { Form, Input, Row, Col, Button } from 'antd'
+import { Form, Input, Row, Col, Button, Select } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 
@@ -19,8 +19,8 @@ const layout = {
 
 
 interface IStoreProps {
-  changeFilter?: (params: ICommentStore.SearchParams) => void
-  filters?: ICommentStore.SearchParams
+  changeFilter?: (params: ICommentGroupStore.SearchGroup) => void
+  filters?: ICommentGroupStore.SearchGroup
   routerStore?: RouterStore
   setCommentType?: (str: string) => void
 }
@@ -29,8 +29,8 @@ interface IStoreProps {
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { routerStore, commentStore } = store
-    const { changeFilter, filters, setCommentType } = commentStore
+    const { routerStore, commentGroupStore } = store
+    const { changeFilter, filters, setCommentType } = commentGroupStore
     return { changeFilter, filters, routerStore, setCommentType }
   }
 )
@@ -42,10 +42,21 @@ class CommentSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   @observable
   private companyType: string = ''
 
+  @observable
+  private langauge: string[]
+
   private IReactionDisposer: () => void
   @action
   toggleLoading = () => {
     this.loading = !this.loading
+  }
+
+  @action
+  getLanaugeDetail = async() => {
+    const res = await this.api.comment.getGroupLanguage() 
+    runInAction('SET_LANGAUE', () => {
+      this.langauge = res.data
+    })
   }
 
   constructor(props) {
@@ -65,7 +76,7 @@ class CommentSearch extends ComponentExt<IStoreProps & FormComponentProps> {
       }
     )
   }
-
+ 
   submit = (e?: React.FormEvent<any>): void => {
     if (e) {
       e.preventDefault()
@@ -82,6 +93,9 @@ class CommentSearch extends ComponentExt<IStoreProps & FormComponentProps> {
         }
       }
     )
+  }
+  componentWillMount() {
+    this.getLanaugeDetail()
   }
   componentDidMount() {
     this.IReactionDisposer()
@@ -103,8 +117,22 @@ class CommentSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <Col span={span}>
                 <FormItem label="Group Language">
                 {getFieldDecorator('group_language', {
-                    initialValue: filters.language
-                })(<Input />)}
+                    initialValue: filters.group_language
+                })(
+                  <Select
+                    showSearch
+                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    mode="multiple"
+                  >
+                    {
+                      this.langauge && this.langauge.map((c, index) => (
+                        <Select.Option key={index} value={c}>
+                          {c}
+                        </Select.Option>
+                      ))
+                    }
+                  </Select>
+                )}
                 </FormItem>
             </Col>
             <Col span={3} offset={1}>

@@ -13,7 +13,7 @@ interface IStoreProps {
     getcommentsLoading?: boolean
     comments?: ICommentGroupStore.IGroup[]
     setComment?: (comment: ICommentGroupStore.IGroup) => void
-    getComments?: () => Promise<any>
+    getCommentGroups?: () => Promise<any>
     setCommentType?: (string) => void
     handleTableChange?: (pagination: PaginationConfig) => void
     page?: number
@@ -32,7 +32,7 @@ interface IProps extends IStoreProps {
         const {
             getcommentsLoading,
             setComment,
-            getComments,
+            getCommentGroups,
             comments,
             handleTableChange,
             page,
@@ -40,7 +40,7 @@ interface IProps extends IStoreProps {
             setCommentType,
             total
         } = commentGroupStore
-        return { routerStore, getcommentsLoading, setComment, getComments, comments, handleTableChange, page, pageSize, setCommentType, total }
+        return { routerStore, getcommentsLoading, setComment, getCommentGroups, comments, handleTableChange, page, pageSize, setCommentType, total }
     }
 )
 @observer
@@ -75,6 +75,9 @@ class CommentTable extends ComponentExt<IProps> {
     }
 
     render() {
+        const style = {
+            marginLeft: '10px'
+        }
         const {
             scrollY,
             getcommentsLoading,
@@ -111,39 +114,24 @@ class CommentTable extends ComponentExt<IProps> {
                         width={100}
                      />
                     <Table.Column<ICommentGroupStore.IGroup> 
-                        key="group_template_ids" 
+                        key="comments" 
                         title="Comment Template ID" 
-                        dataIndex="group_template_ids" 
+                        dataIndex="comments" 
                         width={200}
                         render={(_, record) => (
                             <span>
-                                <Popover
-                                    placement="top"
-                                    trigger="click"
-                                    content={record.group_template_ids.split(',').map(
-                                        item => {
-                                            return this.$checkAuth('Config Manage-Config Manage-Edit') ?
-                                            <span
-                                                style={{ marginRight: '6px', marginLeft: '6px' }}
-                                                onClick={() => this.hoverToast()}
-                                                key={item}>
-                                                <a href="javascript:;">
-                                                    {item}
-                                                </a>
-                                            </span>
-                                            : <span
-                                                style={{ marginRight: '6px', marginLeft: '6px' }}
-                                                key={item}>
-                                                <a href="javascript:;">
-                                                    {item}
-                                                </a>
-                                            </span>
-                                        }
-                                    )}>
-                                    <a href="javascript:;">
-                                        {FormatNumber(_)}
-                                    </a>
-                                </Popover>
+                                {
+                                   record.comments.map((c, index) => (
+                                        <Popover
+                                            placement="top"
+                                            trigger="hover"
+                                            key={index}
+                                            content={c.comment}
+                                            >
+                                                <a href="javascript:;" style={style} key={index}>{FormatNumber(c.id)}</a>
+                                        </Popover>
+                                   )) 
+                                }
                             </span>
                         )}
                     />

@@ -11,11 +11,12 @@ export interface IGroup {
     group_name?: string
     group_language?: string
     group_template_ids?: string
+    comments?: string[]
 }
 
 export interface SearchGroup {
     id?: number
-    group_language?: string
+    group_language?: string[]
 }
 
 export interface OptionListDb {

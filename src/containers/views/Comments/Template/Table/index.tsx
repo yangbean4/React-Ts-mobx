@@ -13,7 +13,7 @@ interface IStoreProps {
     getcommentsLoading?: boolean
     comments?: ICommentStore.IComment[]
     setComment?: (comment: ICommentStore.IComment) => void
-    getComments?: () => Promise<any>
+    getCommentTplList?: () => Promise<any>
     setCommentType?: (string) => void
     handleTableChange?: (pagination: PaginationConfig) => void
     page?: number
@@ -32,7 +32,7 @@ interface IProps extends IStoreProps {
         const {
             getcommentsLoading,
             setComment,
-            getComments,
+            getCommentTplList,
             comments,
             handleTableChange,
             page,
@@ -40,7 +40,7 @@ interface IProps extends IStoreProps {
             setCommentType,
             total
         } = commentStore
-        return { routerStore, getcommentsLoading, setComment, getComments, comments, handleTableChange, page, pageSize, setCommentType, total }
+        return { routerStore, getcommentsLoading, setComment, getCommentTplList, comments, handleTableChange, page, pageSize, setCommentType, total }
     }
 )
 @observer
@@ -48,11 +48,6 @@ class CommentTable extends ComponentExt<IProps> {
 
     @observable
     private commentType: string = ''
-
-    @observable
-    private rowSelection: object = {
-
-    }
 
     @action
     modifyComment = (comment: ICommentStore.IComment) => {
@@ -86,7 +81,6 @@ class CommentTable extends ComponentExt<IProps> {
                     className="center-table"
                     style={{ width: '100%' }}
                     bordered
-                    rowSelection={this.rowSelection}
                     rowKey="comment_id"
                     loading={getcommentsLoading}
                     dataSource={comments}
@@ -99,18 +93,18 @@ class CommentTable extends ComponentExt<IProps> {
                     }}
                     onChange={handleTableChange}
                 >
-                    <Table.Column<ICommentStore.IComment> key="id" title="ID" dataIndex="id" width={50} />
-                    <Table.Column<ICommentStore.IComment> key="language" title="language" dataIndex="language" width={50} />
+                    <Table.Column<ICommentStore.IComment> key="id" title="ID" dataIndex="id" width={80} />
+                    <Table.Column<ICommentStore.IComment> key="language" title="language" dataIndex="language" width={100} />
                     <Table.Column<ICommentStore.IComment>
                         key="head_portrait"
                         className={styles.Avatar}
                         title="Head Portrait"
                         dataIndex="head_portrait"
-                        width={100}
+                        width={150}
                         render={(record) => <img src={record} alt="" width="40"  height="40" />}
                     />
-                    <Table.Column<ICommentStore.IComment> key="com_name" title="Comment Name" dataIndex="com_name" width={100} />
-                    <Table.Column<ICommentStore.IComment> key="com_talk" title="Comment Talk" className={styles.longText} dataIndex="com_talk" width={220} />
+                    <Table.Column<ICommentStore.IComment> key="com_name" title="Comment Name" dataIndex="com_name" width={150} />
+                    <Table.Column<ICommentStore.IComment> key="com_talk" title="Comment Talk" className={styles.longText} dataIndex="com_talk" width={330} />
                     <Table.Column<ICommentStore.IComment>
                         key="status"
                         title="Status"

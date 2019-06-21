@@ -306,7 +306,7 @@ export const routerAndMenu: IRouter[] = [
         id: 8421,
         pid: 842,
         path: '/comments/groups/add',
-        title: 'Add Comment ',
+        title: 'Add Comment Group ',
         component: 'CommentGroupModel',
         isMenu: false
     },

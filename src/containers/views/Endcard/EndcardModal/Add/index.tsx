@@ -241,12 +241,12 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
 
     getUploadprops = (fun: Function, key: string, width: number,
         height: number, size: number, preData?,
-        cb?: Function, type = ".png, .jpg, .jpeg, .gif") => {
+        cb?: Function, type = ".png, .jpg, .jpeg") => {
 
         const errorCb = (error) => { console.log(error); this.removeFile(key) };
         return {
             showUploadList: false,
-            accept: ".png, .jpg, .jpeg, .gif",
+            accept: ".png, .jpg, .jpeg",
             name: 'file',
             // listType: "picture",
             className: "avatar-uploader",
@@ -443,6 +443,11 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem label="Order ID"  >
                         {getFieldDecorator('order_id', {
                             initialValue: order_id,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
                         })(<Input disabled={!this.isAdd} onChange={this.order_idChange} />)}
                     </FormItem>
 
