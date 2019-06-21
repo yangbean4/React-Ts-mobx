@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
-import { observable, action } from 'mobx'
+import { observable, action, autorun } from 'mobx'
 import { Form, Input, Select, Row, Col, Button } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { platformOption, statusOption } from '../web.config'
@@ -21,15 +21,17 @@ const layout = {
 
 interface IStoreProps {
   changeFilter?: (params: IAppManageStore.SearchParams) => void
-  filters?: IAppManageStore.SearchParams
+  filters?: IAppManageStore.SearchParams,
+  routerStore?: RouterStore
 }
 
 
 
 @inject(
   (store: IStore): IStoreProps => {
+    const {routerStore} = store
     const { changeFilter, filters } = store.appManageStore
-    return { changeFilter, filters }
+    return { changeFilter, filters, routerStore }
   }
 )
 @observer
@@ -37,13 +39,26 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
   @observable
   private loading: boolean = false
 
+  private IReactionDisposer: () => void
 
 
   @action
   toggleLoading = () => {
     this.loading = !this.loading
   }
-
+  constructor(props) {
+    super(props)
+    this.IReactionDisposer = autorun(
+      () => {
+        this.props.routerStore.history.listen(route=>{
+          this.props.form.resetFields()
+        })
+      }
+    ) 
+  }
+  componentDidMount() {
+    this.IReactionDisposer()
+  }
   submit = (e?: React.FormEvent<any>): void => {
     if (e) {
       e.preventDefault()

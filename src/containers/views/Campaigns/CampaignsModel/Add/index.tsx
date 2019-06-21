@@ -137,8 +137,8 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                     try {
                         values = {
                             ...values,
-                            'start_time': values['start_time'].format('YYYY-MM-DD HH:mm:ss'),
-                            'end_time': values['end_time'].format('YYYY-MM-DD HH:mm:ss')
+                            'start_time': values['start_time'].format('YYYY-MM-DD'),
+                            'end_time': values['end_time'].format('YYYY-MM-DD')
                         }
                         if (values.id === undefined) {
                             // const {
@@ -214,7 +214,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
             platform = 'android',
             app_key = '',
             campaign_name = '',
-            target_code = "",
+            target_code = undefined,
             bid_type = 'CPI',
             bid = '',
             total_budget = '',
@@ -349,6 +349,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         })(
                             <Select
                                 showSearch
+                                mode="multiple"
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {optionListDb.TargetCode.map(c => (
@@ -498,7 +499,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: impression_url,
                             rules: [
                                 {
-                                    required: true, message: "Required"
+                                    required: false, message: "Required"
                                 }
                             ]
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
@@ -557,7 +558,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<InputNumber />)}
+                        })(<InputNumber disabled={id && !this.isAdd} />)}
                     </FormItem>
 
                     <FormItem label="Campaign Kpi">

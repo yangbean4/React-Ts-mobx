@@ -44,6 +44,7 @@ interface IpropsStore {
 
 interface IProps extends IpropsStore {
     type?: string
+    info?: string
     onOk?: (id: number) => void
     onCancel?: () => void
 }
@@ -81,7 +82,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get accountType() {
-        return this.props.type || this.props.routerStore.location.pathname.includes('subsite') ? 'subsite' : 'source'
+        return this.props.type === 'source' ? 'source' : this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
     }
 
     @computed
@@ -103,6 +104,16 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
     get typeName() {
         return `${this.props.type ? '' : camelCase(this.accountType)} Company`
     }
+
+    // @computed
+    // get infoName() {
+    //     return `${this.props.info ? this.props.info: ''} Company`
+    // }
+
+    // @computed
+    // get chanageName() {
+    //     return this.props.info ? this.infoName : this.typeName
+    // }
 
     @action
     toggleLoading = () => {
@@ -152,6 +163,9 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
         }
     }
     componentWillUnmount() {
+        console.log(this.props.type)
+        console.log(this.accountType)
+        console.log(this.typeName)
         this.props.clearAccount()
     }
     Cancel = () => {

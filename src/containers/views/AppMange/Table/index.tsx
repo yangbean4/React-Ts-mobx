@@ -93,7 +93,7 @@ class AppsManageTable extends ComponentExt<IProps> {
                 <Table.Column<IAppManageStore.IAppMange> key="platform" title="Platform" dataIndex="platform" width={100} />
                 <Table.Column<IAppManageStore.IAppMange> key="category_name" title="Category" dataIndex="category_name" width={200} />
                 <Table.Column<IAppManageStore.IAppMange> key="screen_type" title="Screen type" dataIndex="screen_type" width={200} />
-                <Table.Column<IAppManageStore.IAppMange> key="rating" title="downloads" dataIndex="rating" width={200} />
+                <Table.Column<IAppManageStore.IAppMange> key="downloads" title="Downloads" dataIndex="downloads" width={200} />
                 <Table.Column<IAppManageStore.IAppMange> key="status" title="Status" dataIndex="status" width={200} />
                 <Table.Column<IAppManageStore.IAppMange>
                     key="action"

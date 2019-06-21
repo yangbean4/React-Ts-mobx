@@ -66,7 +66,7 @@ class VcTable extends ComponentExt<TableProps> {
               {
                 this.$checkAuth('Authorization-User', (
                   <a href="javascript:;" onClick={() => copyData(index)}>
-                      <Icon type='form' />
+                      <Icon type='copy' />
                   </a>
                 ))
               }
@@ -214,7 +214,7 @@ class PID extends ComponentExt<IStoreProps> {
           <div className={style.head}>
             <div className={style.row}>
               <div className={style.title}>
-                App Name
+                App ID
                     </div>
               <div className={style.value}>
                 {this.targetCampaigns.app_id}

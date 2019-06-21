@@ -21,7 +21,7 @@ export class AppManageStore extends StoreExt {
      * @memberof appManageStore
      */
     @observable
-    appManageList: IAppManageStore.IAppGroupForList[] = []
+    appManageList: IAppManageStore.IAppMange[] = []
 
     @observable
     appManage: IAppManageStore.IAppMange = {}
@@ -64,7 +64,7 @@ export class AppManageStore extends StoreExt {
 
     @action
     getAccount = async () => {
-        const res = await this.api.appGroup.getAccount()
+        const res = await this.api.appGroup.getAccountSource()
         runInAction('SET', () => {
             this.optionListDb.Account = res.data;
         })

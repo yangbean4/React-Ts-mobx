@@ -46,6 +46,9 @@ export default {
   getAccount(): Promise<any> {
     return http.post(`api/account/account`)
   },
+  getAccountSource(): Promise<any> {
+    return http.post(`api/account/account1`)
+  },
   getPidType(): Promise<any> {
     return http.post(`${basePath}pidType`)
   },

@@ -263,14 +263,14 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
             appstore_url = '',
             app_id = '',
             account_id = '',
-            screen_type = '',
+            screen_type = '0',
             logo = '',
             rating = '',
             downloads = '',
             category_id = '',
-            frame_id = '',
+            frame_id = '2d',
             specs_id = '',
-            style_id = ''
+            style_id = 'Pixel'
         } = reData || {}
         return (
             <React.Fragment>
@@ -436,6 +436,11 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                         <FormItem label="Spec"  >
                             {getFieldDecorator('specs_id', {
                                 initialValue: specs_id,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
                             })(<Select
                                 showSearch
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
@@ -500,6 +505,11 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                         <FormItem label="Screen Type">
                             {getFieldDecorator('screen_type', {
                                 initialValue: screen_type,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
                             })(
                                 <Radio.Group>
                                     {screenOption.map(c => (
@@ -514,6 +524,11 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                         <FormItem label="SEN Account">
                             {getFieldDecorator('account_id', {
                                 initialValue: account_id,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
                             })(<Select
                                 showSearch
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
