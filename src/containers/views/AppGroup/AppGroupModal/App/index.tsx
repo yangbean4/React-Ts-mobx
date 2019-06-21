@@ -200,9 +200,15 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     getDetail = async () => {
         const res = await this.api.appGroup.getAppGroupInfo({ id: this.props.Id })
-        this.props.setAppGroup(res.data)
+        const data = {
+            ...res.data,
+            nations: res.data.nations ? res.data.nations.split(',') : []
+        }
+        this.props.setAppGroup(data)
         runInAction('SET_APPGroup', () => {
-            this.appGroup = { ...res.data }
+            this.appGroup = {
+                ...data
+            }
         })
     }
 
@@ -375,7 +381,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                         <FormItem label={!this.useNot_in_appstore && this.usePlatform === 'ios' ? 'Bundle Id' : "Pkg Name"}>
                             {getFieldDecorator('pkg_name', {
                                 initialValue: pkg_name,
-                                validateTrigger: 'onBlur',
+                                // validateTrigger: 'onBlur',
                                 rules: [
                                     {
                                         required: true, message: "Required",

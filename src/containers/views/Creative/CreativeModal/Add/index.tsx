@@ -4,7 +4,7 @@ import { observable, action, computed, runInAction } from 'mobx'
 import { Form, Input, Select, Radio, Button, message, Icon, Upload, InputNumber, Row, Col } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { statusOption, platformOption } from '@config/web'
-import { showComment, videoType, descriptionOption, skipToOption, igeFlag, igeOption, igeScene, igePrefailOption } from '../../config'
+import { YesOrNo, videoType, descriptionOption, skipToOption, igeFlag, igeOption, igeScene, igePrefailOption } from '../../config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import { typeOf, testSize } from '@utils/index'
@@ -51,10 +51,12 @@ interface hasResult {
 }
 
 interface Whs {
-    width: number
-    height: number
+    width?: number
+    height?: number
     isScale?: boolean
     time?: number
+    minW_H?: number
+    maxW_H?: number
 }
 
 interface IStoreProps {
@@ -94,6 +96,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private platform: string
 
+
     @observable
     private appId: string = this.props.creative ? this.props.creative.app_id : undefined
 
@@ -104,10 +107,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     private CreativeType: number
 
     @observable
-    private videoType: string = this.creativeTarget.video_type || 'landscape'
+    private playback_time: number = this.creativeTarget.playback_time || 30
 
     @observable
-    private lead_video_type: string = this.creativeTarget.lead_video_type || 'landscape'
+    private videoTypeValue: number = this.creativeTarget.video_type || 1
+
 
     @computed
     get useCreativeType() {
@@ -115,8 +119,18 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @computed
+    get videoType() {
+        return videoType.find(ele => ele.value === this.videoTypeValue).key
+    }
+
+    @computed
     get descriptionOption() {
         return descriptionOption
+    }
+
+    @computed
+    get appwall_description() {
+        return this.useCreativeType === 2 ? 'Watch the video' : `Play for ${this.playback_time}s`
     }
 
     @computed
@@ -135,6 +149,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
 
+
     @computed
     get usePkgnameData() {
         return this.props.optionListDb.appIds[this.usePlatform]
@@ -143,19 +158,23 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     setCreativeType = (value) => {
         this.CreativeType = value
-        this.removeFile()
+        this.removeFile(
+            Object.keys(this.imageTarget).filter(ele => ele !== 'creative_icon_url')
+        )
     }
+
+    @action
+    playback_timeChange = (value) => {
+        this.playback_time = value
+    }
+
     @action
     skipToChange = (e) => {
         this.skipTo = e.target.value
     }
     @action
     setVideoType = (value) => {
-        this.videoType = value
-    }
-    @action
-    setLeadVideoType = (value) => {
-        this.lead_video_type = value
+        this.videoTypeValue = value
     }
 
     languageChange = (language) => {
@@ -197,6 +216,22 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
                     this.toggleLoading()
                     try {
+                        if (this.useCreativeType === 3) {
+                            const {
+                                ige_portrait_offline_url = '',
+                                ige_landscape_offline_url = '',
+                                ige_portrait_video_cover_url = '',
+                                ige_landscape_video_cover_url = '',
+                            } = values
+                            if (
+                                (!ige_portrait_offline_url && !ige_landscape_offline_url) ||
+                                (ige_portrait_offline_url && !ige_portrait_video_cover_url) ||
+                                (ige_landscape_offline_url && !ige_landscape_video_cover_url)
+                            ) {
+                                message.error(`Please test IGE Carousel Video`);
+                                return false
+                            }
+                        }
 
                         if (this.isAdd) {
                             if (app_key) {
@@ -238,6 +273,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     setPlatform = (type) => {
         this.platform = type
         this.removeFile()
+        this.props.form.setFieldsValue({
+            app_key: ''
+        })
     }
 
     @action
@@ -254,7 +292,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     removeFile = (key?) => {
-        let keys = key ? [key] : Object.keys(this.imageTarget)
+        console.log(key)
+        let keys = key ? (typeOf(key) === 'string' ? [key] : key) : Object.keys(this.imageTarget)
         let data = {}
         keys.forEach(ele => {
             data[ele] = ''
@@ -264,7 +303,10 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             ...data
         })
         runInAction('clear_Image', () => {
-            this.imageTarget = data
+            this.imageTarget = {
+                ...this.imageTarget,
+                ...data
+            }
         })
     }
 
@@ -299,6 +341,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             showUploadList: false,
             accept: isVideo ? 'video/*' : type,
             name: 'file',
+            // listType:'picture-card',
+            // fileList:[],
             // listType: "picture",
             className: "avatar-uploader",
             onRemove: () => this.removeFile(key),
@@ -310,12 +354,12 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 }
                 const isLt2M = file.size / 1024 < size;
                 if (!isLt2M) {
-                    message.error(`${fileName} must smaller than ${size}kb!`);
+                    message.error(`Failure，The file size cannot exceed ${size}kb!`);
                 }
                 if (isHtml && isLt2M && whs && !isVideo) {
                     const { width, height, isScale = false } = whs;
-                    return testSize(file, width, height, isScale, isVideo ? 'video' : 'img').catch(() => {
-                        const msg = isScale ? `Please upload ${fileName} at ${width}/${height}` : `${fileName} must be width:${width}px height:${height}px`
+                    return testSize(file, whs, isVideo ? 'video' : 'img').catch(() => {
+                        const msg = isScale ? `Please upload ${fileName} at ${width}/${height}` : `Please upload ${fileName} at ${width}*${height}px`
                         message.error(msg);
                         return Promise.reject()
                     })
@@ -374,33 +418,53 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             creative_type = this.useCreativeType,
             creative_icon_url = '',
             app_name = '',
-            app_description = '',
+            description = '',
             if_show_comment = 1,
             status = 1,
             videoUrl = '',
             skip_to = 'ige',
-            video_type = this.videoType,
-            lead_video_type = this.lead_video_type,
-            appwall_description = '',
+            video_type = this.videoTypeValue,
             ige_pkgname = '',
-            ige_leadvideo_flag = undefined,
-            ige_recoverlist_opps,
-            ige_recoverlist_re_en,
+            ige_leadvideo_flag = 2,
+            ige_recoverlist_opps = 1,
+            ige_recoverlist_re_en = 1,
             ige_switch_scene,
-            playback_time,
-            long_play_time,
+            playback_time = 30,
+            long_play_time = 120,
             playicon_creative_offline_url = '',
             leadVideoUrl = '',
             ige_portrait_offline_url = '',
             ige_landscape_offline_url = '',
             ige_portrait_video_cover_url = '',
             ige_landscape_video_cover_url = '',
-            ige_prefail
+            ige_prefail = 0
         } = this.creativeTarget
 
+
+        const getScale = (width: string | number, height?: number) => {
+            if (width === 'landscape' || (width === 16 && height === 9)) {
+                return {
+                    minW_H: 1.75,
+                    maxW_H: 1.80,
+                    width: 16,
+                    height: 9,
+                }
+            } else if (width === 'portrait' || (width === 9 && height === 16)) {
+                return {
+                    minW_H: 0.55,
+                    maxW_H: 0.57,
+                    width: 9,
+                    height: 16,
+                }
+            } else {
+                return {
+                    width: Number(width), height: height || 100
+                }
+            }
+        }
+
         const theVideoUrlPropsForVideoOrIge = this.getUploadprops(this.api.creative.uploadVideo, 'videoUrl', {
-            width: this.videoType === 'portrait' ? 9 : 16,
-            height: this.videoType === 'portrait' ? 16 : 9,
+            ...getScale(this.videoType),
             isScale: true,
             time: 30,
         }, 4000, {
@@ -411,23 +475,21 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         const theVideoUrlPropsForVideoOrIge_url = this.imageTarget['videoUrl'] || videoUrl
 
         const igeLeadVideoUrlProps = this.getUploadprops(this.api.creative.uploadVideo, 'leadVideoUrl', {
-            width: this.lead_video_type === 'portrait' ? 9 : 16,
-            height: this.lead_video_type === 'portrait' ? 16 : 9,
+            ...getScale(this.videoType),
             isScale: true,
             time: 8
         }, 2500, {
                 type: 5,
-                video_type: this.lead_video_type === 'portrait' ? 2 : 1,
+                video_type: this.videoType === 'portrait' ? 2 : 1,
                 app_name: this.appName
             }, 'video')
 
         const igeLeadVideoUrlProps_url = this.imageTarget['leadVideoUrl'] || leadVideoUrl
 
         const igeCarouselVideoUrlPropsPortrait = this.getUploadprops(this.api.creative.uploadVideo, 'ige_portrait_offline_url', {
-            width: 9,
-            height: 16,
+            ...getScale(9, 16),
             isScale: true
-        }, 1000, {
+        }, 1500, {
                 type: 6,
                 video_type: 2,
                 app_name: this.appName
@@ -435,10 +497,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         const igeCarouselVideoUrlPropsPortrait_url = this.imageTarget['ige_portrait_offline_url'] || ige_portrait_offline_url
 
         const igeCarouselVideoUrlPropsLandscape = this.getUploadprops(this.api.creative.uploadVideo, 'ige_landscape_offline_url', {
-            width: 16,
-            height: 9,
+            ...getScale(16, 9),
             isScale: true
-        }, 1000, {
+        }, 1500, {
                 type: 7,
                 video_type: 1,
                 app_name: this.appName
@@ -470,8 +531,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
 
         const igePortraitCover = this.getUploadprops(this.api.creative.handleUploadImg, 'ige_portrait_video_cover_url', {
-            width: 180,
-            height: 180,
+            ...getScale(9, 16),
+            isScale: true
         }, 50, {
                 type: 3,
                 app_name: this.appName
@@ -479,8 +540,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         const igePortraitCover_url = this.imageTarget['ige_portrait_video_cover_url'] || ige_portrait_video_cover_url
 
         const igeLandscapeCover = this.getUploadprops(this.api.creative.handleUploadImg, 'ige_landscape_video_cover_url', {
-            width: 180,
-            height: 180,
+            // width: 16,// height: 9,
+            ...getScale(16, 9),
+            isScale: true
         }, 50, {
                 type: 3,
                 app_name: this.appName
@@ -582,6 +644,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem label="Order ID"  >
                         {getFieldDecorator('order_id', {
                             initialValue: offer_id,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
                         })(<Input disabled={!this.isAdd} onChange={this.order_idChange} />)}
                     </FormItem>
 
@@ -723,26 +790,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                             </FormItem>
 
                             <FormItem label="Appwall Description">
-                                {getFieldDecorator('appwall_description',
-                                    {
-                                        initialValue: appwall_description,
-                                        rules: [
-                                            {
-                                                required: true, message: "Required"
-                                            }
-                                        ]
-                                    })(
-                                        <Select
-                                            showSearch
-                                            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                        >
-                                            {this.descriptionOption.map(c => (
-                                                <Select.Option {...c}>
-                                                    {c.key}
-                                                </Select.Option>
-                                            ))}
-                                        </Select>
-                                    )}
+                                <Input value={this.appwall_description}
+                                    disabled={true} />
                             </FormItem>
                         </React.Fragment>
                     }
@@ -806,9 +855,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                             </FormItem>
 
                             <FormItem label="IGE Leadvideo">
-                                {getFieldDecorator('lead_video_type',
+                                {getFieldDecorator('video_type',
                                     {
-                                        initialValue: lead_video_type,
+                                        initialValue: video_type,
                                         rules: [
                                             {
                                                 required: true, message: "Required"
@@ -817,6 +866,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                     })(
                                         <Select
                                             showSearch
+                                            disabled={true}
                                             onChange={(val) => this.setVideoType(val)}
                                             filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                         >
@@ -840,17 +890,17 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                     <div className={styles.UploadBox}>
                                         <div className={styles.title}>
                                             <div className="left">
-                                                {this.lead_video_type}
+                                                {this.videoType}
                                             </div>
                                             <div className="right">
-                                                {this.lead_video_type === 'portrait' ? '9:16' : '16:9'}
+                                                {this.videoType === 'portrait' ? '9:16' : '16:9'}
                                             </div>
                                         </div>
                                         <div>
                                             <Upload {...igeLeadVideoUrlProps}>
                                                 {
 
-                                                    <div className={this.lead_video_type === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`} >
+                                                    <div className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`} >
                                                         {
                                                             igeLeadVideoUrlProps_url && <video src={igeLeadVideoUrlProps_url} />
                                                         }
@@ -982,7 +1032,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                     ]
                                 })(<Input />)}
                             </FormItem>
-                            <FormItem label="GE Leadvideo Flag">
+                            <FormItem label="IGE Leadvideo Flag">
                                 {getFieldDecorator('ige_leadvideo_flag',
                                     {
                                         initialValue: ige_leadvideo_flag,
@@ -1014,7 +1064,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                     ]
                                 })(
                                     <Radio.Group>
-                                        {igeOption.map(c => (
+                                        {YesOrNo.map(c => (
                                             <Radio key={c.key} value={c.value}>
                                                 {c.key}
                                             </Radio>
@@ -1025,9 +1075,14 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                             <FormItem label="IGE Close To Confirm">
                                 {getFieldDecorator('ige_recoverlist_re_en', {
                                     initialValue: Number(ige_recoverlist_re_en),
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
                                 })(
                                     <Radio.Group>
-                                        {igeOption.map(c => (
+                                        {YesOrNo.map(c => (
                                             <Radio key={c.key} value={c.value}>
                                                 {c.key}
                                             </Radio>
@@ -1075,7 +1130,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             }
                                         }
                                     ]
-                                })(<InputNumber precision={0} />)}
+                                })(<InputNumber onChange={this.playback_timeChange} precision={0} />)}
                                 <span>seconds</span>
 
                             </FormItem>
@@ -1101,26 +1156,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                             </FormItem>
 
                             <FormItem label="Appwall Description">
-                                {getFieldDecorator('appwall_description',
-                                    {
-                                        initialValue: appwall_description,
-                                        rules: [
-                                            {
-                                                required: true, message: "Required"
-                                            }
-                                        ]
-                                    })(
-                                        <Select
-                                            showSearch
-                                            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                        >
-                                            {this.descriptionOption.map(c => (
-                                                <Select.Option {...c}>
-                                                    {c.key}
-                                                </Select.Option>
-                                            ))}
-                                        </Select>
-                                    )}
+                                <Input value={this.appwall_description}
+                                    disabled={true} />
                             </FormItem>
                         </React.Fragment>
                     }
@@ -1161,7 +1198,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                             </FormItem>
 
                             <FormItem label="Skip to">
-                                {getFieldDecorator('status', {
+                                {getFieldDecorator('skip_to', {
                                     initialValue: skip_to,
                                     rules: [
                                         {
@@ -1192,7 +1229,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             ]
                                         })(<Input />)}
                                     </FormItem>
-                                    <FormItem label="GE Leadvideo Flag">
+                                    <FormItem label="IGE Leadvideo Flag">
                                         {getFieldDecorator('ige_leadvideo_flag',
                                             {
                                                 initialValue: ige_leadvideo_flag,
@@ -1329,7 +1366,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(
                             <Radio.Group>
-                                {showComment.map(c => (
+                                {YesOrNo.map(c => (
                                     <Radio key={c.key} value={c.value}>
                                         {c.key}
                                     </Radio>
@@ -1371,8 +1408,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
 
                     <FormItem label="App Description"  >
-                        {getFieldDecorator('app_description', {
-                            initialValue: app_description,
+                        {getFieldDecorator('description', {
+                            initialValue: description,
                             rules: [
                                 {
                                     required: true, message: "Required"

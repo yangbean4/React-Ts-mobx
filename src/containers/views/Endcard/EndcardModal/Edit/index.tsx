@@ -130,11 +130,11 @@ class PID extends ComponentExt<IStoreProps> {
     const value = type === undefined ? !this.isTable : type
     let arr = [
       {
-        title: 'Virtual Endcard',
+        title: 'Endcard',
         path: "/endcard"
       },
       {
-        title: 'Edit Virtual Endcard',
+        title: 'Edit Endcard',
         onClick: () => {
           this.toggleIsTable(true)
         }

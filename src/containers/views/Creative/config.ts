@@ -1,5 +1,5 @@
 
-export const showComment = [
+export const YesOrNo = [
   {
     key: 'Yes',
     value: 1
@@ -13,11 +13,11 @@ export const showComment = [
 export const videoType = [
   {
     key: 'landscape',
-    value: 'landscape'
+    value: 1
   },
   {
     key: 'portrait',
-    value: 'portrait'
+    value: 2
   }
 ]
 
@@ -50,15 +50,15 @@ export const skipToOption = [
 export const igeFlag = [
   {
     key: 'Zepra Loading',
-    value: 0
-  },
-  {
-    key: 'Native Loading',
     value: 1
   },
   {
-    key: 'Leadvideo',
+    key: 'Native Loading',
     value: 2
+  },
+  {
+    key: 'Leadvideo',
+    value: 3
   },
 ]
 
@@ -75,16 +75,16 @@ export const igeOption = [
 
 export const igeScene = [
   {
-    key: 'Display',
+    key: 'circles',
     value: 1
   },
   {
-    key: 'Undisplay',
-    value: 0
+    key: 'crosscutting',
+    value: 2
   },
   {
-    key: 'Undisplay',
-    value: 0
+    key: 'cloud',
+    value: 3
   }
 ]
 

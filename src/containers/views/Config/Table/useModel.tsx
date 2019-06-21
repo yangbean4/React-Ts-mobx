@@ -71,6 +71,9 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
   @action
   setPlatform = (type) => {
     this.platform = type
+    this.props.form.setFieldsValue({
+      pkg_name: ''
+    })
   }
 
   @action

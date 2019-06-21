@@ -259,16 +259,17 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                 }
                 const isLt2M = file.size / 1024 < size;
                 if (!isLt2M) {
-                    message.error(`Image must smaller than ${size}kb!`);
+                    message.error(`Failure，The file size cannot exceed ${size}kb!`);
                 }
                 if (isHtml && isLt2M) {
-                    return testSize(file, width, height).catch((err) => {
+                    return testSize(file, { width, height }).catch((err) => {
                         console.log(err)
-                        message.error(`Image must be width:${width}px height:${height}px`);
+                        message.error(`Please upload Image at ${width}*${height}px`);
                         return Promise.reject()
                     })
+                } else {
+                    return isHtml && isLt2M;
                 }
-                // return isHtml && isLt2M;
             },
             customRequest: (data) => {
                 const formData = new FormData()
@@ -584,11 +585,6 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem label="Button Image" >
                         {getFieldDecorator('cta_pic', {
                             initialValue: cta_pic,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
                         })(
                             <div className={styles.UploadBox}>
                                 <div>

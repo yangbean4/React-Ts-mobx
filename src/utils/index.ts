@@ -322,7 +322,8 @@ export const getGuId = (): string => {
     }).toUpperCase();
 }
 
-export const testSize = (target: File, maxWidth, maxHeight, isScale: boolean = false, type: string = 'img') => {
+export const testSize = (target: File, config, type: string = 'img') => {
+    const { width, height, isScale = false, minW_H, maxW_H } = config
     return new Promise((resolve, reject) => {
         try {
             const objectURL = window.createObjectURL != undefined
@@ -339,10 +340,12 @@ export const testSize = (target: File, maxWidth, maxHeight, isScale: boolean = f
             //     imageCopy.src = ev.target.result
             // }
             const cb = () => {
-                const width = imageCopy.width || imageCopy.videoWidth
-                const height = imageCopy.height || imageCopy.videoHeight
-                console.log(width, height, maxWidth, maxHeight, isScale)
-                const is = isScale ? width / maxWidth === height / maxHeight : width === maxWidth && height === maxHeight
+                const P_width = imageCopy.width || imageCopy.videoWidth
+                const P_height = imageCopy.height || imageCopy.videoHeight
+                console.log(P_width, P_height, width, height, isScale)
+                const is = isScale ?
+                    (minW_H && maxW_H ? (P_width / P_height) <= maxW_H && (P_width / P_height) > minW_H : P_width / width === P_height / height)
+                    : P_width === width && P_height === height
                 is ? resolve() : reject();
             }
             if (type === 'img') {

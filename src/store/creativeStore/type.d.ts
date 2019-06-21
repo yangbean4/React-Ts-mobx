@@ -17,15 +17,13 @@ export interface ICreative {
     version?: string
     offer_id?: number
     creative_icon_url?: string
-    app_description?: string
+    description?: string
     if_show_comment?: string
     creative_type?: string
     ige_prefail?: number
     videoUrl?: string
-    video_type?: string
-    lead_video_type?: string
+    video_type?: number
     videoUrl?: string
-    video_type?: string
     leadVideoUrl?: string
     ige_portrait_offline_url?: string | number
     ige_landscape_offline_url?: string | number
@@ -37,7 +35,7 @@ export interface ICreative {
     ige_recoverlist_opps?: string | number
     ige_recoverlist_re_en?: string | number
     ige_switch_scene?: string | number
-    playback_time?: string | number
+    playback_time?: number
     long_play_time?: string | number
 
     ige_landscape_video_cover_url?: string | number
@@ -47,7 +45,7 @@ export interface ICreative {
     ige_recoverlist_opps?: string | number
     ige_recoverlist_re_en?: string | number
     ige_switch_scene?: string | number
-    playback_time?: string | number
+    playback_time?: number
     long_play_time?: string | number
     skip_to?: string
 
