@@ -259,7 +259,8 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                 }
                 const isLt2M = file.size / 1024 < size;
                 if (!isLt2M) {
-                    message.error(`Failure，The file size cannot exceed ${size}kb!`);
+                    const msg = size >= 1000 ? `${size / 1000} M` : `${size}kb`
+                    message.error(`Failure，The file size cannot exceed ${msg}!`);
                 }
                 if (isHtml && isLt2M) {
                     return testSize(file, { width, height }).catch((err) => {

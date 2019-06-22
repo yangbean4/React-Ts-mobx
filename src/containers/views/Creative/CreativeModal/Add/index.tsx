@@ -354,7 +354,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 }
                 const isLt2M = file.size / 1024 < size;
                 if (!isLt2M) {
-                    message.error(`Failure，The file size cannot exceed ${size}kb!`);
+                    const msg = size >= 1000 ? `${size / 1000} M` : `${size}kb`
+                    message.error(`Failure，The file size cannot exceed ${msg}!`);
                 }
                 // && !isVideo
                 if (isHtml && isLt2M && whs) {
@@ -479,7 +480,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             ...getScale(this.videoType),
             isScale: true,
             time: 8
-        }, 2500, {
+        }, 1000, {
                 type: 5,
                 video_type: this.videoType === 'portrait' ? 2 : 1,
                 app_name: this.appName
