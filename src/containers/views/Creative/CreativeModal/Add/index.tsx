@@ -249,7 +249,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                             }
                             let data = await createCreative(values)
                             message.success(data.message)
-                            creative ? this.props.onOk(data.data.id) : routerStore.push(`/creative/edit/${data.data.app_key}`)
+                            creative ? this.props.onOk(data.data.id) : routerStore.push(`/creative/edit/${data.data.app_key || app_key || values.app_key}`)
                         } else {
                             const data = await modifyCreative({
                                 ...this.creativeTarget,
@@ -414,7 +414,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             platform = 'android',
             app_key = '',
             version = "",
-            offer_id = '',
+            order_id = '',
             creative_name = '',
             language = '',
             creative_type = this.useCreativeType,
@@ -645,7 +645,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
                     <FormItem label="Order ID"  >
                         {getFieldDecorator('order_id', {
-                            initialValue: offer_id,
+                            initialValue: order_id,
                             rules: [
                                 {
                                     required: true, message: "Required"

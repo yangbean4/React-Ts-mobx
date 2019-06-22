@@ -1,5 +1,6 @@
 import React from 'react'
 import { Upload, Modal } from 'antd'
+import { action } from 'mobx';
 
 interface IProps {
   type?: string
@@ -14,8 +15,14 @@ class UploadFile extends React.Component<IProps> {
   private previewVisible: boolean = false
 
 
+  @action
+  handleCancel = () => {
+    this.previewVisible = false;
+  }
+
+
   render() {
-    const { previewVisible, previewImage, fileList } = this.state;
+    const { previewVisible, previewImage, fileList } = this;
     const uploadButton = (
       <div>
         <Icon type="plus" />

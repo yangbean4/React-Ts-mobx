@@ -15,7 +15,7 @@ export interface ICreative {
     creative_name?: string
     language?: string
     version?: string
-    offer_id?: number
+    order_id?: number | string
     creative_icon_url?: string
     description?: string
     if_show_comment?: string

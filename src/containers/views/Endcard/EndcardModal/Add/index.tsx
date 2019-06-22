@@ -538,7 +538,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                         )}
                     </FormItem>
                     {
-                        this.isHeng && (
+                        (this.useAppWall === '007' || this.useAppWall === '008') && (
                             <React.Fragment>
                                 <FormItem label="Cta Text"  >
                                     {getFieldDecorator('cta', {
