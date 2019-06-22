@@ -150,7 +150,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             routerStore.push('/campaigns')
                         } else {
                             console.log(213232)
-                            let data = await modifyCampaingn({ ...values })
+                            let data = await modifyCampaingn({ ...values, 'target_code': values.target_code.join(',') })
                             message.success(data.message)
                             routerStore.push('/campaigns/edit')
                             this.props.onOk(data.data.id)
