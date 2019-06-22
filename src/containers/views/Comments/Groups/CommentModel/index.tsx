@@ -6,7 +6,6 @@ import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import * as web from '../web.config'
-import { async } from 'q';
 // 封装表单域组件
 const FormItem = Form.Item
 
@@ -72,7 +71,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     private loading: boolean = false
 
     @observable
-    private language: string[] = ['en'];
+    private language: string[] = [];
 
     @observable
     private selectedRowKeys: number[] = this.props.comment ? this.props.comment.group_template_ids.split(',').map(ele=>Number(ele)) :[]
@@ -109,6 +108,14 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
+    getLanaugeDetail = async() => {
+        const res = await this.api.comment.getGroupLanguage() 
+        runInAction('SET_LANGAUE', () => {
+        this.language = res.data
+        })
+    }
+
+    @action
     rowSelection =() => {
         return {}
     }
@@ -118,6 +125,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     }
     componentWillMount() {
         this.getComments()
+        this.getLanaugeDetail()
         const { routerStore, comment = {} } = this.props
         const routerId = routerStore.location.pathname.toString().split('/').pop()
         const Id = Number(routerId)
@@ -186,7 +194,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
             id = '',
             status = 1,
             group_name = '',
-            group_language = 'en',
+            group_language = '',
             group_template_ids = '',
         } = comment || {}
         return (
@@ -244,12 +252,11 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                             filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                         >
                             {
-                                this.language.map(c => {
-                                    <Select.Option key={c} value={c}>
-                                        console.log({c})
+                                this.language && this.language.map((c, index) => (
+                                    <Select.Option key={index} value={c}>
                                         {c}
                                     </Select.Option>
-                                })
+                                ))
                             }
                         </Select>)}
                     </FormItem>

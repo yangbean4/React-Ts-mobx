@@ -30,6 +30,12 @@ class VcTable extends ComponentExt<TableProps> {
         scroll={{ y: scrollY }}
       >
         <Table.Column<IEndcardStore.IEndcard>
+          key="id"
+          title="ID"
+          dataIndex="id"
+          width={200}
+        />
+        <Table.Column<IEndcardStore.IEndcard>
           key="endcard_name"
           title="Endcard Name"
           dataIndex="endcard_name"

@@ -74,7 +74,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     private head_portrait: string
 
     @observable 
-    private language: string[] = ['en']
+    private langauge: string[] = []
 
     @computed
     get formItemLayout() {
@@ -118,6 +118,14 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         })
     }
 
+    @action
+    getLanaugeDetail = async() => {
+        const res = await this.api.comment.getCommentLanguage() 
+        runInAction('SET_LANGAUE', () => {
+            this.langauge = res.data
+        })
+    }
+
     componentWillMount() {
         const { routerStore, comment = {} } = this.props
         const routerId = routerStore.location.pathname.toString().split('/').pop()
@@ -125,6 +133,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         if ((!isNaN(Id) && (!comment.id || comment.id !== Id)) && !this.props.type) {
             routerStore.push('/comments/template')
         }
+        this.getLanaugeDetail()
     }
     componentWillUnmount() {
         this.props.clearComment()
@@ -212,7 +221,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         const {
             id = '',
             status = 1,
-            language = 'en',
+            language = '',
             head_portrait = '',
             com_name = '',
             com_talk = ''
@@ -263,12 +272,11 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {
-                                    this.language.map(c => {
-                                        <Select.Option key={c} value={c}>
-                                            console.log({c})
+                                    this.langauge && this.langauge.map((c,index) => (
+                                        <Select.Option key={index} value={c}>
                                             {c}
                                         </Select.Option>
-                                    })
+                                    ))
                                 }
                             </Select>
                         )}

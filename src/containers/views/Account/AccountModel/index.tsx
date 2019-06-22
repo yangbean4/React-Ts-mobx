@@ -81,8 +81,15 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @computed
+    get routerParam() {
+        const param = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+        return param
+    } 
+
+    @computed
     get accountType() {
-        return this.props.type === 'source' ? 'source' : this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+        const ret =  !this.props.type ? this.routerParam : this.props.type
+        return ret
     }
 
     @computed
@@ -102,7 +109,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get typeName() {
-        return `${this.props.type ? '' : camelCase(this.accountType)} Company`
+        return `${this.props.type ? this.props.type : camelCase(this.accountType)} Company`
     }
 
     // @computed
@@ -163,10 +170,12 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
         }
     }
     componentWillUnmount() {
+        this.props.clearAccount()
+    }
+    componentDidMount() {
         console.log(this.props.type)
         console.log(this.accountType)
         console.log(this.typeName)
-        this.props.clearAccount()
     }
     Cancel = () => {
         this.props.routerStore.push(`/account/${this.accountType}`)
@@ -248,7 +257,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                             </Popover>
                         </FormItem>
 
-                        <FormItem label={this.typeName.trim() =='Company'? 'Subsite Company': this.typeName}>
+                        <FormItem label={this.typeName.trim() =='Subsite Company'? 'Subsite Company': this.typeName}>
                             {getFieldDecorator('company', {
                                 initialValue: company,
                                 rules: [

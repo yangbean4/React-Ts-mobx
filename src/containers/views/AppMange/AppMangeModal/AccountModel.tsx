@@ -21,7 +21,7 @@ class AccountModel extends React.Component<IProps>{
         onCancel={this.props.onCancel}
       >
         <AccountForm
-          type='Model'
+          type='source'
           onOk={this.props.onOk}
           onCancel={this.props.onCancel}
         />

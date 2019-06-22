@@ -42,7 +42,7 @@ interface IStoreProps {
     optionListDb?: ICampaignStore.OptionListDb
     getTargetCode?: () => Promise<any>
     getCommentsGroupId?: () => Promise<any>
-    setCampaingn?:(Apps: ICampaignStore.ICampaignGroup) => void
+    setCampaingn?:(Apps: ICampaignStore.ICampainginForList) => void
     routerStore?: RouterStore
 }
 
@@ -142,15 +142,14 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         values = {
                             ...values,
                             'start_time': values['start_time'].format(DateFormat),
-                            'end_time': values['end_time'].format(DateFormat),
-                            'target_code': values.target_code.join(',')
+                            'end_time': values['end_time'].format(DateFormat)
                         }
                         if (values.id === undefined) {
-                            
-                            let data = await createCampaingn({ ...values })
+                            let data = await createCampaingn({ ...values, 'target_code': values.target_code.join(',') })
                             message.success(data.message)
                             routerStore.push('/campaigns')
                         } else {
+                            console.log(213232)
                             let data = await modifyCampaingn({ ...values })
                             message.success(data.message)
                             routerStore.push('/campaigns/edit')
@@ -290,7 +289,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                     }
 
                     {
-                        <FormItem label="App ID">
+                        this.isAdd && <FormItem label="App ID">
                             {getFieldDecorator('app_key', {
                                 initialValue: app_key,
                                 rules: [
