@@ -1,7 +1,9 @@
 import React from 'react'
-import { Upload, Modal, message, Icon } from 'antd'
-import { action, computed, runInAction } from 'mobx';
+import { observer } from 'mobx-react'
+import { Upload, Modal, message, Icon, Button } from 'antd'
+import { action, computed, runInAction, observable } from 'mobx';
 import { typeOf, testSize } from '@utils/index'
+import * as styles from './index.scss'
 interface hasResult {
   result?: string
 }
@@ -21,16 +23,18 @@ interface IProps {
   value?: string
   wht?: WHT
   onChange?: (data: any) => void
-  api?: () => Promise<any>
+  api?: (data: any) => Promise<any>
   children?: React.ReactNode
   preData?: Object
   callBack?: () => void
 }
 
+@observer
 class UploadFile extends React.Component<IProps> {
 
+  @observable
   private previewVisible: boolean = false
-
+  @observable
   private previewUrl: string
 
   @computed
@@ -38,29 +42,22 @@ class UploadFile extends React.Component<IProps> {
     return this.previewUrl || this.props.value
   }
 
-  @computed
-  get fileList() {
-    return this.useUrl ? [{
-      uid: '1',
-      name: '12',
-      status: 'done',
-      url: this.useUrl
-    }] : []
-  }
-
-  @action
-  handleChange = ({ fileList }) => {
-    console.log(fileList)
-  };
-
   @action
   handleCancel = () => {
     this.previewVisible = false;
   }
 
   @action
-  handlePreview = () => {
-    this.previewVisible = true;
+  eyeClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    runInAction("set", () => {
+      this.previewVisible = true;
+    })
+  }
+
+  delClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    this.removeFile()
   }
 
   @action
@@ -85,8 +82,8 @@ class UploadFile extends React.Component<IProps> {
       showUploadList: false,
       accept: isVideo ? 'video/*' : type,
       name: 'file',
-      listType: "picture-card",
-      fileList: this.fileList,
+      // listType: "picture-card",
+      // fileList: this.fileList,
       className: "avatar-uploader",
       onRemove: () => this.removeFile(),
       beforeUpload: (file) => {
@@ -130,6 +127,7 @@ class UploadFile extends React.Component<IProps> {
             runInAction('SET_URL', () => {
               this.previewUrl = target.result
             })
+            this.props.onChange(data.url)
             cb && cb({
               data,
               localUrl: target.result
@@ -143,28 +141,43 @@ class UploadFile extends React.Component<IProps> {
 
 
   render() {
-    const { previewVisible, previewUrl, fileList } = this;
+
+    const { api, wht, fileType, preData, callBack } = this.props;
+    const props = this.getUploadprops(api, wht, preData, fileType, callBack)
+    const domCom = fileType === 'video' ?
+      (<video style={{ width: '100%' }} src={this.useUrl} />)
+      : (<img alt="example" style={{ width: '100%' }} src={this.useUrl} />)
+
+
     const uploadButton = (
       <div>
         <Icon type="plus" />
         <div className="ant-upload-text">Upload</div>
       </div>
     );
-    const { api, wht, fileType, preData, callBack } = this.props;
-    const props = this.getUploadprops(api, wht, preData, fileType, callBack)
+
     return (
-      <div className="clearfix">
+      <React.Fragment>
         <Upload
           {...props}
-          onPreview={this.handlePreview}
-          onChange={this.handleChange}
         >
-          {fileList.length > 0 ? null : this.props.children || uploadButton}
+          {this.useUrl ? (
+            <div className={styles.box}>
+              <div className={styles.layer}>
+                <Button onClick={this.eyeClick} style={{ marginRight: 12 }} type="primary" shape="circle" icon="eye" />
+                <Button onClick={this.delClick} type="primary" shape="circle" icon="delete" />
+              </div>
+              <div className={styles.trueDom}>
+                {domCom}
+              </div>
+            </div>
+          ) : this.props.children || uploadButton}
         </Upload>
-        <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-          <img alt="example" style={{ width: '100%' }} src={previewUrl} />
+        <Modal visible={this.previewVisible} footer={null} onCancel={this.handleCancel}>
+          {domCom}
         </Modal>
-      </div>
+      </React.Fragment>
+
     );
   }
 }

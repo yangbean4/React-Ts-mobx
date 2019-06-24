@@ -104,9 +104,19 @@
 }
 
 .btnUploadGroup {
-  & > :global(div) {
-    float: left;
+  :global {
+    .ant-form-item-children {
+      & > * {
+        float: left;
+      }
+
+      .avatar-uploader {
+        width: 211px;
+        height: 31px;
+      }
+    }
   }
+
   .btnUpload {
     width: 211px;
     height: 31px;
@@ -122,6 +132,7 @@
     }
   }
   .btnUploadTitle {
+    display: inline-block;
     height: 31px;
     line-height: 31px;
     color: rgba(154, 151, 174, 1);

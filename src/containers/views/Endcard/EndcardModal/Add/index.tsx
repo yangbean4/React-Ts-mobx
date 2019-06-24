@@ -8,6 +8,8 @@ import { Jump, IGE } from '../../config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import InputColor from '@components/InputColor/index'
+import UploadFile from '@components/UploadFile'
+
 import { typeOf, testSize } from '@utils/index';
 const FormItem = Form.Item
 
@@ -588,29 +590,23 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                         )
                     }
 
-                    <FormItem label="Button Image" >
+                    <FormItem label="Button Image" className={styles.btnUploadGroup} >
                         {getFieldDecorator('cta_pic', {
                             initialValue: cta_pic,
                         })(
-                            <div className={styles.UploadBox}>
-                                <div>
-                                    <Upload {...ctaPicProps}>
-                                        <div className={styles.btnUploadGroup}>
-                                            <div className={styles.btnUpload} >
-                                                {
-                                                    ctaPic ? <img src={ctaPic} alt="avatar" />
-                                                        : <Icon type='plus' />
-                                                }
-                                            </div>
-                                            <div className={styles.btnUploadTitle}>
-                                                422*62px,≤10kb
-                                            </div>
-                                        </div>
-
-                                    </Upload>
+                            <UploadFile
+                                api={this.api.util.uploadIcon}
+                                wht={{ width: 422, height: 62, size: 10 }}
+                            >
+                                <div className={styles.btnUpload} >
+                                    <Icon type='plus' />
                                 </div>
-                            </div>
+                            </UploadFile>
                         )}
+
+                        <span className={styles.btnUploadTitle}>
+                            422*62px,≤10kb
+                        </span>
                     </FormItem>
 
 
