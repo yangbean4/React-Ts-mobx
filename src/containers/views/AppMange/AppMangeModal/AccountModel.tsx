@@ -5,7 +5,7 @@ import AccountForm from '@views/Account/AccountModel'
 interface IProps {
   visible: boolean
   onCancel: () => void
-  onOk: (id: number) => void
+  onOk: (name: string) => void
 }
 
 class AccountModel extends React.Component<IProps>{

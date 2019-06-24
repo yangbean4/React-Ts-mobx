@@ -41,7 +41,6 @@ interface IStoreProps {
     optionListDb?: IAppManageStore.OptionListDb
     appManage?: IAppManageStore.IAppMange
     getOptionListDb?: (id: number) => Promise<any>
-    getAccount?: () => Promise<any>
     createAppManage?: (appManage: IAppManageStore.IAppMange) => Promise<any>
     modifyAppManage?: (appManage: IAppManageStore.IAppMange) => Promise<any>
     setAppManage?: (Apps: IAppManageStore.IAppMange) => void
@@ -50,14 +49,14 @@ interface IStoreProps {
 
 interface IProps extends IStoreProps {
     onCancel?: () => void
-    onOk?: (id: number) => void
+    onOk?: (name: string) => void
     type?: string
 }
 @inject(
     (store: IStore): IProps => {
         const { appManageStore, routerStore } = store
-        const { createAppManage, modifyAppManage, getAccount, getOptionListDb, optionListDb, setAppManage, appManage } = appManageStore
-        return { routerStore, createAppManage, modifyAppManage, getOptionListDb, optionListDb, getAccount, setAppManage, appManage }
+        const { createAppManage, modifyAppManage, getOptionListDb, optionListDb, setAppManage, appManage } = appManageStore
+        return { routerStore, createAppManage, modifyAppManage, getOptionListDb, optionListDb, setAppManage, appManage }
     }
 )
 @observer
@@ -67,6 +66,9 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
 
     @observable
     private platform: boolean = false
+
+    @observable
+    private Account: string[]
 
     @observable
     private manageGroup: IAppManageStore.IAppMange = {}
@@ -118,6 +120,14 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
         })
     }
 
+    @action
+    getSourceAccount = async () => {
+        const res = await this.api.appGroup.getAccountSource()
+        runInAction('SET', () => {
+            this.Account = res.data;
+        })
+    }
+
     runInit = () => {
         const location = this.props.routerStore.location;
         const isAdd = location.pathname.includes('add')
@@ -132,10 +142,10 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
         })
     }
 
-    companyModelOk = async (id: number) => {
-        await this.props.getAccount()
+    companyModelOk = async (name: string) => {
+        await this.api.appGroup.getAccountSource()
         this.props.form.setFieldsValue({// 重新赋值
-            account_id: id
+            account_id: name
         })
         this.toggleAppShow(false)
     }
@@ -206,6 +216,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
 
     componentWillMount() {
         this.runInit()
+        this.getSourceAccount()
         this.props.getOptionListDb(this.Id)
         if (this.Id) {
             this.getDetail()
@@ -268,16 +279,16 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
             rating = '',
             downloads = '',
             category_id = '',
-            frame_id = '2d',
+            frame_id = '',
             specs_id = '',
-            style_id = 'Pixel'
+            style_id = ''
         } = reData || {}
         return (
             <React.Fragment>
                 <AccountModel
                     visible={this.accountShow}
                     onCancel={() => this.toggleAppShow(false)}
-                    onOk={(id) => this.companyModelOk(id)}
+                    onOk={(name) => this.companyModelOk(name)}
                 />
                 <div className='sb-form'>
                     <Form {...this.props.type ? miniLayout : formItemLayout} className={styles.currencyModal} >
@@ -460,14 +471,6 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                 rules: [
                                     {
                                         required: true, message: "Required",
-                                    },
-                                    {
-                                        validator: (r, v, callback) => {
-                                            if (v <= 0) {
-                                                callback('The Exchange Rate should be a positive integer!')
-                                            }
-                                            callback()
-                                        }
                                     }
                                 ]
                             })(<Select
@@ -533,7 +536,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                 showSearch
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
-                                {optionListDb.Account.map(c => (
+                                {this.Account && this.Account.map(c => (
                                     <Select.Option key={c.id} value={c.id}>
                                         {c.name}
                                     </Select.Option>

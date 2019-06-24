@@ -58,18 +58,8 @@ export class AppManageStore extends StoreExt {
         Category: [],
         Frame: [],
         Spec: [],
-        Style: [],
-        Account: [],
+        Style: []
     }
-
-    @action
-    getAccount = async () => {
-        const res = await this.api.appGroup.getAccountSource()
-        runInAction('SET', () => {
-            this.optionListDb.Account = res.data;
-        })
-    }
-
     @action
     clearCache = () => {
         let target = {}

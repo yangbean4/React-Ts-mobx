@@ -46,6 +46,5 @@ export interface OptionListDb {
     Category?: any[],
     Frame?: any[],
     Spec?: any[],
-    Style?: any[],
-    Account?: any[]
+    Style?: any[]
 }
