@@ -40,7 +40,7 @@ class UploadFile extends React.Component<UploadFileProps> {
 
   @computed
   get useUrl() {
-    return this.previewUrl || this.props.value
+    return this.props.value ? this.previewUrl || this.props.value : ''
   }
 
   @action
@@ -175,7 +175,11 @@ class UploadFile extends React.Component<UploadFileProps> {
           ) : this.props.children || uploadButton}
         </Upload>
         <Modal visible={this.previewVisible} footer={null} onCancel={this.handleCancel}>
-          {domCom}
+          {
+            fileType === 'video' ?
+              (<video style={{ width: '100%' }} controls autoPlay src={this.useUrl} />)
+              : (<img alt="example" style={{ width: '100%' }} src={this.useUrl} />)
+          }
         </Modal>
       </React.Fragment>
 

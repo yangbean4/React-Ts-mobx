@@ -47,4 +47,9 @@ export default {
   getlanguage(): Promise<any> {
     return http.post(`/api/endcard/language`)
   },
+
+  getLeadContents(): Promise<any> {
+    return http.post(`${basePath}getLeadContents`)
+  },
+
 }

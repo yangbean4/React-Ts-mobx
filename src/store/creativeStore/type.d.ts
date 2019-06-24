@@ -19,7 +19,8 @@ export interface ICreative {
     creative_type?: string
     video_type?: number
     videoUrl?: string
-
+    lead_is_show_content?: number
+    lead_content_id?: number
     creative_icon_url?: string
     description?: string
     if_show_comment?: string
@@ -80,4 +81,10 @@ export interface OptionListDb {
         id?: string | number
         creative_name: string
     })[],
+    LeadContents?: {
+        [propName: string]: ({
+            name?: string
+            id?: number
+        })[]
+    }
 }

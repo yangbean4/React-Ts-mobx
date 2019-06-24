@@ -255,7 +255,7 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                         [key]: data.url
                     })
                     runInAction('set_File', () => {
-                        this.fileTarget[key] = data.name
+                        this.fileTarget[key] = file.name
                     })
                     cb && cb(data)
                 }, errorCb).catch(errorCb)
@@ -411,7 +411,7 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                         })(<Input disabled={true} />)}
                     </FormItem>
 
-                    <FormItem {...formItemLayout} label="Lead content">
+                    <FormItem label="Lead content">
                         {getFieldDecorator('content', {
                             initialValue: content,
                             rules: [
@@ -436,10 +436,11 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                         }
                     </FormItem>
 
-
                     <FormItem className={this.props.type ? styles.vcMdoal : styles.btnBox} >
                         <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
-                        <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
+                        {
+                            !this.props.type && <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
+                        }
                     </FormItem>
                 </Form>
 

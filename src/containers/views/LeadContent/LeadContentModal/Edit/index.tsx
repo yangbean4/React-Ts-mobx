@@ -29,6 +29,12 @@ class VcTable extends ComponentExt<TableProps> {
         scroll={{ y: scrollY }}
       >
         <Table.Column<ILeadContentStore.ILeadContent>
+          key="id"
+          title="Id"
+          dataIndex="id"
+          width={100}
+        />
+        <Table.Column<ILeadContentStore.ILeadContent>
           key="name"
           title="Lead Name"
           dataIndex="name"

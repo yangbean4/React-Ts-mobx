@@ -2,6 +2,7 @@ import { observable, action, runInAction } from 'mobx'
 import { PaginationConfig } from 'antd/lib/pagination'
 
 import { StoreExt } from '@utils/reactExt'
+import { async } from 'q';
 
 export class CreativeStore extends StoreExt {
     /**
@@ -55,7 +56,8 @@ export class CreativeStore extends StoreExt {
     optionListDb: ICreativeStore.OptionListDb = {
         appIds: { ios: [], android: [] },
         language: [],
-        CreativeType: []
+        CreativeType: [],
+        LeadContents: {}
     }
 
     @action
@@ -72,6 +74,15 @@ export class CreativeStore extends StoreExt {
             })
         })
     }
+
+    @action
+    getContentList = async () => {
+        const res = await this.api.creative.getLeadContents()
+        runInAction('SET', () => {
+            this.optionListDb.LeadContents = res.data
+        })
+    }
+
     /**
      * 加载用户列表
      *

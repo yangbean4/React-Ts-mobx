@@ -4,21 +4,21 @@
 }
 
 :global {
-  .ant-form-item-children {
-    display: block;
-    @include full();
-    & > div {
-      display: block;
-      @include full();
-    }
-  }
-
   .avatar-uploader {
     display: block;
     @include full();
-  }
-  .ant-upload {
-    @include full();
+    .ant-form-item-children {
+      display: block;
+      @include full();
+      & > div {
+        display: block;
+        @include full();
+      }
+    }
+
+    .ant-upload {
+      @include full();
+    }
   }
 }
 

@@ -84,15 +84,15 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private imageTarget: object = {}
 
-    @observable
-    private platform: string = this.props.platform || this.props.endcard.platform || 'android'
-
-    @observable
-    private app_key: string = this.props.app_key || this.props.endcard.app_key || undefined
-
 
     @observable
     private endcardTarget: IEndcardStore.IEndcard = {}
+
+    @observable
+    private platform: string = this.props.platform || this.endcardTarget.platform || 'android'
+
+    @observable
+    private app_key: string = this.props.app_key || this.endcardTarget.app_key || undefined
 
     @observable
     private AppWall: number
@@ -138,6 +138,9 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     AppWallCahnge = (e) => {
         this.AppWall = e.target.value
         this.removeFile('endcard_image_url')
+        this.props.form.setFieldsValue({
+            endcard_image_url: ''
+        })
     }
 
     languageChange = (language) => {
@@ -227,7 +230,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
         const appName = this.usePkgnameData.find(ele => ele.app_key === app_key).app_name
         const data = this.props.form.getFieldsValue(['version', 'order_id', 'language'])
         this.props.form.setFieldsValue({
-            name: `${appName}_${data.order_id}_${data.version}_${data.language}`
+            endcard_name: `${appName}_${data.order_id}_${data.version}_${data.language}`
         })
         runInAction('set_key', () => {
             this.app_key = app_key
@@ -533,7 +536,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                                 api={this.api.util.uploadCoverImage}
                                 wht={{ width: width, height: height, size: 200 }}
                                 preData={{
-                                    platform: this.usePlatform,
+                                    platform: this.platform,
                                     app_id: this.appId
                                 }}
                             >
