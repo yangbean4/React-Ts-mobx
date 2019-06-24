@@ -82,11 +82,11 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     @computed
     get useCommentList(): ICommentStore.IComment[] {
         if (this.isAdd) {
-            return this.commentList
+            return this.commentList.filter(ele => ele.status === 1)
         } else {
 
             const ids = this.props.comment ? this.props.comment.group_template_ids : ''
-            return this.commentList.sort((a, b) => {
+            return this.commentList.filter(ele => ele.status === 1 || ids.includes(ele.id.toString())).sort((a, b) => {
                 return Number(ids.includes(b.id.toString())) - Number(ids.includes(a.id.toString()))
             })
         }

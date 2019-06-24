@@ -12,9 +12,9 @@
     height: auto;
   }
   .modalBtn {
-    position: relative
+    position: relative;
   }
-  .btn{
+  .btn {
     position: absolute;
     left: 432px;
   }
@@ -24,7 +24,7 @@
   .btn2 {
     margin-left: 20px;
   }
-  .workPlus{
+  .workPlus {
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -36,13 +36,16 @@
     font-size: 16px;
     cursor: pointer;
   }
-  .tableBox{
+  .tableBox {
     margin-left: 220px;
     width: 100%;
     height: auto;
   }
-  .disable{
-    background-color: rgba(0,0,0,.2)
+  .disable {
+    :global {
+      td {
+        background-color: rgba(0, 0, 0, 0.2) !important;
+      }
+    }
   }
-  
 }
