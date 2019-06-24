@@ -20,4 +20,5 @@ declare interface IStore {
     customStore: ICustomStore.CustomStore
     templateStore: ITemplateStore.TemplatesStore
     configStore: IConfigStore.ConfigStore
+    leadContentStore: ILeadContentStore.LeadContentStore
 }

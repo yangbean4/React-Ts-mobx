@@ -221,6 +221,13 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 throw new Error('Please test IGE Carousel Video')
                             }
                         }
+                        if (this.useCreativeType === 4) {
+                            values = {
+                                ...values,
+                                creative_type: this.useCreativeType + this.skipTo === 'ige' ? 1 : 2
+                            }
+                        }
+
                         if (this.isAdd) {
                             if (app_key) {
                                 values = {
@@ -300,8 +307,16 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     getDetail = async () => {
         const res = await this.api.creative.getCreativeInfo({ id: this.props.creativeId })
+        let data = { ...res.data }
+        if (data.creative_type === 41 || data.creative_type === 42) {
+            data = {
+                ...data,
+                creative_type: 4,
+                skip_to: data.creative_type === 41 ? 'ige' : 'gp'
+            }
+        }
         runInAction('SET_APPGroup', () => {
-            this.creativeTarget = { ...res.data }
+            this.creativeTarget = data
         })
     }
 

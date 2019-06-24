@@ -63,7 +63,11 @@ export const asynchronousComponents = {
 
     Creative: loadComponent(() => import(/* webpackChunkName: "Creative" */ '@views/Creative')),
     CreativeAdd: loadComponent(() => import(/* webpackChunkName: "CreativeAdd" */ '@views/Creative/CreativeModal/Add')),
-    CreativeEdit: loadComponent(() => import(/* webpackChunkName: "CreativeEdit" */ '@views/Creative/CreativeModal/Edit'))
+    CreativeEdit: loadComponent(() => import(/* webpackChunkName: "CreativeEdit" */ '@views/Creative/CreativeModal/Edit')),
+    // 
+    LeadContent: loadComponent(() => import(/* webpackChunkName: "LeadContent" */ '@views/LeadContent')),
+    LeadContentAdd: loadComponent(() => import(/* webpackChunkName: "LeadContentAdd" */ '@views/LeadContent/LeadContentModal/Add')),
+    LeadContentEdit: loadComponent(() => import(/* webpackChunkName: "CreativeEdit" */ '@views/LeadContent/LeadContentModal/Edit'))
 }
 
 // 所有路由的key
@@ -195,25 +199,58 @@ export const routerAndMenu: IRouter[] = [
         isMenu: true,
         exact: true,
         title: 'Creatives',
+    },
+    {
+        id: 821,
+        pid: 82,
+        isMenu: true,
+        exact: true,
+        title: 'Creatives',
         authName: 'Offers-Creatives',
         component: 'Creative',
         path: '/creative'
     },
     {
-        id: 822,
-        pid: 82,
+        id: 8212,
+        pid: 821,
         isMenu: false,
         path: '/creative/add',
         title: 'Add Creatives',
         component: 'CreativeAdd',
     },
     {
-        id: 821,
-        pid: 82,
+        id: 8211,
+        pid: 821,
         isMenu: false,
         path: '/creative/edit/:id',
         title: 'Edit Creatives',
         component: 'CreativeEdit',
+    },
+    {
+        id: 822,
+        pid: 82,
+        isMenu: true,
+        exact: true,
+        title: 'Lead Content',
+        authName: 'Offers-Creatives',
+        component: 'LeadContent',
+        path: '/leadContent'
+    },
+    {
+        id: 8222,
+        pid: 822,
+        isMenu: false,
+        path: '/leadContent/add',
+        title: 'Add Lead Content',
+        component: 'LeadContentAdd',
+    },
+    {
+        id: 8221,
+        pid: 822,
+        isMenu: false,
+        path: '/leadContent/edit/:id',
+        title: 'Edit Lead Content',
+        component: 'LeadContentEdit',
     },
     // ------------------Endcard
     {

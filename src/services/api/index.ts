@@ -18,3 +18,5 @@ export { default as comment } from './comment'
 export { default as endcardTemplate } from './endcardTemplate'
 export { default as creative } from './creative'
 export { default as campaigns } from './campaigns'
+export { default as leadContent } from './leadContent'
+

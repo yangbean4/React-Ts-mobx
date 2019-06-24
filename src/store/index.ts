@@ -43,3 +43,6 @@ export { default as creativeStore } from './creativeStore'
 export { default as campaignStore } from './campaignStore'
 
 export { default as appManageStore } from './appManageStore'
+
+export { default as leadContentStore } from './leadContentStore'
+

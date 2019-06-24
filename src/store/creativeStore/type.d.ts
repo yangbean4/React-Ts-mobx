@@ -16,13 +16,14 @@ export interface ICreative {
     language?: string
     version?: string
     order_id?: number | string
+    creative_type?: string
+    video_type?: number
+    videoUrl?: string
+
     creative_icon_url?: string
     description?: string
     if_show_comment?: string
-    creative_type?: string
     ige_prefail?: number
-    videoUrl?: string
-    video_type?: number
     videoUrl?: string
     leadVideoUrl?: string
     ige_portrait_offline_url?: string | number
@@ -31,7 +32,7 @@ export interface ICreative {
     ige_landscape_video_cover_url?: string | number
     ige_pkgname?: string | number
     ige_leadvideo_flag?: string | number
-    appwall_description?: string | number
+    desc?: string | number
     ige_recoverlist_opps?: string | number
     ige_recoverlist_re_en?: string | number
     ige_switch_scene?: string | number
@@ -41,7 +42,7 @@ export interface ICreative {
     ige_landscape_video_cover_url?: string | number
     ige_pkgname?: string | number
     ige_leadvideo_flag?: string | number
-    appwall_description?: string | number
+    desc?: string | number
     ige_recoverlist_opps?: string | number
     ige_recoverlist_re_en?: string | number
     ige_switch_scene?: string | number
