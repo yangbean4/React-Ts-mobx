@@ -27,13 +27,13 @@ const tableWidth = {
     },
     wrapperCol: {
         lg: { span: 15 }
-    } 
+    }
 }
 const formItemLayoutForModel = {
     labelCol: {
         xs: { span: 24 },
         sm: { span: 5 },
-        lg: { span: 10},
+        lg: { span: 10 },
     },
     wrapperCol: {
         xs: { span: 24 },
@@ -74,12 +74,23 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     private language: string[] = [];
 
     @observable
-    private selectedRowKeys: number[] = this.props.comment ? this.props.comment.group_template_ids.split(',').map(ele=>Number(ele)) :[]
+    private selectedRowKeys: number[] = this.props.comment ? this.props.comment.group_template_ids.split(',').map(ele => Number(ele)) : []
 
     @observable
     private commentList: ICommentStore.IComment[] = []
-    
 
+    @computed
+    get useCommentList(): ICommentStore.IComment[] {
+        if (this.isAdd) {
+            return this.commentList
+        } else {
+
+            const ids = this.props.comment ? this.props.comment.group_template_ids : ''
+            return this.commentList.sort((a, b) => {
+                return Number(ids.includes(b.id.toString())) - Number(ids.includes(a.id.toString()))
+            })
+        }
+    }
     @computed
     get formItemLayout() {
         return this.props.type ? formItemLayoutForModel : formItemLayout
@@ -92,7 +103,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get buttonModalLayout() {
-        return this.props.type ?  'btnBox' : ''
+        return this.props.type ? 'btnBox' : ''
     }
     @action
     toggleLoading = () => {
@@ -108,15 +119,15 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
-    getLanaugeDetail = async() => {
-        const res = await this.api.comment.getGroupLanguage() 
+    getLanaugeDetail = async () => {
+        const res = await this.api.comment.getGroupLanguage()
         runInAction('SET_LANGAUE', () => {
-        this.language = res.data
+            this.language = res.data
         })
     }
 
     @action
-    rowSelection =() => {
+    rowSelection = () => {
         return {}
     }
     @action
@@ -128,7 +139,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     setClassName = (record, index) => {
         return (record.status === 0 ? styles.disable : '')
     }
-    
+
     componentWillMount() {
         this.getComments()
         this.getLanaugeDetail()
@@ -184,13 +195,13 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
 
     render() {
         const rowSelection = {
-            selectedRowKeys:this.selectedRowKeys,
+            selectedRowKeys: this.selectedRowKeys,
             onChange: (selectedRowKeys) => {
-                runInAction('SET_SELECT',()=>{
+                runInAction('SET_SELECT', () => {
                     this.selectedRowKeys = selectedRowKeys
                 })
                 this.props.form.setFieldsValue({
-                    group_template_ids:selectedRowKeys.join(',')
+                    group_template_ids: selectedRowKeys.join(',')
                 })
             }
         }
@@ -205,7 +216,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         } = comment || {}
         return (
             <div className='sb-form'>
-                <Form className={styles.CompanyModal} {...this.formItemLayout} style={{paddingLeft: 0}}>
+                <Form className={styles.CompanyModal} {...this.formItemLayout} style={{ paddingLeft: 0 }}>
                     {!this.isAdd && <FormItem label="ID"  >
                         {getFieldDecorator('id', {
                             initialValue: id,
@@ -287,22 +298,22 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                 rowClassName={this.setClassName}
                                 showHeader={false}
                                 pagination={false}
-                                dataSource={this.commentList}
+                                dataSource={this.useCommentList}
                             >
                                 <Table.Column<ICommentStore.IComment> key="id" title="ID" dataIndex="id" width={50} />
                                 <Table.Column<ICommentStore.IComment>
-                                    key="head_portrait" 
-                                    title="head_portrait" 
-                                    dataIndex="head_portrait" 
+                                    key="head_portrait"
+                                    title="head_portrait"
+                                    dataIndex="head_portrait"
                                     width={80}
-                                    render={(record) => <img src={record} alt="" width="40"  height="40" />} />
+                                    render={(record) => <img src={record} alt="" width="40" height="40" />} />
                                 <Table.Column<ICommentStore.IComment> key="com_name" title="com_name" dataIndex="com_name" width={80} />
                                 <Table.Column<ICommentStore.IComment> key="com_talk" title="com_talk" dataIndex="com_talk" width={200} />
                             </Table>
                         </div>
                     </FormItem>
-                    <FormItem className={this.props.type? styles.modalBtn :styles.btnBox} >
-                        <Button className={this.props.type? styles.btn : ''} type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
+                    <FormItem className={this.props.type ? styles.modalBtn : styles.btnBox} >
+                        <Button className={this.props.type ? styles.btn : ''} type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
                     </FormItem>
                 </Form>
             </div>
