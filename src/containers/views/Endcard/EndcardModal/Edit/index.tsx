@@ -264,6 +264,7 @@ class PID extends ComponentExt<IStoreProps> {
                   onOk={this.onOK}
                   endcardId={this.GJB.id}
                   app_key={this.app_key}
+                  platform={this.targetEndcard.platform}
                   endcard={this.GJB} />
               </div>
           }

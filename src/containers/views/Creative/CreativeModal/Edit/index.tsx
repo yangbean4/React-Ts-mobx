@@ -257,6 +257,7 @@ class PID extends ComponentExt<IStoreProps> {
                   onOk={this.onOK}
                   creativeId={this.GJB.id}
                   app_key={this.app_key}
+                  platform={this.targetCreative.platform}
                   creative={this.GJB} />
               </div>
           }

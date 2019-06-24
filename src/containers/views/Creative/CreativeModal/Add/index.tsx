@@ -59,6 +59,7 @@ interface IProps extends IStoreProps {
     creativeId?: number
     creative?: ICreativeStore.ICreative
     app_key?: string
+    platform?: string
     onCancel?: () => void
     onOk?: (id: number) => void
     type?: string
@@ -82,11 +83,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     private creativeTarget: ICreativeStore.ICreative = {}
 
     @observable
-    private platform: string
-
+    private platform: string = this.props.platform || this.creativeTarget.platform || 'android'
 
     @observable
-    private appId: string = this.props.creative ? this.props.creative.app_id : undefined
+    private app_key: string = this.props.app_key || this.creativeTarget.app_key || undefined
+
 
     @observable
     private skipTo: string = this.creativeTarget.skip_to || 'ige'
@@ -104,6 +105,20 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     @computed
     get useCreativeType() {
         return [this.CreativeType, this.creativeTarget.creative_type, 3].find(ele => ele !== undefined)
+    }
+
+    @computed
+    get appTarget() {
+        return this.usePkgnameData.find(ele => ele.app_key === this.app_key) || {}
+    }
+
+    @computed
+    get appId() {
+        return this.appTarget.app_id
+    }
+    @computed
+    get appName() {
+        return this.appTarget.app_name
     }
 
     @computed
@@ -126,21 +141,10 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         return !this.props.creativeId
     }
 
-    @computed
-    get appName() {
-        return (this.usePkgnameData.find(ele => ele.app_id === this.appId) || {}).app_name
-    }
-
-    @computed
-    get usePlatform() {
-        return this.platform || this.creativeTarget.platform || 'android'
-    }
-
-
 
     @computed
     get usePkgnameData() {
-        return this.props.optionListDb.appIds[this.usePlatform]
+        return this.props.optionListDb.appIds[this.platform]
     }
 
     @action
@@ -166,7 +170,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     languageChange = (language) => {
-        const data = this.props.form.getFieldsValue(['version', 'order_id',])
+        const data = this.props.form.getFieldsValue(['version', 'order_id'])
         this.props.form.setFieldsValue({
             creative_name: `${this.appName}_${data.order_id}_${data.version}_${language}`
         })
@@ -275,12 +279,13 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     setAppid = (app_key) => {
-        this.appId = this.usePkgnameData.find(ele => ele.app_key === app_key).app_id
-        setImmediate(() => {
-            const data = this.props.form.getFieldsValue(['version', 'order_id', 'language'])
-            this.props.form.setFieldsValue({
-                creative_name: `${this.appName}_${data.order_id}_${data.version}_${data.language}`
-            })
+        const appName = this.usePkgnameData.find(ele => ele.app_key === app_key).app_name
+        const data = this.props.form.getFieldsValue(['version', 'order_id', 'language'])
+        this.props.form.setFieldsValue({
+            name: `${appName}_${data.order_id}_${data.version}_${data.language}`
+        })
+        runInAction('set_key', () => {
+            this.app_key = app_key
         })
         this.removeFile()
     }

@@ -239,6 +239,7 @@ class PID extends ComponentExt<IStoreProps> {
                   onOk={this.onOK}
                   leadContentId={this.GJB.id}
                   app_key={this.app_key}
+                  platform={this.targetLeadContent.platform}
                   leadContent={this.GJB} />
               </div>
           }

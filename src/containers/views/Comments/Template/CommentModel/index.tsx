@@ -269,6 +269,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                             <Select
                                 showSearch
                                 onChange={this.languageChange}
+                                disabled={!this.isAdd}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {

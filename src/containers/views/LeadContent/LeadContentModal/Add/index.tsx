@@ -57,6 +57,7 @@ interface IProps extends IStoreProps {
     leadContentId?: number
     leadContent?: ILeadContentStore.ILeadContent
     app_key?: string
+    platform?: string
     onCancel?: () => void
     onOk?: (id: number) => void
     type?: string
@@ -79,7 +80,7 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
     private md5: string = this.leadContentTarget.content_md5
 
     @observable
-    private platform: string
+    private platform: string = this.props.platform || this.leadContentTarget.platform || 'android'
 
     @observable
     private app_key: string = this.props.app_key || this.leadContentTarget.app_key || undefined
@@ -107,13 +108,8 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @computed
-    get usePlatform() {
-        return this.platform || this.leadContentTarget.platform || 'android'
-    }
-
-    @computed
     get usePkgnameData() {
-        return this.props.optionListDb.appIds[this.usePlatform]
+        return this.props.optionListDb.appIds[this.platform]
     }
 
     languageChange = (language) => {
@@ -203,7 +199,6 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     setAppid = (app_key) => {
-
         const appName = this.usePkgnameData.find(ele => ele.app_key === app_key).app_name
         const data = this.props.form.getFieldsValue(['version', 'order_id', 'language'])
         this.props.form.setFieldsValue({

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
-import { observable, action } from 'mobx'
+import { observable, action, autorun } from 'mobx'
 import { Form, Input, Row, Col, Button } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
@@ -19,14 +19,16 @@ const layout = {
 
 interface IStoreProps {
   getEndcardTemplates?: () => Promise<any>
+  routerStore?: RouterStore
   changeFilter?: (params: IEndcardTemplateStore.SearchParams) => void
   changepage?: (page: number) => void
 }
 
 @inject(
   (store: IStore): IStoreProps => {
+    const { routerStore } = store
     const { getEndcardTemplates, changepage, changeFilter } = store.endcardTemplateStore
-    return { getEndcardTemplates, changepage, changeFilter }
+    return { getEndcardTemplates, changepage, changeFilter, routerStore }
   }
 )
 @observer
@@ -34,11 +36,26 @@ class CustomSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   @observable
   private loading: boolean = false
 
-
+  @observable
+  private IReactionDisposer: () => void
 
   @action
   toggleLoading = () => {
     this.loading = !this.loading
+  }
+
+  constructor(props) {
+    super(props)
+    this.IReactionDisposer = autorun(
+      () => {
+        this.props.routerStore.history.listen(route => {
+          this.props.form.resetFields()
+        })
+      }
+    )
+  }
+  componentDidMount() {
+    this.IReactionDisposer()
   }
 
   submit = (e?: React.FormEvent<any>): void => {

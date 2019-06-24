@@ -64,6 +64,7 @@ interface IProps extends IStoreProps {
     endcardId?: number
     endcard?: IEndcardStore.IEndcard
     app_key?: string
+    platform?: string
     onCancel?: () => void
     onOk?: (id: number) => void
     type?: string
@@ -84,10 +85,11 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     private imageTarget: object = {}
 
     @observable
-    private platform: string
+    private platform: string = this.props.platform || this.props.endcard.platform || 'android'
 
     @observable
-    private appId: string = this.props.endcard ? this.props.endcard.app_id : undefined
+    private app_key: string = this.props.app_key || this.props.endcard.app_key || undefined
+
 
     @observable
     private endcardTarget: IEndcardStore.IEndcard = {}
@@ -114,18 +116,22 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @computed
-    get appName() {
-        return (this.usePkgnameData.find(ele => ele.app_id === this.appId) || {}).app_name
-    }
-
-    @computed
-    get usePlatform() {
-        return this.platform || this.endcardTarget.platform || 'android'
-    }
-
-    @computed
     get usePkgnameData() {
-        return this.props.optionListDb.appIds[this.usePlatform]
+        return this.props.optionListDb.appIds[this.platform]
+    }
+
+    @computed
+    get appTarget() {
+        return this.usePkgnameData.find(ele => ele.app_key === this.app_key) || {}
+    }
+
+    @computed
+    get appId() {
+        return this.appTarget.app_id
+    }
+    @computed
+    get appName() {
+        return this.appTarget.app_name
     }
 
     @action
@@ -218,7 +224,14 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     setAppid = (app_key) => {
-        this.appId = this.usePkgnameData.find(ele => ele.app_key === app_key).app_id
+        const appName = this.usePkgnameData.find(ele => ele.app_key === app_key).app_name
+        const data = this.props.form.getFieldsValue(['version', 'order_id', 'language'])
+        this.props.form.setFieldsValue({
+            name: `${appName}_${data.order_id}_${data.version}_${data.language}`
+        })
+        runInAction('set_key', () => {
+            this.app_key = app_key
+        })
         this.removeFile('endcard_image_url')
     }
 

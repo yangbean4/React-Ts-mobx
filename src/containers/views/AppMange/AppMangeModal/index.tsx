@@ -49,7 +49,7 @@ interface IStoreProps {
 
 interface IProps extends IStoreProps {
     onCancel?: () => void
-    onOk?: (name: string) => void
+    onOk?: (id: number) => void
     type?: string
 }
 @inject(
@@ -112,12 +112,31 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
-    getDetail = async () => {
-        const res = await this.api.appsManage.modifyAppsManageInfo({ app_key: this.Id })
-        this.props.setAppManage(res.data)
-        runInAction('SET_APPManage', () => {
-            this.manageGroup = { ...res.data }
+    switchNumber = (obj, target={}) => {
+        const keys = Object.keys(obj)
+        keys.forEach(() => {
+            target['category_id'] = Number(obj['category_id'])
+            target['frame_id'] = Number(obj['frame_id'])
+            target['style_id'] = Number(obj['style_id'])
+            target['specs_id'] = Number(obj['specs_id']) 
         })
+        return target
+    }
+
+    @action
+    getDetail = async () => {
+        const target = {}
+        const res = await this.api.appsManage.modifyAppsManageInfo({ app_key: this.Id })
+        const ret = Object.assign({}, res.data, this.switchNumber(res.data, target))
+        this.props.setAppManage(res.data)        
+        runInAction('SET_APPManage', () => {
+            this.manageGroup = ret
+        })
+    }
+
+    @action
+    checkCampaignsUse = async () => {
+        const res = await this.api.appsManage.checkAppsStatus({app_key: this.props.appManage.app_key})
     }
 
     @action
@@ -142,10 +161,10 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
         })
     }
 
-    companyModelOk = async (name: string) => {
+    companyModelOk = async (id: number) => {
         await this.api.appGroup.getAccountSource()
         this.props.form.setFieldsValue({// 重新赋值
-            account_id: name
+            account_id: id
         })
         this.toggleAppShow(false)
     }
@@ -272,23 +291,23 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
             app_key = '',
             title = "",
             appstore_url = '',
-            app_id = '',
+            app_id = undefined,
             account_id = '',
             screen_type = '0',
             logo = '',
             rating = '',
             downloads = '',
-            category_id = '',
-            frame_id = '',
-            specs_id = '',
-            style_id = ''
+            category_id = undefined,
+            frame_id = undefined,
+            specs_id = undefined,
+            style_id = undefined
         } = reData || {}
         return (
             <React.Fragment>
                 <AccountModel
                     visible={this.accountShow}
                     onCancel={() => this.toggleAppShow(false)}
-                    onOk={(name) => this.companyModelOk(name)}
+                    onOk={(id) => this.companyModelOk(id)}
                 />
                 <div className='sb-form'>
                     <Form {...this.props.type ? miniLayout : formItemLayout} className={styles.currencyModal} >
@@ -316,7 +335,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 ]
                             })(
-                                <Radio.Group>
+                                <Radio.Group onChange={this.checkCampaignsUse}>
                                     {statusOption.map(c => (
                                         <Radio key={c.key} value={c.value}>
                                             {c.key}

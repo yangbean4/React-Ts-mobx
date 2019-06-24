@@ -113,14 +113,15 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     getComments = async () => {
         const res = await this.api.comment.selectTemplate({})
+        const ret = res.data.en.concat(res.data.sv)
         runInAction('SET_COMMENT', () => {
-            this.commentList = res.data.en
+            this.commentList = ret
         })
     }
 
     @action
-    getLanaugeDetail = async () => {
-        const res = await this.api.comment.getGroupLanguage()
+    getLanaugeDetail = async() => {
+        const res = await this.api.endcard.getlanguage() 
         runInAction('SET_LANGAUE', () => {
             this.language = res.data
         })

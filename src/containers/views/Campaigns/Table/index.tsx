@@ -95,7 +95,7 @@ class CampaignsTable extends ComponentExt<IProps> {
                     className="center-table"
                     style={{ width: '100%' }}
                     bordered
-                    rowKey="campaign_id"
+                    rowKey="app_key"
                     loading={getCampaignsLoading}
                     dataSource={campaigns}
                     scroll={{ y: scrollY }}
