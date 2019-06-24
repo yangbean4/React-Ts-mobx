@@ -9,6 +9,7 @@ export const btnUpload: string;
 export const btnUploadGroup: string;
 export const btnUploadTitle: string;
 export const endcardModal: string;
+export const full: string;
 export const hasImg: string;
 export const heng: string;
 export const imgBox: string;

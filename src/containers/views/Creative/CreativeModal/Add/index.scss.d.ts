@@ -8,6 +8,7 @@ export const btnBox: string;
 export const btnUpload: string;
 export const btnUploadGroup: string;
 export const creativeModal: string;
+export const full: string;
 export const hasImg: string;
 export const heng: string;
 export const imgBox: string;

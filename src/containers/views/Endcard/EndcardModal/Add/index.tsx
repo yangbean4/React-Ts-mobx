@@ -316,19 +316,11 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     render() {
         const { form, optionListDb } = this.props
         const { getFieldDecorator } = form
-        const { uploadCoverImage, uploadIcon } = this.api.util
         const { width, height } = this.isHeng ? {
             width: 1920, height: 1080
         } : {
                 height: 1920, width: 1080
             }
-        const Landscapeprops = this.getUploadprops(uploadCoverImage, 'endcard_image_url', width, height, 200, {
-            platform: this.usePlatform,
-            app_id: this.appId
-        })
-        const ctaPicProps = this.getUploadprops(this.api.util.uploadIcon, 'cta_pic', 422, 62, 10)
-
-
 
         const {
             platform = 'android',
@@ -506,37 +498,34 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
 
 
-                    <FormItem label="Cover Image" className={styles.autoHeight}>
+                    <FormItem label="Cover Image" className={styles.autoHeight + ` ${styles.UploadBox}`}>
+                        <div className={styles.title}>
+                            <div className="left">
+                                {this.isHeng ? 'Landscape' : 'Portrait'}
+                            </div>
+                            <div className="right">
+                                {this.isHeng ? '1920*1080px' : '1080*1920px'}
+                            </div>
+                        </div>
                         {getFieldDecorator('endcard_image_url', {
-                            initialValue: endcard_image_url,
+                            initialValue: endcard_image,
                             rules: [
                                 {
                                     required: true, message: "Required"
                                 }
                             ]
                         })(
-                            <div className={styles.UploadBox}>
-                                <div className={styles.title}>
-                                    <div className="left">
-                                        {this.isHeng ? 'Landscape' : 'Portrait'}
-                                    </div>
-                                    <div className="right">
-                                        {this.isHeng ? '1920*1080px' : '1080*1920px'}
-                                    </div>
-                                </div>
-                                <div>
-                                    <Upload {...Landscapeprops}>
-                                        {
-
-                                            <div className={this.isHeng ? `${styles.sunjiao} ${styles.heng}` : `${styles.sunjiao} ${styles.shu}`} >
-                                                {
-                                                    endcard_image && <img src={endcard_image} alt="avatar" />
-                                                }
-                                            </div>
-                                        }
-                                    </Upload>
-                                </div>
-                            </div>
+                            <UploadFile
+                                className={this.isHeng ? `${styles.sunjiao} ${styles.heng}` : `${styles.sunjiao} ${styles.shu}`}
+                                api={this.api.util.uploadCoverImage}
+                                wht={{ width: width, height: height, size: 200 }}
+                                preData={{
+                                    platform: this.usePlatform,
+                                    app_id: this.appId
+                                }}
+                            >
+                                <div className={styles.full} />
+                            </UploadFile>
                         )}
                     </FormItem>
                     {
@@ -592,7 +581,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
 
                     <FormItem label="Button Image" className={styles.btnUploadGroup} >
                         {getFieldDecorator('cta_pic', {
-                            initialValue: cta_pic,
+                            initialValue: ctaPic,
                         })(
                             <UploadFile
                                 api={this.api.util.uploadIcon}

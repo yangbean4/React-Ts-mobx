@@ -8,7 +8,7 @@ interface hasResult {
   result?: string
 }
 
-interface WHT {
+export interface FileWHT {
   width?: number
   height?: number
   isScale?: boolean
@@ -18,19 +18,20 @@ interface WHT {
   size?: number
 }
 
-interface IProps {
+export interface UploadFileProps {
   fileType?: string
   value?: string
-  wht?: WHT
+  wht?: FileWHT
   onChange?: (data: any) => void
   api?: (data: any) => Promise<any>
   children?: React.ReactNode
   preData?: Object
   callBack?: () => void
+  className?: string
 }
 
 @observer
-class UploadFile extends React.Component<IProps> {
+class UploadFile extends React.Component<UploadFileProps> {
 
   @observable
   private previewVisible: boolean = false
@@ -69,7 +70,7 @@ class UploadFile extends React.Component<IProps> {
   }
 
   getUploadprops = (fun: Function,
-    whs?: WHT,
+    whs?: FileWHT,
     preData?,
     type = ".png, .jpg, .jpeg, .gif",
     cb?: Function) => {
@@ -84,7 +85,7 @@ class UploadFile extends React.Component<IProps> {
       name: 'file',
       // listType: "picture-card",
       // fileList: this.fileList,
-      className: "avatar-uploader",
+      className: "avatar-uploader " + this.props.className,
       onRemove: () => this.removeFile(),
       beforeUpload: (file) => {
         const houz = file.name.split('.').pop()
