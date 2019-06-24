@@ -81,7 +81,7 @@ class CommentTable extends ComponentExt<IProps> {
                     className="center-table"
                     style={{ width: '100%' }}
                     bordered
-                    rowKey="comment_id"
+                    rowKey="id"
                     loading={getcommentsLoading}
                     dataSource={comments}
                     scroll={{ y: scrollY }}

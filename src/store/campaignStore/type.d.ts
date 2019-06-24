@@ -11,7 +11,7 @@ export interface ICampaignGroup {
     platform?: string[]
     status?: number
     campaign_name?: string
-    target_code?: number
+    target_code?: string
     bid_type?: string
     bid?: number
     total_budget?: number

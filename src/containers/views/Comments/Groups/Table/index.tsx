@@ -93,7 +93,7 @@ class CommentTable extends ComponentExt<IProps> {
                     className="center-table"
                     style={{ width: '100%' }}
                     bordered
-                    rowKey="group_id"
+                    rowKey="id"
                     loading={getcommentsLoading}
                     dataSource={comments}
                     scroll={{ y: scrollY }}
@@ -121,7 +121,7 @@ class CommentTable extends ComponentExt<IProps> {
                         render={(_, record) => (
                             <span>
                                 {
-                                   record.comments.map((c, index) => (
+                                   record.comments && record.comments.map((c, index) => (
                                         <Popover
                                             placement="top"
                                             trigger="hover"

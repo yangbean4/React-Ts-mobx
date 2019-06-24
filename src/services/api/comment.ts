@@ -35,7 +35,7 @@ export default {
     },
     // select template
     selectTemplate(data): Promise<any> {
-        return http.post(`${basePath}${basePath}commentTemplates`, data || {})
+        return http.post(`${basePath}commentTemplates`, data || {})
     },
     // get Group List
     getCommentGroupId(): Promise<any> {

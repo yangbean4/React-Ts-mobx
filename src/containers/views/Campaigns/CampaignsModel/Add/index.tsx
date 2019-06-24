@@ -12,7 +12,6 @@ const FormItem = Form.Item
 
 const DateFormat = 'YYYY-MM-DD'
 const Now = moment().format(DateFormat)
-console.log(Now)
 
 const formItemLayout = {
     labelCol: {
@@ -42,7 +41,7 @@ interface IStoreProps {
     optionListDb?: ICampaignStore.OptionListDb
     getTargetCode?: () => Promise<any>
     getCommentsGroupId?: () => Promise<any>
-    setCampaingn?:(Apps: ICampaignStore.ICampainginForList) => void
+    setCampaingn?: (Apps: ICampaignStore.ICampainginForList) => void
     routerStore?: RouterStore
 }
 
@@ -51,12 +50,14 @@ interface IProps extends IStoreProps {
     onCancel?: () => void
     onOk?: (id: number) => void
     type?: string
+    endcards?: string[]
+    creatives?: string[]
 }
 @inject(
     (store: IStore): IProps => {
         const { campaignStore, routerStore } = store
-        const { createCampaingn,setCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId } = campaignStore
-        return { routerStore,setCampaingn, createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId }
+        const { createCampaingn, setCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId } = campaignStore
+        return { routerStore, setCampaingn, createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId }
     }
 )
 
@@ -88,12 +89,12 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get endcards() {
-        return this.appTarget.endcards
+        return this.props.endcards || this.appTarget.endcards
     }
 
     @computed
     get creatives() {
-        return this.appTarget.creatives
+        return this.props.creatives || this.appTarget.creatives
     }
 
     @computed
@@ -138,19 +139,24 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
             async (err, values): Promise<any> => {
                 if (!err) {
                     this.toggleLoading()
+                    const TargetCampaign = localStorage.getItem('TargetCampaign')
+                    const param = JSON.parse(TargetCampaign)
+                    const appKey = values.app_key ? values.app_key : param.app_key
                     try {
                         values = {
                             ...values,
                             'start_time': values['start_time'].format(DateFormat),
-                            'end_time': values['end_time'].format(DateFormat)
+                            'end_time': values['end_time'].format(DateFormat),
+                            'target_code': values.target_code.join(','),
+                            'app_key': appKey,
+                           
                         }
                         if (values.id === undefined) {
-                            let data = await createCampaingn({ ...values, 'target_code': values.target_code.join(',') })
+                            let data = await createCampaingn({ ...values })
                             message.success(data.message)
                             routerStore.push('/campaigns')
                         } else {
-                            console.log(213232)
-                            let data = await modifyCampaingn({ ...values, 'target_code': values.target_code.join(',') })
+                            let data = await modifyCampaingn({ ...values })
                             message.success(data.message)
                             routerStore.push('/campaigns/edit')
                             this.props.onOk(data.data.id)
@@ -188,7 +194,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         this.props.getTargetCode()
         this.props.getCommentsGroupId()
         this.init()
-        if(this.props.campaign) {
+        if (this.props.campaign) {
             this.getDetail()
         }
     }
@@ -200,13 +206,14 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         const reData = this.CampaignGroup
         const { form, optionListDb } = this.props
         const { getFieldDecorator } = form
+        let target_codeValue: (string | number)[] = []
         const {
             id = '',
             status = 'published',
             platform = 'android',
             app_key = '',
             campaign_name = '',
-            target_code = [],
+            target_code = undefined,
             bid_type = 'CPI',
             bid = '',
             total_budget = '',
@@ -223,11 +230,16 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
             kpi = '',
         } = reData || {}
         
+        if (target_code && reData) {
+            target_codeValue = target_code.split(',').map(ele => {
+                return (optionListDb.TargetCode.find(code => code.code2 === ele) || {}).code2
+            }).filter(ele => ele !== undefined)
+        }
         return (
             <div className='sb-form'>
                 <Form {...this.props.type ? miniLayout : formItemLayout} className={styles.currencyModal} >
                     {
-                        id  && <FormItem label="ID">
+                        id && <FormItem label="ID">
                             {getFieldDecorator('id', {
                                 initialValue: id,
                                 rules: [
@@ -325,7 +337,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
                     <FormItem label="Target Code"  >
                         {getFieldDecorator('target_code', {
-                            initialValue: target_code,
+                            initialValue: target_codeValue,
                             rules: [
                                 {
                                     required: true, message: "Required"
@@ -439,7 +451,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
 
                     <FormItem label="Start Time">
-                        {getFieldDecorator('start_time', 
+                        {getFieldDecorator('start_time',
                             {
                                 initialValue: moment(start_time),
                                 rules: [{ type: 'object', required: true, message: 'Please select time!' }]
@@ -448,10 +460,10 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
 
                     <FormItem label="End Time">
-                        {getFieldDecorator('end_time', 
+                        {getFieldDecorator('end_time',
                             {
                                 initialValue: moment(end_time),
-                                rules: [{ type: 'object', required: false}],
+                                rules: [{ type: 'object', required: false }],
                             }
                         )(<DatePicker />)}
                     </FormItem>
@@ -583,7 +595,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 }
                             ]
-                        })(<InputNumber disabled={id && !this.isAdd} />)}
+                        })(<InputNumber disabled={!this.isAdd} />)}
                     </FormItem>
 
                     <FormItem label="Campaign Kpi">

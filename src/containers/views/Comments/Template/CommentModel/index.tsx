@@ -120,7 +120,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     getLanaugeDetail = async() => {
-        const res = await this.api.comment.getCommentLanguage() 
+        const res = await this.api.endcard.getlanguage() 
         runInAction('SET_LANGAUE', () => {
             this.langauge = res.data
         })

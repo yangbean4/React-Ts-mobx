@@ -82,7 +82,6 @@ export class AppManageStore extends StoreExt {
     @action
     getOptionListDb = async (id: number) => {
         const keys = Object.keys(this.optionListDb)
-        console.log(1231)
         const promiseAll = keys.map(key => this.api.appGroup[`get${key}`]())
         Promise.all(promiseAll).then(data => {
             const target = {}

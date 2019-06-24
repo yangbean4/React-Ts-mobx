@@ -6,7 +6,6 @@ import { ComponentExt } from '@utils/reactExt'
 import { statusOption } from '../../web.config'
 import FormAdd from '../Add'
 import * as style from './index.scss'
-import { routerStore } from 'store';
 interface TableProps {
   onEdit: (index: number) => void
   copyData: (index: number) => void
@@ -25,7 +24,7 @@ class VcTable extends ComponentExt<TableProps> {
         className="center-table"
         style={{ width: '100%' }}
         bordered
-        rowKey="edit_id"
+        rowKey="id"
         dataSource={data}
         scroll={{ y: scrollY }}
       >
@@ -54,11 +53,11 @@ class VcTable extends ComponentExt<TableProps> {
           render={(_, record, index) => (
             <span>
               {
-                this.$checkAuth('Authorization-User Manage-Edit', [
-                  <a href="javascript:;" onClick={() => onEdit(index)}>
+                this.$checkAuth('Authorization-User Manage-Edit', 
+                  <a href="javascript:;"  onClick={() => onEdit(index)}>
                     <Icon type="form" />
                   </a>
-                ])
+                )
               }
               {
                 <Divider key='Divider' type="vertical" />
@@ -146,31 +145,21 @@ class PID extends ComponentExt<IStoreProps> {
     this.loading = !this.loading
   }
 
-  // @computed
-  // get appTarget() {
-  //   return this.appIds.find(ele => ele.app_id === this.targetCampaigns.app_id) || {}
-  // }
-
-  // @computed
-  // get endcards() {
-  //   return this.appTarget.endcards
-  // }
-
-  // @computed
-  // get creatives() {
-  //   return this.appTarget.creatives
-  // }
-
-  @action
-  getAppIds = async () => {
-    const res = await this.api.endcard.getappIds()
-    const appIds = this.targetCampaigns.platform === 'android' ? res.data.android : res.data.ios
-    console.log(appIds)
-    runInAction('SET_APPIDS', () => {
-      this.appIds = appIds
-    })
+  @computed
+  get appTarget() {
+    return this.appIds.find(ele => ele.app_id === this.targetCampaigns.app_id) || {}
   }
 
+  @computed
+  get endcards() {
+    return this.appTarget.endcards
+  }
+
+  @computed
+  get creatives() {
+    return this.appTarget.creatives
+  }
+ 
   @action
   initDetail = async () => {
     try {
@@ -192,6 +181,15 @@ class PID extends ComponentExt<IStoreProps> {
     } catch (error) {
       this.props.routerStore.push('/campaigns');
     }
+  }
+
+  @action
+  getAppIds = async () => {
+    const res = await this.api.endcard.getappIds() // 取appID数据
+    const data = this.targetCampaigns.platform === 'android' ? res.data.android : res.data.ios
+    runInAction('SET_APPIDS', () => {
+      this.appIds = data
+    })
   }
 
   submit = () => {
@@ -232,10 +230,7 @@ class PID extends ComponentExt<IStoreProps> {
   }
 
   componentDidMount() {
-    console.log(this.appIds)
-    // console.log(this.appTarget)
-    // console.log(this.creatives)
-    // console.log(this.endcards)
+    
   }
 
   componentWillUnmount() {
@@ -278,7 +273,7 @@ class PID extends ComponentExt<IStoreProps> {
                   onCancel={this.onCancel}
                   onOk={this.onOK}
                   campaign={this.GJB}
-                  endCards={this.endcards}
+                  endcards={this.endcards}
                   creatives={this.creatives}
                 />
               </div>

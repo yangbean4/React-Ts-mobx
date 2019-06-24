@@ -101,9 +101,9 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     getComments = async () => {
-        const res = await this.api.comment.getCommentTplList({})
+        const res = await this.api.comment.selectTemplate({})
         runInAction('SET_COMMENT', () => {
-            this.commentList = res.data
+            this.commentList = res.data.en
         })
     }
 
@@ -123,6 +123,12 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     languageChange = () => {
 
     }
+
+    @action
+    setClassName = (record, index) => {
+        return (record.status === 0 ? styles.disable : '')
+    }
+    
     componentWillMount() {
         this.getComments()
         this.getLanaugeDetail()
@@ -278,6 +284,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                 bordered
                                 rowKey="id"
                                 rowSelection={rowSelection}
+                                rowClassName={this.setClassName}
                                 showHeader={false}
                                 pagination={false}
                                 dataSource={this.commentList}
