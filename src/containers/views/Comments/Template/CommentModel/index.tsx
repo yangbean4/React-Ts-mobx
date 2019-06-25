@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Input, Button, message, Upload, Icon as AntIcon, Popover, Col, Radio, Select} from 'antd'
+import { Form, Input, Button, message, Upload, Icon as AntIcon, Popover, Col, Radio, Select } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
@@ -43,7 +43,7 @@ interface IStoreProps {
     comment?: ICommentStore.IComment
     createComment?: (company: ICommentStore.IComment) => Promise<any>
     modifyComment?: (company: ICommentStore.IComment) => Promise<any>
-    getOptionListDb?: ({}) => Promise<any>
+    getOptionListDb?: ({ }) => Promise<any>
     changepage?: (page: number) => void
     routerStore?: RouterStore
     clearComment?: () => void
@@ -73,7 +73,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private head_portrait: string
 
-    @observable 
+    @observable
     private langauge: string[] = []
 
     @computed
@@ -119,8 +119,8 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
-    getLanaugeDetail = async() => {
-        const res = await this.api.endcard.getlanguage() 
+    getLanaugeDetail = async () => {
+        const res = await this.api.endcard.getlanguage()
         runInAction('SET_LANGAUE', () => {
             this.langauge = res.data
         })
@@ -139,13 +139,37 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         this.props.clearComment()
     }
 
-    checkImageWH = (file, width, height) => {
+
+    checkImageWH = (file) => {
+        const SIZE = 30 ,MSG = `Failure, The file size cannot exceed 30kb`
         return new Promise((resolve, reject) => {
-            let filereader = new FileReader()
-            filereader.onload = e => {
-                let src = e.target as hasResult
+            if (SIZE - file.size / 1024 >= 0) {
+                resolve()
+                message.success('Success')
+            } else {
+                reject() 
+                message.error(MSG) 
             }
         })
+    }
+
+    actionUpload = async (data) => {
+        const formData = new FormData()
+        formData.append('file', data.file)
+        await this.api.appGroup.uploadIcon(formData).then(res => {
+            const head_portrait = res.data.url
+            this.props.form.setFieldsValue({
+                head_portrait: head_portrait
+            })
+            const fileRender = new FileReader()
+            fileRender.onload = (ev) => {
+                const target = ev.target as hasResult
+                runInAction('SET_URL', () => {
+                    this.head_portrait = target.result;
+                })
+            }
+            fileRender.readAsDataURL(data.file)
+        }, this.removeFile).catch(this.removeFile)
     }
 
     submit = (e?: React.FormEvent<any>): void => {
@@ -185,9 +209,9 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         )
     }
 
-    setCom_talk = (e)=>{
+    setCom_talk = (e) => {
         this.props.form.setFieldsValue({
-            com_talk:e.target.innerHTML
+            com_talk: e.target.innerHTML
         })
     }
 
@@ -196,25 +220,8 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
             showUploadList: false,
             accept: ".png, .jpg, .jpeg, .gif",
             name: 'file',
-            customRequest: (data) => {
-                const formData = new FormData()
-                formData.append('file', data.file)
-                this.api.appGroup.uploadIcon(formData).then(res => {
-                    const head_portrait = res.data.url
-                    this.props.form.setFieldsValue({
-                        head_portrait: head_portrait
-                    })
-                    const fileRender = new FileReader()
-                    fileRender.onload = (ev) => {
-                        const target = ev.target as hasResult
-                        runInAction('SET_URL', () => {
-                            this.head_portrait = target.result;
-                        })
-                    }
-                    fileRender.readAsDataURL(data.file)
-                }, this.removeFile).catch(this.removeFile)
-            }
-
+            beforeUpload: this.checkImageWH,
+            customRequest: this.actionUpload
         }
         const { comment, form } = this.props
         const { getFieldDecorator } = form
@@ -273,7 +280,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {
-                                    this.langauge && this.langauge.map((c,index) => (
+                                    this.langauge && this.langauge.map((c, index) => (
                                         <Select.Option key={index} value={c}>
                                             {c}
                                         </Select.Option>
@@ -315,7 +322,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                             ],
                         })(
                             <div>
-                                <Popover 
+                                <Popover
                                     content={<EmojiPicker></EmojiPicker>}
                                     trigger="click"
                                     visible={this.emoji}
@@ -328,7 +335,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                         <AntIcon className={styles.workBtn} type="question-circle" />
                                     </Popover>
                                 </div>
-                                
+
                             </div>
                         )}
                     </FormItem>

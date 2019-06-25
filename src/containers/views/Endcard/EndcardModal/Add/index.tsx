@@ -595,24 +595,27 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                         )
                     }
 
-                    <FormItem label="Button Image" className={styles.btnUploadGroup} >
-                        {getFieldDecorator('cta_pic', {
-                            initialValue: ctaPic,
-                        })(
-                            <UploadFile
-                                api={this.api.util.uploadIcon}
-                                wht={{ width: 422, height: 62, size: 10 }}
-                            >
-                                <div className={styles.btnUpload} >
-                                    <Icon type='plus' />
-                                </div>
-                            </UploadFile>
-                        )}
+                    {
+                        (this.useAppWall !== '005' && this.useAppWall !== '006') && <FormItem label="Button Image" className={styles.btnUploadGroup} >
+                            {getFieldDecorator('cta_pic', {
+                                initialValue: ctaPic,
+                            })(
+                                <UploadFile
+                                    api={this.api.util.uploadIcon}
+                                    wht={{ width: 422, height: 62, size: 10 }}
+                                >
+                                    <div className={styles.btnUpload} >
+                                        <Icon type='plus' />
+                                    </div>
+                                </UploadFile>
+                            )}
 
-                        <span className={styles.btnUploadTitle}>
-                            422*62px,≤10kb
-                        </span>
-                    </FormItem>
+                            <span className={styles.btnUploadTitle}>
+                                422*62px,≤10kb
+                         </span>
+                        </FormItem>
+                    }
+
 
 
                     <FormItem label="Automatic Jump">

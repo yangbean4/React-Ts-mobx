@@ -381,7 +381,7 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input disabled={!this.isAdd} onChange={this.order_idChange} />)}
+                        })(<Input onChange={this.order_idChange} />)}
                     </FormItem>
 
                     <FormItem label="Lead Language">

@@ -112,13 +112,13 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
-    switchNumber = (obj, target={}) => {
+    switchNumber = (obj, target = {}) => {
         const keys = Object.keys(obj)
         keys.forEach(() => {
             target['category_id'] = Number(obj['category_id'])
             target['frame_id'] = Number(obj['frame_id'])
             target['style_id'] = Number(obj['style_id'])
-            target['specs_id'] = Number(obj['specs_id']) 
+            target['specs_id'] = Number(obj['specs_id'])
         })
         return target
     }
@@ -128,7 +128,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
         const target = {}
         const res = await this.api.appsManage.modifyAppsManageInfo({ app_key: this.Id })
         const ret = Object.assign({}, res.data, this.switchNumber(res.data, target))
-        this.props.setAppManage(res.data)        
+        this.props.setAppManage(res.data)
         runInAction('SET_APPManage', () => {
             this.manageGroup = ret
         })
@@ -136,7 +136,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     checkCampaignsUse = async () => {
-        const res = await this.api.appsManage.checkAppsStatus({app_key: this.props.appManage.app_key})
+        const res = await this.api.appsManage.checkAppsStatus({ app_key: this.props.appManage.app_key })
     }
 
     @action
@@ -283,7 +283,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
         }
         const { form, optionListDb } = this.props
         const data = this.manageGroup
-        const reData = this.manageStore ? { data, ...this.manageGroup } : this.manageGroup
+        const reData = this.manageStore ? { ...data, ...this.manageStore } : data
         const { getFieldDecorator } = form
         const {
             platform = 'android',
@@ -394,7 +394,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 ]
                             })(
-                                <Upload {...props}>
+                                <Upload {...props} disabled={(!!this.manageStore.logo) || (!this.isAdd && !!logo)}>
                                     {this.logo || logo ? <img style={{ width: '100px' }} src={this.logo || logo} alt="avatar" /> : <AntIcon className={styles.workPlus} type='plus' />}
                                 </Upload>
                             )}
@@ -453,6 +453,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(<Select
                                 showSearch
+                                disabled={!this.isAdd}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {optionListDb.Category.map(c => (

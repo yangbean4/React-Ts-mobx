@@ -140,7 +140,8 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
                 const houz = file.name.split('.').pop()
                 const isHtml = type.includes(houz)
                 if (!isHtml) {
-                    message.error(`The Endcard template file should be a  ${type}`);
+                    const msg = type === '.zip' ? `The Endcard template file should be a  ${type}` : 'Please upload the file in png/jpg format'
+                    message.error(msg);
                 }
                 let isLt2M = !size || file.size / 1024 < size;
                 if (!isLt2M) {
@@ -256,7 +257,8 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: 'Required'
                                 }
                             ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
+                            // disabled={!this.typeIsAdd}
+                        })(<Input />)}
                     </FormItem>
 
                     <FormItem {...formItemLayout} label="Template">
