@@ -210,6 +210,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                 title={this.title}
                 visible={visible}
                 width={500}
+                maskClosable={false}
                 onOk={this.submit}
                 destroyOnClose
                 onCancel={this.onCancel}

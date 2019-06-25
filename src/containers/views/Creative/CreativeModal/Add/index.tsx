@@ -93,7 +93,10 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     private app_key: string = this.props.app_key || this.creativeTarget.app_key || undefined
 
     @observable
-    private skipTo: string = this.creativeTarget.skip_to || 'ige'
+    private skipTo: string
+
+    @observable
+    private needLC: number = 1
 
     @observable
     private CreativeType: number
@@ -102,10 +105,20 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     private playback_time: number = this.creativeTarget.playback_time || 30
 
     @observable
-    private videoTypeValue: number = this.creativeTarget.video_type || 1
+    private videoTypeValue: number
 
     @observable
     private accountShow: boolean = false
+
+    @computed
+    get useVideoTypeValue() {
+        return [this.videoTypeValue, this.creativeTarget.video_type, 1].find(ele => ele !== undefined)
+    }
+
+    @computed
+    get useSkipTo() {
+        return [this.skipTo, this.creativeTarget.skip_to, 'ige'].find(ele => ele !== undefined)
+    }
 
     @computed
     get useCreativeType() {
@@ -133,7 +146,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get videoType() {
-        return videoType.find(ele => ele.value === this.videoTypeValue).key
+        return videoType.find(ele => ele.value === this.useVideoTypeValue).key
     }
 
     @computed
@@ -187,6 +200,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     skipToChange = (e) => {
         this.skipTo = e.target.value
     }
+    @action
+    setNeedLC = (e) => {
+        this.needLC = e.target.value
+    }
+
     @action
     setVideoType = (value) => {
         this.videoTypeValue = value
@@ -251,7 +269,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                         if (this.useCreativeType === 4) {
                             values = {
                                 ...values,
-                                creative_type: this.useCreativeType * 10 + (this.skipTo === 'ige' ? 0 : 1)
+                                creative_type: this.useCreativeType * 10 + (this.useSkipTo === 'ige' ? 0 : 1)
                             }
                         }
                         if (this.useCreativeType === 2 || this.useCreativeType === 3) {
@@ -288,25 +306,26 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 message.success(data.message)
                                 this.props.onOk(data.data.id)
                             }
-                            if (this.creativeTarget.status !== values.status) {
+                            if ((this.creativeTarget.status !== values.status) && values.status === 0) {
                                 this.api.creative.checkCreative({ id: creativeId }).then((res) => {
                                     if (res.data.errorcode !== 0) {
-                                        this.confirmModal = Modal.confirm({
-                                            okText: 'Yes',
-                                            cancelText: 'No',
-                                            content: `${values.creative_name} is in use. Please remove the corresponding relation before deleting it！`,
-                                            onCancel: () => {
-                                                setImmediate(() => {
-                                                    this.confirmModal.destroy()
-                                                })
-                                            },
-                                            onOk: () => {
-                                                cb()
-                                                setImmediate(() => {
-                                                    this.confirmModal.destroy()
-                                                })
-                                            }
-                                        })
+
+                                        message.error(`${values.creative_name} is in use. Please remove the corresponding relation before deleting it！`)
+                                        // this.confirmModal = Modal.confirm({
+                                        //     // okText: 'Yes',
+                                        //     cancelText: 'Ok',
+                                        //     content: ,
+                                        //     onCancel: () => {
+                                        //         setImmediate(() => {
+                                        //             this.confirmModal.destroy()
+                                        //         })
+                                        //     },
+                                        //     onOk: () => {
+                                        //         setImmediate(() => {
+                                        //             this.confirmModal.destroy()
+                                        //         })
+                                        //     }
+                                        // })
                                     } else {
                                         cb()
                                     }
@@ -321,7 +340,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                     }
                     this.toggleLoading()
                 } else {
-                    console.log(this.useCreativeType === 4 ? Number(this.useCreativeType) * 10 + (this.skipTo === 'ige' ? 0 : 1) : this.useCreativeType)
+                    console.log(this.useCreativeType === 4 ? Number(this.useCreativeType) * 10 + (this.useSkipTo === 'ige' ? 0 : 1) : this.useCreativeType)
                 }
             }
         )
@@ -432,13 +451,13 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             language = '',
             creative_type = this.useCreativeType,
             creative_icon_url = '',
-            app_name = '',
+            title = '',
             description = '',
             if_show_comment = 1,
             status = 1,
             videoUrl = '',
-            skip_to = 'ige',
-            video_type = this.videoTypeValue,
+            skip_to = this.useSkipTo,
+            video_type = this.useVideoTypeValue,
             ige_pkgname = '',
             ige_leadvideo_flag = 2,
             ige_recoverlist_opps = 1,
@@ -888,28 +907,18 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 </FormItem>
 
                                 <FormItem label="IGE Leadvideo">
-                                    {getFieldDecorator('video_type',
-                                        {
-                                            initialValue: video_type,
-                                            rules: [
-                                                {
-                                                    required: true, message: "Required"
-                                                }
-                                            ]
-                                        })(
-                                            <Select
-                                                showSearch
-                                                disabled={true}
-                                                onChange={(val) => this.setVideoType(val)}
-                                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                            >
-                                                {videoType.map(c => (
-                                                    <Select.Option {...c}>
-                                                        {c.key}
-                                                    </Select.Option>
-                                                ))}
-                                            </Select>
-                                        )}
+                                    <Select
+                                        showSearch
+                                        disabled={true}
+                                        value={this.videoType}
+                                        filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        {videoType.map(c => (
+                                            <Select.Option {...c}>
+                                                {c.key}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
                                 </FormItem>
                                 <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
                                     <div className={styles.title}>
@@ -1243,7 +1252,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                     )}
                                 </FormItem>
                                 {
-                                    this.skipTo === 'ige' && <React.Fragment>
+                                    this.useSkipTo === 'ige' && <React.Fragment>
                                         <FormItem label="IGE Pkgname"  >
                                             {/* {getFieldDecorator('ige_pkgname', {
                                             initialValue: ige_pkgname,
@@ -1380,7 +1389,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                         }
 
                         {
-                            (this.useCreativeType === 3 || (this.useCreativeType === 4 && this.skipTo === 'ige')) && <FormItem label="IGE First Frame Prefail">
+                            (this.useCreativeType === 3 || (this.useCreativeType === 4 && this.useSkipTo === 'ige')) && <FormItem label="IGE First Frame Prefail">
                                 {getFieldDecorator('ige_prefail', {
                                     initialValue: Number(ige_prefail),
                                     rules: [
@@ -1422,7 +1431,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                         </FormItem>
 
                         {
-                            (this.useCreativeType === 3 || (this.useCreativeType === 4 && this.skipTo === 'ige')) && <React.Fragment>
+                            (this.useCreativeType === 3 || (this.useCreativeType === 4 && this.useSkipTo === 'ige')) && <React.Fragment>
 
                                 <FormItem label="If Show Lead Content">
                                     {getFieldDecorator('lead_is_show_content', {
@@ -1433,7 +1442,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             }
                                         ]
                                     })(
-                                        <Radio.Group>
+                                        <Radio.Group
+                                            onChange={(e) => this.setNeedLC(e)}
+                                        >
                                             {YesOrNo.map(c => (
                                                 <Radio key={c.key} value={c.value}>
                                                     {c.key}
@@ -1448,7 +1459,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         initialValue: lead_content_id,
                                         rules: [
                                             {
-                                                required: true, message: "Required"
+                                                required: this.needLC === 1, message: "Required"
                                             }
                                         ]
                                     })(
@@ -1472,8 +1483,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                         }
 
                         <FormItem label="App Name"  >
-                            {getFieldDecorator('app_name', {
-                                initialValue: app_name,
+                            {getFieldDecorator('title', {
+                                initialValue: title,
                                 rules: [
                                     {
                                         required: true, message: "Required"

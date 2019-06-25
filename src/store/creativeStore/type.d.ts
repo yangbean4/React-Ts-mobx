@@ -39,7 +39,7 @@ export interface ICreative {
     ige_switch_scene?: string | number
     playback_time?: number
     long_play_time?: string | number
-
+    title?: string
     ige_landscape_video_cover_url?: string | number
     ige_pkgname?: string | number
     ige_leadvideo_flag?: string | number

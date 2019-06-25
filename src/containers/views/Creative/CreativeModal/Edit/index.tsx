@@ -64,6 +64,9 @@ class VcTable extends ComponentExt<TableProps> {
           key="status"
           title="Status"
           dataIndex="status"
+          render={(_) => (
+            statusOption.find(item => item.value === _).key
+          )}
           width={200} />
 
         <Table.Column<ICreativeStore.ICreative>

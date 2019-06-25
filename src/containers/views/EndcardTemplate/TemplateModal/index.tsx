@@ -218,6 +218,7 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
             <Modal
                 title={this.title}
                 visible={visible}
+                maskClosable={false}
                 width={500}
                 onOk={this.submit}
                 destroyOnClose
