@@ -31,6 +31,7 @@ export interface IConfigTarget {
 export interface SearchParams {
   pkg_name?: string,
   platform?: string
+  bundle_id?: string
 }
 
 export interface iosAndAnd {

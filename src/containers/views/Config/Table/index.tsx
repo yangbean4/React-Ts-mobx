@@ -233,6 +233,7 @@ class ConfigTable extends ComponentExt<IProps> {
                     onChange={handleTableChange}
                 >
                     <Table.Column<IConfigStore.IConfig> key="pkg_name" title="Pkg Name" dataIndex="pkg_name" width={200} />
+                    <Table.Column<IConfigStore.IConfig> key="bundle_id" title="Bundle ID" dataIndex="bundle_id" width={200} />
                     <Table.Column<IConfigStore.IConfig> key="platform" title="Platform" dataIndex="platform" width={200} />
                     <Table.Column<IConfigStore.IConfig>
                         key="totalConfig"

@@ -32,14 +32,14 @@ class VcTable extends ComponentExt<TableProps> {
         <Table.Column<ICreativeStore.ICreative>
           key="id"
           title="ID"
-          dataIndex="creative_name"
-          width={200}
+          dataIndex="id"
+          width={100}
         />
         <Table.Column<ICreativeStore.ICreative>
           key="creative_type"
           title="Creative Type"
           dataIndex="creative_type"
-          width={200}
+          width={100}
         />
         <Table.Column<ICreativeStore.ICreative>
           key="creative_name"
@@ -58,7 +58,7 @@ class VcTable extends ComponentExt<TableProps> {
           key="language"
           title="Creative Language"
           dataIndex="language"
-          width={200} />
+          width={100} />
 
         <Table.Column<ICreativeStore.ICreative>
           key="status"
@@ -67,7 +67,7 @@ class VcTable extends ComponentExt<TableProps> {
           render={(_) => (
             statusOption.find(item => item.value === _).key
           )}
-          width={200} />
+          width={100} />
 
         <Table.Column<ICreativeStore.ICreative>
           key="action"
