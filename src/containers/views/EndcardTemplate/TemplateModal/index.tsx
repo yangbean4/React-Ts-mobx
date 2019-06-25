@@ -210,7 +210,7 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
             template_image = '',
             status = 1
         } = endcardTemplate || {}
-        const imageProps = this.getUploadprops(this.api.util.uploadTemplateImage, 'template_image', '.png, .jpg', 1500, undefined, true)
+        const imageProps = this.getUploadprops(this.api.util.uploadTemplateImage, 'template_image', '.png, .jpg', 15, undefined, true)
         const templateProps = this.getUploadprops(this.api.util.uploadTemplate, 'template_url', '.zip', undefined, (data) => {
             this.md5 = data.md5
         })

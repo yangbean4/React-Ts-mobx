@@ -670,6 +670,102 @@ export const routerAndMenu: IRouter[] = [
         title: 'Apps',
     },
     {
+        id: 48,
+        pid: 4,
+        isMenu: true,
+        hasBread: false,
+        title: 'Offers',
+        exact: true,
+    },
+    {
+        id: 481,
+        pid: 48,
+        isMenu: true,
+        title: 'Apps Manage',
+        path: '/log/appsManage',
+        component: 'Logs'
+    },
+
+    {
+        id: 482,
+        pid: 48,
+        isMenu: true,
+        hasBread: false,
+        title: 'Creatives',
+    },
+    {
+        id: 4821,
+        pid: 482,
+        isMenu: true,
+        title: 'Creatives',
+        path: '/log/creative',
+        component: 'Logs'
+    },
+    {
+        id: 4822,
+        pid: 482,
+        isMenu: true,
+        title: 'Lead Content',
+        path: '/log/lead_content',
+        component: 'Logs'
+    },
+
+    {
+        id: 483,
+        pid: 48,
+        isMenu: true,
+        hasBread: false,
+        title: 'Endcard',
+    },
+    {
+        id: 4831,
+        pid: 483,
+        isMenu: true,
+        title: 'Endcard',
+        path: '/log/endcard',
+        component: 'Logs'
+    },
+    {
+        id: 4832,
+        pid: 483,
+        isMenu: true,
+        title: 'Endcard Template',
+        path: '/log/endcard_template',
+        component: 'Logs'
+    },
+
+    {
+        id: 484,
+        pid: 48,
+        isMenu: true,
+        hasBread: false,
+        title: 'Comments',
+    },
+    {
+        id: 4841,
+        pid: 484,
+        isMenu: true,
+        title: 'Comments',
+        path: '/log/comment',
+        component: 'Logs'
+    },
+    {
+        id: 4842,
+        pid: 484,
+        isMenu: true,
+        title: 'Comment Groups',
+        path: '/log/comment_group',
+        component: 'Logs'
+    },
+    {
+        id: 485,
+        pid: 48,
+        isMenu: true,
+        title: 'Campaigns',
+        path: '/log/campaigns',
+        component: 'Logs'
+    },
+    {
         id: 42,
         pid: 4,
         isMenu: true,
