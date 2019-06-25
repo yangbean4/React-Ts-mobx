@@ -68,7 +68,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     private platform: boolean = false
 
     @observable
-    private Account: string[]
+    private Account: [] = []
 
     @observable
     private manageGroup: IAppManageStore.IAppMange = {}
@@ -142,7 +142,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     getSourceAccount = async () => {
         const res = await this.api.appGroup.getAccountSource()
-        runInAction('SET', () => {
+        runInAction('SET_SOURCE', () => {
             this.Account = res.data;
         })
     }
@@ -292,7 +292,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
             title = "",
             appstore_url = '',
             app_id = undefined,
-            account_id = '',
+            account_id = undefined,
             screen_type = '0',
             logo = '',
             rating = '',

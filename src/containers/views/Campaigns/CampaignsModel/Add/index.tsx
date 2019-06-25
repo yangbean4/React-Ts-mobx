@@ -146,7 +146,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         values = {
                             ...values,
                             'start_time': values['start_time'].format(DateFormat),
-                            'end_time': values['end_time'].format(DateFormat),
+                            'end_time': values['end_time'] ? values['end_time'].format(DateFormat) : '',
                             'target_code': values.target_code.join(','),
                             'app_key': appKey,
                            
@@ -190,6 +190,14 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         this.platform = value
     }
 
+    @action
+    setEndTime = (value) => {
+        const initialValue = value? moment(value) : ''
+        this.props.form.setFieldsValue({
+            end_time: initialValue
+        })
+    }
+
     componentWillMount() {
         this.props.getTargetCode()
         this.props.getCommentsGroupId()
@@ -199,7 +207,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         }
     }
     componentDidMount() {
-        console.log(this.userAppID)
+        
     }
 
     render() {
@@ -219,7 +227,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
             total_budget = '',
             daily_budget = '',
             start_time = Now,
-            end_time = '2019-07-02',
+            end_time = '',
             comment_group_id = '',
             ad_type = 1,
             tracking_url = '',
@@ -229,7 +237,6 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
             default_cpm = '0.01',
             kpi = '',
         } = reData || {}
-        
         if (target_code && reData) {
             target_codeValue = target_code.split(',').map(ele => {
                 return (optionListDb.TargetCode.find(code => code.code2 === ele) || {}).code2
@@ -456,7 +463,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                 initialValue: moment(start_time),
                                 rules: [{ type: 'object', required: true, message: 'Please select time!' }]
                             }
-                        )(<DatePicker />)}
+                        )(<DatePicker placeholder="Select Time" />)}
                     </FormItem>
 
                     <FormItem label="End Time">
