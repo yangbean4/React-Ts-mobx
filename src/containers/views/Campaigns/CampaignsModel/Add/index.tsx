@@ -577,12 +577,11 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             <Select
                                 showSearch
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >
-                                {this.endcards && this.endcards.map(c => (
-                                    <Select.Option key={c.id} value={c.id}>
-                                        {c.name}
-                                    </Select.Option>
-                                ))}
+                            >   
+                                {
+                                    this.endcards && this.endcards.find(c => (c.name !== ''))
+                                }
+                                
                             </Select>
                         )}
                     </FormItem>

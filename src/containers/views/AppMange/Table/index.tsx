@@ -87,15 +87,15 @@ class AppsManageTable extends ComponentExt<IProps> {
                 }}
                 onChange={handleTableChange}
             >
-                <Table.Column<IAppManageStore.IAppMange> key="app_key" title="Appkey" dataIndex="app_key" width={80} />
-                <Table.Column<IAppManageStore.IAppMange> key="title" title="App Name" dataIndex="title" width={120} />
-                <Table.Column<IAppManageStore.IAppMange> key="app_id" title="App ID" dataIndex="app_id" width={120} />
-                <Table.Column<IAppManageStore.IAppMange> key="platform" title="Platform" dataIndex="platform" width={80} />
-                <Table.Column<IAppManageStore.IAppMange> key="category_name" title="Category" dataIndex="category_name" width={100} />
+                <Table.Column<IAppManageStore.IAppMange> key="app_key" title="Appkey" dataIndex="app_key" width={100} />
+                <Table.Column<IAppManageStore.IAppMange> key="title" title="App Name" dataIndex="title" width={150} />
+                <Table.Column<IAppManageStore.IAppMange> key="app_id" title="App ID" dataIndex="app_id" width={200} />
+                <Table.Column<IAppManageStore.IAppMange> key="platform" title="Platform" dataIndex="platform" width={100} />
+                <Table.Column<IAppManageStore.IAppMange> key="category_name" title="Category" dataIndex="category_name" width={120} />
                 <Table.Column<IAppManageStore.IAppMange> key="screen_type" title="Screen type" dataIndex="screen_type" width={100} />
                 <Table.Column<IAppManageStore.IAppMange> key="rating" title="Rate" dataIndex="rating" width={100} />
-                <Table.Column<IAppManageStore.IAppMange> key="downloads" title="Downloads" dataIndex="downloads" width={80} />
-                <Table.Column<IAppManageStore.IAppMange> key="status" title="Status" dataIndex="status" width={80} />
+                <Table.Column<IAppManageStore.IAppMange> key="downloads" title="Downloads" dataIndex="downloads" width={100} />
+                <Table.Column<IAppManageStore.IAppMange> key="status" title="Status" dataIndex="status" width={100} />
                 <Table.Column<IAppManageStore.IAppMange>
                     key="action"
                     title="Operate"
