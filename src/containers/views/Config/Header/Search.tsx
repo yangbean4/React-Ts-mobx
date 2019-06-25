@@ -68,7 +68,7 @@ class ConfigSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <FormItem label="Pkg Name">
               {getFieldDecorator('pkg_name', {
                 initialValue: filters.pkg_name
-              })(<Input autoComplete="off" />)}
+              })(<Input />)}
             </FormItem>
           </Col>
           <Col span={span}>

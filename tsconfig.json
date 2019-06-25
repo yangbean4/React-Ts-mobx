@@ -6,50 +6,24 @@
         "allowSyntheticDefaultImports": true,
         "sourceMap": true,
         "removeComments": false,
-        "rootDirs": [
-            "./src"
-        ],
+        "rootDirs": ["./src"],
         "baseUrl": "./src",
         "paths": {
-            "@constants/*": [
-                "constants/*"
-            ],
-            "@services/*": [
-                "services/*"
-            ],
-            "@utils/*": [
-                "utils/*"
-            ],
-            "@assets/*": [
-                "assets/*"
-            ],
-            "@components/*": [
-                "components/*"
-            ],
-            "@views/*": [
-                "containers/views/*"
-            ],
-            "@shared/*": [
-                "containers/shared/*"
-            ],
-            "@config/*": [
-                "config/*"
-            ],
+            "@constants/*": ["constants/*"],
+            "@services/*": ["services/*"],
+            "@utils/*": ["utils/*"],
+            "@assets/*": ["assets/*"],
+            "@components/*": ["components/*"],
+            "@views/*": ["containers/views/*"],
+            "@shared/*": ["containers/shared/*"]
         },
         "jsx": "react",
         "alwaysStrict": true,
         "noUnusedLocals": true,
         "importHelpers": true,
         "experimentalDecorators": true,
-        "lib": [
-            "es7",
-            "dom"
-        ],
+        "lib": ["es7", "dom"],
         "skipLibCheck": true,
-        "typeRoots": [
-            "node",
-            "node_modules/@types",
-            "./typings"
-        ]
+        "typeRoots": ["node", "node_modules/@types", "./typings"]
     }
 }

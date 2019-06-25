@@ -1,11 +1,4 @@
 declare interface IStore {
-    appManageStore: IAppManageStore.AppManageStore
-    creativeStore: ICreativeStore.CreativeStore
-    campaignStore: ICampaignStore.CampaignStore
-    commentGroupStore: ICommentGroupStore.CommentGroupStore
-    endcardStore: IEndcardStore.EndcardStore
-    endcardTemplateStore: IEndcardTemplateStore.EndcardTemplateStore
-    commentStore: ICommentStore.CommentStore
     appGroupStore: IAppGroupStore.AppGroupStore
     accountStore: ICurrencyStore.AccountStore
     currencyStore: ICurrencyStore.CurrencyStore
@@ -20,5 +13,4 @@ declare interface IStore {
     customStore: ICustomStore.CustomStore
     templateStore: ITemplateStore.TemplatesStore
     configStore: IConfigStore.ConfigStore
-    leadContentStore: ILeadContentStore.LeadContentStore
 }

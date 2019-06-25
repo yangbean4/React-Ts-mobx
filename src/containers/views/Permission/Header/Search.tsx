@@ -70,14 +70,14 @@ class PermissionSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <FormItem label="Name">
               {getFieldDecorator('name', {
                 initialValue: filters.name
-              })(<Input autoComplete="off" />)}
+              })(<Input />)}
             </FormItem>
           </Col>
           <Col span={span}>
             <FormItem label="Route">
               {getFieldDecorator('route', {
                 initialValue: filters.route
-              })(<Input autoComplete="off" />)}
+              })(<Input />)}
             </FormItem>
           </Col>
           <Col span={3} offset={1}>

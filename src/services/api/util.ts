@@ -9,16 +9,4 @@ export default {
   uploadToLocal(data): Promise<any> {
     return http.post(`${basePath}uploadToLocal`, data || {})
   },
-  uploadCoverImage(data): Promise<any> {
-    return http.post(`${basePath}uploadCoverImage`, data || {})
-  },
-  uploadIcon(data): Promise<any> {
-    return http.post(`${basePath}uploadIcon`, data || {})
-  },
-  uploadTemplate(data): Promise<any> {
-    return http.post(`${basePath}uploadTemplate`, data || {})
-  },
-  uploadTemplateImage(data): Promise<any> {
-    return http.post(`${basePath}uploadTemplateImage `, data || {})
-  },
 }

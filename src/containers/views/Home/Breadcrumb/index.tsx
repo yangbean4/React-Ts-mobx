@@ -2,7 +2,7 @@ import React from 'react';
 import { inject, observer } from 'mobx-react'
 import { observable, computed } from 'mobx'
 import { Breadcrumb } from 'antd'
-import menu, { router, IRouter, templateId, logId } from '../menu&router'
+import menu, { router, IMenu, templateId, logId } from '../menu&router'
 import pathToRegexp from 'path-to-regexp'
 import * as styles from './style.scss'
 
@@ -30,7 +30,7 @@ class Bread extends React.Component<IStoreProps> {
   @computed
   get addSideBar() {
     const merge = (pop, tmp) => {
-      const addTmp: IRouter[] = tmp.map((item, index) => {
+      const addTmp: IMenu[] = tmp.map((item, index) => {
         return {
           pid: templateId,
           id: (templateId * 1000) + index,
@@ -39,7 +39,7 @@ class Bread extends React.Component<IStoreProps> {
           path: `/template/${encodeURI(item.id)}`
         }
       })
-      const addLog: IRouter[] = tmp.map((item, index) => {
+      const addLog: IMenu[] = tmp.map((item, index) => {
         return {
           pid: logId,
           id: (logId * 1000) + index,
@@ -84,11 +84,11 @@ class Bread extends React.Component<IStoreProps> {
     const array = this.allConfig
     const current = this.currentMenu
     const result = []
-    const getPath = (item: IRouter): void => {
+    const getPath = (item: IMenu): void => {
       if (item && item.pid && item.hasBread !== false) {
         result.unshift(item)
         const pItem = array.find(ele => ele.id == item.pid)
-        !item.isMenu && getPath(pItem)
+        getPath(pItem)
       }
     }
     getPath(current)

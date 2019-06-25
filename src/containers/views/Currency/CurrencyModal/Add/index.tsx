@@ -267,7 +267,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input autoComplete="off" />)}
+                        })(<Input />)}
                     </FormItem>
 
                     <FormItem label="VC Description"  >
@@ -310,7 +310,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem label="VC Secret Key">
                         {getFieldDecorator('vc_secret_key', {
                             initialValue: vc_secret_key,
-                        })(<Input autoComplete="off" />)}
+                        })(<Input />)}
                     </FormItem>
 
                     <FormItem className={this.props.type ? styles.vcMdoal : styles.btnBox} >

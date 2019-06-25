@@ -88,19 +88,19 @@ class TemplateSearch extends ComponentExt<IStoreProps & FormComponentProps> {
           {
             this.searchList.includes('template_name') &&
             <FormItem label={camelCase('template_name')}>
-              {getFieldDecorator('template_name')(<Input autoComplete="off" />)}
+              {getFieldDecorator('template_name')(<Input />)}
             </FormItem>
           }
           {
             this.searchList.includes('template_md5') &&
             <FormItem label={camelCase('template_md5')}>
-              {getFieldDecorator('template_md5')(<Input autoComplete="off" />)}
+              {getFieldDecorator('template_md5')(<Input />)}
             </FormItem>
           }
           {
             this.searchList.includes('version') &&
             <FormItem label={camelCase('version')}>
-              {getFieldDecorator('version')(<Input autoComplete="off" />)}
+              {getFieldDecorator('version')(<Input />)}
             </FormItem>
           }
           <Button type="primary" className='addbtn-ml20 addbtn-mb20' onClick={() => this.submit()} >Search</Button>

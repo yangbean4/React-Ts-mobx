@@ -317,7 +317,7 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input autoComplete="off" disabled={!this.typeIsAdd} />)}
+                        })(<Input disabled={!this.typeIsAdd} />)}
                     </FormItem>
                     {
                         sortArr.map(key => {

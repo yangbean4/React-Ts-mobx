@@ -6,10 +6,10 @@ import { FormComponentProps } from 'antd/lib/form'
 import * as web from '@views/AppGroup/web.config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
+import InputColor from '@components/InputColor/index'
 import MyIcon from '@components/Icon'
 import VCmodel from './VCmodel';
 const FormItem = Form.Item
-import InputColor from '@components/InputColor/index'
 const InitColor = '#FF1D0C';
 
 interface hasResult {
@@ -388,7 +388,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input autoComplete="off" disabled={!this.isAdd} />)}
+                        })(<Input disabled={!this.isAdd} />)}
                     </FormItem>
 
                     <FormItem label="Placement Name">
@@ -399,7 +399,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input autoComplete="off" />)}
+                        })(<Input />)}
                     </FormItem>
 
                     <FormItem label="IGE Carrier">
@@ -506,7 +506,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     showSearch
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
-                                    {optionListDb.PidType.map(c => (
+                                    {(this.props.appGroup.contains_native_s2s_pid_types === 1 ? optionListDb.PidType : optionListDb.PidType.filter(ele => ele.id !== 5)).map(c => (
                                         <Select.Option key={c.id} value={c.id}>
                                             {c.name}
                                         </Select.Option>
@@ -554,7 +554,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
 
                     {
-                        (this.usePidtype === 2 || this.usePidtype === 5) && <FormItem label="PID Budget">
+                        (this.usePidtype === 2 || this.usePidtype === 5 || this.usePidtype === 4) && <FormItem label="PID Budget">
                             {getFieldDecorator('budget', {
                                 initialValue: budget,
                                 rules: [
@@ -614,14 +614,14 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                             required: true, message: "Required"
                                         }
                                     ]
-                                })(<Input autoComplete="off" />)}
+                                })(<Input />)}
                             </FormItem>
                             <div className={`${styles.formItemBox} ${styles.noTitle}`}>
 
                                 {/* <FormItem {...noLabelLayout}>
                                     {getFieldDecorator('style_detail.title_font', {
                                         initialValue: style_detail.title_font,
-                                    })(<Input autoComplete="off" style={{ width: '60%' }} />)}
+                                    })(<Input style={{ width: '60%' }} />)}
                                     <span className={styles.lineSpan}>   font   </span>
                                 </FormItem> */}
                                 <FormItem {...noLabelLayout}>
@@ -654,7 +654,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                             required: true, message: "Required"
                                         }
                                     ]
-                                })(<Input autoComplete="off" />)}
+                                })(<Input />)}
                             </FormItem>
 
                             <div className={`${styles.formItemBox} ${styles.noTitle}`}>
@@ -816,7 +816,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             {/* <FormItem label='Content Font'>
                                 {getFieldDecorator('style_detail.content_font', {
                                     initialValue: style_detail.content_font,
-                                })(<Input autoComplete="off" />)}
+                                })(<Input />)}
                             </FormItem> */}
                         </React.Fragment>
                     }

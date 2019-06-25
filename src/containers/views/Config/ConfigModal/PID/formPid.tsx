@@ -178,7 +178,7 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
                 required: true, message: "Required"
               }
             ]
-          })(<Input autoComplete="off" placeholder='name' disabled={!this.isAdd} />)}
+          })(<Input placeholder='name' disabled={!this.isAdd} />)}
         </FormItem>
         <Basic
           onCancel={this.props.onCancel}

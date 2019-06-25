@@ -143,13 +143,10 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
     }
     onCancel = () => {
         this.setTemplate({})
-        // this.props.onCancel()
+        this.props.onCancel()
         this.removePropFile = false
         this.toggleLoading(false)
         this.props.form.resetFields()
-        setTimeout(()=>{
-            console.log(this.comTemplate.template_url )
-        },100)
     }
 
     removeFile = () => {
@@ -230,7 +227,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input autoComplete="off" disabled={!this.typeIsAdd} />)}
+                            })(<Input disabled={!this.typeIsAdd} />)}
                         </FormItem> : null
                     }
                     {
@@ -242,7 +239,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input autoComplete="off" />)}
+                            })(<Input />)}
                         </FormItem> : null
                     }
                     {

@@ -211,7 +211,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
           }
           ],
         })(
-          <Input autoComplete="off" placeholder="Template Name" style={{ width: '60%', marginRight: 8 }} />
+          <Input placeholder="Template Name" style={{ width: '60%', marginRight: 8 }} />
         )}
         <Icon
           className={styles.dynamic}
@@ -272,7 +272,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                   }
                 }
               ]
-            })(<Input autoComplete="off" className={styles.minInput} key='input' />), <Icon onClick={this.toggleAddType} className={styles.workBtn} key="iconxia" type='iconxia' />]
+            })(<Input className={styles.minInput} key='input' />), <Icon onClick={this.toggleAddType} className={styles.workBtn} key="iconxia" type='iconxia' />]
 
               : [
                 getFieldDecorator('pId', {

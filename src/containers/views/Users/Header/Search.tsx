@@ -72,14 +72,14 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <FormItem label="User Name">
               {getFieldDecorator('user_name', {
                 initialValue: filters.user_name
-              })(<Input autoComplete="off" autoComplete="off" />)}
+              })(<Input />)}
             </FormItem>
           </Col>
           <Col span={span}>
             <FormItem label="Owner" className='minInput'>
               {getFieldDecorator('owner', {
                 initialValue: filters.owner
-              })(<Input autoComplete="off" autoComplete="off" />)}
+              })(<Input />)}
             </FormItem>
           </Col>
           <Col span={span}>

@@ -27,13 +27,6 @@ export class ConfigStore extends StoreExt {
     pageSize: number = 10
 
     @observable
-    pkgNameAndBundleId: IConfigStore.iosAndAnd = {
-        ios: [],
-        android: []
-    }
-
-
-    @observable
     allConfig: string[] = []
     /**
      * users total
@@ -51,22 +44,13 @@ export class ConfigStore extends StoreExt {
     clearConfigAll = () => {
         this.allConfig = []
     }
-    // @action
-    // getAllConfig = async () => {
-    //     try {
-    //         this.clearConfigAll()
-    //         const res = await this.api.config.fullConfig()
-    //         runInAction('aet_all_roleList', () => {
-    //             this.allConfig = Object.values(res.data)
-    //         })
-    //     } catch (err) { }
-    // }
     @action
     getAllConfig = async () => {
         try {
+            this.clearConfigAll()
             const res = await this.api.config.fullConfig()
             runInAction('aet_all_roleList', () => {
-                this.pkgNameAndBundleId = res.data
+                this.allConfig = Object.values(res.data)
             })
         } catch (err) { }
     }
