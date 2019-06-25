@@ -153,6 +153,9 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                     try {
                         const md5 = this.md5 || leadContent.content_md5
                         values = md5 ? { ...values, content_md5: md5 } : values
+                        if (values.status === undefined) {
+                            values.status = 1
+                        }
                         if (this.isAdd) {
                             if (app_key) {
                                 values = {
@@ -168,8 +171,8 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                                 ))
                             }
                             let data = await createLeadContent(values)
-                            message.success(data.message)
-                            leadContent ? this.props.onOk(data.data.id) : routerStore.push(`/leadContent/edit/${data.data.app_key || app_key || values.app_key}`)
+                            message.success(data.message);
+                            (this.props.type || leadContent) ? this.props.onOk(data.data.id) : routerStore.push(`/leadContent/edit/${data.data.app_key || app_key || values.app_key}`)
                         } else {
                             const data = await modifyLeadContent({
                                 ...this.leadContentTarget,
@@ -267,7 +270,7 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
         const { form, optionListDb } = this.props
         const { getFieldDecorator } = form
         const {
-            platform = 'android',
+            platform = this.platform,
             app_key = '',
             version = "",
             order_id = '',
@@ -317,7 +320,7 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                         !this.props.leadContent && <FormItem label="Platform">
                             {getFieldDecorator('platform',
                                 {
-                                    initialValue: platform,
+                                    initialValue: this.platform,
                                     rules: [
                                         {
                                             required: true, message: "Required"
@@ -340,9 +343,9 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                     }
 
                     {
-                        !this.props.leadContent && <FormItem label="App ID">
+                        (!this.props.leadContent && !this.props.type) && <FormItem label="App ID">
                             {getFieldDecorator('app_key', {
-                                initialValue: app_key,
+                                initialValue: this.app_key,
                                 rules: [
                                     {
                                         required: true, message: "Required"

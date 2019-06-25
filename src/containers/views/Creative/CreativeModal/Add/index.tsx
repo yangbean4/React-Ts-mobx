@@ -92,7 +92,6 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private app_key: string = this.props.app_key || this.creativeTarget.app_key || undefined
 
-
     @observable
     private skipTo: string = this.creativeTarget.skip_to || 'ige'
 
@@ -252,7 +251,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                         if (this.useCreativeType === 4) {
                             values = {
                                 ...values,
-                                creative_type: this.useCreativeType + this.skipTo === 'ige' ? 0 : 1
+                                creative_type: this.useCreativeType * 10 + (this.skipTo === 'ige' ? 0 : 1)
                             }
                         }
                         if (this.useCreativeType === 2 || this.useCreativeType === 3) {
@@ -290,8 +289,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 this.props.onOk(data.data.id)
                             }
                             if (this.creativeTarget.status !== values.status) {
-                                this.api.creative.checkCreative(creativeId).then((res) => {
-                                    if (res.errorcode !== 0) {
+                                this.api.creative.checkCreative({ id: creativeId }).then((res) => {
+                                    if (res.data.errorcode !== 0) {
                                         this.confirmModal = Modal.confirm({
                                             okText: 'Yes',
                                             cancelText: 'No',
@@ -321,6 +320,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                         console.log(err);
                     }
                     this.toggleLoading()
+                } else {
+                    console.log(this.useCreativeType === 4 ? Number(this.useCreativeType) * 10 + (this.skipTo === 'ige' ? 0 : 1) : this.useCreativeType)
                 }
             }
         )
@@ -569,6 +570,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                     visible={this.accountShow}
                     onCancel={() => this.toggleAppShow(false)}
                     onOk={(id) => this.companyModelOk(id)}
+                    platform={this.platform}
+                    app_key={this.app_key}
                 />
 
                 <div className={`sb-form ${styles.creativeModal}`}>
@@ -605,7 +608,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                             !this.props.creative && <FormItem label="Platform">
                                 {getFieldDecorator('platform',
                                     {
-                                        initialValue: platform,
+                                        initialValue: this.platform,
                                         rules: [
                                             {
                                                 required: true, message: "Required"
@@ -630,7 +633,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                         {
                             !this.props.creative && <FormItem label="App ID">
                                 {getFieldDecorator('app_key', {
-                                    initialValue: app_key,
+                                    initialValue: this.app_key,
                                     rules: [
                                         {
                                             required: true, message: "Required"
@@ -852,8 +855,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             {this.videoType === 'portrait' ? '9:16' : '16:9'}
                                         </div>
                                     </div>
-                                    {this.videoType === 'portrait' ? getFieldDecorator('common_portrait_creative_offline_url', {
-                                        initialValue: this.getInitialValue('common_portrait_creative_offline_url'),
+                                    {this.videoType === 'portrait' ? getFieldDecorator('common_portrait_creative_online_url', {
+                                        initialValue: this.getInitialValue('common_portrait_creative_online_url'),
                                         rules: [
                                             {
                                                 required: true, message: "Required"
@@ -866,8 +869,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         >
                                             <div className={styles.full} />
                                         </UploadFile>
-                                    ) : getFieldDecorator('common_landscape_creative_offline_url', {
-                                        initialValue: this.getInitialValue('common_landscape_creative_offline_url'),
+                                    ) : getFieldDecorator('common_landscape_creative_online_url', {
+                                        initialValue: this.getInitialValue('common_landscape_creative_online_url'),
                                         rules: [
                                             {
                                                 required: true, message: "Required"
@@ -1419,9 +1422,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                         </FormItem>
 
                         {
-                            (this.useCreativeType === 3 || this.useCreativeType === 4) && <React.Fragment>
+                            (this.useCreativeType === 3 || (this.useCreativeType === 4 && this.skipTo === 'ige')) && <React.Fragment>
 
-                                <FormItem label="If Show Comment">
+                                <FormItem label="If Show Lead Content">
                                     {getFieldDecorator('lead_is_show_content', {
                                         initialValue: Number(lead_is_show_content),
                                         rules: [
@@ -1461,7 +1464,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             ))}
                                         </Select>
                                     )}
-                                    <MyIcon className={styles.uploadICON} onClick={() => this.toggleAppShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
+                                    {
+                                        this.app_key && <MyIcon className={styles.uploadICON} onClick={() => this.toggleAppShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
+                                    }
                                 </FormItem>
                             </React.Fragment>
                         }

@@ -6,6 +6,8 @@ interface IProps {
   visible: boolean
   onCancel: () => void
   onOk: (id: number) => void
+  app_key?: string
+  platform?: string
 }
 
 class AccountModel extends React.Component<IProps>{
@@ -22,6 +24,8 @@ class AccountModel extends React.Component<IProps>{
       >
         <AccountForm
           type='Modal'
+          app_key={this.props.app_key}
+          platform={this.props.platform}
           onOk={this.props.onOk}
           onCancel={this.props.onCancel}
         />

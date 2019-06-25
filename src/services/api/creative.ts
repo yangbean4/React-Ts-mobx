@@ -24,7 +24,7 @@ export default {
   },
 
   checkCreative(data): Promise<any> {
-    return http.post(`${basePath}checkCreative`, data || {})
+    return http.post(`${basePath}checkCreative`, data, { useRes: true })
   },
 
   uploadVideo(data): Promise<any> {
