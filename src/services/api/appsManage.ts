@@ -22,7 +22,7 @@ export default {
   },
 
   checkAppsStatus(data): Promise<any> {
-    return http.post(`${basePath}checkApp`, data)
+    return http.post(`${basePath}checkApp`, data, { useRes: true })
   },
 
   showGrabMessage(data): Promise<any> {

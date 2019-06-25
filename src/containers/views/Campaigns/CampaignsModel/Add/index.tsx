@@ -556,7 +556,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                 showSearch
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
-                                {this.creatives && this.creatives.map(c => (
+                                {this.creatives && this.creatives.filter(c => (!!c.name)).map(c => (
                                     <Select.Option key={c.id} value={c.id}>
                                         {c.name}
                                     </Select.Option>
@@ -577,11 +577,15 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             <Select
                                 showSearch
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >   
+                            >
                                 {
-                                    this.endcards && this.endcards.find(c => (c.name !== ''))
+                                    this.endcards && this.endcards.filter(c => (!!c.name)).map(c => (
+                                        <Select.Option key={c.id} value={c.id}>
+                                            {c.name}
+                                        </Select.Option>
+                                    ))
                                 }
-                                
+
                             </Select>
                         )}
                     </FormItem>

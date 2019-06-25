@@ -125,13 +125,15 @@ export class ConfigStore extends StoreExt {
             const res = await this.api.config.getConfigs({ page: this.page, pageSize: this.pageSize, ...this.filters })
             const fmtArr: IConfigStore.IConfig[] = res.data.map(item => {
                 const {
-                    config_version, config_deploy_id, pkg_name, platform, totalConfig
+                    config_version, config_deploy_id, pkg_name, platform, totalConfig,
+                    bundle_id
                 } = item
                 const verArr = (config_version || '').split(',')
                 const idArr = (config_deploy_id || '').split(',')
                 const versionArr = verArr.map((j, i) => ({ version: j, id: idArr[i] }))
                 return {
                     versionArr,
+                    bundle_id,
                     pkg_name, platform, totalConfig
                 }
             })

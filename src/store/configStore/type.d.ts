@@ -15,6 +15,7 @@ export interface IConfig {
   pkg_name?: string
   platform?: string
   totalConfig?: number
+  bundle_id?: string
 }
 
 export interface IConfigTarget {

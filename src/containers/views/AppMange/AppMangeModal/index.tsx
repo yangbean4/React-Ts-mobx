@@ -178,30 +178,32 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
         })
     }
 
-    showModel = (values, cb, routerStore) => { Modal.confirm({
-        title: 'Do you Want to change status enable to disable?',
-        okText: 'YES',
-        content: 'The status of the app is modified to disable, all campaigns under this app will be suspended',
-        onOk() {
-            cb(values).then(res => {
-                if(res.errorcode === 0) {
-                    message.success(res.message)
-                    routerStore.push('/offer')
-                }         
-            })
-        },
-        onCancel() {
-            console.log('Cancel');
-        }
-    })}
+    showModel = (values, cb, routerStore) => {
+        Modal.confirm({
+            title: 'Do you Want to change status enable to disable?',
+            okText: 'YES',
+            content: 'The status of the app is modified to disable, all campaigns under this app will be suspended',
+            onOk() {
+                cb(values).then(res => {
+                    if (res.errorcode === 0) {
+                        message.success(res.message)
+                        routerStore.push('/offer')
+                    }
+                })
+            },
+            onCancel() {
+                console.log('Cancel');
+            }
+        })
+    }
 
     submit = (e?: React.FormEvent<any>): void => {
         if (e) {
             e.preventDefault()
         }
-        
+
         const { routerStore, createAppManage, form, modifyAppManage, type } = this.props
-        
+
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
@@ -219,13 +221,24 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                             message.success(data.message)
                             routerStore.push('/offer')
                         } else {
-                            const checkData = await this.api.appsManage.checkAppsStatus({app_key: values.app_key.toString()})
-                            if(checkData.errorcode === 105 || checkData.message === 'Fail') {
-                               this.showModel(values, modifyAppManage, routerStore)
-                            } else {
+                            const cb = async () => {
                                 data = await modifyAppManage({ ...values })
+                                message.success(data.message)
                                 routerStore.push('/offer')
-                            } 
+                            }
+                            if ((this.manageGroup.status !== values.status) && values.status === 'suspend') {
+                                const resData = await this.api.appsManage.checkAppsStatus({ app_key: values.app_key.toString() })
+                                const checkData = resData.data
+                                if (checkData.errorcode !== 0) {
+                                    // this.showModel(values, modifyAppManage, routerStore)
+                                    this.$message.error('The status of the app is modified to disable, all campaigns under this app will be suspended')
+                                } else {
+                                    cb()
+                                }
+                            } else {
+                                cb()
+                            }
+
                         }
                         if (this.props.type) {
                             this.props.form.resetFields()
