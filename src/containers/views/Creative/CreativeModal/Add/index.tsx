@@ -1303,7 +1303,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                 ]
                                             })(
                                                 <Radio.Group>
-                                                    {igeOption.map(c => (
+                                                    {YesOrNo.map(c => (
                                                         <Radio key={c.key} value={c.value}>
                                                             {c.key}
                                                         </Radio>
@@ -1321,7 +1321,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                 ]
                                             })(
                                                 <Radio.Group>
-                                                    {igeOption.map(c => (
+                                                    {YesOrNo.map(c => (
                                                         <Radio key={c.key} value={c.value}>
                                                             {c.key}
                                                         </Radio>
