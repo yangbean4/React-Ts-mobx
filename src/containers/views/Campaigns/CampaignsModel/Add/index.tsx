@@ -149,7 +149,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             'end_time': values['end_time'] ? values['end_time'].format(DateFormat) : '',
                             'target_code': values.target_code.join(','),
                             'app_key': appKey,
-                           
+
                         }
                         if (values.id === undefined) {
                             let data = await createCampaingn({ ...values })
@@ -192,7 +192,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     setEndTime = (value) => {
-        const initialValue = value? moment(value) : ''
+        const initialValue = value ? moment(value) : ''
         this.props.form.setFieldsValue({
             end_time: initialValue
         })
@@ -207,7 +207,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         }
     }
     componentDidMount() {
-        
+
     }
 
     render() {
@@ -443,11 +443,9 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: daily_budget,
                             rules: [
                                 {
-                                    required: false, message: "Required"
-                                },
-                                {
                                     validator: (r, v, callback) => {
-                                        if (v <= 0) {
+
+                                        if (v != undefined && v <= 0) {
                                             callback('The Exchange Rate should be a positive integer!')
                                         }
                                         callback()
@@ -469,7 +467,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem label="End Time">
                         {getFieldDecorator('end_time',
                             {
-                                initialValue: moment(end_time),
+                                initialValue: id !== undefined ? undefined : moment(end_time),
                                 rules: [{ type: 'object', required: false }],
                             }
                         )(<DatePicker />)}

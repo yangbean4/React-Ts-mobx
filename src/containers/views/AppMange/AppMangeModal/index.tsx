@@ -68,7 +68,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     private platform: boolean = false
 
     @observable
-    private Account: [] = []
+    private Account: ({ name?: string, id?: number })[] = []
 
     @observable
     private manageGroup: IAppManageStore.IAppMange = {}
@@ -162,7 +162,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     companyModelOk = async (id: number) => {
-        await this.api.appGroup.getAccountSource()
+        await this.getSourceAccount()
         this.props.form.setFieldsValue({// 重新赋值
             account_id: id
         })
