@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Input, Select, Radio, Button, message, Popover, Icon as AntIcon, Upload } from 'antd'
+import { Form, Input, Select, Radio, Button, message, Modal, Popover, Icon as AntIcon, Upload } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { statusOption, platformOption, screenOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
@@ -135,11 +135,6 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
-    checkCampaignsUse = async () => {
-        const res = await this.api.appsManage.checkAppsStatus({ app_key: this.props.appManage.app_key })
-    }
-
-    @action
     getSourceAccount = async () => {
         const res = await this.api.appGroup.getAccountSource()
         runInAction('SET_SOURCE', () => {
@@ -183,11 +178,30 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
         })
     }
 
+    showModel = (values, cb, routerStore) => { Modal.confirm({
+        title: 'Do you Want to change status enable to disable?',
+        okText: 'YES',
+        content: 'The status of the app is modified to disable, all campaigns under this app will be suspended',
+        onOk() {
+            cb(values).then(res => {
+                if(res.errorcode === 0) {
+                    message.success(res.message)
+                    routerStore.push('/offer')
+                }         
+            })
+        },
+        onCancel() {
+            console.log('Cancel');
+        }
+    })}
+
     submit = (e?: React.FormEvent<any>): void => {
         if (e) {
             e.preventDefault()
         }
+        
         const { routerStore, createAppManage, form, modifyAppManage, type } = this.props
+        
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
@@ -202,14 +216,19 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                         values = { ...values }
                         if (this.isAdd) {
                             data = await createAppManage(values)
+                            message.success(data.message)
+                            routerStore.push('/offer')
                         } else {
-                            data = await modifyAppManage({ ...values })
+                            const checkData = await this.api.appsManage.checkAppsStatus({app_key: values.app_key.toString()})
+                            if(checkData.errorcode === 105 || checkData.message === 'Fail') {
+                               this.showModel(values, modifyAppManage, routerStore)
+                            } else {
+                                data = await modifyAppManage({ ...values })
+                                routerStore.push('/offer')
+                            } 
                         }
-                        message.success(data.message)
                         if (this.props.type) {
                             this.props.form.resetFields()
-                        } else {
-                            routerStore.push('/offer')
                         }
                     } catch (error) {
                         console.log(err)
@@ -254,7 +273,6 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     render() {
-
         const props = {
             showUploadList: false,
             accept: ".png, .jpg, .jpeg, .gif",
@@ -298,9 +316,9 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
             rating = '',
             downloads = '',
             category_id = undefined,
-            frame_id = undefined,
+            frame_id = 201,
             specs_id = undefined,
-            style_id = undefined
+            style_id = 301
         } = reData || {}
         return (
             <React.Fragment>
@@ -335,7 +353,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 ]
                             })(
-                                <Radio.Group onChange={this.checkCampaignsUse}>
+                                <Radio.Group>
                                     {statusOption.map(c => (
                                         <Radio key={c.key} value={c.value}>
                                             {c.key}

@@ -78,6 +78,11 @@ class CommentTable extends ComponentExt<IProps> {
         const style = {
             marginLeft: '10px'
         }
+        const styles = {
+            maxWidth: '130px',
+            height: 'auto',
+            whiteSpace: 'wrap'
+        }
         const {
             scrollY,
             getcommentsLoading,
@@ -126,7 +131,7 @@ class CommentTable extends ComponentExt<IProps> {
                                             placement="top"
                                             trigger="hover"
                                             key={index}
-                                            content={c.comment}
+                                            content={<p style={styles}>{c.comment}</p>}
                                             >
                                                 <a href="javascript:;" style={style} key={index}>{FormatNumber(c.id)}</a>
                                         </Popover>

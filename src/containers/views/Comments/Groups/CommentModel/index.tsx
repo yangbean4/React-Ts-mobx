@@ -81,9 +81,9 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get useCommentList(): ICommentStore.IComment[] {
-        if (this.isAdd) {
+        if (this.isAdd && this.commentList) {
             return this.commentList.filter(ele => ele.status === 1)
-        } else {
+        } else if (this.commentList) {
 
             const ids = this.props.comment ? this.props.comment.group_template_ids : ''
             return this.commentList.filter(ele => ele.status === 1 || ids.includes(ele.id.toString())).sort((a, b) => {
@@ -111,9 +111,9 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
-    getComments = async () => {
+    getComments = async (val='en') => {
         const res = await this.api.comment.selectTemplate({})
-        const ret = res.data.en.concat(res.data.sv)
+        const ret = res.data[val]
         runInAction('SET_COMMENT', () => {
             this.commentList = ret
         })
@@ -132,8 +132,8 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         return {}
     }
     @action
-    languageChange = () => {
-
+    languageChange = (val) => {
+        this.getComments(val)
     }
 
     @action

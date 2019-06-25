@@ -98,6 +98,12 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @computed
+    get accountType() {
+        debugger
+        return this.appTarget.account_type
+    }
+
+    @computed
     get isAdd() {
         return !this.props.campaign
     }
@@ -180,9 +186,6 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
             this.appIDAndroid = res.data.android
             this.appIDIOS = res.data.ios
         })
-        /**
-         * //TOTO: id ----------------info ------------------------setTarget
-         *  */
     }
 
     @action
@@ -517,16 +520,18 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         )}
                     </FormItem>
 
-                    <FormItem label="Tracking Url">
-                        {getFieldDecorator('tracking_url', {
-                            initialValue: tracking_url,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
-                        })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
-                    </FormItem>
+                    {
+                        this.accountType !== 2 && <FormItem label="Tracking Url">
+                            {getFieldDecorator('tracking_url', {
+                                initialValue: tracking_url,
+                                rules: [
+                                    {
+                                        required: false, message: "Required"
+                                    }
+                                ]
+                            })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
+                        </FormItem>
+                    }
 
                     <FormItem label="Impression Url">
                         {getFieldDecorator('impression_url', {
