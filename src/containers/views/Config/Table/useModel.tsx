@@ -191,7 +191,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                       required: true, message: "Required"
                     }
                   ]
-                })(<Input className={styles.minInput} key='input' />)
+                })(<Input autoComplete="off" className={styles.minInput} key='input' />)
                   , <Icon onClick={this.toggleAddType} className={styles.workBtn} key="iconxia" type='iconxia' />
                 ]
 
@@ -251,7 +251,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                   }
                 ]
               })(
-                <Input />
+                <Input autoComplete="off" />
               )
 
             }
@@ -265,7 +265,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                   }
                 ]
               })(
-                <Input />
+                <Input autoComplete="off" />
               )}
             </FormItem> : null
           }

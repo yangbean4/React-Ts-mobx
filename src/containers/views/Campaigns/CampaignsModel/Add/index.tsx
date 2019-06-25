@@ -99,7 +99,6 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get accountType() {
-        debugger
         return this.appTarget.account_type
     }
 
@@ -228,7 +227,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
             bid_type = 'CPI',
             bid = '',
             total_budget = '',
-            daily_budget = '',
+            daily_budget,
             start_time = Now,
             end_time = '',
             comment_group_id = '',
@@ -258,7 +257,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 ]
                             })(
-                                <Input disabled={true} />
+                                <Input autoComplete="off" disabled={true} />
                             )}
                         </FormItem>
                     }
@@ -342,7 +341,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
 
                     <FormItem label="Target Code"  >
@@ -447,7 +446,6 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             rules: [
                                 {
                                     validator: (r, v, callback) => {
-
                                         if (v != undefined && v <= 0) {
                                             callback('The Exchange Rate should be a positive integer!')
                                         }

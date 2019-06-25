@@ -226,7 +226,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     }
                     <FormItem label="Status"  >
@@ -254,7 +254,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                 required: true, message: "Required"
                             }
                             ]
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem label="Group Language" >
                         {getFieldDecorator('group_language', {
@@ -286,7 +286,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ],
-                        })(<Input disabled={true} />)}
+                        })(<Input autoComplete="off" disabled={true} />)}
                     </FormItem>
                     <FormItem className={styles.tableBox} {...tableWidth}>
                         <div>

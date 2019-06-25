@@ -135,7 +135,7 @@ class PermissionModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                         {/*  disabled={!this.typeIsAdd}  */}
                     </FormItem>
 
@@ -173,7 +173,7 @@ class PermissionModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem {...formItemLayout} label="route">
                         {getFieldDecorator('route', {
                             initialValue: route,
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
 
                     <FormItem className={styles.btnBox}>

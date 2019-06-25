@@ -458,7 +458,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input onChange={this.versionChange} />)}
+                        })(<Input autoComplete="off" onChange={this.versionChange} />)}
                     </FormItem>
 
                     <FormItem label="Order ID"  >
@@ -469,7 +469,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input disabled={!this.isAdd} onChange={this.order_idChange} />)}
+                        })(<Input autoComplete="off" disabled={!this.isAdd} onChange={this.order_idChange} />)}
                     </FormItem>
 
                     <FormItem label="Endcard Language">
@@ -496,7 +496,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem label="Endcard Name"  >
                         {getFieldDecorator('endcard_name', {
                             initialValue: endcard_name,
-                        })(<Input disabled={true} />)}
+                        })(<Input autoComplete="off" disabled={true} />)}
                     </FormItem>
 
                     <FormItem {...bigLayout} className={styles.hasImg + ` ${styles.autoHeight}`} label='Endcard Template'>
@@ -566,7 +566,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                                                 required: true, message: "Required"
                                             }
                                         ]
-                                    })(<Input />)}
+                                    })(<Input autoComplete="off" />)}
                                 </FormItem>
 
                                 <FormItem label="Cta text color"  >

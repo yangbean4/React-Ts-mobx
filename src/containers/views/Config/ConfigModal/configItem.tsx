@@ -185,7 +185,7 @@ class ConfigItem extends React.Component<IProps> {
         // Component1 = React.createElement('div', {
         //   key: 'color-box',
         // }, [
-        //     <Input key="input" value={value} onDoubleClick={() => this.onTogglePicker()} />,
+        //     <Input autoComplete="off" key="input" value={value} onDoubleClick={() => this.onTogglePicker()} />,
         //     this.pickerVisible && (
         //       <div style={{ position: 'absolute', zIndex: 10 }} key='color'>
         //         <SketchPicker

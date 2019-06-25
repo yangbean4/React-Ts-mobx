@@ -398,7 +398,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     // }
                                 ]
                                 //  disabled={!this.useNot_in_appstore || (!this.isAdd && !!pkg_name)}
-                            })(<Input disabled={!this.isAdd && !!pkg_name} />)}
+                            })(<Input autoComplete="off" disabled={!this.isAdd && !!pkg_name} />)}
                         </FormItem>
 
                         <FormItem label="App Name">
@@ -409,7 +409,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input />)}
+                            })(<Input autoComplete="off" />)}
                             <Popover content={(<p>Enter a temporary app name if the app is not in the app store.</p>)}>
                                 <AntIcon className={styles.workBtn} type="question-circle" />
                             </Popover>
@@ -679,7 +679,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                             required: true, message: "Required",
                                         },
                                     ]
-                                })(<Input />)}
+                                })(<Input autoComplete="off" />)}
                             </FormItem>
                             {
                                 this.usePidType && <React.Fragment>
@@ -691,7 +691,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                                     required: true, message: "Required",
                                                 },
                                             ]
-                                        })(<Input />)}
+                                        })(<Input autoComplete="off" />)}
                                     </FormItem>
 
                                     <FormItem label="GEO">
@@ -726,7 +726,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                                     required: true, message: "Required",
                                                 },
                                             ]
-                                        })(<Input />)}
+                                        })(<Input autoComplete="off" />)}
                                     </FormItem>
                                 </React.Fragment>
 
@@ -744,7 +744,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required",
                                     },
                                 ]
-                            })(<Input disabled={!this.isAdd} />)}
+                            })(<Input autoComplete="off" disabled={!this.isAdd} />)}
                         </FormItem>
 
 

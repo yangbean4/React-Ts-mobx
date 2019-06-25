@@ -388,7 +388,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input disabled={!this.isAdd} />)}
+                        })(<Input autoComplete="off" disabled={!this.isAdd} />)}
                     </FormItem>
 
                     <FormItem label="Placement Name">
@@ -399,7 +399,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
 
                     <FormItem label="IGE Carrier">
@@ -614,14 +614,14 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                             required: true, message: "Required"
                                         }
                                     ]
-                                })(<Input />)}
+                                })(<Input autoComplete="off" />)}
                             </FormItem>
                             <div className={`${styles.formItemBox} ${styles.noTitle}`}>
 
                                 {/* <FormItem {...noLabelLayout}>
                                     {getFieldDecorator('style_detail.title_font', {
                                         initialValue: style_detail.title_font,
-                                    })(<Input style={{ width: '60%' }} />)}
+                                    })(<Input autoComplete="off" style={{ width: '60%' }} />)}
                                     <span className={styles.lineSpan}>   font   </span>
                                 </FormItem> */}
                                 <FormItem {...noLabelLayout}>
@@ -654,7 +654,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                             required: true, message: "Required"
                                         }
                                     ]
-                                })(<Input />)}
+                                })(<Input autoComplete="off" />)}
                             </FormItem>
 
                             <div className={`${styles.formItemBox} ${styles.noTitle}`}>
@@ -816,7 +816,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             {/* <FormItem label='Content Font'>
                                 {getFieldDecorator('style_detail.content_font', {
                                     initialValue: style_detail.content_font,
-                                })(<Input />)}
+                                })(<Input autoComplete="off" />)}
                             </FormItem> */}
                         </React.Fragment>
                     }

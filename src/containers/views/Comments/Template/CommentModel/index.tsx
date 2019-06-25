@@ -244,7 +244,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input disabled={!this.isAdd} />)}
+                        })(<Input autoComplete="off" disabled={!this.isAdd} />)}
                     </FormItem>
                     }
                     <FormItem label="Status"  >
@@ -310,7 +310,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                 }
                             ],
                             validateTrigger: 'onBlur'
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem label="Comment Talk" >
                         {getFieldDecorator('com_talk', {

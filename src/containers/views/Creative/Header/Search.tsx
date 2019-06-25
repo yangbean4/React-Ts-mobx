@@ -72,7 +72,7 @@ class CreativeSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <FormItem label="App ID">
               {getFieldDecorator('app_id', {
                 initialValue: filters.app_id
-              })(<Input />)}
+              })(<Input autoComplete="off" />)}
             </FormItem>
           </Col>
           <Col span={span}>

@@ -147,7 +147,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem label="Full Name of Source Company" >
                         {getFieldDecorator('company_full_name', {
@@ -156,7 +156,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem  label="Address">
                         {getFieldDecorator('address', {
@@ -176,7 +176,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                 }
                             ],
                             validateTrigger: 'onBlur'
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem  label="Phone">
                         {getFieldDecorator('phone', {
@@ -191,7 +191,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                 }
                             ],
                             validateTrigger: 'onBlur'
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem className={this.props.type? styles.modalBtn :styles.btnBox} >
                         <Button className={this.props.type? styles.btn : ''} type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>

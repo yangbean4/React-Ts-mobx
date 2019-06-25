@@ -103,7 +103,7 @@ class AccountSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <FormItem label={this.typeName}>
               {getFieldDecorator('company_name', {
                 initialValue: filters.company_name
-              })(<Input />)}
+              })(<Input autoComplete="off" />)}
             </FormItem>
           </Col>
           <Col span={span}>

@@ -96,7 +96,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     private skipTo: string
 
     @observable
-    private needLC: number = 1
+    private needLC: number
 
     @observable
     private CreativeType: number
@@ -109,6 +109,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
     @observable
     private accountShow: boolean = false
+
+    @computed
+    get useNeedLc() {
+        return [this.needLC, this.creativeTarget.lead_is_show_content, 1].find(ele => ele !== undefined)
+    }
 
     @computed
     get useVideoTypeValue() {
@@ -262,8 +267,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 (ige_portrait_offline_url && !ige_portrait_video_cover_url) ||
                                 (ige_landscape_offline_url && !ige_landscape_video_cover_url)
                             ) {
-                                message.error(`Please test IGE Carousel Video`)
-                                throw new Error('Please test IGE Carousel Video')
+                                const error = 'Please upload the landscape cover image./Please upload the portrait cover image.'
+                                message.error(error)
+                                throw new Error(error)
                             }
                         }
                         if (this.useCreativeType === 4) {
@@ -680,7 +686,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input onChange={this.versionChange} />)}
+                            })(<Input autoComplete="off" onChange={this.versionChange} />)}
                         </FormItem>
 
                         <FormItem label="Order ID"  >
@@ -691,7 +697,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input disabled={!this.isAdd} onChange={this.order_idChange} />)}
+                            })(<Input autoComplete="off" disabled={!this.isAdd} onChange={this.order_idChange} />)}
                         </FormItem>
 
                         <FormItem label="Creative Language">
@@ -718,7 +724,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                         <FormItem label="Creative Name"  >
                             {getFieldDecorator('creative_name', {
                                 initialValue: creative_name,
-                            })(<Input disabled={true} />)}
+                            })(<Input autoComplete="off" disabled={true} />)}
                         </FormItem>
 
                         <FormItem label="Icon" className={styles.autoHeight}>
@@ -834,7 +840,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 </FormItem>
 
                                 <FormItem label="Appwall Description">
-                                    <Input value={this.appwall_description}
+                                    <Input autoComplete="off" value={this.appwall_description}
                                         disabled={true} />
                                 </FormItem>
                             </React.Fragment>
@@ -1069,7 +1075,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         }
                                     ]
                                 })( */}
-                                    <Input value={this.appId} disabled={true} />
+                                    <Input autoComplete="off" value={this.appId} disabled={true} />
                                     {/* )} */}
                                 </FormItem>
                                 <FormItem label="IGE Leadvideo Flag">
@@ -1196,7 +1202,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 </FormItem>
 
                                 <FormItem label="Appwall Description">
-                                    <Input value={this.appwall_description}
+                                    <Input autoComplete="off" value={this.appwall_description}
                                         disabled={true} />
                                 </FormItem>
                             </React.Fragment>
@@ -1262,7 +1268,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                 }
                                             ]
                                         })( */}
-                                            <Input value={this.appId} disabled={true} />
+                                            <Input autoComplete="off" value={this.appId} disabled={true} />
                                             {/* )} */}
                                         </FormItem>
                                         <FormItem label="IGE Leadvideo Flag">
@@ -1308,6 +1314,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         <FormItem label="IGE Close To Confirm">
                                             {getFieldDecorator('ige_recoverlist_re_en', {
                                                 initialValue: Number(ige_recoverlist_re_en),
+                                                rules: [
+                                                    {
+                                                        required: true, message: "Required"
+                                                    }
+                                                ]
                                             })(
                                                 <Radio.Group>
                                                     {igeOption.map(c => (
@@ -1435,7 +1446,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
                                 <FormItem label="If Show Lead Content">
                                     {getFieldDecorator('lead_is_show_content', {
-                                        initialValue: Number(lead_is_show_content),
+                                        initialValue: Number(this.useNeedLc),
                                         rules: [
                                             {
                                                 required: true, message: "Required"
@@ -1459,7 +1470,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         initialValue: lead_content_id,
                                         rules: [
                                             {
-                                                required: this.needLC === 1, message: "Required"
+                                                required: this.useNeedLc === 1, message: "Required"
                                             }
                                         ]
                                     })(
@@ -1490,7 +1501,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input />)}
+                            })(<Input autoComplete="off" />)}
                         </FormItem>
 
                         <FormItem label="App Description"  >

@@ -84,12 +84,12 @@ class CustomSearch extends ComponentExt<IStoreProps & FormComponentProps> {
         <Row>
           <Col span={span}>
             <FormItem label="Template ID">
-              {getFieldDecorator('template_id')(<Input />)}
+              {getFieldDecorator('template_id')(<Input autoComplete="off" />)}
             </FormItem>
           </Col>
           <Col span={span}>
             <FormItem label="Template Name">
-              {getFieldDecorator('template_name')(<Input />)}
+              {getFieldDecorator('template_name')(<Input autoComplete="off" />)}
             </FormItem>
           </Col>
           <Col span={3} offset={1}>

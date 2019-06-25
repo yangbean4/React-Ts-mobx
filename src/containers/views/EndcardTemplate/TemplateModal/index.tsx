@@ -116,6 +116,9 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
         this.props.onCancel()
         this.toggleLoading(false)
         this.props.form.resetFields()
+        runInAction('clear_Image', () => {
+            this.fileTarget = {};
+        })
     }
 
     @action
@@ -213,21 +216,17 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
         })
         const urlName = this.fileTarget['template_url'] !== undefined ? this.fileTarget['template_url'] : (template_url || '').split('/').pop();
         const imageName = this.fileTarget['template_image'] !== undefined ? this.fileTarget['template_image'] : (template_image || '').split('/').pop();
-
         return (
             <Modal
                 title={this.title}
                 visible={visible}
-                maskClosable={false}
                 width={500}
                 onOk={this.submit}
-                destroyOnClose
                 onCancel={this.onCancel}
                 footer={
                     <Button type="primary" loading={this.loading} onClick={this.submit} >Submit</Button>
                 }
             >
-
 
                 <Form className={styles.templateModal}>
 
@@ -259,7 +258,7 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
                                 }
                             ]
                             // disabled={!this.typeIsAdd}
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
 
                     <FormItem {...formItemLayout} label="Template">

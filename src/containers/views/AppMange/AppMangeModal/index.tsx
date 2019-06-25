@@ -400,7 +400,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input disabled={!this.isAdd} />)}<Button type="primary" onClick={this.getAppStoreInfo} className={styles.importBtn}>Import</Button>
+                            })(<Input autoComplete="off" disabled={!this.isAdd} />)}<Button type="primary" onClick={this.getAppStoreInfo} className={styles.importBtn}>Import</Button>
                         </FormItem>
 
                         <FormItem label="Logo">
@@ -426,7 +426,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input disabled={!this.isAdd} />)}
+                            })(<Input autoComplete="off" disabled={!this.isAdd} />)}
                         </FormItem>
 
                         <FormItem label="App Name">
@@ -437,7 +437,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input disabled={!this.isAdd} />)}
+                            })(<Input autoComplete="off" disabled={!this.isAdd} />)}
                         </FormItem>
 
                         <FormItem label="Rate">
@@ -448,7 +448,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input />)}
+                            })(<Input autoComplete="off" />)}
                         </FormItem>
                         <FormItem label="Download">
                             {getFieldDecorator('downloads', {
@@ -458,7 +458,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input />)}
+                            })(<Input autoComplete="off" />)}
                         </FormItem>
 
                         <FormItem label="Category">

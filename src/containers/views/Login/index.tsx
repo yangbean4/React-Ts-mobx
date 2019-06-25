@@ -109,7 +109,7 @@ class Login extends React.Component<IStoreProps & FormComponentProps> {
                                 {getFieldDecorator('captcha', {
                                     rules: [{ required: true, message: 'Please input the captcha you got!' }],
                                 })(
-                                    <Input />
+                                    <Input autoComplete="off" />
                                 )}
                             </Col>
                             <Col span={12}>

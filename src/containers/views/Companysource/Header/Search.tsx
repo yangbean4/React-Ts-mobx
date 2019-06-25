@@ -97,7 +97,7 @@ class CompanySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <FormItem label="Source Company">
                 {getFieldDecorator('company_name', {
                     initialValue: filters.company
-                })(<Input />)}
+                })(<Input autoComplete="off" />)}
                 </FormItem>
             </Col>
             <Col span={3} offset={1}>

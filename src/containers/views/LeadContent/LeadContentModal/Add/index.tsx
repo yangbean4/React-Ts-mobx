@@ -317,7 +317,7 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                     }
 
                     {
-                        !this.props.leadContent && <FormItem label="Platform">
+                        !this.props.leadContent && !this.props.type && <FormItem label="Platform">
                             {getFieldDecorator('platform',
                                 {
                                     initialValue: this.platform,
@@ -373,7 +373,7 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input onChange={this.versionChange} />)}
+                        })(<Input autoComplete="off" onChange={this.versionChange} />)}
                     </FormItem>
 
                     <FormItem label="Order ID"  >
@@ -384,7 +384,7 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input onChange={this.order_idChange} />)}
+                        })(<Input autoComplete="off" onChange={this.order_idChange} />)}
                     </FormItem>
 
                     <FormItem label="Lead Language">
@@ -411,7 +411,7 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem label="Lead Name"  >
                         {getFieldDecorator('name', {
                             initialValue: name,
-                        })(<Input disabled={true} />)}
+                        })(<Input autoComplete="off" disabled={true} />)}
                     </FormItem>
 
                     <FormItem label="Lead content">
