@@ -84,6 +84,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private imageTarget: object = {}
 
+    private gjbUrl = ''
 
     @observable
     private endcardTarget: IEndcardStore.IEndcard = {}
@@ -137,9 +138,9 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     AppWallCahnge = (e) => {
         this.AppWall = e.target.value
-        this.removeFile('endcard_image_url')
+        this.removeFile('endcard_image_url_web_show')
         this.props.form.setFieldsValue({
-            endcard_image_url: ''
+            endcard_image_url_web_show: ''
         })
     }
 
@@ -168,6 +169,11 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
         this.loading = !this.loading
     }
 
+    @action
+    setUrl = (data) => {
+        this.gjbUrl = data.data.url
+    }
+
     Cancel = () => {
         this.props.type || !this.isAdd ? this.props.onCancel() : this.props.routerStore.push('/endcard')
     }
@@ -182,6 +188,10 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
                     this.toggleLoading()
                     try {
+                        if (this.gjbUrl) {
+                            values.endcard_image_url = this.gjbUrl
+                            delete values.endcard_image_url_web_show
+                        }
 
                         if (this.isAdd) {
                             if (app_key) {
@@ -222,7 +232,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     setPlatform = (type) => {
         this.platform = type
-        this.removeFile('endcard_image_url')
+        this.removeFile('endcard_image_url_web_show')
     }
 
     @action
@@ -235,7 +245,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
         runInAction('set_key', () => {
             this.app_key = app_key
         })
-        this.removeFile('endcard_image_url')
+        this.removeFile('endcard_image_url_web_show')
     }
 
     @action
@@ -346,7 +356,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
             endcard_name = '',
             language = '',
             template_id = this.useAppWall,
-            endcard_image_url = '',
+            endcard_image_url_web_show = '',
             cta = 'Download',
             cta_text_col = '#FFFFFF',
             cta_bkgd = '#0087ff',
@@ -357,7 +367,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
             status = 1,
         } = this.endcardTarget
 
-        const endcard_image = this.imageTarget['endcard_image_url'] || this.endcardTarget.endcard_image_url_web_show
+        const endcard_image = this.imageTarget['endcard_image_url_web_show'] || this.endcardTarget.endcard_image_url_web_show
         const ctaPic = this.imageTarget['cta_pic'] || cta_pic
 
         return (
@@ -523,7 +533,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                                 {this.isHeng ? '1920*1080px' : '1080*1920px'}
                             </div>
                         </div>
-                        {getFieldDecorator('endcard_image_url', {
+                        {getFieldDecorator('endcard_image_url_web_show', {
                             initialValue: endcard_image,
                             rules: [
                                 {
@@ -535,6 +545,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                                 className={this.isHeng ? `${styles.sunjiao} ${styles.heng}` : `${styles.sunjiao} ${styles.shu}`}
                                 api={this.api.util.uploadCoverImage}
                                 wht={{ width: width, height: height, size: 200 }}
+                                callBack={this.setUrl}
                                 preData={{
                                     platform: this.platform,
                                     app_id: this.appId
