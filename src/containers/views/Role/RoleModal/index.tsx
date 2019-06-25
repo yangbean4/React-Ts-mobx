@@ -140,7 +140,7 @@ class RoleModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input autoComplete="off" disabled={!this.typeIsAdd} />)}
+                        })(<Input disabled={!this.typeIsAdd} />)}
                     </FormItem>
                     <FormItem {...formItemLayout} label='Authorization'>
                         {permissionTree && permissionTree.length

@@ -72,14 +72,14 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <FormItem label="App Name">
               {getFieldDecorator('app_name', {
                 initialValue: filters.app_name
-              })(<Input autoComplete="off" />)}
+              })(<Input />)}
             </FormItem>
           </Col>
           <Col span={span}>
             <FormItem label="Pkg Name">
               {getFieldDecorator('pkg_name', {
                 initialValue: filters.pkg_name
-              })(<Input autoComplete="off" />)}
+              })(<Input />)}
             </FormItem>
           </Col>
           <Col span={span}>

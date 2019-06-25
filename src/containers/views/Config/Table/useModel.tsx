@@ -20,7 +20,7 @@ const layout = {
 }
 
 interface IStoreProps {
-  pkgNameAndBundleId?: IConfigStore.iosAndAnd
+  allConfig?: string[]
   getAllConfig?: () => Promise<any>
 }
 
@@ -36,8 +36,8 @@ interface IProps extends IStoreProps {
 @inject(
   (store: IStore): IStoreProps => {
     const { configStore } = store
-    const { pkgNameAndBundleId, getAllConfig } = configStore
-    return { pkgNameAndBundleId, getAllConfig }
+    const { allConfig, getAllConfig } = configStore
+    return { allConfig, getAllConfig }
   }
 )
 
@@ -53,27 +53,6 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
   @computed
   get modelTitle() {
     return titleTarget[this.props.type]
-  }
-
-  @observable
-  private platform: string
-
-  @computed
-  get usePlatform() {
-    return this.platform || this.props.targetConfig.platform || 'android'
-  }
-
-  @computed
-  get usePkgnameData() {
-    return this.props.pkgNameAndBundleId[this.usePlatform]
-  }
-
-  @action
-  setPlatform = (type) => {
-    this.platform = type
-    this.props.form.setFieldsValue({
-      pkg_name: ''
-    })
   }
 
   @action
@@ -149,40 +128,8 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
           </Button>,
         ]}
       >
-
         <Form {...layout} >
-
-          <FormItem label="Platform">
-            {
-              type !== 'add' ? <p>{targetConfig.platform}</p>
-                : getFieldDecorator('platform', {
-                  initialValue: this.usePlatform,
-                  rules: [
-                    {
-                      required: true, message: "Required"
-                    }
-                  ]
-                })(
-                  <Select
-                    allowClear
-                    showSearch
-                    onChange={(val) => this.setPlatform(val)}
-                    getPopupContainer={trigger => trigger.parentElement}
-                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                  >
-                    {(statusOption).map(c => (
-                      <Select.Option {...c}>
-                        {c.key}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                )
-            }
-
-          </FormItem>
-
-
-          <FormItem label={this.usePlatform === 'android' ? "Pkg Name" : "Bundle Id"}>
+          <FormItem label="Pkg Name">
             {
               type !== 'add' ? <p>{targetConfig.pkg_name}</p>
                 : this.typeIsAdd ? [getFieldDecorator('pkg_name', {
@@ -191,9 +138,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                       required: true, message: "Required"
                     }
                   ]
-                })(<Input autoComplete="off" className={styles.minInput} key='input' />)
-                  , <Icon onClick={this.toggleAddType} className={styles.workBtn} key="iconxia" type='iconxia' />
-                ]
+                })(<Input className={styles.minInput} key='input' />), <Icon onClick={this.toggleAddType} className={styles.workBtn} key="iconxia" type='iconxia' />]
 
                   : [
                     getFieldDecorator('pkg_name', {
@@ -208,20 +153,44 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                         showSearch
                         getPopupContainer={trigger => trigger.parentElement}
                         filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                        // className={styles.minInput}
+                        className={styles.minInput}
                         key='select'>
-                        {this.usePkgnameData.map(c => (
+                        {this.props.allConfig.map(c => (
                           <Select.Option value={c} key={c}>
                             {c}
                           </Select.Option>
                         ))}
                       </Select>
-                    )
-                    // , <Icon className={styles.workBtn} onClick={this.toggleAddType} key='iconxinzeng1' type='iconxinzeng1' />
+                    ), <Icon className={styles.workBtn} onClick={this.toggleAddType} key='iconxinzeng1' type='iconxinzeng1' />
                   ]
             }
           </FormItem>
+          <FormItem label="Platform">
+            {
+              type !== 'add' ? <p>{targetConfig.platform}</p>
+                : getFieldDecorator('platform', {
+                  rules: [
+                    {
+                      required: true, message: "Required"
+                    }
+                  ]
+                })(
+                  <Select
+                    allowClear
+                    showSearch
+                    getPopupContainer={trigger => trigger.parentElement}
+                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  >
+                    {(statusOption).map(c => (
+                      <Select.Option {...c}>
+                        {c.key}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                )
+            }
 
+          </FormItem>
           <FormItem label="Config Version">
             {
               type !== 'add' ? getFieldDecorator('id', {
@@ -251,7 +220,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                   }
                 ]
               })(
-                <Input autoComplete="off" />
+                <Input />
               )
 
             }
@@ -265,7 +234,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                   }
                 ]
               })(
-                <Input autoComplete="off" />
+                <Input />
               )}
             </FormItem> : null
           }

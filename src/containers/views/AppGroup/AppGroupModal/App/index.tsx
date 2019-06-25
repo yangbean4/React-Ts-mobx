@@ -200,15 +200,9 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     getDetail = async () => {
         const res = await this.api.appGroup.getAppGroupInfo({ id: this.props.Id })
-        const data = {
-            ...res.data,
-            nations: res.data.nations ? res.data.nations.split(',') : []
-        }
-        this.props.setAppGroup(data)
+        this.props.setAppGroup(res.data)
         runInAction('SET_APPGroup', () => {
-            this.appGroup = {
-                ...data
-            }
+            this.appGroup = { ...res.data }
         })
     }
 
@@ -224,7 +218,6 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
 
     componentWillMount() {
         this.props.getOptionListDb(this.props.Id)
-        console.log(this.props.Id)
         if (this.props.Id) {
             this.getDetail()
         }
@@ -378,11 +371,11 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 </Radio.Group>
                             )}
                         </FormItem>
-                        <FormItem label={!this.useNot_in_appstore && this.usePlatform === 'ios' ? 'Bundle Id' : "Pkg Name"}>
+                        <FormItem label="Pkg Name">
                             {getFieldDecorator('pkg_name', {
                                 initialValue: pkg_name,
-                                // validateTrigger: 'onBlur',
-                                rules: [
+                                validateTrigger: 'onBlur',
+                                rules: this.useNot_in_appstore ? [
                                     {
                                         required: true, message: "Required",
                                     },
@@ -390,15 +383,14 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     //     validator: (r, v, callback) => {
                                     //         const reg = this.usePlatform === 'android' ? /^com./ : /^[0-9]*$/
                                     //         if (!reg.test(v)) {
-                                    //             const msg = this.usePlatform === 'android'
+                                    //             const msg = this.usePlatform === 'android' 
                                     //             callback('Pkgname for android /Ios platform should start with com.xxx/number!')
                                     //         }
                                     //         callback()
                                     //     }
                                     // }
-                                ]
-                                //  disabled={!this.useNot_in_appstore || (!this.isAdd && !!pkg_name)}
-                            })(<Input autoComplete="off" disabled={!this.isAdd && !!pkg_name} />)}
+                                ] : undefined
+                            })(<Input disabled={!this.useNot_in_appstore || (!this.isAdd && !!pkg_name)} />)}
                         </FormItem>
 
                         <FormItem label="App Name">
@@ -409,7 +401,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input autoComplete="off" />)}
+                            })(<Input />)}
                             <Popover content={(<p>Enter a temporary app name if the app is not in the app store.</p>)}>
                                 <AntIcon className={styles.workBtn} type="question-circle" />
                             </Popover>
@@ -679,7 +671,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                             required: true, message: "Required",
                                         },
                                     ]
-                                })(<Input autoComplete="off" />)}
+                                })(<Input />)}
                             </FormItem>
                             {
                                 this.usePidType && <React.Fragment>
@@ -691,7 +683,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                                     required: true, message: "Required",
                                                 },
                                             ]
-                                        })(<Input autoComplete="off" />)}
+                                        })(<Input />)}
                                     </FormItem>
 
                                     <FormItem label="GEO">
@@ -726,7 +718,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                                     required: true, message: "Required",
                                                 },
                                             ]
-                                        })(<Input autoComplete="off" />)}
+                                        })(<Input />)}
                                     </FormItem>
                                 </React.Fragment>
 
@@ -744,7 +736,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required",
                                     },
                                 ]
-                            })(<Input autoComplete="off" disabled={!this.isAdd} />)}
+                            })(<Input disabled={!this.isAdd} />)}
                         </FormItem>
 
 

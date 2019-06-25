@@ -104,7 +104,7 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
     return (
       <Form {...layout} className={style.logSearch} >
         <FormItem label="Operator">
-          {getFieldDecorator('operator_name')(<Input autoComplete="off" />)}
+          {getFieldDecorator('operator_name')(<Input />)}
         </FormItem>
         <FormItem label="Type">
           {getFieldDecorator('type')(
@@ -123,11 +123,11 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
           )}
         </FormItem>
         <FormItem label="Object">
-          {getFieldDecorator('object')(<Input autoComplete="off" />)}
+          {getFieldDecorator('object')(<Input />)}
         </FormItem>
 
         <FormItem label="Operation">
-          {getFieldDecorator('operation')(<Input autoComplete="off" />)}
+          {getFieldDecorator('operation')(<Input />)}
         </FormItem>
 
         <FormItem label="Time">

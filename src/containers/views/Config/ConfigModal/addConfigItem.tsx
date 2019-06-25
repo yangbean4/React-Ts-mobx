@@ -212,14 +212,14 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
             <FormItem {...layout}>
               {getFieldDecorator('default', {
                 initialValue: config.default
-              })(<Input autoComplete="off" placeholder='default' />)}
+              })(<Input placeholder='default' />)}
             </FormItem>
           </Col>),
           (<Col span={span} key='unit'>
             <FormItem {...layout}>
               {getFieldDecorator('unit', {
                 initialValue: config.unit
-              })(<Input autoComplete="off" placeholder='unit' />)}
+              })(<Input placeholder='unit' />)}
             </FormItem>
           </Col>)
         ]
@@ -334,7 +334,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
                                 }
                               ]
                             }
-                          )(<Input autoComplete="off" />)
+                          )(<Input />)
                         }
                       </Radio>
                     ))
@@ -408,7 +408,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
                     required: true, message: "Required"
                   }
                 ]
-              })(<Input autoComplete="off" placeholder='name' />)}
+              })(<Input placeholder='name' />)}
             </FormItem>
           </Col>
           <Col span={span}>

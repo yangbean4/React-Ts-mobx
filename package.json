@@ -140,7 +140,7 @@
             "^@components/(.*)$": "<rootDir>/src/components//$1",
             "^@views/(.*)$": "<rootDir>/src/containers/views//$1",
             "^@shared/(.*)$": "<rootDir>/src/containers/shared//$1",
-            "^@config/(.*)$": "<rootDir>/src/config//$1"
+            "^@src/(.*)$": "<rootDir>/src//$1"
         }
     }
 }

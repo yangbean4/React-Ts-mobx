@@ -29,20 +29,3 @@ export { default as currencyStore } from './currencyStore'
 export { default as accountStore } from './accountStore'
 
 export { default as appGroupStore } from './appGroupStore'
-
-export { default as endcardStore } from './endcardStore'
-
-export { default as endcardTemplateStore } from './endcardTemplate'
-
-export { default as commentStore } from './commenttplStore'
-
-export { default as commentGroupStore } from './commentGroupStore'
-
-export { default as creativeStore } from './creativeStore'
-
-export { default as campaignStore } from './campaignStore'
-
-export { default as appManageStore } from './appManageStore'
-
-export { default as leadContentStore } from './leadContentStore'
-

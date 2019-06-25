@@ -69,7 +69,7 @@ class RoleSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <FormItem label="Role Name">
               {getFieldDecorator('role_name', {
                 initialValue: filters.role_name
-              })(<Input autoComplete="off" />)}
+              })(<Input />)}
             </FormItem>
           </Col>
           <Col span={3} offset={1}>
