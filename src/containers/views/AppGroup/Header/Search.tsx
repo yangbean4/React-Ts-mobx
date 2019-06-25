@@ -72,7 +72,7 @@ class AppGroupSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <FormItem label="Pkg Name">
               {getFieldDecorator('pkg_name', {
                 initialValue: filters.pkg_name
-              })(<Input />)}
+              })(<Input autoComplete="off" />)}
             </FormItem>
           </Col>
           <Col span={span}>

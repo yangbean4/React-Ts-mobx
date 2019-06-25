@@ -1,0 +1,47 @@
+@mixin full {
+  width: 100%;
+  height: 100%;
+}
+
+:global {
+  .avatar-uploader {
+    display: block;
+    @include full();
+    .ant-form-item-children {
+      display: block;
+      @include full();
+      & > div {
+        display: block;
+        @include full();
+      }
+    }
+
+    .ant-upload {
+      @include full();
+    }
+  }
+}
+
+.box {
+  @include full();
+  position: relative;
+  &:hover .layer {
+    display: flex;
+  }
+  .layer {
+    @include full();
+    display: none;
+    position: absolute;
+    z-index: 2;
+    // display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: rgba(00, 00, 00, 0.5);
+  }
+  .trueDom {
+    @include full();
+    position: absolute;
+    z-index: 1;
+  }
+}

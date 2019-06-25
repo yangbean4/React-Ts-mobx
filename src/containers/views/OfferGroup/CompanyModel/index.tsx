@@ -132,7 +132,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
+                        })(<Input autoComplete="off" disabled={!this.typeIsAdd} />)}
                     </FormItem>
                     <FormItem label="Full name of company"{...formItemLayout} >
                         {getFieldDecorator('pwd', {
@@ -140,7 +140,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ] : undefined
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem  label="Remarks"{...formItemLayout} >
                         {getFieldDecorator('remarks', {
@@ -155,7 +155,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
+                        })(<Input autoComplete="off" disabled={!this.typeIsAdd} />)}
                     </FormItem>
                     <FormItem  label="Phone"{...formItemLayout} >
                         {getFieldDecorator('owner', {
@@ -165,7 +165,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
+                        })(<Input autoComplete="off" disabled={!this.typeIsAdd} />)}
                     </FormItem>
                     <FormItem  label="Beneficiary name"{...formItemLayout} >
                         {getFieldDecorator('owner', {
@@ -175,7 +175,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
+                        })(<Input autoComplete="off" disabled={!this.typeIsAdd} />)}
                     </FormItem>
                     <FormItem  label="Account number"{...formItemLayout} >
                         {getFieldDecorator('owner', {
@@ -185,7 +185,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
+                        })(<Input autoComplete="off" disabled={!this.typeIsAdd} />)}
                     </FormItem>
                     <FormItem  label="Swift code"{...formItemLayout} >
                         {getFieldDecorator('owner', {
@@ -195,7 +195,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
+                        })(<Input autoComplete="off" disabled={!this.typeIsAdd} />)}
                     </FormItem>
                     <FormItem  label="Address"{...formItemLayout} >
                         {getFieldDecorator('owner', {

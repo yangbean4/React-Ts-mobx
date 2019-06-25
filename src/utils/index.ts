@@ -1,6 +1,4 @@
 
-
-
 export function dateFormat(date, format) {
     if (!format || typeof format !== 'string') {
         console.error('format is undefiend or type is Error');
@@ -322,4 +320,45 @@ export const getGuId = (): string => {
         let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     }).toUpperCase();
+}
+
+export const testSize = (target: File, config, type: string = 'img') => {
+    const { width, height, isScale = false, minW_H, maxW_H } = config
+    return new Promise((resolve, reject) => {
+        try {
+            const objectURL = window.createObjectURL != undefined
+                ? window.createObjectURL(target) : URL != undefined
+                    ? window.URL.createObjectURL(target) : window.webkitURL != undefined
+                        ? window.webkitURL.createObjectURL(target) : null
+            const imageCopy: HTMLVideoElement | HTMLImageElement = type === 'img' ? new Image() : type === 'video' ? document.createElement('video') : null
+            imageCopy.src = objectURL
+
+            // const imageCopy: HTMLVideoElement | HTMLImageElement = type === 'img' ? new Image() : type === 'video' ? document.createElement('video') : null
+            // const fileRender = new FileReader()
+            // fileRender.readAsDataURL(target)
+            // fileRender.onload = (ev) => {
+            //     imageCopy.src = ev.target.result
+            // }
+            const cb = () => {
+                const P_width = imageCopy.width || imageCopy.videoWidth
+                const P_height = imageCopy.height || imageCopy.videoHeight
+                console.log(P_width, P_height, width, height, isScale)
+                const is = isScale ?
+                    (minW_H && maxW_H ? (P_width / P_height) <= maxW_H && (P_width / P_height) > minW_H : P_width / width === P_height / height)
+                    : P_width === width && P_height === height
+                is ? resolve() : reject();
+            }
+            if (type === 'img') {
+                imageCopy.onload = cb
+            } else {
+                imageCopy.addEventListener('canplay', cb)
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+
+
+
+    })
 }

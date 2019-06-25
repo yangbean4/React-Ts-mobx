@@ -25,7 +25,7 @@ const formItemLayout = {
 }
 const formItemLayoutForModel = {
     labelCol: {
-        lg: { span: 7},
+        lg: { span: 7 },
     },
     wrapperCol: {
         lg: { span: 13 }
@@ -44,6 +44,7 @@ interface IpropsStore {
 
 interface IProps extends IpropsStore {
     type?: string
+    info?: string
     onOk?: (id: number) => void
     onCancel?: () => void
 }
@@ -80,8 +81,15 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @computed
+    get routerParam() {
+        const param = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
+        return param
+    }
+
+    @computed
     get accountType() {
-        return this.props.type || this.props.routerStore.location.pathname.includes('subsite') ? 'subsite' : 'source'
+        const ret = !this.props.type ? this.routerParam : this.props.type
+        return ret
     }
 
     @computed
@@ -101,8 +109,18 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get typeName() {
-        return `${this.props.type ? '' : camelCase(this.accountType)} Company`
+        return `${this.props.type ? this.props.type : camelCase(this.accountType)} Company`
     }
+
+    // @computed
+    // get infoName() {
+    //     return `${this.props.info ? this.props.info: ''} Company`
+    // }
+
+    // @computed
+    // get chanageName() {
+    //     return this.props.info ? this.infoName : this.typeName
+    // }
 
     @action
     toggleLoading = () => {
@@ -154,6 +172,11 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
     componentWillUnmount() {
         this.props.clearAccount()
     }
+    componentDidMount() {
+        console.log(this.props.type)
+        console.log(this.accountType)
+        console.log(this.typeName)
+    }
     Cancel = () => {
         this.props.routerStore.push(`/account/${this.accountType}`)
     }
@@ -168,7 +191,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
                     this.toggleLoading()
                     try {
-                        this.props.type ? (values.status =1) : values.status // 弹窗提交默认给status添加状态为1
+                        this.props.type ? (values.status = 1) : values.status // 弹窗提交默认给status添加状态为1
                         let data = { message: '', data: { id: 1 } }
                         if (this.typeIsAdd) {
                             data = await createAccount(values)
@@ -210,7 +233,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                 />
                 <div className='sb-form'>
                     <Form className={styles.accountModal} {...this.formItemLayout}>
-                        <FormItem  label="User Name">
+                        <FormItem label="User Name">
                             {getFieldDecorator('user_name', {
                                 initialValue: user_name,
                                 rules: [
@@ -218,23 +241,23 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                         required: true, message: "Required"
                                     }
                                 ]
-                            })(<Input disabled={!this.typeIsAdd} />)}
+                            })(<Input autoComplete="off" disabled={!this.typeIsAdd} />)}
                         </FormItem>
-                        <FormItem  label="Password">
+                        <FormItem label="Password">
                             {getFieldDecorator('password', {
                                 rules: this.typeIsAdd ? [
                                     {
                                         required: true, message: "Required"
                                     }
                                 ] : undefined
-                            })(<Input />)}
+                            })(<Input autoComplete="off" />)}
 
                             <Popover content={(<p>It is recommended that passwords contain <br /> both upper and lower case letters and Numbers.</p>)}>
                                 <AntIcon className={styles.workBtn} type="question-circle" />
                             </Popover>
                         </FormItem>
 
-                        <FormItem label={this.typeName.trim() =='Company'? 'Subsite Company': this.typeName}>
+                        <FormItem label={this.typeName.trim() == 'Subsite Company' ? 'Subsite Company' : this.typeName}>
                             {getFieldDecorator('company', {
                                 initialValue: company,
                                 rules: [
@@ -329,8 +352,8 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                 )}
                             </FormItem>
                         }
-                        <FormItem className={this.props.type? styles.modalBtn :styles.btnBox}>
-                            <Button type="primary" className={this.props.type? styles.btn : ''} loading={this.loading} onClick={this.submit}>Submit</Button>
+                        <FormItem className={this.props.type ? styles.modalBtn : styles.btnBox}>
+                            <Button type="primary" className={this.props.type ? styles.btn : ''} loading={this.loading} onClick={this.submit}>Submit</Button>
                             {
                                 !this.props.type && <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
                             }

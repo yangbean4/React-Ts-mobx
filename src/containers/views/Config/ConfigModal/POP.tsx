@@ -93,7 +93,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                           required: true, message: "Required"
                         }
                       ]
-                    })(<Input placeholder='Oops ! Connection failed' />)}
+                    })(<Input autoComplete="off" placeholder='Oops ! Connection failed' />)}
                   </Form.Item>
                 </div>
                 <div className="li">
@@ -105,7 +105,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                           required: true, message: "Required"
                         }
                       ]
-                    })(<Input placeholder='Try later or download now' />)}
+                    })(<Input autoComplete="off" placeholder='Try later or download now' />)}
                   </Form.Item>
 
                 </div>
@@ -127,7 +127,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                               required: true, message: "Required"
                             }
                           ]
-                        })(<Input placeholder='Download' />)}
+                        })(<Input autoComplete="off" placeholder='Download' />)}
                       </Form.Item>
 
                     </div>
@@ -159,7 +159,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                               required: true, message: "Required"
                             }
                           ]
-                        })(<Input placeholder='Download' />)}
+                        })(<Input autoComplete="off" placeholder='Download' />)}
                       </Form.Item>
 
                     </div>
@@ -174,7 +174,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                           required: true, message: "Required"
                         }
                       ]
-                    })(<Input placeholder='Win %s %s now!' />)}
+                    })(<Input autoComplete="off" placeholder='Win %s %s now!' />)}
                   </Form.Item>
                 </div>
                 <div className="li">
@@ -186,7 +186,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                           required: true, message: "Required"
                         }
                       ]
-                    })(<Input placeholder='Return to game for rewards?' />)}
+                    })(<Input autoComplete="off" placeholder='Return to game for rewards?' />)}
                   </Form.Item>
                 </div>
                 <div className="li btnGroup">
@@ -199,7 +199,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                             required: true, message: "Required"
                           }
                         ]
-                      })(<Input placeholder='Yes' />)}
+                      })(<Input autoComplete="off" placeholder='Yes' />)}
                     </Form.Item>
                   </div>
                   <div className="frbtn btn">
@@ -211,7 +211,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                             required: true, message: "Required"
                           }
                         ]
-                      })(<Input placeholder='Quit' />)}
+                      })(<Input autoComplete="off" placeholder='Quit' />)}
                     </Form.Item>
 
                   </div>
@@ -242,7 +242,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
                               required: true, message: "Required"
                             }
                           ]
-                        })(<Input placeholder='Download' />)}
+                        })(<Input autoComplete="off" placeholder='Download' />)}
                       </Form.Item>
 
                     </div>

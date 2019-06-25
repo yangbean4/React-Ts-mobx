@@ -195,7 +195,7 @@ class EditRedioModal extends ComponentExt<IProps & FormComponentProps> {
             message: "Please input Radio Name or delete this field.",
           }],
         })(
-          <Input placeholder="Radio Name" style={{ width: '60%', marginRight: 8 }} />
+          <Input autoComplete="off" placeholder="Radio Name" style={{ width: '60%', marginRight: 8 }} />
         )}
         <Icon
           className={styles.dynamic}

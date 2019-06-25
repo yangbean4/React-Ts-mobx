@@ -98,9 +98,9 @@ class InputGroup extends ComponentExt<IProps & FormComponentProps> {
             message: "Please input or delete this field.",
           }],
         })(
-          <Input className={styles.input} onChange={(e) => this.onChange(e, k)} style={{ width: '60%', marginRight: 8 }} />
+          <Input autoComplete="off" className={styles.input} onChange={(e) => this.onChange(e, k)} style={{ width: '60%', marginRight: 8 }} />
         )}
-        {/* <Input  /> */}
+        {/* <Input autoComplete="off"  /> */}
         <Icon
           className={styles.dynamic}
           type="iconjianshao"

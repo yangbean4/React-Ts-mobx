@@ -163,7 +163,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem label="Full Name of Subsite Company" >
                         {getFieldDecorator('company_full_name', {
@@ -172,7 +172,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                 required: true, message: "Required"
                             }
                             ]
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem label="Address" >
                         {getFieldDecorator('address', {
@@ -192,7 +192,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                 }
                             ],
                             validateTrigger: 'onBlur'
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem label="Phone" >
                         {getFieldDecorator('phone', {
@@ -207,7 +207,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                 }
                             ],
                             validateTrigger: 'onBlur'
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <Col span={4} className={styles.companyTag}>
                         <div className={styles.tagWrapper}>
@@ -222,7 +222,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem label="Account Number" >
                         {getFieldDecorator('bank_account_number', {
@@ -237,7 +237,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                 }
                             ],
                             validateTrigger: 'onBlur'
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem label="Swift Code" >
                         {getFieldDecorator('bank_swift_code', {
@@ -252,7 +252,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                                 }
                             ],
                             validateTrigger: 'onBlur'
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem label="Address" >
                         {getFieldDecorator('bank_address', {

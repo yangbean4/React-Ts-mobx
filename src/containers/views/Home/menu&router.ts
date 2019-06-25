@@ -9,24 +9,36 @@ const loadComponent = (loader: () => Promise<any>) =>
     })
 
 export const asynchronousComponents = {
+    //------------------Apps Manage
+    AppManages: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppMange')),
+    AppManagesModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppMange/AppMangeModal')),
+    //------------------Compaigns
+    Campaigns: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns')),
+    CampaignsAdd: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns/CampaignsModel/Add')),
+    CampaignsEdit: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns/CampaignsModel/Edit')),
+    //------------------Comments
+    CommentsTpl: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Comments/Template')),
+    CommentTplModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Comments/Template/CommentModel')),
+    CommentGroup: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Comments/Groups')),
+    CommentGroupModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Comments/Groups/CommentModel')),
     //------------------Apps
-    Apps: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppGroup')),
-    AppsModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppGroup/AppGroupModal')),
+    Apps: loadComponent(() => import(/* webpackChunkName: "Apps" */ '@views/AppGroup')),
+    AppsModel: loadComponent(() => import(/* webpackChunkName: "AppsModel" */ '@views/AppGroup/AppGroupModal')),
 
     Currency: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency')),
-    CurrencyAdd: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency/CurrencyModal/Add')),
-    CurrencyEdit: loadComponent(() => import(/* webpackChunkName: "Currency" */ '@views/Currency/CurrencyModal/Edit')),
+    CurrencyAdd: loadComponent(() => import(/* webpackChunkName: "CurrencyAdd" */ '@views/Currency/CurrencyModal/Add')),
+    CurrencyEdit: loadComponent(() => import(/* webpackChunkName: "CurrencyEdit" */ '@views/Currency/CurrencyModal/Edit')),
 
-    Account: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Account')),
-    AccountModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Account/AccountModel')),
+    Account: loadComponent(() => import(/* webpackChunkName: "Account" */ '@views/Account')),
+    AccountModel: loadComponent(() => import(/* webpackChunkName: "AccountModel" */ '@views/Account/AccountModel')),
 
     CompanySite: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Companysite')),
     CompanySource: loadComponent(() => import(/* webpackChunkName: "CompanySource" */ '@views/Companysource')),
     CompanyModel: loadComponent(() => import(/* webpackChunkName: "CompanyModel" */ '@views/Companysite/CompanyModel')),
-    CompanysourceModel: loadComponent(() => import(/* webpackChunkName: "CompanyModel" */ '@views/Companysource/AdsourceModel')),
+    CompanysourceModel: loadComponent(() => import(/* webpackChunkName: "CompanysourceModel" */ '@views/Companysource/AdsourceModel')),
 
     Config: loadComponent(() => import(/* webpackChunkName: "Config" */ '@views/Config')),
-    ConfigModel: loadComponent(() => import(/* webpackChunkName: "Config" */ '@views/Config/ConfigModal')),
+    ConfigModel: loadComponent(() => import(/* webpackChunkName: "ConfigModel" */ '@views/Config/ConfigModal')),
 
     Users: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Users')),
     UserModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/Users/UserModal')),
@@ -43,6 +55,19 @@ export const asynchronousComponents = {
     Logs: loadComponent(() => import(/* webpackChunkName: "Logs" */ '@views/Log')),
 
     Test: loadComponent(() => import(/* webpackChunkName: "Test" */ '@views/Test/useEffrct.js')),
+
+    Endcard: loadComponent(() => import(/* webpackChunkName: "Endcard" */ '@views/Endcard')),
+    EndcardAdd: loadComponent(() => import(/* webpackChunkName: "EndcardAdd" */ '@views/Endcard/EndcardModal/Add')),
+    EndcardEdit: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/Endcard/EndcardModal/Edit')),
+    endcardTemplate: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/EndcardTemplate')),
+
+    Creative: loadComponent(() => import(/* webpackChunkName: "Creative" */ '@views/Creative')),
+    CreativeAdd: loadComponent(() => import(/* webpackChunkName: "CreativeAdd" */ '@views/Creative/CreativeModal/Add')),
+    CreativeEdit: loadComponent(() => import(/* webpackChunkName: "CreativeEdit" */ '@views/Creative/CreativeModal/Edit')),
+    // 
+    LeadContent: loadComponent(() => import(/* webpackChunkName: "LeadContent" */ '@views/LeadContent')),
+    LeadContentAdd: loadComponent(() => import(/* webpackChunkName: "LeadContentAdd" */ '@views/LeadContent/LeadContentModal/Add')),
+    LeadContentEdit: loadComponent(() => import(/* webpackChunkName: "CreativeEdit" */ '@views/LeadContent/LeadContentModal/Edit'))
 }
 
 // 所有路由的key
@@ -58,6 +83,7 @@ export interface IMenu {
     exact?: boolean
     authName?: string
     hasBread?: boolean
+    breadcrumbRoot?: boolean
 }
 
 export interface IMenuInTree extends IMenu {
@@ -70,6 +96,7 @@ export interface IRouter extends IMenu {
 export const templateId = 2
 export const logId = 442
 export const routerAndMenu: IRouter[] = [
+    // -------Apps-----------
     {
         id: 5,
         isMenu: true,
@@ -130,25 +157,232 @@ export const routerAndMenu: IRouter[] = [
         title: 'Edit Virtual Currency',
         component: 'CurrencyEdit',
     },
-    // {
-    //     id: 523,
-    //     pid: 52,
-    //     isMenu: false,
-    //     exact: true,
-    //     path: '/currency/edit/add',
-    //     title: 'Add',
-    //     component: 'CurrencyEdit',
-    // },
-    // {
-    //     id: 524,
-    //     pid: 52,
-    //     isMenu: false,
-    //     exact: true,
-    //     path: '/currency/edit/edit',
-    //     title: 'Edit',
-    //     component: 'CurrencyEdit',
-    // },
-    /********* Company*********/
+    // --------Offer-----------
+    {
+        id: 8,
+        isMenu: true,
+        title: 'Offers',
+        icon: 'iconlog',
+        authName: 'Offers'
+    },
+    // ---------Apps manage--------------
+    {
+        id: 81,
+        pid: 8,
+        isMenu: true,
+        exact: true,
+        title: 'Apps Manage',
+        authName: 'Offers-Apps Manage',
+        component: 'AppManages',
+        path: '/offer'
+    },
+    {
+        id: 851,
+        pid: 81,
+        isMenu: false,
+        path: '/offer/add',
+        title: 'Add App ',
+        component: 'AppManagesModel',
+    },
+    {
+        id: 851,
+        pid: 81,
+        isMenu: false,
+        path: '/offer/edit/:id',
+        title: 'Edit App',
+        component: 'AppManagesModel',
+    },
+    // creative
+    {
+        id: 82,
+        pid: 8,
+        isMenu: true,
+        exact: true,
+        title: 'Creatives',
+    },
+    {
+        id: 821,
+        pid: 82,
+        isMenu: true,
+        exact: true,
+        title: 'Creatives',
+        authName: 'Offers-Creatives',
+        component: 'Creative',
+        path: '/creative'
+    },
+    {
+        id: 8212,
+        pid: 821,
+        isMenu: false,
+        path: '/creative/add',
+        title: 'Add Creatives',
+        component: 'CreativeAdd',
+    },
+    {
+        id: 8211,
+        pid: 821,
+        isMenu: false,
+        path: '/creative/edit/:id',
+        title: 'Edit Creatives',
+        component: 'CreativeEdit',
+    },
+    {
+        id: 822,
+        pid: 82,
+        isMenu: true,
+        exact: true,
+        title: 'Lead Content',
+        authName: 'Offers-Creatives',
+        component: 'LeadContent',
+        path: '/leadContent'
+    },
+    {
+        id: 8222,
+        pid: 822,
+        isMenu: false,
+        path: '/leadContent/add',
+        title: 'Add Lead Content',
+        component: 'LeadContentAdd',
+    },
+    {
+        id: 8221,
+        pid: 822,
+        isMenu: false,
+        path: '/leadContent/edit/:id',
+        title: 'Edit Lead Content',
+        component: 'LeadContentEdit',
+    },
+    // ------------------Endcard
+    {
+        id: 83,
+        pid: 8,
+        isMenu: true,
+        exact: true,
+        title: 'Endcard',
+    },
+    {
+        id: 831,
+        pid: 83,
+        isMenu: true,
+        exact: true,
+        title: 'Endcard',
+        authName: 'Offers-Endcard',
+        component: 'Endcard',
+        path: '/endcard'
+    },
+
+    {
+        id: 832,
+        pid: 83,
+        isMenu: true,
+        exact: true,
+        title: 'Endcard Template',
+        authName: 'Offers-Endcard',
+        component: 'endcardTemplate',
+        path: '/endcardTemplate'
+    },
+    {
+        id: 8312,
+        pid: 831,
+        isMenu: false,
+        path: '/endcard/add',
+        title: 'Add Endcard',
+        component: 'EndcardAdd',
+    },
+    {
+        id: 8311,
+        pid: 831,
+        isMenu: false,
+        path: '/endcard/edit/:id',
+        title: 'Edit Endcard',
+        component: 'EndcardEdit',
+    },
+    // -------Comments--------
+    {
+        id: 84,
+        pid: 8,
+        isMenu: true,
+        title: 'Comments',
+        hasBread: false,
+    },
+    {
+        id: 841,
+        pid: 84,
+        isMenu: true,
+        title: 'Comment Tempaltes',
+        component: 'CommentsTpl',
+        path: '/comments/template',
+        exact: true
+    },
+    {
+        id: 8411,
+        pid: 841,
+        path: '/comments/template/add',
+        title: 'Add Comment ',
+        component: 'CommentTplModel',
+        isMenu: false
+    },
+    {
+        id: 8412,
+        pid: 841,
+        path: '/comments/template/edit/:id',
+        title: 'Edit Comment ',
+        component: 'CommentTplModel',
+        isMenu: false
+    },
+    {
+        id: 842,
+        pid: 84,
+        isMenu: true,
+        title: 'Comment Groups',
+        component: 'CommentGroup',
+        path: '/comments/groups',
+        exact: true
+    },
+    {
+        id: 8421,
+        pid: 842,
+        path: '/comments/groups/add',
+        title: 'Add Comment Group ',
+        component: 'CommentGroupModel',
+        isMenu: false
+    },
+    {
+        id: 8421,
+        pid: 842,
+        path: '/comments/groups/edit/:id',
+        title: 'Edit Comment ',
+        component: 'CommentGroupModel',
+        isMenu: false
+    },
+    // ---------Campaigns--------------
+    {
+        id: 85,
+        pid: 8,
+        isMenu: true,
+        exact: true,
+        title: 'Campaigns',
+        authName: 'Offers-Campaigns',
+        component: 'Campaigns',
+        path: '/campaigns'
+    },
+    {
+        id: 851,
+        pid: 85,
+        isMenu: false,
+        path: '/campaigns/add',
+        title: 'Add Campaign ',
+        component: 'CampaignsAdd',
+    },
+    {
+        id: 851,
+        pid: 85,
+        isMenu: false,
+        path: '/campaigns/edit',
+        title: 'Edit Campaign',
+        component: 'CampaignsEdit',
+    },
+    // --------Company---------------
     {
         id: 6,
         isMenu: true,
@@ -270,14 +504,6 @@ export const routerAndMenu: IRouter[] = [
         component: 'AccountModel',
         isMenu: false
     },
-
-    // {
-    //     id: 8,
-    //     isMenu: true,
-    //     title: 'Offers',
-    //     icon: 'iconlog',
-    //     authName: 'Offers'
-    // },
     // ----------------------------------------
     {
         id: 1,
@@ -442,6 +668,102 @@ export const routerAndMenu: IRouter[] = [
         isMenu: true,
         hasBread: false,
         title: 'Apps',
+    },
+    {
+        id: 48,
+        pid: 4,
+        isMenu: true,
+        hasBread: false,
+        title: 'Offers',
+        exact: true,
+    },
+    {
+        id: 481,
+        pid: 48,
+        isMenu: true,
+        title: 'Apps Manage',
+        path: '/log/appsManage',
+        component: 'Logs'
+    },
+
+    {
+        id: 482,
+        pid: 48,
+        isMenu: true,
+        hasBread: false,
+        title: 'Creatives',
+    },
+    {
+        id: 4821,
+        pid: 482,
+        isMenu: true,
+        title: 'Creatives',
+        path: '/log/creative',
+        component: 'Logs'
+    },
+    {
+        id: 4822,
+        pid: 482,
+        isMenu: true,
+        title: 'Lead Content',
+        path: '/log/lead_content',
+        component: 'Logs'
+    },
+
+    {
+        id: 483,
+        pid: 48,
+        isMenu: true,
+        hasBread: false,
+        title: 'Endcard',
+    },
+    {
+        id: 4831,
+        pid: 483,
+        isMenu: true,
+        title: 'Endcard',
+        path: '/log/endcard',
+        component: 'Logs'
+    },
+    {
+        id: 4832,
+        pid: 483,
+        isMenu: true,
+        title: 'Endcard Template',
+        path: '/log/endcard_template',
+        component: 'Logs'
+    },
+
+    {
+        id: 484,
+        pid: 48,
+        isMenu: true,
+        hasBread: false,
+        title: 'Comments',
+    },
+    {
+        id: 4841,
+        pid: 484,
+        isMenu: true,
+        title: 'Comments',
+        path: '/log/comment',
+        component: 'Logs'
+    },
+    {
+        id: 4842,
+        pid: 484,
+        isMenu: true,
+        title: 'Comment Groups',
+        path: '/log/comment_group',
+        component: 'Logs'
+    },
+    {
+        id: 485,
+        pid: 48,
+        isMenu: true,
+        title: 'Campaigns',
+        path: '/log/campaigns',
+        component: 'Logs'
     },
     {
         id: 42,

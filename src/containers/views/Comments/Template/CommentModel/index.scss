@@ -1,0 +1,66 @@
+.CompanyModal {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  :global(.ant-form-item) {
+    margin-bottom: 25px;
+  }
+  :global(.ant-form-item-label) {
+    width: 220px;
+  }
+  :global(.ant-form-item-control) {
+    height: auto;
+  }
+  .modalBtn {
+    position: relative
+  }
+  .btn{
+    position: absolute;
+    left: 432px;
+  }
+  .btnBox {
+    margin-left: 220px;
+  }
+  .btn2 {
+    margin-left: 20px;
+  }
+  .workPlus{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 10px;
+    background: rgba(237, 240, 255, 1);
+    border-radius: 4px;
+    color: #667ffd;
+    line-height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .workBtn {
+    float:left;
+    // width: 40px;
+    // height: 40px;
+    border-radius: 50%;
+    margin-top: 20px;
+    margin-left: 10px;
+    // background: rgba(237, 240, 255, 1);
+    border-radius: 4px;
+    color: #667ffd;
+    position: absolute;
+    line-height: 40px;
+  }
+  .textBox{
+    float: left;
+    width: 420px;
+    padding: 5px;
+    box-sizing: border-box;
+    font-size: 12px;
+    color: #645e84;
+    min-height: 50px;
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #e4edf0;
+    text-indent: 20px;
+    margin-top: 30px;
+  }
+}

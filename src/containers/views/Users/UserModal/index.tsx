@@ -132,7 +132,7 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
+                        })(<Input autoComplete="off" disabled={!this.typeIsAdd} />)}
                     </FormItem>
                     <FormItem {...formItemLayout} label="Password">
                         {getFieldDecorator('pwd', {
@@ -141,7 +141,7 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ] : undefined
-                        })(<Input />)}
+                        })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem {...formItemLayout} label="Owner">
                         {getFieldDecorator('owner', {
@@ -151,7 +151,7 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
+                        })(<Input autoComplete="off" disabled={!this.typeIsAdd} />)}
                     </FormItem>
 
                     <FormItem {...formItemLayout} label="Role Name">
