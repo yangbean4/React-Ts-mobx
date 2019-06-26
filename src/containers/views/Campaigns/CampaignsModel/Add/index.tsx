@@ -607,9 +607,8 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 }
                             ]
-                        })(<InputNumber disabled={!this.isAdd} />)}
+                        })(<InputNumber disabled={!!id} />)}
                     </FormItem>
-
                     <FormItem label="Campaign Kpi">
                         {getFieldDecorator('kpi', {
                             initialValue: kpi,

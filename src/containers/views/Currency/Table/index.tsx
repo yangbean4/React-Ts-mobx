@@ -95,7 +95,7 @@ class CurrencyTable extends ComponentExt<IProps> {
                 className="center-table"
                 style={{ width: '100%' }}
                 bordered
-                rowKey={r => r.app_name + r.platform}
+                rowKey={r => (r.app_name + r.pkg_name).replace('.', '_') + r.platform}
                 locale={{ emptyText: 'No Data' }}
                 loading={getCurrencyLoading}
                 dataSource={currencyList}

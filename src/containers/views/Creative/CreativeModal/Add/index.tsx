@@ -1504,7 +1504,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                             })(<Input autoComplete="off" />)}
                         </FormItem>
 
-                        <FormItem label="App Description"  >
+                        <FormItem label="App Description" className={styles.autoHeight} >
                             {getFieldDecorator('description', {
                                 initialValue: description,
                                 rules: [

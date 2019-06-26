@@ -96,9 +96,8 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
         let per = values;
         per.config_version = per.config_version ? `v${per.config_version}` : per.config_version
         per.copyTo = per.copyTo ? `v${per.copyTo}` : per.copyTo
-
+        per.pkg_name = this.usePkgnameData[per.pkg_name]
         const cb = () => {
-
 
           this.props.onOk(per)
           this.props.form.resetFields()
@@ -137,6 +136,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
   render() {
     const { form, visible, targetConfig, type } = this.props
     const { getFieldDecorator } = form
+
     return (
       <Modal
         title={this.modelTitle}
@@ -210,8 +210,8 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                         filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                         // className={styles.minInput}
                         key='select'>
-                        {this.usePkgnameData.map(c => (
-                          <Select.Option value={c} key={c}>
+                        {this.usePkgnameData.map((c, index) => (
+                          <Select.Option value={index} key={index}>
                             {c}
                           </Select.Option>
                         ))}
