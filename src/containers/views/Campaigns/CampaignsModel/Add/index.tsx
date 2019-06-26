@@ -77,7 +77,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     private appIDIOS: any = []
 
     @observable
-    private appIdKey: string
+    private appIdKey: string = this.props.app_key || undefined
 
     @observable
     private CampaignGroup: ICampaignStore.ICampaignGroup = {}
@@ -99,7 +99,6 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get accountType() {
-        console.log(this.appTarget.account_type)
         return this.appTarget.account_type
     }
 

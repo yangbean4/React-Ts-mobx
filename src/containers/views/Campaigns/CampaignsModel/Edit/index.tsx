@@ -53,8 +53,8 @@ class VcTable extends ComponentExt<TableProps> {
           render={(_, record, index) => (
             <span>
               {
-                this.$checkAuth('Authorization-User Manage-Edit', 
-                  <a href="javascript:;"  onClick={() => onEdit(index)}>
+                this.$checkAuth('Authorization-User Manage-Edit',
+                  <a href="javascript:;" onClick={() => onEdit(index)}>
                     <Icon type="form" />
                   </a>
                 )
@@ -159,7 +159,7 @@ class PID extends ComponentExt<IStoreProps> {
   get creatives() {
     return this.appTarget.creatives
   }
- 
+
   @action
   initDetail = async () => {
     try {
@@ -230,7 +230,7 @@ class PID extends ComponentExt<IStoreProps> {
   }
 
   componentDidMount() {
-    
+
   }
 
   componentWillUnmount() {
@@ -274,6 +274,7 @@ class PID extends ComponentExt<IStoreProps> {
                   onOk={this.onOK}
                   campaign={this.GJB}
                   endcards={this.endcards}
+                  app_key={this.appTarget.app_key}
                   creatives={this.creatives}
                 />
               </div>
