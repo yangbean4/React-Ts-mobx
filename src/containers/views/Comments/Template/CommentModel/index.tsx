@@ -7,6 +7,7 @@ import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import EmojiPicker from '@components/Emoji'
 import * as web from '../web.config'
+import { typeOf, testSize } from '@utils/index'
 // 封装表单域组件
 const FormItem = Form.Item
 
@@ -39,6 +40,16 @@ interface hasResult {
     result?: string
 }
 
+interface FileWHT {
+    width?: number
+    height?: number
+    isScale?: boolean
+    time?: number
+    minW_H?: number
+    maxW_H?: number
+    size?: number
+}
+
 interface IStoreProps {
     comment?: ICommentStore.IComment
     createComment?: (company: ICommentStore.IComment) => Promise<any>
@@ -46,7 +57,8 @@ interface IStoreProps {
     getOptionListDb?: ({ }) => Promise<any>
     changepage?: (page: number) => void
     routerStore?: RouterStore
-    clearComment?: () => void
+    clearComment?: () => void,
+    setBreadcrumbArr?: (menus?: IGlobalStore.menu[]) => void
 }
 
 interface IProps extends IStoreProps {
@@ -57,9 +69,10 @@ interface IProps extends IStoreProps {
 
 @inject(
     (store: IStore): IProps => {
-        const { commentStore, routerStore } = store
+        const { commentStore, routerStore, globalStore } = store
+        const { setBreadcrumbArr } = globalStore
         const { comment, createComment, modifyComment, clearComment } = commentStore
-        return { clearComment, comment, routerStore, createComment, modifyComment }
+        return { clearComment, comment, routerStore, createComment, modifyComment, setBreadcrumbArr }
     }
 )
 @observer
@@ -126,6 +139,21 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         })
     }
 
+    @action
+    resetBread = (comment: ICommentStore.IComment) => {
+        let arr = [
+            {
+                title: 'Comment Tempaltes',
+                path: "/comments/template"
+            }
+        ] as IGlobalStore.menu[]
+        arr.push({
+            title: comment.id ? `Edit ${comment.com_name}` : ''
+        })
+       
+        this.props.setBreadcrumbArr(arr)
+    }
+
     componentWillMount() {
         const { routerStore, comment = {} } = this.props
         const routerId = routerStore.location.pathname.toString().split('/').pop()
@@ -141,16 +169,21 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
 
 
     checkImageWH = (file) => {
-        const SIZE = 30 ,MSG = `Failure, The file size cannot exceed 30kb`
-        return new Promise((resolve, reject) => {
-            if (SIZE - file.size / 1024 >= 0) {
-                resolve()
-                message.success('Success')
-            } else {
-                reject() 
-                message.error(MSG) 
-            }
-        })
+        const WHS = { width: 80, height: 80, size: 30 }
+        const { width, height, size } = WHS
+        const isLt2M = file.size / 1024 < WHS.size ? true : false
+        if (!isLt2M) {
+          const msg =`${size}kb`
+          message.error(`Failure，The file size cannot exceed ${msg}!`)
+          return  Promise.reject()
+        } else {
+            return testSize(file, WHS, 'img').catch(() => {
+                const msg =  `Please upload Image at ${width}*${height}px`
+                message.error(msg);
+                return Promise.reject()
+            })
+        }
+        
     }
 
     actionUpload = async (data) => {
@@ -191,6 +224,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                         if (this.isAdd) {
                             data = await createComment(values)
                         } else {
+                            // this.resetBread(comment)
                             data = await modifyComment({ ...values })
                         }
                         message.success(data.message)

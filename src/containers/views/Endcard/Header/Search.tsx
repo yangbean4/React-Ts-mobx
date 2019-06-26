@@ -18,13 +18,11 @@ const layout = {
   }
 }
 
-
 interface IStoreProps {
   changeFilter?: (params: IEndcardStore.SearchParams) => void
   routerStore?: RouterStore
   filters?: IEndcardStore.SearchParams
 }
-
 
 
 @inject(
@@ -53,14 +51,23 @@ class EndcardSearch extends ComponentExt<IStoreProps & FormComponentProps> {
     this.IReactionDisposer = autorun(
       () => {
         this.props.routerStore.history.listen(route => {
-          const pathname = route.pathname === '/endcard' ? true : false
-          pathname && this.props.form.resetFields()  
+            this.props.form.resetFields()
         })
       }
     )
   }
-  componentDidMount() {
+  componentWillMount() {
     this.IReactionDisposer()
+    this.props.routerStore.history.listen(route => {
+      console.log('####')
+        this.props.form.resetFields()
+    })
+  }
+
+  componentDidMount() {
+    this.props.routerStore.history.listen(route => {
+        this.props.form.resetFields()
+    })
   }
 
   submit = (e?: React.FormEvent<any>): void => {

@@ -81,7 +81,8 @@ class CommentTable extends ComponentExt<IProps> {
         const styles = {
             maxWidth: '130px',
             height: 'auto',
-            whiteSpace: 'wrap'
+            wordWrap: 'break-world',
+            wordBreak: 'break-all'
         }
         const {
             scrollY,

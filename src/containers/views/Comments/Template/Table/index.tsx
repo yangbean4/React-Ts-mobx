@@ -20,6 +20,7 @@ interface IStoreProps {
     pageSize?: number
     total?: number
     routerStore?: RouterStore
+    setBreadcrumbArr?: (menus?: IGlobalStore.menu[]) => void
 }
 
 interface IProps extends IStoreProps {
@@ -28,7 +29,8 @@ interface IProps extends IStoreProps {
 
 @inject(
     (store: IStore): IStoreProps => {
-        const { routerStore, commentStore } = store
+        const { routerStore, commentStore, globalStore } = store
+        const { setBreadcrumbArr } = globalStore
         const {
             getcommentsLoading,
             setComment,
@@ -40,7 +42,7 @@ interface IProps extends IStoreProps {
             setCommentType,
             total
         } = commentStore
-        return { routerStore, getcommentsLoading, setComment, getCommentTplList, comments, handleTableChange, page, pageSize, setCommentType, total }
+        return { routerStore, setBreadcrumbArr, getcommentsLoading, setComment, getCommentTplList, comments, handleTableChange, page, pageSize, setCommentType, total }
     }
 )
 @observer
@@ -52,8 +54,26 @@ class CommentTable extends ComponentExt<IProps> {
     @action
     modifyComment = (comment: ICommentStore.IComment) => {
         this.props.setComment(comment)
+        this.resetBread(comment)
         this.props.routerStore.replace(`/comments/template/edit/${comment.id}`)
     }
+
+    @action
+    resetBread = (comment: ICommentStore.IComment) => {
+        let arr = [
+            {
+                title: 'Comment Tempaltes',
+                path: "/comments/template"
+            }
+        ] as IGlobalStore.menu[]
+        arr.push({
+            title: `Edit ${comment.com_name}`,
+            path: `/comments/template/edit/${comment.id}`
+        })
+       
+        this.props.setBreadcrumbArr(arr)
+    }
+
     // 去请求数据
     componentDidMount() {
         const companyType = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
@@ -64,7 +84,9 @@ class CommentTable extends ComponentExt<IProps> {
         }
         this.props.setCommentType(companyType)
     }
-
+    componentWillUnmount() {
+        this.props.setBreadcrumbArr()
+    }
     render() {
         const {
             scrollY,
