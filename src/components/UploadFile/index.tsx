@@ -90,11 +90,11 @@ class UploadFile extends React.Component<UploadFileProps> {
       beforeUpload: (file) => {
         const houz = file.name.split('.').pop()
         const isHtml = isVideo || type.includes(houz)
-        const size = whs.size;
+        const size = isVideo ? 0 : whs.size;
         if (!isHtml) {
           message.error(`Upload failed! The file must be in ${type} format.`);
         }
-        const isLt2M = file.size / 1024 < size;
+        const isLt2M = !size || file.size / 1024 < size;
         if (!isLt2M) {
           const msg = size >= 1000 ? `${size / 1000} M` : `${size}kb`
           message.error(`Failure，The file size cannot exceed ${msg}!`);

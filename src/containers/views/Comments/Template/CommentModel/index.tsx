@@ -11,6 +11,31 @@ import { typeOf, testSize } from '@utils/index'
 // 封装表单域组件
 const FormItem = Form.Item
 
+// 获取光标位置
+function getCursortPosition(textDom) {
+    var cursorPos = 0;
+    const mm = window.getSelection()
+    console.log(mm.rangeCount)
+    if (document.selection) {
+        // IE Support
+        textDom.focus();
+        var selectRange = document.selection.createRange();
+        selectRange.moveStart('character', -textDom.value.length);
+        cursorPos = selectRange.text.length;
+    } else if (textDom.selectionStart || textDom.selectionStart == '0') {
+        // Firefox support
+        cursorPos = textDom.selectionStart;
+    }
+    return cursorPos;
+}
+
+function insertAfterText(textDom: HTMLElement, value, startPos) {
+    return textDom.innerHTML.substring(0, startPos) + value + textDom.innerHTML.substring(startPos, textDom.innerHTML.length);
+}
+
+
+
+
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
@@ -84,10 +109,15 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     private emoji: boolean = false
 
     @observable
+    private mousePositon: number = 0
+
+    @observable
     private head_portrait: string
 
     @observable
     private langauge: string[] = []
+
+
 
     private myRef = React.createRef()
 
@@ -114,6 +144,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     showEmojiPicker = () => {
         // this.emoji = !this.emoji
+        this.mousePositon = getCursortPosition(this.myRef.current)
     }
 
     @action
@@ -252,7 +283,9 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
 
     selectEmoji = (emoji) => {
         const current = this.myRef.current as HTMLElement
-        const innerHTML = current.innerHTML + emoji
+        // const innerHTML = current.innerHTML + emoji
+
+        const innerHTML = insertAfterText(current, emoji, this.mousePositon)
         current.innerHTML = innerHTML
         this.props.form.setFieldsValue({
             com_talk: innerHTML
