@@ -17,7 +17,7 @@ const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
         sm: { span: 5 },
-        lg: { span: 3 }
+        lg: { span: 5 }
     },
     wrapperCol: {
         xs: { span: 24 },
@@ -967,7 +967,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 </FormItem>
                                 {/* ige-----load-------box */}
                                 <Row>
-                                    <Col span={3}>
+                                    <Col span={5}>
                                         <p style={{ textAlign: 'right', marginRight: '12px' }}>IGE Carousel Video:</p>
                                     </Col>
                                     <Col span={8}>
