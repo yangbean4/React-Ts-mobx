@@ -242,25 +242,22 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
                     this.toggleLoading()
                     try {
-                        let data = {
+                        let res = {
                             message: '',
                         }
-                        values = {
-                            ...values,
-                        }
                         if (this.isAdd) {
-                            data = await createComment(values)
+                            res = await createComment(values)
                         } else {
+                            res = await modifyComment({ ...values })
+                        }
+                        message.success(res.message)
+                        // if (this.props.type) {
+                        //     this.props.onOk(res.data.id)
+                        //     this.props.form.resetFields()
+                        // } else {
+                        // }
 
-                            data = await modifyComment({ ...values })
-                        }
-                        message.success(data.message)
-                        if (this.props.type) {
-                            // this.props.onOk(data.data.id)
-                            this.props.form.resetFields()
-                        } else {
-                            routerStore.push('/comments/template')
-                        }
+                        routerStore.push('/comments/template')
                     } catch (err) {
                         console.log(err);
                     }
@@ -283,7 +280,6 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     setMousePosition = () => {
-        console.log(window.getSelection().focusOffset)
         this.mousePositon = window.getSelection().focusOffset
     }
 
