@@ -5,14 +5,14 @@ import { observer } from 'mobx-react'
 import * as styles from './index.scss'
 
 interface IProp {
-  onChange?: (data: any) => void
+  selectEmoji?: (data: any) => void
 }
 
 @observer
 class EmojiPicker extends React.Component<IProp>{
   @action
   insertEmoji = (event) => {
-
+    console.log(event)
   }
   render() {
     return (
@@ -24,7 +24,7 @@ class EmojiPicker extends React.Component<IProp>{
                 <li
                   key={index}
                   data-emoji={item}
-                  onClick={(event) => this.insertEmoji(event)}
+                  onClick={() => this.props.selectEmoji(item)}
                 >{item}
                 </li>
               )

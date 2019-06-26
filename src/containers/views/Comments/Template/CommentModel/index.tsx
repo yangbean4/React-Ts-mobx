@@ -89,6 +89,8 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private langauge: string[] = []
 
+    private myRef = React.createRef()
+
     @computed
     get formItemLayout() {
         return this.props.type ? formItemLayoutForModel : formItemLayout
@@ -111,7 +113,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     showEmojiPicker = () => {
-        this.emoji = !this.emoji
+        // this.emoji = !this.emoji
     }
 
     @action
@@ -248,10 +250,23 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         )
     }
 
+    selectEmoji = (emoji) => {
+        const current = this.myRef.current as HTMLElement
+        const innerHTML = current.innerHTML + emoji
+        current.innerHTML = innerHTML
+        this.props.form.setFieldsValue({
+            com_talk: innerHTML
+        })
+    }
+
     setCom_talk = (e) => {
         this.props.form.setFieldsValue({
             com_talk: e.target.innerHTML
         })
+    }
+
+    componentDidMount() {
+
     }
 
     render() {
@@ -362,14 +377,15 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                         })(
                             <div>
                                 <Popover
-                                    content={<EmojiPicker></EmojiPicker>}
+                                    content={<EmojiPicker
+                                        selectEmoji={this.selectEmoji}
+                                    ></EmojiPicker>}
                                     trigger="click"
-                                    visible={this.emoji}
                                     placement="top">
                                     <AntIcon className={styles.workPlus} onClick={this.showEmojiPicker} type="plus" />
                                 </Popover>
                                 <div>
-                                    <div className={styles.textBox} onInput={this.setCom_talk} contentEditable={true}>{com_talk}</div>
+                                    <div ref={this.myRef} className={styles.textBox} onInput={this.setCom_talk} contentEditable={true}>{com_talk}</div>
                                     <Popover content={(<p>At least 80 characters.</p>)}>
                                         <AntIcon className={styles.workBtn} type="question-circle" />
                                     </Popover>
