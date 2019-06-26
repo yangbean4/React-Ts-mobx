@@ -7,4 +7,5 @@ export const btnBox: string;
 export const disable: string;
 export const modalBtn: string;
 export const tableBox: string;
+export const tableContainer: string;
 export const workPlus: string;

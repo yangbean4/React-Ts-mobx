@@ -4,6 +4,7 @@ import { Upload, Modal, message, Icon, Button } from 'antd'
 import { action, computed, runInAction, observable } from 'mobx';
 import { typeOf, testSize } from '@utils/index'
 import * as styles from './index.scss'
+import { url } from 'inspector';
 interface hasResult {
   result?: string
 }
@@ -147,7 +148,7 @@ class UploadFile extends React.Component<UploadFileProps> {
     const props = this.getUploadprops(api, wht, preData, fileType, callBack)
     const domCom = fileType === 'video' ?
       (<video style={{ width: '100%' }} src={this.useUrl} />)
-      : (<img alt="example" style={{ width: '100%' }} src={this.useUrl} />)
+      : (<div className={styles.imgBox} style={{backgroundImage: 'url('+this.useUrl+')'}}></div>)
 
 
     const uploadButton = (

@@ -551,7 +551,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                                     app_id: this.appId
                                 }}
                             >
-                                <div className={styles.full} />
+                                <div className={styles.full}></div>
                             </UploadFile>
                         )}
                     </FormItem>

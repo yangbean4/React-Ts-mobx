@@ -99,6 +99,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get accountType() {
+        console.log(this.appTarget.account_type)
         return this.appTarget.account_type
     }
 

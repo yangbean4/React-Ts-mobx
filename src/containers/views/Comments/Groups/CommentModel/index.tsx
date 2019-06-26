@@ -292,7 +292,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                         })(<Input autoComplete="off" disabled={true} />)}
                     </FormItem>
                     <FormItem className={styles.tableBox} {...tableWidth}>
-                        <div>
+                        <div className={styles.tableContainer}>
                             <Table<ICommentStore.IComment>
                                 className="center-table"
                                 style={{ width: '100%' }}

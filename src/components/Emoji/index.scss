@@ -24,6 +24,9 @@
   margin: 0;
   padding: 15px 15px 20px 15px;
   overflow: auto;
+  &::-webkit-scrollbar{
+    display: none;
+  }
   li {
     display: block;
     list-style: none;

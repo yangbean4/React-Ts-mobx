@@ -41,6 +41,10 @@
     width: 100%;
     height: auto;
   }
+  .tableContainer{
+    max-height: 600px;
+    overflow: scroll;
+  }
   .disable {
     :global {
       td {

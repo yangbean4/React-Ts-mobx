@@ -143,13 +143,10 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
     }
     onCancel = () => {
         this.setTemplate({})
-        // this.props.onCancel()
+        this.props.onCancel()
         this.removePropFile = false
         this.toggleLoading(false)
         this.props.form.resetFields()
-        setTimeout(()=>{
-            console.log(this.comTemplate.template_url )
-        },100)
     }
 
     removeFile = () => {
