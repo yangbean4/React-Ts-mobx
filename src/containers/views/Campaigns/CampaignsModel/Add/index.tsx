@@ -519,18 +519,16 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         )}
                     </FormItem>
 
-                    {
-                        this.accountType !== 2 && <FormItem label="Tracking Url">
-                            {getFieldDecorator('tracking_url', {
-                                initialValue: tracking_url,
-                                rules: [
-                                    {
-                                        required: false, message: "Required"
-                                    }
-                                ]
-                            })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
-                        </FormItem>
-                    }
+                    <FormItem label="Tracking Url">
+                        {getFieldDecorator('tracking_url', {
+                            initialValue: tracking_url,
+                            rules: [
+                                {
+                                    required: this.accountType === 1, message: "Required"
+                                }
+                            ]
+                        })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
+                    </FormItem>
 
                     <FormItem label="Impression Url">
                         {getFieldDecorator('impression_url', {

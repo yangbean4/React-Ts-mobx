@@ -111,7 +111,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
-    getComments = async (val='en') => {
+    getComments = async (val = 'en') => {
         const res = await this.api.comment.selectTemplate({})
         const ret = res.data[val]
         runInAction('SET_COMMENT', () => {
@@ -120,8 +120,8 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
-    getLanaugeDetail = async() => {
-        const res = await this.api.endcard.getlanguage() 
+    getLanaugeDetail = async () => {
+        const res = await this.api.endcard.getlanguage()
         runInAction('SET_LANGAUE', () => {
             this.language = res.data
         })
@@ -142,13 +142,16 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     componentWillMount() {
-        this.getComments()
+
         this.getLanaugeDetail()
         const { routerStore, comment = {} } = this.props
         const routerId = routerStore.location.pathname.toString().split('/').pop()
         const Id = Number(routerId)
         if ((!isNaN(Id) && (!comment.id || comment.id !== Id)) && !this.props.type) {
             routerStore.push('/comments/groups')
+        }
+        if (Id) {
+            this.getComments(this.props.comment.group_language)
         }
     }
     componentDidMount() {

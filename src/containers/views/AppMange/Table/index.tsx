@@ -38,7 +38,7 @@ interface IProps extends IStoreProps {
             total,
             setAppManage
         } = appManageStore
-        return { routerStore, setAppManage,appManage, getAppManageLoading, getAppManageList, appManageList, handleTableChange, page, pageSize, total }
+        return { routerStore, setAppManage, appManage, getAppManageLoading, getAppManageList, appManageList, handleTableChange, page, pageSize, total }
     }
 )
 @observer
@@ -89,7 +89,7 @@ class AppsManageTable extends ComponentExt<IProps> {
             >
                 <Table.Column<IAppManageStore.IAppMange> key="app_key" title="Appkey" dataIndex="app_key" width={100} />
                 <Table.Column<IAppManageStore.IAppMange> key="title" title="App Name" dataIndex="title" width={150} />
-                <Table.Column<IAppManageStore.IAppMange> key="app_id" title="App ID" dataIndex="app_id" width={200} />
+                <Table.Column<IAppManageStore.IAppMange> key="app_id" title="App ID" dataIndex="app_id" />
                 <Table.Column<IAppManageStore.IAppMange> key="platform" title="Platform" dataIndex="platform" width={100} />
                 <Table.Column<IAppManageStore.IAppMange> key="category_name" title="Category" dataIndex="category_name" width={120} />
                 <Table.Column<IAppManageStore.IAppMange> key="screen_type" title="Screen type" dataIndex="screen_type" width={100} />

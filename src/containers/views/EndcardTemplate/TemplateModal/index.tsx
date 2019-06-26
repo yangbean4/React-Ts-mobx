@@ -193,7 +193,7 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
                         [key]: data.url
                     })
                     runInAction('set_File', () => {
-                        this.fileTarget[key] = data.name
+                        this.fileTarget[key] = file.name
                     })
                     cb && cb(data)
                 }, errorCb).catch(errorCb)

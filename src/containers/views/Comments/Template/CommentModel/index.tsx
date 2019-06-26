@@ -150,8 +150,9 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         arr.push({
             title: comment.id ? `Edit ${comment.com_name}` : ''
         })
-       
-        this.props.setBreadcrumbArr(arr)
+        setImmediate(() => {
+            this.props.setBreadcrumbArr(arr)
+        })
     }
 
     componentWillMount() {
@@ -161,10 +162,14 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         if ((!isNaN(Id) && (!comment.id || comment.id !== Id)) && !this.props.type) {
             routerStore.push('/comments/template')
         }
+        if (Id) {
+            this.resetBread(comment)
+        }
         this.getLanaugeDetail()
     }
     componentWillUnmount() {
         this.props.clearComment()
+        this.props.setBreadcrumbArr()
     }
 
 
@@ -173,17 +178,17 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         const { width, height, size } = WHS
         const isLt2M = file.size / 1024 < WHS.size ? true : false
         if (!isLt2M) {
-          const msg =`${size}kb`
-          message.error(`Failure，The file size cannot exceed ${msg}!`)
-          return  Promise.reject()
+            const msg = `${size}kb`
+            message.error(`Failure，The file size cannot exceed ${msg}!`)
+            return Promise.reject()
         } else {
             return testSize(file, WHS, 'img').catch(() => {
-                const msg =  `Please upload Image at ${width}*${height}px`
+                const msg = `Please upload Image at ${width}*${height}px`
                 message.error(msg);
                 return Promise.reject()
             })
         }
-        
+
     }
 
     actionUpload = async (data) => {
@@ -224,7 +229,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                         if (this.isAdd) {
                             data = await createComment(values)
                         } else {
-                            // this.resetBread(comment)
+
                             data = await modifyComment({ ...values })
                         }
                         message.success(data.message)
@@ -364,7 +369,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                     <AntIcon className={styles.workPlus} onClick={this.showEmojiPicker} type="plus" />
                                 </Popover>
                                 <div>
-                                    <div className={styles.textBox} onInput={this.setCom_talk} contentEditable={true}>{com_talk ? com_talk : ''}</div>
+                                    <div className={styles.textBox} onInput={this.setCom_talk} contentEditable={true}>{com_talk}</div>
                                     <Popover content={(<p>At least 80 characters.</p>)}>
                                         <AntIcon className={styles.workBtn} type="question-circle" />
                                     </Popover>
