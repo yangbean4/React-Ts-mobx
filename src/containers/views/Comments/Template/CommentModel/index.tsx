@@ -14,18 +14,7 @@ const FormItem = Form.Item
 // 获取光标位置
 function getCursortPosition(textDom) {
     var cursorPos = 0;
-    const mm = window.getSelection()
-    console.log(mm.rangeCount)
-    if (document.selection) {
-        // IE Support
-        textDom.focus();
-        var selectRange = document.selection.createRange();
-        selectRange.moveStart('character', -textDom.value.length);
-        cursorPos = selectRange.text.length;
-    } else if (textDom.selectionStart || textDom.selectionStart == '0') {
-        // Firefox support
-        cursorPos = textDom.selectionStart;
-    }
+    window.getSelection().getRangeAt(0)
     return cursorPos;
 }
 
@@ -144,7 +133,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     showEmojiPicker = () => {
         // this.emoji = !this.emoji
-        this.mousePositon = getCursortPosition(this.myRef.current)
+        // this.mousePositon = getCursortPosition(this.myRef.current)
     }
 
     @action
@@ -284,7 +273,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     selectEmoji = (emoji) => {
         const current = this.myRef.current as HTMLElement
         // const innerHTML = current.innerHTML + emoji
-
+        console.log(this.mousePositon)
         const innerHTML = insertAfterText(current, emoji, this.mousePositon)
         current.innerHTML = innerHTML
         this.props.form.setFieldsValue({
@@ -292,14 +281,22 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         })
     }
 
+    @action
+    setMousePosition = () => {
+        console.log(window.getSelection().focusOffset)
+        this.mousePositon = window.getSelection().focusOffset
+    }
+
     setCom_talk = (e) => {
+        this.setMousePosition()
         this.props.form.setFieldsValue({
             com_talk: e.target.innerHTML
         })
     }
 
     componentDidMount() {
-
+        const current = this.myRef.current as HTMLElement
+        current.innerHTML = this.props.comment ? this.props.comment.com_talk : ''
     }
 
     render() {
@@ -418,7 +415,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                     <AntIcon className={styles.workPlus} onClick={this.showEmojiPicker} type="plus" />
                                 </Popover>
                                 <div>
-                                    <div ref={this.myRef} className={styles.textBox} onInput={this.setCom_talk} contentEditable={true}>{com_talk}</div>
+                                    <div ref={this.myRef} onClick={this.setMousePosition} className={styles.textBox} onInput={this.setCom_talk} contentEditable={true}></div>
                                     <Popover content={(<p>At least 80 characters.</p>)}>
                                         <AntIcon className={styles.workBtn} type="question-circle" />
                                     </Popover>

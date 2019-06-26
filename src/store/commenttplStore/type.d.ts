@@ -10,7 +10,7 @@ export interface IComment {
     language?: string
     head_portrait?: string
     com_name?: number
-    com_talk?: number
+    com_talk?: string
 }
 export interface SearchParams {
     id?: number
@@ -18,5 +18,5 @@ export interface SearchParams {
 }
 
 export interface OptionListDb {
-   language?: string[]
+    language?: string[]
 }
