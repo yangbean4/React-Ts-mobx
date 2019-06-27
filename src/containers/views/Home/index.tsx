@@ -10,6 +10,8 @@ import Header from './Header'
 import Sider from './Sider'
 import Breadcrumb from './Breadcrumb'
 
+
+
 function Home() {
     return (
         <Layout>
@@ -18,7 +20,7 @@ function Home() {
                 <Header />
                 <Breadcrumb />
                 <Layout.Content className={styles.content}>
-                    <Router className={styles.Router}>
+                    <Router>
                         <Switch>
                             {router.map(m => {
                                 if (!m.path) {
@@ -36,7 +38,7 @@ function Home() {
                             <Route component={Error} />
                         </Switch>
                     </Router>
-                    <div className={styles.beian} style={{ width: '300px', margin: '0 auto', padding: '20px 0' }}>
+                    <div style={{ width: '300px', margin: '0 auto', padding: '20px 0' }}>
                         <a target='_blank' href='http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010502038143'
                             style={{ display: 'inline-block', textDecoration: 'none', height: '20px', lineHeight: '20px' }}>
                             <img src='../guo.jpg' style={{ float: 'left' }} />
