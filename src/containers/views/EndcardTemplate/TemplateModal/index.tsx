@@ -165,12 +165,12 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
                                 const width = imageCopy.width
                                 const height = imageCopy.height
                                 console.log(width, height)
-                                if ((width === 300 && height === 167) || (width === 167 && height === 300)) {
-                                    this.template_type = Number(width === 167 && height === 300) + 1
+                                if ((width === 300 && height === 167) || (width === 168 && height === 293)) {
+                                    this.template_type = Number(width === 168 && height === 293) + 1
                                     resolve()
                                 } else {
                                     this.template_type = undefined
-                                    message.error('Please upload image at 300*167px or 167*300px!')
+                                    message.error('Please upload image at 300*167px or 168*293px!')
                                     reject()
                                 }
                             }

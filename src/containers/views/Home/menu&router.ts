@@ -309,7 +309,7 @@ export const routerAndMenu: IRouter[] = [
         id: 841,
         pid: 84,
         isMenu: true,
-        title: 'Comment Tempaltes',
+        title: 'Comment Template',
         component: 'CommentsTpl',
         path: '/comments/template',
         exact: true
