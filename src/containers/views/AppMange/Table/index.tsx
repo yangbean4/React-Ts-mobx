@@ -88,7 +88,7 @@ class AppsManageTable extends ComponentExt<IProps> {
                 onChange={handleTableChange}
             >
                 <Table.Column<IAppManageStore.IAppMange> key="app_key" title="Appkey" dataIndex="app_key" width={100} />
-                <Table.Column<IAppManageStore.IAppMange> key="title" title="App Name" dataIndex="title" width={150} />
+                <Table.Column<IAppManageStore.IAppMange> key="title" title="App Name" dataIndex="title" />
                 <Table.Column<IAppManageStore.IAppMange> key="app_id" title="App ID" dataIndex="app_id" />
                 <Table.Column<IAppManageStore.IAppMange> key="platform" title="Platform" dataIndex="platform" width={100} />
                 <Table.Column<IAppManageStore.IAppMange> key="category_name" title="Category" dataIndex="category_name" width={120} />

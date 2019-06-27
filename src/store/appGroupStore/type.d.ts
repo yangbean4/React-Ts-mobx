@@ -109,6 +109,7 @@ export interface Placement {
     min_offer_num?: number
     offer_num?: number
     budget?: number
+    creative_type?: string[]
 
     // appwall add
     style_id?: number

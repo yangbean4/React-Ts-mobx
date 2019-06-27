@@ -284,6 +284,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             ige_carrier_support = [],
             frequency_num,
             frequency_time,
+            creative_type,
             accept_cpm, // 新增
             // pid_type = this.props.appGroup && this.props.appGroup.contains_native_s2s_pid_types === 1 ? 5 : undefined,
             pid_type = this.usePidtype,
@@ -427,6 +428,29 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                         <Popover content={(<p>Support the network type of ige offer.</p>)}>
                             <Icon className={styles.workBtn} type="question-circle" />
                         </Popover>
+                    </FormItem>
+                    <FormItem label="Apply Creative Type">
+                        {getFieldDecorator('creative_type',
+                            {
+                                initialValue: creative_type,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Select
+                                    mode="multiple"
+                                    showSearch
+                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    {web.creative_type.map(c => (
+                                        <Select.Option {...c}>
+                                            {c.key}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            )}
                     </FormItem>
 
                     <FormItem label="Frequency Number">

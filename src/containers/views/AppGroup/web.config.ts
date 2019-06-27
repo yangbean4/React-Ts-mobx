@@ -132,3 +132,27 @@ export const rewardOption = [
     value: 1
   }
 ]
+
+
+export const creative_type = [
+  {
+    key: 'IVE',
+    value: '1'
+  },
+  {
+    key: 'VIDEO',
+    value: '2'
+  },
+  {
+    key: 'IGE',
+    value: '3'
+  },
+  {
+    key: 'Playicon-IGE',
+    value: '40'
+  },
+  {
+    key: 'Playicon-GP',
+    value: '41'
+  }
+]
