@@ -6,13 +6,18 @@
     width: 100%;
     height: 100%;
     :global(.ant-form-item-label) {
-      // width: 220px;
       height: 30px;
       line-height: 30px;
     }
     :global(.ant-form-item-control) {
       height: 30px;
       line-height: 30px;
+    }
+    @media screen and(max-width: 1340px) {
+      .sb-form{
+        min-width: 900px;
+        overflow-x: scroll;
+      }
     }
   }
  

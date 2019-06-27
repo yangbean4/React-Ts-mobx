@@ -108,7 +108,7 @@ class CommentSearch extends ComponentExt<IStoreProps & FormComponentProps> {
       <Form {...layout} >
         <Row>
             <Col span={span}>
-                <FormItem label="Group ID">
+                <FormItem label="Group Name">
                 {getFieldDecorator('id', {
                     initialValue: filters.id
                 })(<Input autoComplete="off" />)}

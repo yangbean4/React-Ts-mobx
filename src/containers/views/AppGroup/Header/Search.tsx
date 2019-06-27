@@ -5,6 +5,7 @@ import { Form, Input, Select, Row, Col, Button } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { platformOption, statusOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
+import * as styles from './index.scss'
 
 const FormItem = Form.Item
 
@@ -69,7 +70,7 @@ class AppGroupSearch extends ComponentExt<IStoreProps & FormComponentProps> {
       <Form {...layout} >
         <Row>
           <Col span={span}>
-            <FormItem label="Pkg Name">
+            <FormItem label="Pkg Name" className={styles.searchInput}>
               {getFieldDecorator('pkg_name', {
                 initialValue: filters.pkg_name
               })(<Input autoComplete="off" />)}
