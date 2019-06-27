@@ -469,7 +469,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem label="End Time">
                         {getFieldDecorator('end_time',
                             {
-                                initialValue: id !== undefined ? undefined : moment(end_time),
+                                initialValue: id && end_time ? moment(end_time) : undefined,
                                 rules: [{ type: 'object', required: false }],
                             }
                         )(<DatePicker />)}

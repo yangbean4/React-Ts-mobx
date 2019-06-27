@@ -4,6 +4,8 @@ export const CompanyModal: string;
 export const btn: string;
 export const btn2: string;
 export const btnBox: string;
+export const ccc: string;
+export const imgbox: string;
 export const modalBtn: string;
 export const textBox: string;
 export const workBtn: string;

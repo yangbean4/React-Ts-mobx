@@ -8,6 +8,8 @@ import * as styles from './index.scss'
 import EmojiPicker from '@components/Emoji'
 import * as web from '../web.config'
 import { typeOf, testSize } from '@utils/index'
+import UploadFile, { UploadFileProps, FileWHT } from '@components/UploadFile'
+
 // 封装表单域组件
 const FormItem = Form.Item
 
@@ -369,7 +371,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                             </Select>
                         )}
                     </FormItem>
-                    <FormItem label="Head Portrait" >
+                    <FormItem label="Head Portrait" className={styles.ccc}>
                         {getFieldDecorator('head_portrait', {
                             initialValue: head_portrait,
                             rules: [
@@ -377,9 +379,21 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ],
-                        })(<Upload {...uploadConfig}>
-                            {this.head_portrait || head_portrait ? <img width="80" height="80" src={this.head_portrait || head_portrait} alt="avatar" /> : <AntIcon className={styles.workPlus} type='plus' />}
-                        </Upload>)}
+                        })(
+                            // <Upload {...uploadConfig}>
+                            //     {this.head_portrait || head_portrait ? <img width="80" height="80" src={this.head_portrait || head_portrait} alt="avatar" /> : <AntIcon className={styles.workPlus} type='plus' />}
+                            // </Upload>
+                            <UploadFile
+                                className={styles.imgbox}
+                                api={this.api.appGroup.uploadIcon}
+                                wht={{ width: 80, height: 80, size: 30 }}
+                            >
+                                {/* <div className={styles.full}></div> */}
+                                {/* <AntIcon type='plus' /> */}
+                                <AntIcon className={styles.workPlus} type="plus" />
+                            </UploadFile>
+                        )
+                        }
                     </FormItem>
                     <FormItem label="Comment Name" >
                         {getFieldDecorator('com_name', {

@@ -11,9 +11,9 @@ export const IGE = [
 export const Jump = [
   {
     key: 'Yes',
-    value: 1
+    value: 0
   }, {
     key: 'No',
-    value: 0
+    value: 1
   }
 ]
