@@ -11,7 +11,7 @@ import { typeOf } from '@utils/index'
 import UploadFile, { UploadFileProps, FileWHT } from '@components/UploadFile'
 import AccountModel from './AccountModel'
 import MyIcon from '@components/Icon'
-import { validate } from '@babel/types';
+
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -109,6 +109,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     private videoTypeValue: number
 
     @observable
+    private igeFlag: number
+
+    @observable
     private accountShow: boolean = false
 
     @computed
@@ -124,6 +127,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     @computed
     get useSkipTo() {
         return [this.skipTo, this.creativeTarget.skip_to, 'ige'].find(ele => ele !== undefined)
+    }
+
+    @computed
+    get useIgeFlag() {
+        return [this.igeFlag, this.creativeTarget.ige_leadvideo_flag, 2].find(ele => ele !== undefined)
     }
 
     @computed
@@ -214,6 +222,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     setVideoType = (value) => {
         this.videoTypeValue = value
+    }
+
+    @action
+    setIgeFlag = (value) => {
+        this.igeFlag = value
     }
 
     languageChange = (language) => {
@@ -466,7 +479,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             skip_to = this.useSkipTo,
             video_type = this.useVideoTypeValue,
             ige_pkgname = '',
-            ige_leadvideo_flag = 2,
+            ige_leadvideo_flag = this.useIgeFlag,
             ige_recoverlist_opps = 1,
             ige_recoverlist_re_en = 1,
             ige_switch_scene = 1,
@@ -950,7 +963,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         initialValue: this.getInitialValue('ige_leadvideo_portrait_offline_url'),
                                         rules: [
                                             {
-                                                required: true, message: "Required"
+                                                required: this.useIgeFlag !== 2, message: "Required"
                                             }
                                         ]
                                     })(
@@ -964,7 +977,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         initialValue: this.getInitialValue('ige_leadvideo_landscape_offline_url'),
                                         rules: [
                                             {
-                                                required: true, message: "Required"
+                                                required: this.useIgeFlag !== 2, message: "Required"
                                             }
                                         ]
                                     })(
@@ -1101,6 +1114,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         })(
                                             <Select
                                                 showSearch
+                                                onChange={(val) => this.setIgeFlag(val)}
                                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                             >
                                                 {igeFlag.map(c => (
