@@ -29,7 +29,7 @@ class Header extends ComponentExt<IStoreProps> {
             <div className='searchForm'>
                 <Search />
                 {
-                    this.$checkAuth('Offers-Comments Comment Templates-Add', (
+                    this.$checkAuth('Offers-Comments-Comment Templates-Add', (
                         <PortalsBtn querySelector='#companyAddBtn'>
                             <Button icon='plus' type="primary" onClick={this.addCompany}>
                                 Add

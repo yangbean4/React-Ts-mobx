@@ -70,7 +70,7 @@ class CommentTable extends ComponentExt<IProps> {
             title: `Edit ${comment.com_name}`,
             path: `/comments/template/edit/${comment.id}`
         })
-       
+
         this.props.setBreadcrumbArr(arr)
     }
 
@@ -123,7 +123,7 @@ class CommentTable extends ComponentExt<IProps> {
                         title="Head Portrait"
                         dataIndex="head_portrait"
                         width={150}
-                        render={(record) => <img src={record} alt="" width="40"  height="40" />}
+                        render={(record) => <img src={record} alt="" width="40" height="40" />}
                     />
                     <Table.Column<ICommentStore.IComment> key="com_name" title="Comment Name" dataIndex="com_name" width={150} />
                     <Table.Column<ICommentStore.IComment> key="com_talk" title="Comment Talk" className={styles.longText} dataIndex="com_talk" width={330} />
@@ -143,7 +143,7 @@ class CommentTable extends ComponentExt<IProps> {
                         render={(_, record) => (
                             <span>
                                 {
-                                    this.$checkAuth('Offers-Comments Comment Templates-Edit', [
+                                    this.$checkAuth('Offers-Comments-Comment Templates-Edit', [
                                         (<a key='form' href="javascript:;" onClick={() => this.modifyComment(record)}>
                                             <Icon type="form" />
                                         </a>)

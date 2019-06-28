@@ -117,7 +117,7 @@ class LeadContentTable extends ComponentExt<IProps> {
                     render={(_, record) => (
                         <span>
                             {
-                                this.$checkAuth('Offers-Creatives Lead Content-Edit', [
+                                this.$checkAuth('Offers-Creatives-Lead Content-Edit', [
                                     (<a key='form' href="javascript:;" onClick={() => this.modifyLeadContent(record)}>
                                         <Icon type="form" />
                                     </a>)

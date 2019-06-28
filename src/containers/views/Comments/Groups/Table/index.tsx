@@ -118,25 +118,25 @@ class CommentTable extends ComponentExt<IProps> {
                         title="Group Language"
                         dataIndex="group_language"
                         width={100}
-                     />
-                    <Table.Column<ICommentGroupStore.IGroup> 
-                        key="comments" 
-                        title="Comment Template ID" 
-                        dataIndex="comments" 
+                    />
+                    <Table.Column<ICommentGroupStore.IGroup>
+                        key="comments"
+                        title="Comment Template ID"
+                        dataIndex="comments"
                         width={200}
                         render={(_, record) => (
                             <span>
                                 {
-                                   record.comments && record.comments.map((c, index) => (
+                                    record.comments && record.comments.map((c, index) => (
                                         <Popover
                                             placement="top"
                                             trigger="hover"
                                             key={index}
                                             content={<p style={styles}>{c.comment}</p>}
-                                            >
-                                                <a href="javascript:;" style={style} key={index}>{FormatNumber(c.id)}</a>
+                                        >
+                                            <a href="javascript:;" style={style} key={index}>{FormatNumber(c.id)}</a>
                                         </Popover>
-                                   )) 
+                                    ))
                                 }
                             </span>
                         )}
@@ -157,7 +157,7 @@ class CommentTable extends ComponentExt<IProps> {
                         render={(_, record) => (
                             <span>
                                 {
-                                    this.$checkAuth('Offers-Comments Comment Groups-Edit', [
+                                    this.$checkAuth('Offers-Comments-Comment Groups-Edit', [
                                         (<a key='form' href="javascript:;" onClick={() => this.modifyComment(record)}>
                                             <Icon type="form" />
                                         </a>)

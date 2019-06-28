@@ -16,7 +16,7 @@ interface IStoreProps {
     pageSize?: number
     total?: number
     routerStore?: RouterStore
-}  
+}
 
 interface IProps extends IStoreProps {
     scrollY: number
@@ -97,7 +97,7 @@ class AdsourceTable extends ComponentExt<IProps> {
                         render={(_, record) => (
                             <span>
                                 {
-                                    this.$checkAuth('Authorization-User Manage-Edit', [
+                                    this.$checkAuth('Company-Source Company-Edit', [
                                         (<a key='form' href="javascript:;" onClick={() => this.modifyCompany(record)}>
                                             <Icon type="form" />
                                         </a>)

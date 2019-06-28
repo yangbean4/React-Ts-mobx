@@ -18,7 +18,7 @@ interface IStoreProps {
     pageSize?: number
     total?: number
     routerStore?: RouterStore
-}  
+}
 
 interface IProps extends IStoreProps {
     scrollY: number
@@ -100,7 +100,7 @@ class CompanyTable extends ComponentExt<IProps> {
                         render={(_, record) => (
                             <span>
                                 {
-                                    this.$checkAuth('Authorization-User Manage-Edit', [
+                                    this.$checkAuth('Company-Subsite Company-Edit', [
                                         (<a key='form' href="javascript:;" onClick={() => this.modifyCompany(record)}>
                                             <Icon type="form" />
                                         </a>)

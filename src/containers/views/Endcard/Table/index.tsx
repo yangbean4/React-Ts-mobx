@@ -117,7 +117,7 @@ class EndcardTable extends ComponentExt<IProps> {
                     render={(_, record) => (
                         <span>
                             {
-                                this.$checkAuth('Offers-Endcard Endcard-Edit', [
+                                this.$checkAuth('Offers-Endcards-Endcard-Edit', [
                                     (<a key='form' href="javascript:;" onClick={() => this.modifyEndcard(record)}>
                                         <Icon type="form" />
                                     </a>)

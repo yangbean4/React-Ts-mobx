@@ -141,13 +141,13 @@ class EndcardTemplateTable extends ComponentExt<IProps> {
                         render={(_, record) => (
                             <span>
                                 {
-                                    this.$checkAuth('Offers-Endcard Endcard Template-Edit', [
+                                    this.$checkAuth('Offers-Endcards-Endcard Template-Edit', [
                                         <a href="javascript:;" onClick={() => this.modifyEndcardTemplate(record)}>
                                             <Icon type="form" />
                                         </a>
                                     ])
                                 }
-                                
+
                             </span>
                         )}
                     />

@@ -50,11 +50,11 @@ class CampaignsTable extends ComponentExt<IProps> {
     @action
     modifyComment = (campaign: ICampaignStore.ICampainginForList, type?) => {
         this.props.setCampaingn(campaign)
-        const { 
+        const {
             app_id,
             platform,
             app_key
-         } = campaign
+        } = campaign
         localStorage.setItem('TargetCampaign', JSON.stringify({
             app_id,
             platform,

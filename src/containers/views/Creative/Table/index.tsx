@@ -117,7 +117,7 @@ class CreativeTable extends ComponentExt<IProps> {
                     render={(_, record) => (
                         <span>
                             {
-                                this.$checkAuth('Offers-Creatives Creatives-Edit', [
+                                this.$checkAuth('Offers-Creatives-Creatives-Edit', [
                                     (<a key='form' href="javascript:;" onClick={() => this.modifyCreative(record)}>
                                         <Icon type="form" />
                                     </a>)

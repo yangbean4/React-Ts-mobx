@@ -232,8 +232,11 @@ class PID extends ComponentExt<IStoreProps> {
           </div>
           {
             this.isTable ? <div className="tableBox">
-              <Button type="primary" className={style.addbtn} onClick={() => this.editPid()}>+ Add</Button>
-
+              {
+                this.$checkAuth('Offers-Creatives-Lead Content-Add', (
+                  <Button type="primary" className={style.addbtn} onClick={() => this.editPid()}>+ Add</Button>
+                ))
+              }
               <VcTable data={this.thisDataList} onEdit={this.editPid} />
               {/* <div className={style.btnGroup}> */}
               {/* <Button type="primary" className={style.submitBtn} onClick={this.submit}>Submit</Button> */}

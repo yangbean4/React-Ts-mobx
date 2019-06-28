@@ -36,7 +36,7 @@ class Header extends ComponentExt<IStoreProps> {
             <div className='searchForm'>
                 <Search />
                 {
-                    this.$checkAuth('Offers-Endcards Endcard Template-Add', (
+                    this.$checkAuth('Offers-Endcards-Endcard Template-Add', (
                         <PortalsBtn querySelector='#customAddBtn'>
                             <Button icon='plus' type="primary" onClick={this.toggleCustomModalVisible}>
                                 Add
