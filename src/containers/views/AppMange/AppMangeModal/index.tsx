@@ -174,7 +174,10 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
             appstore_url: this.props.form.getFieldValue('appstore_url')
         })
         runInAction('SET_APPGP', () => {
-            this.manageStore = { ...res.data }
+            this.manageStore = {
+                ...res.data,
+                category_id: (this.props.optionListDb.Category.find(ele => ele.name === res.data.category_id) || {}).id
+            }
         })
     }
 
