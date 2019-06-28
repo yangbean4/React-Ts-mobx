@@ -103,11 +103,11 @@ class AppsManageTable extends ComponentExt<IProps> {
                     render={(_, record) => (
                         <span>
                             {
-                                // this.$checkAuth('Apps-Virtual Endcard-Add', [
-                                (<a key='form' href="javascript:;" onClick={() => this.modifyEndcard(record)}>
-                                    <Icon type="form" />
-                                </a>)
-                                // ])
+                                this.$checkAuth('Offers-Apps Manage-Edit', [
+                                    (<a key='form' href="javascript:;" onClick={() => this.modifyEndcard(record)}>
+                                        <Icon type="form" />
+                                    </a>)
+                                ])
                             }
                         </span>
                     )}
