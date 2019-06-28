@@ -117,11 +117,11 @@ class LeadContentTable extends ComponentExt<IProps> {
                     render={(_, record) => (
                         <span>
                             {
-                                // this.$checkAuth('Apps-Virtual LeadContent-Add', [
-                                (<a key='form' href="javascript:;" onClick={() => this.modifyLeadContent(record)}>
-                                    <Icon type="form" />
-                                </a>)
-                                // ])
+                                this.$checkAuth('Offers-Creatives Lead Content-Edit', [
+                                    (<a key='form' href="javascript:;" onClick={() => this.modifyLeadContent(record)}>
+                                        <Icon type="form" />
+                                    </a>)
+                                ])
                             }
                         </span>
                     )}

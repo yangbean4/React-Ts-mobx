@@ -456,7 +456,6 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         <span style={{ marginRight: "5px" }}>$</span>
                         {getFieldDecorator('daily_budget', {
                             initialValue: daily_budget,
-                            validateTrigger: 'blur',
                             rules: [
                                 {
                                     validator: (r, v, callback) => {

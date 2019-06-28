@@ -117,11 +117,11 @@ class CreativeTable extends ComponentExt<IProps> {
                     render={(_, record) => (
                         <span>
                             {
-                                // this.$checkAuth('Apps-Virtual Creative-Add', [
-                                (<a key='form' href="javascript:;" onClick={() => this.modifyCreative(record)}>
-                                    <Icon type="form" />
-                                </a>)
-                                // ])
+                                this.$checkAuth('Offers-Creatives Creatives-Edit', [
+                                    (<a key='form' href="javascript:;" onClick={() => this.modifyCreative(record)}>
+                                        <Icon type="form" />
+                                    </a>)
+                                ])
                             }
                         </span>
                     )}

@@ -29,14 +29,13 @@ class Header extends ComponentExt<IStoreProps> {
             <div className='searchForm'>
                 <Search />
                 {
-                    // this.$checkAuth('Apps-Virtual Creative-Add', (
-                    <PortalsBtn querySelector='#creativeAddBtn'>
-                        <Button icon='plus' type="primary" onClick={this.addCreative}>
-                            Add
-                        </Button>
-                    </PortalsBtn>
-
-                    // ))
+                    this.$checkAuth('Offers-Creatives Creative-Add', (
+                        <PortalsBtn querySelector='#creativeAddBtn'>
+                            <Button icon='plus' type="primary" onClick={this.addCreative}>
+                                Add
+                            </Button>
+                        </PortalsBtn>
+                    ))
                 }
             </div>
         )

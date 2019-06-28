@@ -117,7 +117,7 @@ class CampaignsTable extends ComponentExt<IProps> {
                         render={(_, record) => (
                             <span>
                                 {
-                                    this.$checkAuth('Authorization-User Manage-Edit', [
+                                    this.$checkAuth('Offers-Campaigns-Edit', [
                                         (<a key='form' href="javascript:;" onClick={() => this.modifyComment(record)}>
                                             <Icon type="form" />
                                         </a>)
