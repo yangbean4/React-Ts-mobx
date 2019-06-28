@@ -693,6 +693,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                         <FormItem label="Order ID"  >
                             {getFieldDecorator('order_id', {
                                 initialValue: order_id,
+                                validateTrigger: 'blur',
                                 rules: [
                                     {
                                         required: true, message: "Required"
