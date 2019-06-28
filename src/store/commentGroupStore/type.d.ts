@@ -15,7 +15,7 @@ export interface IGroup {
 }
 
 export interface SearchGroup {
-    id?: number
+    group_name?: string
     group_language?: string[]
 }
 

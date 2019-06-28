@@ -189,7 +189,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                             routerStore.push('/comments/groups')
                         }
                     } catch (err) {
-                        //console.log(err);
+                        console.log(err);
                     }
                     this.toggleLoading()
                 }

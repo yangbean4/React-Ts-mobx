@@ -131,6 +131,19 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         this.appIdKey = value
     }
 
+    @action
+    limitDecimals = (value: string | number): string => {
+        const reg = /^(\-)*(\d+)\.(\d\d).*$/
+        console.log(value)
+        if (typeof value === 'string') {
+            return !isNaN(Number(value)) ? value.replace(reg, '$1$2.$3') : ''
+        } else if (typeof value === 'number') {
+            return !isNaN(value) ? String(value).replace(reg, '$1$2.$3') : ''
+        } else {
+            return ''
+        }
+    }
+
     Cancel = () => {
         this.props.type || !this.isAdd ? this.props.onCancel() : this.props.routerStore.push('/currency')
     }
@@ -410,13 +423,13 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                 {
                                     validator: (r, v, callback) => {
                                         if (v <= 0) {
-                                            callback('The Exchange Rate should be a positive integer!')
+                                            callback('The Exchange Rate should be a positive number!')
                                         }
                                         callback()
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={0} />)}
+                        })(<InputNumber precision={2} formatter={this.limitDecimals} parser={this.limitDecimals} />)}
                     </FormItem>
 
                     <FormItem label="Total Budget">
@@ -430,13 +443,13 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                 {
                                     validator: (r, v, callback) => {
                                         if (v <= 0) {
-                                            callback('The Exchange Rate should be a positive integer!')
+                                            callback('The Exchange Rate should be a positive number!')
                                         }
                                         callback()
                                     }
                                 }
                             ]
-                        })(<InputNumber />)}
+                        })(<InputNumber precision={2} formatter={this.limitDecimals} parser={this.limitDecimals} />)}
                     </FormItem>
 
                     <FormItem label="Daily Budget">
@@ -448,13 +461,13 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                 {
                                     validator: (r, v, callback) => {
                                         if (v != undefined && v <= 0) {
-                                            callback('The Exchange Rate should be a positive integer!')
+                                            callback('The Exchange Rate should be a positive number!')
                                         }
                                         callback()
                                     }
                                 }
                             ]
-                        })(<InputNumber />)}
+                        })(<InputNumber precision={2} formatter={this.limitDecimals} parser={this.limitDecimals} />)}
                     </FormItem>
 
                     <FormItem label="Start Time">

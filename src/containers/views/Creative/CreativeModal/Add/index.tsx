@@ -11,6 +11,7 @@ import { typeOf } from '@utils/index'
 import UploadFile, { UploadFileProps, FileWHT } from '@components/UploadFile'
 import AccountModel from './AccountModel'
 import MyIcon from '@components/Icon'
+import { validate } from '@babel/types';
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -695,6 +696,15 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 rules: [
                                     {
                                         required: true, message: "Required"
+                                    },
+                                    {
+                                        validator: (r, v, callback) => {
+                                            const reg = /^[0-9]*$/;
+                                            if (!reg.test(v)) {
+                                                callback('The Exchange Rate should be a positive integer!')
+                                            }
+                                            callback()
+                                        }
                                     }
                                 ]
                             })(<Input autoComplete="off" disabled={!this.isAdd} onChange={this.order_idChange} />)}
