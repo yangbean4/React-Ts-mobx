@@ -52,13 +52,9 @@ class VcTable extends ComponentExt<TableProps> {
           width={120}
           render={(_, record, index) => (
             <span>
-              {
-                this.$checkAuth('Authorization-User Manage-Edit',
-                  <a href="javascript:;" onClick={() => onEdit(index)}>
-                    <Icon type="form" />
-                  </a>
-                )
-              }
+              <a href="javascript:;" onClick={() => onEdit(index)}>
+                <Icon type="form" />
+              </a>
 
               {
                 this.$checkAuth('Offers-Campaigns-Add', (
