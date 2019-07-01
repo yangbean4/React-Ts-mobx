@@ -176,7 +176,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
         runInAction('SET_APPGP', () => {
             this.manageStore = {
                 ...res.data,
-                category_id: (this.props.optionListDb.Category.find(ele => ele.name === res.data.category_id) || {}).id
+                // category_id: (this.props.optionListDb.Category.find(ele => ele.name === res.data.category_id) || {}).id
             }
         })
     }
@@ -487,7 +487,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(<Select
                                 showSearch
-                                disabled={!this.isAdd}
+                                // disabled={!this.isAdd}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {optionListDb.Category.map(c => (
