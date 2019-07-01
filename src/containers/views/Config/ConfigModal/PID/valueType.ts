@@ -13,5 +13,10 @@ export const value_typeOption = [
     key: ' Appwall',
     value: 2,
     phpKey: "Appwall"
+  },
+  {
+    key: ' Reward s2s',
+    value: 4,
+    phpKey: "RewardS2s"
   }
 ]

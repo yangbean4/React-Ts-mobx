@@ -576,7 +576,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         const creativeIconProps = this.getUploadprops(this.api.creative.handleUploadImg, {
             width: 180,
             height: 180,
-            size: 20
+            size: 100
         }, {
                 type: 2,
                 app_key: this.app_key
@@ -721,7 +721,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         }
                                     }
                                 ]
-                            })(<Input autoComplete="off" disabled={!this.isAdd} onChange={this.order_idChange} />)}
+                            })(<Input autoComplete="off" disabled={!this.isAdd && !!order_id} onChange={this.order_idChange} />)}
                         </FormItem>
 
                         <FormItem label="Creative Language">

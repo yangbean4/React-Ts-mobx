@@ -65,7 +65,7 @@ export class AuthStore extends StoreExt {
         this.setUserInfo(userInfo)
         setCookie(COOKIE_KEYS.TOKEN, token)
         localStorage.setItem(LOCALSTORAGE_KEYS.USERINFO, JSON.stringify(userInfo))
-        return res
+        return { authTree }
     }
 
 

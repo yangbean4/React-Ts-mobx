@@ -155,7 +155,7 @@ class SiderMenu extends ComponentExt<IStoreProps> {
     }
     // 选中给子节点添加上active的样式
     addActive = (item, key, domEvent) => {
-        
+
     }
     // 递归生成菜单
     getMenus = (menuTree: IMenuInTree[]) => {
@@ -164,8 +164,17 @@ class SiderMenu extends ComponentExt<IStoreProps> {
                 if (item.pid) {
                     this.levelMap[item.id] = item.pid
                 }
-                const authArr = item.children.map(ele => ele.authName).filter(ele => !!ele);
-                const auth = authArr.length > 0 ? authArr.join('|') : item.authName
+                const getAuthArr = (item): string[] => {
+                    if (item.children) {
+                        return item.children.map(ele => getAuthArr(ele))
+                    } else {
+                        return [item.authName]
+                    }
+                }
+                const authArr = getAuthArr(item).join(',').split(',').filter(ele => !!ele)
+
+                const auth = authArr.join('|')
+
                 return (
                     this.$checkAuth(auth, (
                         <SubMenu

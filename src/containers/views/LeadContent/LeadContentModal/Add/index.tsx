@@ -382,9 +382,18 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                             rules: [
                                 {
                                     required: true, message: "Required"
+                                },
+                                {
+                                    validator: (r, v, callback) => {
+                                        const reg = /^[0-9]*$/;
+                                        if (!reg.test(v)) {
+                                            callback('The Exchange Rate should be a positive integer!')
+                                        }
+                                        callback()
+                                    }
                                 }
                             ]
-                        })(<Input autoComplete="off" onChange={this.order_idChange} />)}
+                        })(<Input autoComplete="off" disabled={!this.isAdd && !!order_id} onChange={this.order_idChange} />)}
                     </FormItem>
 
                     <FormItem label="Lead Language">
