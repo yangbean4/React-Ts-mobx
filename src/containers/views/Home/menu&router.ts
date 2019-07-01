@@ -94,6 +94,7 @@ export interface IRouter extends IMenu {
     isMenu?: boolean
 }
 export const templateId = 2
+
 export const logId = 442
 export const routerAndMenu: IRouter[] = [
     // -------Apps-----------
@@ -685,7 +686,7 @@ export const routerAndMenu: IRouter[] = [
         isMenu: true,
         title: 'Apps Manage',
         path: '/log/appsManage',
-        authName: 'Apps-Apps Manage',
+        // authName: 'Apps-Apps Manage',
         component: 'Logs'
     },
 
@@ -702,7 +703,7 @@ export const routerAndMenu: IRouter[] = [
         isMenu: true,
         title: 'Creatives',
         path: '/log/creative',
-        authName: 'Offers-Creatives-Creatives',
+        // authName: 'Offers-Creatives-Creatives',
         component: 'Logs'
     },
     {
@@ -711,7 +712,7 @@ export const routerAndMenu: IRouter[] = [
         isMenu: true,
         title: 'Lead Content',
         path: '/log/lead_content',
-        authName: 'Offers-Creatives-Lead Content',
+        // authName: 'Offers-Creatives-Lead Content',
         component: 'Logs'
     },
 
@@ -728,7 +729,7 @@ export const routerAndMenu: IRouter[] = [
         isMenu: true,
         title: 'Endcard',
         path: '/log/endcard',
-        authName: 'Offers-Endcard',
+        // authName: 'Offers-Endcard',
         component: 'Logs'
     },
     {
@@ -737,7 +738,7 @@ export const routerAndMenu: IRouter[] = [
         isMenu: true,
         title: 'Endcard Template',
         path: '/log/endcard_template',
-        authName: 'Offers-Endcards-Endcard Template',
+        // authName: 'Offers-Endcards-Endcard Template',
         component: 'Logs'
     },
 
@@ -754,7 +755,7 @@ export const routerAndMenu: IRouter[] = [
         isMenu: true,
         title: 'Comments',
         path: '/log/comment',
-        authName: 'Offers-Comments-Comment Templates',
+        // authName: 'Offers-Comments-Comment Templates',
         component: 'Logs'
     },
     {
@@ -762,7 +763,7 @@ export const routerAndMenu: IRouter[] = [
         pid: 484,
         isMenu: true,
         title: 'Comment Groups',
-        authName: 'Offers-Comments-Comment Groups',
+        // authName: 'Offers-Comments-Comment Groups',
         path: '/log/comment_group',
         component: 'Logs'
     },
@@ -772,7 +773,7 @@ export const routerAndMenu: IRouter[] = [
         isMenu: true,
         title: 'Campaigns',
         path: '/log/campaigns',
-        authName: 'Offers-Campaigns',
+        // authName: 'Offers-Campaigns',
         component: 'Logs'
     },
     {
@@ -816,7 +817,7 @@ export const routerAndMenu: IRouter[] = [
         path: '/log/app',
         title: 'App',
         component: 'Logs',
-        authName: 'Apps-Apps Manage',
+        // authName: 'Apps-Apps Manage',
     },
     {
         id: 4112,
@@ -825,7 +826,7 @@ export const routerAndMenu: IRouter[] = [
         path: '/log/placement',
         title: 'Placement',
         component: 'Logs',
-        authName: 'Apps-Apps Manage',
+        // authName: 'Apps-Apps Manage',
     },
 
     {
@@ -836,7 +837,7 @@ export const routerAndMenu: IRouter[] = [
         title: 'Virtual Currency',
         component: 'Logs',
         exact: true,
-        authName: 'Apps-Virtual Currency'
+        // authName: 'Apps-Virtual Currency'
 
     },
     {
@@ -845,7 +846,7 @@ export const routerAndMenu: IRouter[] = [
         isMenu: true,
         path: '/log/companysubsite',
         title: 'Subsite Company',
-        authName: 'Company-Subsite Company',
+        // authName: 'Company-Subsite Company',
         component: 'Logs',
     },
     {
@@ -855,7 +856,7 @@ export const routerAndMenu: IRouter[] = [
         path: '/log/companysource',
         title: 'Source Company',
         component: 'Logs',
-        authName: 'Company-Source Company',
+        // authName: 'Company-Source Company',
     },
     {
         id: 431,
@@ -864,7 +865,7 @@ export const routerAndMenu: IRouter[] = [
         path: '/log/accountsubsite',
         title: 'Subsite Account',
         component: 'Logs',
-        authName: 'Account-Subsite Account',
+        // authName: 'Account-Subsite Account',
     },
     {
         id: 432,
@@ -873,7 +874,7 @@ export const routerAndMenu: IRouter[] = [
         path: '/log/accountsource',
         title: 'Source Account',
         component: 'Logs',
-        authName: 'Account-Source Account',
+        // authName: 'Account-Source Account',
     },
 
     {
@@ -883,7 +884,7 @@ export const routerAndMenu: IRouter[] = [
         path: '/log/config',
         title: 'Config Manage',
         component: 'Logs',
-        authName: 'Config Manage-Config Manage'
+        // authName: 'Config Manage-Config Manage'
     },
     {
         id: logId,
@@ -892,7 +893,7 @@ export const routerAndMenu: IRouter[] = [
         title: 'Template Manage',
         hasBread: false,
         component: 'Logs',
-        authName: 'Config Manage-Template Manage'
+        // authName: 'Config Manage-Template Manage'
     },
     {
         id: 451,
@@ -901,7 +902,7 @@ export const routerAndMenu: IRouter[] = [
         path: '/log/template',
         title: 'Custom Templates',
         component: 'Logs',
-        authName: 'Config Manage-Template Manage'
+        // authName: 'Config Manage-Template Manage'
     },
     {
         id: 45,
@@ -917,7 +918,7 @@ export const routerAndMenu: IRouter[] = [
         path: '/log/user',
         title: 'User Manage',
         component: 'Logs',
-        authName: 'Authorization-User Manage'
+        // authName: 'Authorization-User Manage'
     },
     {
         id: 452,
@@ -925,7 +926,7 @@ export const routerAndMenu: IRouter[] = [
         isMenu: true,
         path: '/log/role',
         title: 'Roles Manage',
-        authName: 'Authorization-Role Manage',
+        // authName: 'Authorization-Role Manage',
         component: 'Logs',
     },
     {

@@ -173,7 +173,7 @@ class SiderMenu extends ComponentExt<IStoreProps> {
                 }
                 const authArr = getAuthArr(item).join(',').split(',').filter(ele => !!ele)
 
-                const auth = authArr.join('|')
+                const auth = item.id.toString().indexOf('4') === 0 ? 'Log' : authArr.join('|')
 
                 return (
                     this.$checkAuth(auth, (
