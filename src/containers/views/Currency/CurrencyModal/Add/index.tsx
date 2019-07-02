@@ -282,11 +282,11 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                             validateTrigger: 'blur',
                             rules: [
                                 {
-                                    required: true, message: "Required",
+                                    required: false, message: "Required",
                                 },
                                 {
                                     validator: (r, v, callback) => {
-                                        if (v <= 0) {
+                                        if (v !== undefined && v <= 0) {
                                             callback('The Exchange Rate should be a positive integer!')
                                         }
                                         callback()

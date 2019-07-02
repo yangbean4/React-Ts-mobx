@@ -490,7 +490,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             videoUrl = '',
             skip_to = this.useSkipTo,
             video_type = this.useVideoTypeValue,
-            ige_pkgname = '',
+            ige_pkgname = this.props.platform === 'android' ? this.appId : '',
             ige_leadvideo_flag = this.useIgeFlag,
             ige_recoverlist_opps = 1,
             ige_recoverlist_re_en = 1,
