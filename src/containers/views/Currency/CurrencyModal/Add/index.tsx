@@ -180,7 +180,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
             platform = 'android',
             vc_name = '',
             app_name = "",
-            vc_exchange_rate = '',
+            vc_exchange_rate = undefined,
             vc_callback_url = '',
             vc_desc = '',
             vc_secret_key = '',
@@ -286,7 +286,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                                 },
                                 {
                                     validator: (r, v, callback) => {
-                                        if (v !== undefined && v <= 0) {
+                                        if (v != undefined && v <= 0) {
                                             callback('The Exchange Rate should be a positive integer!')
                                         }
                                         callback()

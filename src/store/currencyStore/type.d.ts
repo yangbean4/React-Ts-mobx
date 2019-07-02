@@ -10,7 +10,7 @@ export interface ICurrency {
     app_id?: string
     platform?: string
     vc_name?: string
-    vc_exchange_rate?: string
+    vc_exchange_rate?: number
     vc_callback_url?: string
     vc_desc?: string
     vc_secret_key?: string
