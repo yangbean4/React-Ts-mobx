@@ -372,16 +372,28 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         this.platform = type
         this.removeFile()
         this.props.form.setFieldsValue({
-            app_key: ''
+            app_key: '',
+            ige_pkgname: ''
         })
     }
 
     @action
     setAppid = (app_key) => {
-        const appName = this.usePkgnameData.find(ele => ele.app_key === app_key).app_name
+        const {
+            app_name,
+            app_id
+        } = this.usePkgnameData.find(ele => ele.app_key === app_key);
+
+        let formData = {}
+        if (this.platform === 'android') {
+            formData = {
+                ige_pkgname: app_id
+            }
+        }
         const data = this.props.form.getFieldsValue(['version', 'order_id', 'language'])
         this.props.form.setFieldsValue({
-            creative_name: `${appName}_${data.order_id}_${data.version}_${data.language}`
+            ...formData,
+            creative_name: `${app_name}_${data.order_id}_${data.version}_${data.language}`
         })
         runInAction('set_key', () => {
             this.app_key = app_key
@@ -1091,16 +1103,16 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                     </Col>
                                 </Row>
                                 <FormItem label="IGE Pkgname"  >
-                                    {/* {getFieldDecorator('ige_pkgname', {
-                                    initialValue: ige_pkgname,
-                                    rules: [
-                                        {
-                                            required: true, message: "Required"
-                                        }
-                                    ]
-                                })( */}
-                                    <Input autoComplete="off" value={this.appId} disabled={true} />
-                                    {/* )} */}
+                                    {getFieldDecorator('ige_pkgname', {
+                                        initialValue: ige_pkgname,
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
+                                    })(
+                                        <Input autoComplete="off" />
+                                    )}
                                 </FormItem>
                                 <FormItem label="IGE Leadvideo Flag">
                                     {getFieldDecorator('ige_leadvideo_flag',
@@ -1285,16 +1297,16 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 {
                                     this.useSkipTo === 'ige' && <React.Fragment>
                                         <FormItem label="IGE Pkgname"  >
-                                            {/* {getFieldDecorator('ige_pkgname', {
-                                            initialValue: ige_pkgname,
-                                            rules: [
-                                                {
-                                                    required: true, message: "Required"
-                                                }
-                                            ]
-                                        })( */}
-                                            <Input autoComplete="off" value={this.appId} disabled={true} />
-                                            {/* )} */}
+                                            {getFieldDecorator('ige_pkgname', {
+                                                initialValue: ige_pkgname,
+                                                rules: [
+                                                    {
+                                                        required: true, message: "Required"
+                                                    }
+                                                ]
+                                            })(
+                                                <Input autoComplete="off" />
+                                            )}
                                         </FormItem>
                                         <FormItem label="IGE Leadvideo Flag">
                                             {getFieldDecorator('ige_leadvideo_flag',
