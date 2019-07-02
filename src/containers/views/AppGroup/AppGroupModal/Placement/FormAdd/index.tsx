@@ -7,10 +7,10 @@ import * as web from '@views/AppGroup/web.config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import MyIcon from '@components/Icon'
-import VCmodel from './VCmodel';
+import VCmodel from './VCmodel'
+import { InitColor } from './Appwall.config'
 const FormItem = Form.Item
 import InputColor from '@components/InputColor/index'
-const InitColor = '#FF1D0C';
 
 interface hasResult {
     result?: string
@@ -96,7 +96,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
     private imageTarget: object = {}
 
     @observable
-    private AppWall: number
+    private AppWall: number = 1
 
     @observable
     private Palcement: IAppGroupStore.Placement = {}
@@ -131,7 +131,6 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
     get usePidtype() {
         const prov = this.props.appGroup && this.props.appGroup.contains_native_s2s_pid_types === 1 ? 5 : undefined
         const value = [this.pidType, this.Palcement.pid_type, prov].find(ele => ele !== undefined)
-        console.log(value)
         return value
     }
 
@@ -242,7 +241,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
         const colorKey = key.replace('image', 'color')
         const data = andColor ? {
             [`style_detail.${key}`]: '',
-            [`style_detail.${colorKey}`]: typeof andColor === 'boolean' ? InitColor : andColor
+            [`style_detail.${colorKey}`]: typeof andColor === 'boolean' ? InitColor[this.AppWall-1].ad_desc_color : andColor
         } : {
                 [`style_detail.${key}`]: '',
             }
@@ -632,7 +631,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
 
                             <FormItem label="Title">
                                 {getFieldDecorator('style_detail.title_text', {
-                                    initialValue: style_detail.title_text,
+                                    initialValue: style_detail.title_text || InitColor[this.AppWall - 1].title_text,
                                     rules: [
                                         {
                                             required: true, message: "Required"
@@ -648,9 +647,9 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     })(<Input autoComplete="off" style={{ width: '60%' }} />)}
                                     <span className={styles.lineSpan}>   font   </span>
                                 </FormItem> */}
-                                <FormItem {...noLabelLayout}>
+                                <FormItem {...noLabelLayout}>title_text_color
                                     {getFieldDecorator('style_detail.title_text_color', {
-                                        initialValue: style_detail.title_text_color || InitColor,
+                                        initialValue: style_detail.title_text_color || InitColor[this.AppWall - 1].title_text_color,
                                         rules: [
                                             {
                                                 required: true, message: "Required"
@@ -661,7 +660,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 </FormItem>
                                 <FormItem {...noLabelLayout}>
                                     {getFieldDecorator('style_detail.title_background_color', {
-                                        initialValue: style_detail.title_background_color || InitColor,
+                                        initialValue: style_detail.title_background_color || InitColor[this.AppWall - 1].title_background_color,
                                     })(<InputColor onChange={(color) => this.removeFile("title_background_image", color)} />)}
                                     <span className={styles.lineSpanOr}>bkgd&nbsp;&nbsp;&nbsp;&nbsp;or</span>
                                 </FormItem>
@@ -672,7 +671,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
 
                             <FormItem label="Subtitle">
                                 {getFieldDecorator('style_detail.subtitle_text', {
-                                    initialValue: style_detail.subtitle_text,
+                                    initialValue: style_detail.subtitle_text || InitColor[this.AppWall - 1].subtitle_text,
                                     rules: [
                                         {
                                             required: true, message: "Required"
@@ -684,7 +683,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             <div className={`${styles.formItemBox} ${styles.noTitle}`}>
                                 <FormItem {...noLabelLayout}>
                                     {getFieldDecorator('style_detail.subtitle_color', {
-                                        initialValue: style_detail.subtitle_color || InitColor,
+                                        initialValue: style_detail.subtitle_color || InitColor[this.AppWall-1].subtitle_color,
                                         rules: [
                                             {
                                                 required: true, message: "Required"
@@ -695,7 +694,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 </FormItem>
                                 <FormItem {...noLabelLayout}>
                                     {getFieldDecorator('style_detail.subtitle_background_color', {
-                                        initialValue: style_detail.subtitle_background_color || InitColor,
+                                        initialValue: style_detail.subtitle_background_color || InitColor[this.AppWall - 1].subtitle_background_color,
                                     })(<InputColor onChange={(color) => this.removeFile("subtitle_background_image", color)} />)}
                                     <span className={styles.lineSpanOr}>bkgd&nbsp;&nbsp;&nbsp;&nbsp;or</span>
                                 </FormItem>
@@ -710,7 +709,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 <Col span={15}>
                                     <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.ad_title_color', {
-                                            initialValue: style_detail.ad_title_color || InitColor,
+                                            initialValue: style_detail.ad_title_color || InitColor[this.AppWall - 1].ad_title_color,
                                             rules: [
                                                 {
                                                     required: true, message: "Required"
@@ -721,7 +720,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     </FormItem>
                                     <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.ad_desc_color', {
-                                            initialValue: style_detail.ad_desc_color || InitColor,
+                                            initialValue: style_detail.ad_desc_color || InitColor[this.AppWall - 1].ad_desc_color,
                                         })(<InputColor />)}
                                         <span className={styles.lineSpan}>   decr </span>
                                     </FormItem>
@@ -741,7 +740,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 <Col span={15}>
                                     <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.ad_edge_color', {
-                                            initialValue: style_detail.ad_edge_color || InitColor,
+                                            initialValue: style_detail.ad_edge_color || InitColor[this.AppWall - 1].ad_edge_color,
                                             rules: [
                                                 {
                                                     required: true, message: "Required"
@@ -752,7 +751,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     </FormItem>
                                     <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.ad_background_color', {
-                                            initialValue: style_detail.ad_background_color || InitColor,
+                                            initialValue: style_detail.ad_background_color || InitColor[this.AppWall - 1].ad_background_color,
                                         })(<InputColor onChange={(color) => this.removeFile("ad_background_image", color)} />)}
                                         <span className={styles.lineSpanOr}>bkgd&nbsp;&nbsp;&nbsp;&nbsp;or</span>
                                     </FormItem>
@@ -768,7 +767,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 <Col span={15}>
                                     <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.button_text_color', {
-                                            initialValue: style_detail.button_text_color || InitColor,
+                                            initialValue: style_detail.button_text_color || InitColor[this.AppWall - 1].button_text_color,
                                             rules: [
                                                 {
                                                     required: true, message: "Required"
@@ -779,20 +778,20 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     </FormItem>
                                     <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.button_background_color', {
-                                            initialValue: style_detail.button_background_color || InitColor,
+                                            initialValue: style_detail.button_background_color || InitColor[this.AppWall - 1].button_background_color,
                                         })(<InputColor onChange={(color) => this.removeFile("button_background_image", color)} />)}
                                         <span className={styles.lineSpan}>   bkgd </span>
                                     </FormItem>
                                     <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.button_edge_color', {
-                                            initialValue: style_detail.button_edge_color || InitColor,
+                                            initialValue: style_detail.button_edge_color || InitColor[this.AppWall - 1].button_edge_color,
                                         })(<InputColor />)}
                                         <span className={styles.lineSpan}>   edge </span>
                                     </FormItem>
 
                                     <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.button_unavail_color', {
-                                            initialValue: style_detail.button_unavail_color || InitColor,
+                                            initialValue: style_detail.button_unavail_color || InitColor[this.AppWall - 1].button_unavail_color,
                                         })(<InputColor />)}
                                         <span className={styles.lineSpanOr}>unavail&nbsp;&nbsp;&nbsp;&nbsp;or</span>
                                     </FormItem>
@@ -829,7 +828,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 <Col span={15}>
                                     <FormItem {...noLabelLayout}>
                                         {getFieldDecorator('style_detail.big_background_color', {
-                                            initialValue: style_detail.big_background_color || InitColor,
+                                            initialValue: style_detail.big_background_color || InitColor[this.AppWall - 1].big_background_color,
                                         })(<InputColor onChange={(color) => this.removeFile("big_background_image", color)} />)}
                                         <span className={styles.lineSpan}>   bkgd </span>
                                     </FormItem>
