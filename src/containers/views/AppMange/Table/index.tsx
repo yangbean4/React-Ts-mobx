@@ -22,6 +22,7 @@ interface IStoreProps {
 
 interface IProps extends IStoreProps {
     scrollY: number
+    scrollX: number
 }
 
 @inject(
@@ -62,6 +63,7 @@ class AppsManageTable extends ComponentExt<IProps> {
     render() {
         const {
             scrollY,
+            scrollX,
             getAppManageLoading,
             appManageList,
             handleTableChange,
@@ -78,7 +80,7 @@ class AppsManageTable extends ComponentExt<IProps> {
                 locale={{ emptyText: 'No Data' }}
                 loading={getAppManageLoading}
                 dataSource={appManageList}
-                scroll={{ y: scrollY }}
+                scroll={{ y: scrollY, x: '120%' }}
                 pagination={{
                     current: page,
                     pageSize,
@@ -88,12 +90,12 @@ class AppsManageTable extends ComponentExt<IProps> {
                 onChange={handleTableChange}
             >
                 <Table.Column<IAppManageStore.IAppMange> key="app_key" title="Appkey" dataIndex="app_key" width={100} />
-                <Table.Column<IAppManageStore.IAppMange> key="title" title="App Name" dataIndex="title" width={400} />
-                <Table.Column<IAppManageStore.IAppMange> key="app_id" title="App ID" dataIndex="app_id" width={400} />
+                <Table.Column<IAppManageStore.IAppMange> key="title" title="App Name" dataIndex="title" width={200} />
+                <Table.Column<IAppManageStore.IAppMange> key="app_id" title="App ID" dataIndex="app_id" width={180} />
                 <Table.Column<IAppManageStore.IAppMange> key="platform" title="Platform" dataIndex="platform" width={100} />
                 <Table.Column<IAppManageStore.IAppMange> key="category_name" title="Category" dataIndex="category_name" width={120} />
-                <Table.Column<IAppManageStore.IAppMange> key="screen_type" title="Screen type" dataIndex="screen_type" width={100} />
-                <Table.Column<IAppManageStore.IAppMange> key="rating" title="Rate" dataIndex="rating" />
+                <Table.Column<IAppManageStore.IAppMange> key="screen_type" title="Screen type" dataIndex="screen_type" width={140} />
+                <Table.Column<IAppManageStore.IAppMange> key="rating" title="Rate" dataIndex="rating" width={100} />
                 <Table.Column<IAppManageStore.IAppMange> key="downloads" title="Downloads" dataIndex="downloads" width={100} />
                 <Table.Column<IAppManageStore.IAppMange> key="status" title="Status" dataIndex="status" width={100} />
                 <Table.Column<IAppManageStore.IAppMange>
