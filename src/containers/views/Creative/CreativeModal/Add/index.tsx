@@ -150,9 +150,15 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @computed
+    get appLogo() {
+        return this.appTarget.logo
+    }
+
+    @computed
     get appId() {
         return this.appTarget.app_id
     }
+
     @computed
     get appName() {
         return this.appTarget.app_name
@@ -394,7 +400,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         const data = this.props.form.getFieldsValue(['version', 'order_id', 'language'])
         this.props.form.setFieldsValue({
             ...formData,
-            creative_icon_url : logo,
+            creative_icon_url: logo,
             creative_name: `${app_name}_${data.order_id}_${data.version}_${data.language}`,
         })
         runInAction('set_key', () => {
@@ -767,7 +773,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
                         <FormItem label="Icon" className={styles.autoHeight}>
                             {getFieldDecorator('creative_icon_url', {
-                                initialValue: this.getInitialValue('creative_icon_url'),
+                                initialValue: this.getInitialValue('creative_icon_url') || this.appLogo,
                                 rules: [
                                     {
                                         required: true, message: "Required"
