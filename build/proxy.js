@@ -1,6 +1,6 @@
 module.exports = {
   '/index.php': {
-    target: 'http://san-manage.test2.com',
+    target: 'http://san-manage.test.com',
     changeOrigin: true,
     pathRewrite: {
       '^/': '/'

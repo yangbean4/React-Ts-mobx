@@ -16,6 +16,7 @@ export interface ICreative {
     language?: string
     version?: string
     order_id?: number | string
+    last_stage_reward?: number
     creative_type?: string
     video_type?: number
     videoUrl?: string

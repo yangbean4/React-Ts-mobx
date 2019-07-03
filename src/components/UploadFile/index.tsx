@@ -4,7 +4,7 @@ import { Upload, Modal, message, Icon, Button } from 'antd'
 import { action, computed, runInAction, observable } from 'mobx';
 import { typeOf, testSize } from '@utils/index'
 import * as styles from './index.scss'
-import { url } from 'inspector';
+import MyIcon from '../Icon'
 interface hasResult {
   result?: string
 }
@@ -78,6 +78,7 @@ class UploadFile extends React.Component<UploadFileProps> {
 
     const errorCb = (error) => { console.log(error); this.removeFile() };
     const isVideo = type === 'video'
+    const isZip = type === '.zip'
     const fileName = isVideo ? 'Video' : 'Image'
 
     return {
@@ -101,7 +102,7 @@ class UploadFile extends React.Component<UploadFileProps> {
           message.error(`Failure，The file size cannot exceed ${msg}!`);
         }
         // && !isVideo
-        if (isHtml && isLt2M && whs) {
+        if (isHtml && isLt2M && !isZip && whs) {
           const { width, height, isScale = false } = whs;
           return testSize(file, whs, isVideo ? 'video' : 'img').catch(() => {
             const msg = isScale ? `Please upload ${fileName} at ${width}/${height}` : `Please upload ${fileName} at ${width}*${height}px`
@@ -121,21 +122,31 @@ class UploadFile extends React.Component<UploadFileProps> {
             formData.append(key, _value)
           })
         }
+
         fun(formData).then(res => {
-          const data = res.data
-          const fileRender = new FileReader()
-          fileRender.onload = (ev) => {
-            const target = ev.target as hasResult
+          const Rdata = res.data
+          this.props.onChange(Rdata.url)
+
+          if (isZip) {
             runInAction('SET_URL', () => {
-              this.previewUrl = target.result
+              this.previewUrl = file.name
             })
-            this.props.onChange(data.url)
-            cb && cb({
-              data,
-              localUrl: target.result
-            })
+          } else {
+            const fileRender = new FileReader()
+            fileRender.onload = (ev) => {
+              const target = ev.target as hasResult
+              runInAction('SET_URL', () => {
+                this.previewUrl = target.result
+              })
+
+              cb && cb({
+                Rdata,
+                localUrl: target.result
+              })
+            }
+            fileRender.readAsDataURL(file)
           }
-          fileRender.readAsDataURL(file)
+
         }, errorCb).catch(errorCb)
       }
     }
@@ -148,8 +159,9 @@ class UploadFile extends React.Component<UploadFileProps> {
     const props = this.getUploadprops(api, wht, preData, fileType, callBack)
     const domCom = fileType === 'video' ?
       (<video style={{ width: '100%' }} src={this.useUrl} />)
-      : (<div className={styles.imgBox} style={{backgroundImage: 'url('+this.useUrl+')'}}></div>)
+      : (<div className={styles.imgBox} style={{ backgroundImage: 'url(' + this.useUrl + ')' }}></div>)
 
+    const isZip = fileType === '.zip'
 
     const uploadButton = (
       <div>
@@ -164,7 +176,12 @@ class UploadFile extends React.Component<UploadFileProps> {
           {...props}
         >
           {this.useUrl ? (
-            <div className={styles.box}>
+            isZip ? (
+              <div>
+                <span style={{ marginRight: 10 }}>{this.useUrl}</span>
+                <MyIcon type="iconguanbi" onClick={() => this.removeFile()} />
+              </div>
+            ) : (<div className={styles.box}>
               <div className={styles.layer}>
                 <Button onClick={this.eyeClick} style={{ marginRight: 12 }} type="primary" shape="circle" icon="eye" />
                 <Button onClick={this.delClick} type="primary" shape="circle" icon="delete" />
@@ -173,7 +190,9 @@ class UploadFile extends React.Component<UploadFileProps> {
                 {domCom}
               </div>
             </div>
-          ) : this.props.children || uploadButton}
+              ))
+
+            : this.props.children || uploadButton}
         </Upload>
         <Modal visible={this.previewVisible} footer={null} onCancel={this.handleCancel}>
           {

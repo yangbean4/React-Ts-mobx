@@ -176,7 +176,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get appwall_description() {
-        return this.useCreativeType === 2 ? 'Watch the video' : `Play for ${this.playback_time}s`
+        return this.useCreativeType === 2 ? 'Watch the video' : this.useCreativeType === 1 ? 'Complate an action' : `Play for ${this.playback_time}s`
     }
 
     @computed
@@ -505,6 +505,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             ige_switch_scene = 1,
             playback_time = 30,
             long_play_time = 120,
+            last_stage_reward = 1,
             lead_is_show_content = 1,
             lead_content_id,
             playicon_creative_offline_url = '',
@@ -538,6 +539,15 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 }
             }
         }
+
+
+
+        const theVideoUrlPropsForIVE = this.getUploadprops(this.api.creative.uploadZip, {
+            size: 2500
+        }, {
+                type: 9,
+                app_key: this.app_key
+            }, '.zip')
 
         const theVideoUrlPropsForVideoOrIge = this.getUploadprops(this.api.creative.uploadVideo, {
             ...getScale(this.videoType),
@@ -816,6 +826,108 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 )}
                         </FormItem>
                         {/* video */}
+                        {
+                            this.useCreativeType === 1 && <React.Fragment>
+                                <FormItem label="IVE Type">
+                                    {getFieldDecorator('video_type',
+                                        {
+                                            initialValue: video_type,
+                                            rules: [
+                                                {
+                                                    required: true, message: "Required"
+                                                }
+                                            ]
+                                        })(
+                                            <Select
+                                                showSearch
+                                                disabled={!this.isAdd}
+                                                onChange={(val) => this.setVideoType(val)}
+                                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                            >
+                                                {videoType.map(c => (
+                                                    <Select.Option {...c}>
+                                                        {c.key}
+                                                    </Select.Option>
+                                                ))}
+                                            </Select>
+                                        )}
+                                </FormItem>
+                                <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
+                                    {this.videoType === 'portrait' ? getFieldDecorator('common_portrait_creative_offline_url', {
+                                        initialValue: this.getInitialValue('common_portrait_creative_offline_url'),
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
+                                    })(
+                                        <UploadFile {...theVideoUrlPropsForIVE} >
+                                            <Button>
+                                                    <MyIcon type="iconshangchuan1" /> Upload IVE
+                                            </Button>
+                                        </UploadFile>
+                                    ) : getFieldDecorator('common_landscape_creative_offline_url', {
+                                        initialValue: this.getInitialValue('common_landscape_creative_offline_url'),
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
+                                    })(
+                                        <UploadFile {...theVideoUrlPropsForIVE} >
+                                            <Button>
+                                                <MyIcon type="iconshangchuan1" /> Upload IVE
+                                            </Button>
+                                        </UploadFile>
+                                    )
+                                    }
+                                </FormItem>
+                                <FormItem label="Minimum Playing Time">
+                                    {getFieldDecorator('playback_time', {
+                                        initialValue: playback_time,
+                                        validateTrigger: 'blur',
+                                        rules: [
+                                            {
+                                                required: true, message: "Required",
+                                            },
+                                            {
+                                                validator: (r, v, callback) => {
+                                                    if (v <= 0) {
+                                                        callback('The Exchange Rate should be a positive integer!')
+                                                    }
+                                                    callback()
+                                                }
+                                            }
+                                        ]
+                                    })(<InputNumber precision={0} />)}
+                                    <span>seconds</span>
+
+                                </FormItem>
+
+                                <FormItem label="Last Stage Reward">
+                                    {getFieldDecorator('last_stage_reward', {
+                                        initialValue: Number(last_stage_reward),
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
+                                    })(
+                                        <Radio.Group>
+                                            {YesOrNo.map(c => (
+                                                <Radio key={c.key} value={c.value}>
+                                                    {c.key}
+                                                </Radio>
+                                            ))}
+                                        </Radio.Group>
+                                    )}
+                                </FormItem>
+                                <FormItem label="Appwall Description">
+                                    <Input autoComplete="off" value={this.appwall_description}
+                                        disabled={true} />
+                                </FormItem>
+                            </React.Fragment>
+                        }
                         {
                             this.useCreativeType === 2 && <React.Fragment>
                                 <FormItem label="Video Type">

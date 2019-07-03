@@ -30,6 +30,11 @@ export default {
   uploadVideo(data): Promise<any> {
     return http.post(`api/upload/uploadVideo`, data || {})
   },
+
+  uploadZip(data): Promise<any> {
+    return http.post(`api/upload/uploadZip`, data || {})
+  },
+
   handleUploadImg(data): Promise<any> {
     return http.post(`api/upload/handleUploadImg`, data || {})
   },
