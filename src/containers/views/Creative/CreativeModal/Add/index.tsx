@@ -381,7 +381,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     setAppid = (app_key) => {
         const {
             app_name,
-            app_id
+            app_id,
+            logo
         } = this.usePkgnameData.find(ele => ele.app_key === app_key);
 
         let formData = {}
@@ -393,7 +394,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         const data = this.props.form.getFieldsValue(['version', 'order_id', 'language'])
         this.props.form.setFieldsValue({
             ...formData,
-            creative_name: `${app_name}_${data.order_id}_${data.version}_${data.language}`
+            creative_icon_url : logo,
+            creative_name: `${app_name}_${data.order_id}_${data.version}_${data.language}`,
         })
         runInAction('set_key', () => {
             this.app_key = app_key
