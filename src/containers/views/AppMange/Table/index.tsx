@@ -80,7 +80,7 @@ class AppsManageTable extends ComponentExt<IProps> {
                 locale={{ emptyText: 'No Data' }}
                 loading={getAppManageLoading}
                 dataSource={appManageList}
-                scroll={{ y: scrollY, x: '120%' }}
+                scroll={{ y: scrollY, x: '130%' }}
                 pagination={{
                     current: page,
                     pageSize,
