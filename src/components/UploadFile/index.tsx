@@ -27,7 +27,7 @@ export interface UploadFileProps {
   api?: (data: any) => Promise<any>
   children?: React.ReactNode
   preData?: Object
-  callBack?: () => void
+  callBack?: (data) => void
   className?: string
   viewUrl?: string
 }

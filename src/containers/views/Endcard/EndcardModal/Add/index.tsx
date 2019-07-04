@@ -188,10 +188,8 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
                     this.toggleLoading()
                     try {
-                        if (this.gjbUrl) {
-                            values.endcard_image_url = this.gjbUrl
-                            delete values.endcard_image_url_web_show
-                        }
+                        values.endcard_image_url = this.gjbUrl || this.endcardTarget.endcard_image_url
+                        delete values.endcard_image_url_web_show
 
                         if (this.isAdd) {
                             if (app_key) {
