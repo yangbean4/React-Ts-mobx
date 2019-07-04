@@ -9,7 +9,8 @@ export interface ICreative {
     platform?: string
     app_id?: string
     app_name?: string
-
+    common_landscape_creative_online_url?: string
+    common_portrait_creative_online_url?: string
     status?: int
     app_key?: string
     creative_name?: string

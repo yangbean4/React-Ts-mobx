@@ -94,6 +94,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     private app_key: string = this.props.app_key || this.creativeTarget.app_key || undefined
 
     @observable
+    private noChange: boolean = true
+
+    @observable
     private skipTo: string
 
     @observable
@@ -113,6 +116,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
     @observable
     private accountShow: boolean = false
+
+    @computed
+    get iveViewUrl() {
+        return this.noChange ? this.creativeTarget.common_landscape_creative_online_url || this.creativeTarget.common_portrait_creative_online_url : ''
+    }
 
     @computed
     get useNeedLc() {
@@ -193,6 +201,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     toggleAppShow = (type?: boolean) => {
         this.accountShow = type === undefined ? !this.accountShow : type
+    }
+
+    @action
+    noChangeChange = () => {
+        this.noChange = false
     }
 
     companyModelOk = async (id: number) => {
@@ -861,9 +874,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             }
                                         ]
                                     })(
-                                        <UploadFile {...theVideoUrlPropsForIVE} >
+                                        <UploadFile {...theVideoUrlPropsForIVE} onChange={() => this.noChangeChange()} viewUrl={this.iveViewUrl}>
                                             <Button>
-                                                    <MyIcon type="iconshangchuan1" /> Upload IVE
+                                                <MyIcon type="iconshangchuan1" /> Upload IVE
                                             </Button>
                                         </UploadFile>
                                     ) : getFieldDecorator('common_landscape_creative_offline_url', {
@@ -874,7 +887,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             }
                                         ]
                                     })(
-                                        <UploadFile {...theVideoUrlPropsForIVE} >
+                                        <UploadFile {...theVideoUrlPropsForIVE} onChange={() => this.noChangeChange()} viewUrl={this.iveViewUrl}>
                                             <Button>
                                                 <MyIcon type="iconshangchuan1" /> Upload IVE
                                             </Button>

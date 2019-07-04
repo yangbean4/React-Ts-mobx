@@ -29,6 +29,7 @@ export interface UploadFileProps {
   preData?: Object
   callBack?: () => void
   className?: string
+  viewUrl?: string
 }
 
 @observer
@@ -152,6 +153,10 @@ class UploadFile extends React.Component<UploadFileProps> {
     }
   }
 
+  viewFile = () => {
+    window.open(this.props.viewUrl)
+  }
+
 
   render() {
 
@@ -177,9 +182,12 @@ class UploadFile extends React.Component<UploadFileProps> {
         >
           {this.useUrl ? (
             isZip ? (
-              <div>
-                <span style={{ marginRight: 10 }}>{this.useUrl}</span>
-                <MyIcon type="iconguanbi" onClick={() => this.removeFile()} />
+              <div className={styles.fileBox}>
+                <span className={styles.fileName} title={this.useUrl}>{this.useUrl}</span>
+                <MyIcon className={styles.fileIcon} type="iconguanbi" onClick={this.delClick} />
+                {
+                  this.props.viewUrl && <Icon className={styles.fileIcon} type="eye" onClick={this.viewFile} />
+                }
               </div>
             ) : (<div className={styles.box}>
               <div className={styles.layer}>
@@ -197,8 +205,9 @@ class UploadFile extends React.Component<UploadFileProps> {
         <Modal visible={this.previewVisible} footer={null} onCancel={this.handleCancel}>
           {
             fileType === 'video' ?
-              (<video style={{ width: '100%' }} controls autoPlay src={this.useUrl} />)
-              : (<img alt="example" style={{ width: '100%' }} src={this.useUrl} />)
+              (<video style={{ width: '100%' }} controls autoPlay src={this.useUrl} />) :
+              isZip ? <iframe src={this.props.viewUrl} />
+                : (<img alt="example" style={{ width: '100%' }} src={this.useUrl} />)
           }
         </Modal>
       </React.Fragment>

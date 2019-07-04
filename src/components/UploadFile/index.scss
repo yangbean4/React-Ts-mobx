@@ -45,11 +45,31 @@
     z-index: 1;
   }
 
-  .imgBox{
+  .imgBox {
     width: 100%;
     height: 100%;
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100%;
+  }
+}
+
+.fileBox {
+  display: flex;
+  & > * {
+    display: block;
+  }
+  .fileName {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .fileIcon {
+    margin-left: 10px;
+    width: 1em;
+    height: 1em;
+    font-size: 16px;
+    color: #667ffd;
   }
 }
