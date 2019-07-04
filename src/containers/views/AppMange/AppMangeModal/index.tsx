@@ -173,9 +173,11 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
             platform: this.props.form.getFieldValue('platform'),
             appstore_url: this.props.form.getFieldValue('appstore_url')
         })
+        let del = res.data
+        delete del.category_id
         runInAction('SET_APPGP', () => {
             this.manageStore = {
-                ...res.data,
+                ...del,
                 // category_id: (this.props.optionListDb.Category.find(ele => ele.name === res.data.category_id) || {}).id
             }
         })

@@ -210,9 +210,8 @@ class SiderMenu extends ComponentExt<IStoreProps> {
         const menuItems = this.getMenus(this.menuTree)
         // 寻找选中路由
         let currentMenu: IMenu = null
-        const reg = pathToRegexp(this.currentRoute)
         for (const item of this.allRouterAndMenu) {
-            if (item.path && reg.exec(item.path)) {
+            if (item.path && pathToRegexp(item.path).exec(this.currentRoute)) {
                 currentMenu = item
                 break
             }

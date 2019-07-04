@@ -141,7 +141,7 @@ class UploadFile extends React.Component<UploadFileProps> {
               })
 
               cb && cb({
-                Rdata,
+                data: Rdata,
                 localUrl: target.result
               })
             }
