@@ -556,7 +556,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
 
         const theVideoUrlPropsForIVE = this.getUploadprops(this.api.creative.uploadZip, {
-            size: 2500
+            size: 5000
         }, {
                 type: 9,
                 app_key: this.app_key
