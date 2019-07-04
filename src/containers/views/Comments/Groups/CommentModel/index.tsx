@@ -85,9 +85,9 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
             return this.commentList.filter(ele => ele.status === 1)
         } else if (this.commentList) {
 
-            const ids = this.props.comment ? this.props.comment.group_template_ids : ''
-            return this.commentList.filter(ele => ele.status === 1 || ids.includes(ele.id.toString())).sort((a, b) => {
-                return Number(ids.includes(b.id.toString())) - Number(ids.includes(a.id.toString()))
+            const ids = this.selectedRowKeys
+            return this.commentList.filter(ele => ele.status === 1 || ids.includes(ele.id)).sort((a, b) => {
+                return Number(ids.includes(b.id)) - Number(ids.includes(a.id))
             })
         }
     }
@@ -149,8 +149,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         const Id = Number(routerId)
         if ((!isNaN(Id) && (!comment.id || comment.id !== Id)) && !this.props.type) {
             routerStore.push('/comments/groups')
-        }
-        if (Id) {
+        } else if (Id) {
             this.getComments(this.props.comment.group_language)
         }
     }
