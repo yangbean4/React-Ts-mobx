@@ -311,7 +311,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 creative_type: this.useCreativeType * 10 + (this.useSkipTo === 'ige' ? 0 : 1)
                             }
                         }
-                        if (this.useCreativeType === 2 || this.useCreativeType === 3) {
+                        if (this.useCreativeType === 2 || this.useCreativeType === 3 || this.useCreativeType === 1) {
                             values = {
                                 ...values,
                                 desc: this.appwall_description
