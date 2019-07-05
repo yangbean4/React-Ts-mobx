@@ -304,36 +304,10 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         </FormItem>
                     }
 
-                    {
-                        this.isAdd && <FormItem label="Platform">
-                            {getFieldDecorator('platform',
-                                {
-                                    initialValue: platform,
-                                    rules: [
-                                        {
-                                            required: true, message: "Required"
-                                        }
-                                    ]
-                                })(
-                                    <Select
-                                        showSearch
-                                        onChange={(val) => this.setPlatform(val)}
-                                        filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                    >
-                                        {platformOption.map(c => (
-                                            <Select.Option key={c.key} value={c.value}>
-                                                {c.key}
-                                            </Select.Option>
-                                        ))}
-                                    </Select>
-                                )}
-                        </FormItem>
-                    }
-
-                    {
-                        this.isAdd && <FormItem label="App ID">
-                            {getFieldDecorator('app_key', {
-                                initialValue: app_key,
+                    <FormItem label="Platform">
+                        {getFieldDecorator('platform',
+                            {
+                                initialValue: platform,
                                 rules: [
                                     {
                                         required: true, message: "Required"
@@ -342,18 +316,41 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             })(
                                 <Select
                                     showSearch
-                                    onChange={(val) => this.AppIdChange(val)}
+                                    disabled={!this.isAdd}
+                                    onChange={(val) => this.setPlatform(val)}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
-                                    {this.userAppID.map(c => (
-                                        <Select.Option value={c.app_key} key={c.app_key}>
-                                            {c.app_id_key}
+                                    {platformOption.map(c => (
+                                        <Select.Option key={c.key} value={c.value}>
+                                            {c.key}
                                         </Select.Option>
                                     ))}
                                 </Select>
                             )}
-                        </FormItem>
-                    }
+                    </FormItem>
+                    <FormItem label="App ID">
+                        {getFieldDecorator('app_key', {
+                            initialValue: app_key,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(
+                            <Select
+                                showSearch
+                                disabled={!this.isAdd}
+                                onChange={(val) => this.AppIdChange(val)}
+                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                            >
+                                {this.userAppID.map(c => (
+                                    <Select.Option value={c.app_key} key={c.app_key}>
+                                        {c.app_id_key}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        )}
+                    </FormItem>
                     <FormItem label="Campaign Name">
                         {getFieldDecorator('campaign_name', {
                             initialValue: campaign_name,
