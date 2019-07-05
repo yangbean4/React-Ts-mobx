@@ -3,7 +3,7 @@ import http from '@services/http'
 const basePath = '/api/campaigns/'
 export default {
   getCampaigns(data): Promise<any> {
-    return http.post(`${basePath}appList`, data || {})
+    return http.post(`${basePath}campaignsList`, data || {})
   },
   getCampaignsList(data): Promise<any> {
     return http.post(`${basePath}campaignsList`, data || {})
@@ -15,9 +15,9 @@ export default {
     return http.post(`${basePath}editCampaigns`, data || {})
   },
   copyCampaignsSubmit(data): Promise<any> {
-      return http.post(`${basePath}duplicateCampaigns`, data || {})
+    return http.post(`${basePath}duplicateCampaigns`, data || {})
   },
   editBeforeCampaigns(data): Promise<any> {
-      return http.post(`${basePath}campaignsDetail`, data || {})
+    return http.post(`${basePath}campaignsDetail`, data || {})
   }
 }

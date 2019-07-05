@@ -15,7 +15,7 @@ export const asynchronousComponents = {
     //------------------Compaigns
     Campaigns: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns')),
     CampaignsAdd: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns/CampaignsModel/Add')),
-    CampaignsEdit: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns/CampaignsModel/Edit')),
+    CampaignsEdit: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns/CampaignsModel/Add')),
     //------------------Comments
     CommentsTpl: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Comments/Template')),
     CommentTplModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Comments/Template/CommentModel')),
@@ -381,7 +381,7 @@ export const routerAndMenu: IRouter[] = [
         id: 851,
         pid: 85,
         isMenu: false,
-        path: '/campaigns/edit',
+        path: '/campaigns/edit/:id',
         title: 'Edit Campaign',
         component: 'CampaignsEdit',
     },

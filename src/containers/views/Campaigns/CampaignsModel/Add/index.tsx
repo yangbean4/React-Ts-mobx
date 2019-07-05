@@ -41,12 +41,12 @@ interface IStoreProps {
     optionListDb?: ICampaignStore.OptionListDb
     getTargetCode?: () => Promise<any>
     getCommentsGroupId?: () => Promise<any>
+    campaign?: ICampaignStore.ICampainginForList
     setCampaingn?: (Apps: ICampaignStore.ICampainginForList) => void
     routerStore?: RouterStore
 }
 
 interface IProps extends IStoreProps {
-    campaign?: ICampaignStore.ICampaignGroup
     onCancel?: () => void
     onOk?: (id: number) => void
     type?: string
@@ -56,8 +56,8 @@ interface IProps extends IStoreProps {
 @inject(
     (store: IStore): IProps => {
         const { campaignStore, routerStore } = store
-        const { createCampaingn, setCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId } = campaignStore
-        return { routerStore, setCampaingn, createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId }
+        const { createCampaingn, setCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId, campaign } = campaignStore
+        return { routerStore, setCampaingn, createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId, campaign }
     }
 )
 
@@ -77,7 +77,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     private appIDIOS: any = []
 
     @observable
-    private appIdKey: string = this.props.app_key || undefined
+    private appIdKey: string = this.props.campaign ? this.props.campaign.app_key : undefined
 
     @observable
     private CampaignGroup: ICampaignStore.ICampaignGroup = {}
@@ -145,7 +145,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     Cancel = () => {
-        this.props.type || !this.isAdd ? this.props.onCancel() : this.props.routerStore.push('/currency')
+        (this.props.type || !this.isAdd) && this.props.onCancel ? this.props.onCancel() : this.props.routerStore.push('/currency')
     }
 
     submit = (e?: React.FormEvent<any>): void => {
@@ -176,7 +176,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         } else {
                             let data = await modifyCampaingn({ ...values })
                             message.success(data.message)
-                            routerStore.push('/campaigns/edit')
+                            routerStore.push('/campaigns')
                             this.props.onOk(data.data.id)
                             if (this.props.type) {
                                 this.props.form.resetFields()
@@ -217,7 +217,15 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         this.props.getTargetCode()
         this.props.getCommentsGroupId()
         this.init()
-        if (this.props.campaign) {
+        const {
+            campaign = {}, routerStore
+        } = this.props
+        const routerId = routerStore.location.pathname.toString().split('/').pop()
+        const Id = Number(routerId)
+
+        if ((!isNaN(Id) && (!campaign.id || campaign.id !== Id))) {
+            routerStore.push('/campaigns')
+        } else {
             this.getDetail()
         }
     }

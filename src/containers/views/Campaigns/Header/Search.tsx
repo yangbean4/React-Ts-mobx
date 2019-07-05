@@ -4,7 +4,7 @@ import { observable, action, runInAction, autorun } from 'mobx'
 import { Form, Input, Row, Col, Button, Select } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
-import { platformOption } from '../web.config'
+import { platformOption, statusOption, adTypeOption } from '../web.config'
 
 const FormItem = Form.Item
 
@@ -23,7 +23,9 @@ interface IStoreProps {
   changeFilter?: (params: ICampaignStore.SearchParams) => void
   filters?: ICampaignStore.SearchParams
   routerStore?: RouterStore
+  getTargetCode?: () => Promise<any>
   setCampaignType?: (str: string) => void
+  optionListDb?: ICampaignStore.OptionListDb
 }
 
 
@@ -31,8 +33,8 @@ interface IStoreProps {
 @inject(
   (store: IStore): IStoreProps => {
     const { routerStore, campaignStore } = store
-    const { changeFilter, filters, setCampaignType } = campaignStore
-    return { changeFilter, filters, routerStore, setCampaignType }
+    const { changeFilter, filters, setCampaignType, getTargetCode, optionListDb } = campaignStore
+    return { changeFilter, filters, routerStore, setCampaignType, getTargetCode, optionListDb }
   }
 )
 @observer
@@ -43,28 +45,25 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   @observable
   private companyType: string = ''
 
-  private IReactionDisposer: () => void
+
+  @observable
+  private Account: ({ name?: string, id?: number })[] = []
+
   @action
   toggleLoading = () => {
     this.loading = !this.loading
   }
 
-  constructor(props) {
-    super(props)
-    this.IReactionDisposer = autorun(
-      () => {
-        const companyType = this.props.routerStore.location.pathname.includes('source') ? 'source' : 'subsite'
-        if (companyType !== this.companyType) {
-          runInAction('SET_TYPE', () => {
-            this.companyType = companyType
-          })
-          this.props.form.resetFields()
-          this.props.setCampaignType(companyType)
-          return true
-        }
-        return false
-      }
-    )
+  @action
+  getSourceAccount = async () => {
+    const res = await this.api.appGroup.getAccountSource()
+    runInAction('SET_SOURCE', () => {
+      this.Account = res.data;
+    })
+  }
+  componentWillMount() {
+    this.getSourceAccount()
+    this.props.getTargetCode()
   }
 
   submit = (e?: React.FormEvent<any>): void => {
@@ -84,29 +83,27 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
       }
     )
   }
-  componentDidMount() {
-    this.IReactionDisposer()
-  }
+
 
   render() {
-    const { form, filters } = this.props
+    const { form, filters, optionListDb } = this.props
     const { getFieldDecorator } = form
     return (
       <Form {...layout} >
         <Row>
-            <Col span={span}>
-                <FormItem label="App ID">
-                {getFieldDecorator('app_id', {
-                    initialValue: filters.app_id
-                })(<Input autoComplete="off" />)}
-                </FormItem>
-            </Col>
-            <Col span={span}>
-                <FormItem label="Platform">
-                {getFieldDecorator('platform', {
-                    initialValue: filters.platform
-                })(
-                  <Select
+          <Col span={span}>
+            <FormItem label="App ID">
+              {getFieldDecorator('app_id', {
+                initialValue: filters.app_id
+              })(<Input autoComplete="off" />)}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="Platform">
+              {getFieldDecorator('platform', {
+                initialValue: filters.platform
+              })(
+                <Select
                   allowClear
                   showSearch
                   mode='multiple'
@@ -118,15 +115,95 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                     </Select.Option>
                   ))}
                 </Select>
-                )}
-                </FormItem>
-            </Col>
-            <Col span={3} offset={1}>
-                <Button type="primary" onClick={this.submit}>Search</Button>
-            </Col>
-            <Col span={3} offset={1}>
-              <span id='companyAddBtn'></span>
-            </Col>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="Campaign ID">
+              {getFieldDecorator('campaignId', {
+                initialValue: filters.campaignId
+              })(<Input autoComplete="off" />)}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="Target Code">
+              {getFieldDecorator('target_code', {
+                initialValue: filters.target_code
+              })(<Select
+                showSearch
+                mode="multiple"
+                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              >
+                {optionListDb.TargetCode.map(c => (
+                  <Select.Option key={c.id} value={c.code2}>
+                    {c.code2}
+                  </Select.Option>
+                ))}
+              </Select>)}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="Ad Type">
+              {getFieldDecorator('ad_type', {
+                initialValue: filters.ad_type,
+              })(
+                <Select
+                  showSearch
+                  mode='multiple'
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {adTypeOption.map(c => (
+                    <Select.Option key={c.key} value={c.value}>
+                      {c.key}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="Sen Account">
+              {getFieldDecorator('account', {
+                initialValue: filters.account,
+              })(<Select
+                showSearch
+                mode='multiple'
+                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              >
+                {this.Account && this.Account.map(c => (
+                  <Select.Option key={c.id} value={c.id}>
+                    {c.name}
+                  </Select.Option>
+                ))}
+              </Select>)}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="Status">
+              {getFieldDecorator('status', {
+                initialValue: filters.status
+              })(
+                <Select
+                  allowClear
+                  showSearch
+                  mode='multiple'
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {statusOption.map(c => (
+                    <Select.Option {...c}>
+                      {c.key}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={3} offset={1}>
+            <Button type="primary" onClick={this.submit}>Search</Button>
+          </Col>
+          <Col span={3} offset={1}>
+            <span id='companyAddBtn'></span>
+          </Col>
         </Row>
       </Form>
     )

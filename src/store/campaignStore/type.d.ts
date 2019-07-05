@@ -6,7 +6,7 @@ export interface CampaignStore extends CampaignStoreModel { }
 
 export interface ICampaignGroup {
     id?: number | string
-    app_key?:string
+    app_key?: string
     app_id?: string
     platform?: string[]
     status?: number
@@ -36,6 +36,11 @@ export interface IAppInfo {
 
 export interface SearchParams {
     app_id?: string,
+    campaignId?: string,
+    target_code?: string[],
+    ad_type?: string[],
+    account?: string[],
+    status?: string[],
     platform?: string[],
 }
 
@@ -43,7 +48,7 @@ export interface ICampainginForList {
     app_key?: string
     app_id?: string
     platform?: string
-    id?: string
+    id?: number
 }
 
 export interface OptionListDb {
