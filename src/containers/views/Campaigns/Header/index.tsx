@@ -7,13 +7,14 @@ import PortalsBtn from '@components/portalsBtn'
 
 interface IStoreProps {
     routerStore?: RouterStore
+    setCampaingn?: (Apps: ICampaignStore.ICampainginForList) => void
 }
 
 @inject(
     (store: IStore): IStoreProps => {
-        const { routerStore } = store
+        const { routerStore, campaignStore } = store
         return {
-            routerStore,
+            routerStore, setCampaingn: campaignStore.setCampaingn
         }
     }
 )
@@ -21,6 +22,7 @@ interface IStoreProps {
 class Header extends ComponentExt<IStoreProps> {
 
     addCompany = () => {
+        this.props.setCampaingn({})
         this.props.routerStore.push('/campaigns/add')
     }
 

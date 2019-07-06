@@ -443,7 +443,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: total_budget,
                             rules: [
                                 {
-                                    required: true, message: "Required"
+                                    required: this.accountType !== 2, message: "Required"
                                 },
                                 {
                                     validator: (r, v, callback) => {
@@ -541,7 +541,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: tracking_url,
                             rules: [
                                 {
-                                    required: this.accountType === 1, message: "Required"
+                                    required: this.accountType !== 2, message: "Required"
                                 }
                             ]
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}

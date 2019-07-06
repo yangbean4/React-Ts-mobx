@@ -24,7 +24,7 @@ const formItemLayoutForModel = {
     labelCol: {
         xs: { span: 24 },
         sm: { span: 5 },
-        lg: { span: 10},
+        lg: { span: 10 },
     },
     wrapperCol: {
         xs: { span: 24 },
@@ -67,7 +67,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get buttonModalLayout() {
-        return this.props.type ?  'btnBox' : ''
+        return this.props.type ? 'btnBox' : ''
     }
 
     @computed
@@ -217,41 +217,41 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem label="Beneficiary Name" >
                         {getFieldDecorator('beneficiary_name', {
                             initialValue: beneficiary_name,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                }
-                            ]
+                            // rules: [
+                            //     {
+                            //         required: true, message: "Required"
+                            //     }
+                            // ]
                         })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem label="Account Number" >
                         {getFieldDecorator('bank_account_number', {
                             initialValue: bank_account_number,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                },
-                                {
-                                    pattern: /^[0-9]{14,19}$/,
-                                    message: 'Incorrect bank account format!'
-                                }
-                            ],
-                            validateTrigger: 'onBlur'
+                            // rules: [
+                            //     {
+                            //         required: true, message: "Required"
+                            //     },
+                            //     {
+                            //         pattern: /^[0-9]{14,19}$/,
+                            //         message: 'Incorrect bank account format!'
+                            //     }
+                            // ],
+                            // validateTrigger: 'onBlur'
                         })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem label="Swift Code" >
                         {getFieldDecorator('bank_swift_code', {
                             initialValue: bank_swift_code,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                },
-                                {
-                                    pattern: /^[0-9]*$/,
-                                    message: 'number format'
-                                }
-                            ],
-                            validateTrigger: 'onBlur'
+                            // rules: [
+                            //     {
+                            //         required: true, message: "Required"
+                            //     },
+                            //     {
+                            //         pattern: /^[0-9]*$/,
+                            //         message: 'number format'
+                            //     }
+                            // ],
+                            // validateTrigger: 'onBlur'
                         })(<Input autoComplete="off" />)}
                     </FormItem>
                     <FormItem label="Address" >
@@ -259,8 +259,8 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: bank_address,
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
                     </FormItem>
-                    <FormItem className={this.props.type? styles.modalBtn :styles.btnBox} >
-                        <Button className={this.props.type? styles.btn : ''} type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
+                    <FormItem className={this.props.type ? styles.modalBtn : styles.btnBox} >
+                        <Button className={this.props.type ? styles.btn : ''} type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
                     </FormItem>
                 </Form>
 

@@ -280,7 +280,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                                 </Select>
                             )}
                             {
-                                !this.props.type && < Icon className={styles.workBtn} onClick={() => this.toggleCompanyShow(true)} key='iconxinzeng1' type='iconxinzeng1' />
+                                !this.props.type && < AntIcon className={styles.workBtn} onClick={() => this.toggleCompanyShow(true)} key='plus' type='plus' />
                             }
                         </FormItem>
 
