@@ -616,6 +616,24 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 app_key: this.app_key
             }, 'video')
 
+        const ige_firstframe_image = this.getUploadprops(this.api.creative.handleUploadImg, {
+            WH_arr: [
+                {
+                    width: 1080,
+                    height: 1920,
+                },
+                {
+                    width: 1920,
+                    height: 1080,
+                }
+            ],
+            size: 200
+        }, {
+                type: 4,
+                app_key: this.app_key
+            })
+
+
         const creativeIconProps = this.getUploadprops(this.api.creative.handleUploadImg, {
             width: 180,
             height: 180,
@@ -1570,24 +1588,46 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                         }
 
                         {
-                            (this.useCreativeType === 3 || (this.useCreativeType === 4 && this.useSkipTo === 'ige')) && <FormItem label="IGE First Frame Prefail">
-                                {getFieldDecorator('ige_prefail', {
-                                    initialValue: Number(ige_prefail),
-                                    rules: [
-                                        {
-                                            required: true, message: "Required"
-                                        }
-                                    ]
-                                })(
-                                    <Radio.Group>
-                                        {igePrefailOption.map(c => (
-                                            <Radio key={c.key} value={c.value}>
-                                                {c.key}
-                                            </Radio>
-                                        ))}
-                                    </Radio.Group>
-                                )}
-                            </FormItem>
+                            (this.useCreativeType === 3 || (this.useCreativeType === 4 && this.useSkipTo === 'ige')) &&
+                            <React.Fragment>
+                                <FormItem label="IGE First Frame" className={`${styles.autoHeight}  ${styles.UploadBox}`}>
+                                    {getFieldDecorator('ige_firstframe_image_url', {
+                                        initialValue: this.getInitialValue('ige_firstframe_image_url'),
+
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
+                                    })(
+
+                                        <UploadFile
+                                            className={`${styles.sunjiao} ${styles.Square}`}
+                                            {...ige_firstframe_image}
+                                        >
+                                            <div className={styles.full} />
+                                        </UploadFile>
+                                    )}
+                                </FormItem>
+                                <FormItem label="IGE First Frame Prefail">
+                                    {getFieldDecorator('ige_prefail', {
+                                        initialValue: Number(ige_prefail),
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
+                                    })(
+                                        <Radio.Group>
+                                            {igePrefailOption.map(c => (
+                                                <Radio key={c.key} value={c.value}>
+                                                    {c.key}
+                                                </Radio>
+                                            ))}
+                                        </Radio.Group>
+                                    )}
+                                </FormItem>
+                            </React.Fragment>
                         }
 
 

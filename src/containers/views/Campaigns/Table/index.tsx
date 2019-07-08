@@ -93,7 +93,7 @@ class CampaignsTable extends ComponentExt<IProps> {
             <React.Fragment>
                 <Table<ICampaignStore.ICampainginForList>
                     className="center-table"
-                    style={{ width: '100%' }}
+                    style={{ width: '100%', wordBreak: 'break-all' }}
                     bordered
                     rowKey="id"
                     loading={getCampaignsLoading}
@@ -108,22 +108,21 @@ class CampaignsTable extends ComponentExt<IProps> {
                     onChange={handleTableChange}
                 >
                     <Table.Column<ICampaignStore.ICampainginForList> key="app_key" title="Appkey" dataIndex="app_key" width={120} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="app_id" title="App ID" dataIndex="app_id" width={300} />
+                    <Table.Column<ICampaignStore.ICampainginForList> key="app_id" title="App ID" dataIndex="app_id" width={250} />
                     <Table.Column<ICampaignStore.ICampainginForList> key="platform" title="Platform" dataIndex="platform" width={100} />
-
-                    <Table.Column<ICampaignStore.ICampainginForList> key="id" title="Campaign ID" dataIndex="id" width={200} />
+                    <Table.Column<ICampaignStore.ICampainginForList> key="id" title="Campaign ID" dataIndex="id" width={150} />
                     <Table.Column<ICampaignStore.ICampainginForList> key="campaign_name" title="Campaign Name" dataIndex="campaign_name" width={200} />
                     <Table.Column<ICampaignStore.ICampainginForList> key="target_code" title="Target Code" dataIndex="target_code" width={200} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="ad_type" title="Ad Type" dataIndex="ad_type" width={200} />
+                    <Table.Column<ICampaignStore.ICampainginForList> key="ad_type" title="Ad Type" dataIndex="ad_type" width={100} />
 
                     <Table.Column<ICampaignStore.ICampainginForList> key="user_name" title="SEN Account" dataIndex="user_name" width={200} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="start_time" title="Start Time" dataIndex="start_time" width={240} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="end_time" title="End Time" dataIndex="end_time" width={240} />
+                    <Table.Column<ICampaignStore.ICampainginForList> key="start_time" title="Start Time" dataIndex="start_time" width={200} />
+                    <Table.Column<ICampaignStore.ICampainginForList> key="end_time" title="End Time" dataIndex="end_time" width={200} />
                     <Table.Column<ICampaignStore.ICampainginForList> key="status" title="Status" dataIndex="status"
                         render={(_) => (
-                            statusOption.find(item => item.value === _).key
+                            statusOption.find(item => item.value === _) === undefined ? {} : statusOption.find(item => item.value === _).key
                         )}
-                        width={200} />
+                        width={110} />
 
                     <Table.Column<ICampaignStore.ICampainginForList>
                         key="action"

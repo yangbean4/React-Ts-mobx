@@ -74,13 +74,13 @@ class AppsManageTable extends ComponentExt<IProps> {
         return (
             <Table<IAppManageStore.IAppMange>
                 className="center-table"
-                style={{ width: '100%' }}
+                style={{ width: '100%', wordBreak: 'break-all' }}
                 bordered
                 rowKey='app_key'
                 locale={{ emptyText: 'No Data' }}
                 loading={getAppManageLoading}
                 dataSource={appManageList}
-                scroll={{ y: scrollY, x: '130%' }}
+                scroll={{ y: scrollY }}
                 pagination={{
                     current: page,
                     pageSize,
@@ -91,10 +91,10 @@ class AppsManageTable extends ComponentExt<IProps> {
             >
                 <Table.Column<IAppManageStore.IAppMange> key="app_key" title="Appkey" dataIndex="app_key" width={100} />
                 <Table.Column<IAppManageStore.IAppMange> key="title" title="App Name" dataIndex="title" width={200} />
-                <Table.Column<IAppManageStore.IAppMange> key="app_id" title="App ID" dataIndex="app_id" width={180} />
+                <Table.Column<IAppManageStore.IAppMange> key="app_id" title="App ID" dataIndex="app_id" width={200} />
                 <Table.Column<IAppManageStore.IAppMange> key="platform" title="Platform" dataIndex="platform" width={100} />
-                <Table.Column<IAppManageStore.IAppMange> key="category_name" title="Category" dataIndex="category_name" width={120} />
-                <Table.Column<IAppManageStore.IAppMange> key="screen_type" title="Screen type" dataIndex="screen_type" width={140} />
+                <Table.Column<IAppManageStore.IAppMange> key="category_name" title="Category" dataIndex="category_name" width={100} />
+                <Table.Column<IAppManageStore.IAppMange> key="screen_type" title="Screen type" dataIndex="screen_type" width={100} />
                 <Table.Column<IAppManageStore.IAppMange> key="rating" title="Rate" dataIndex="rating" width={100} />
                 <Table.Column<IAppManageStore.IAppMange> key="downloads" title="Downloads" dataIndex="downloads" width={100} />
                 <Table.Column<IAppManageStore.IAppMange> key="status" title="Status" dataIndex="status" width={100} />
@@ -102,6 +102,7 @@ class AppsManageTable extends ComponentExt<IProps> {
                     key="action"
                     title="Operate"
                     width={100}
+                    // fixed="right"
                     render={(_, record) => (
                         <span>
                             {

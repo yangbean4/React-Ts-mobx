@@ -323,7 +323,7 @@ export const getGuId = (): string => {
 }
 
 export const testSize = (target: File, config, type: string = 'img') => {
-    const { width, height, isScale = false, minW_H, maxW_H } = config
+    const { WH_arr } = config
     return new Promise((resolve, reject) => {
         try {
             const objectURL = window.createObjectURL != undefined
@@ -339,19 +339,25 @@ export const testSize = (target: File, config, type: string = 'img') => {
             // fileRender.onload = (ev) => {
             //     imageCopy.src = ev.target.result
             // }
-            const cb = () => {
+
+            const callBack = () => {
                 const P_width = imageCopy.width || imageCopy.videoWidth
                 const P_height = imageCopy.height || imageCopy.videoHeight
-                console.log(P_width, P_height, width, height, isScale)
-                const is = isScale ?
-                    (minW_H && maxW_H ? (P_width / P_height) <= maxW_H && (P_width / P_height) > minW_H : P_width / width === P_height / height)
-                    : P_width === width && P_height === height
+                const arr = WH_arr ? WH_arr : [config]
+                const is = arr.map((ele) => {
+                    const { width, height, isScale = false, minW_H, maxW_H } = ele
+                    return isScale ?
+                        (minW_H && maxW_H ? (P_width / P_height) <= maxW_H && (P_width / P_height) > minW_H : P_width / width === P_height / height)
+                        : P_width === width && P_height === height
+                }).find(ele => !!ele)
+
                 is ? resolve() : reject();
             }
+
             if (type === 'img') {
-                imageCopy.onload = cb
+                imageCopy.onload = callBack
             } else {
-                imageCopy.addEventListener('canplay', cb)
+                imageCopy.addEventListener('canplay', callBack)
             }
 
         } catch (error) {

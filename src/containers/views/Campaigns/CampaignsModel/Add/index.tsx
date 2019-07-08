@@ -68,7 +68,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     private loading: boolean = false
 
     @observable
-    private platform: string = 'android'
+    private platform: string = this.props.campaign ? this.props.campaign.platform : 'android'
 
     @observable
     private appIDAndroid: any = []
@@ -247,7 +247,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
             target_code = undefined,
             bid_type = 'CPI',
             bid = '',
-            total_budget = '',
+            total_budget,
             daily_budget,
             start_time = Now,
             end_time = '',
@@ -447,7 +447,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                 },
                                 {
                                     validator: (r, v, callback) => {
-                                        if (v <= 0) {
+                                        if (v <= 0 && v != undefined) {
                                             callback('The Exchange Rate should be a positive number!')
                                         }
                                         callback()

@@ -17,6 +17,7 @@ export interface FileWHT {
   minW_H?: number
   maxW_H?: number
   size?: number
+  WH_arr?: FileWHT[]
 }
 
 export interface UploadFileProps {
@@ -104,7 +105,7 @@ class UploadFile extends React.Component<UploadFileProps> {
         }
         // && !isVideo
         if (isHtml && isLt2M && !isZip && whs) {
-          const { width, height, isScale = false } = whs;
+          const { width, height, isScale = false, WH_arr } = whs;
           return testSize(file, whs, isVideo ? 'video' : 'img').catch(() => {
             const msg = isScale ? `Please upload ${fileName} at ${width}/${height}` : `Please upload ${fileName} at ${width}*${height}px`
             message.error(msg);
