@@ -7,7 +7,6 @@ import { statusOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
 import { camelCase } from '@utils/index'
 import * as styles from './index.scss'
-import Icon from '@components/Icon'
 import CompanyModel from './CompanyModel'
 const FormItem = Form.Item
 

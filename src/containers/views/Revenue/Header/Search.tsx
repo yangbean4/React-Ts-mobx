@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
-import { observable, action, autorun } from 'mobx'
+import { observable, action, autorun, runInAction } from 'mobx'
 import { Form, Input, Select, Row, Col, Button } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
-import { platformOption, statusOption } from '../web.config'
+import { statusOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 
@@ -21,8 +21,8 @@ const layout = {
 
 
 interface IStoreProps {
-  changeFilter?: (params: IAppManageStore.SearchParams) => void
-  filters?: IAppManageStore.SearchParams,
+  changeFilter?: (params: IRevenueStore.SearchParams) => void
+  filters?: IRevenueStore.SearchParams,
   routerStore?: RouterStore
 }
 
@@ -30,15 +30,19 @@ interface IStoreProps {
 
 @inject(
   (store: IStore): IStoreProps => {
-    const {routerStore} = store
-    const { changeFilter, filters } = store.appManageStore
+    const { routerStore, revenueStore } = store
+    const { changeFilter, filters } = revenueStore
     return { changeFilter, filters, routerStore }
   }
 )
 @observer
-class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
+class RevenueSearch extends ComponentExt<IStoreProps & FormComponentProps> {
+
   @observable
   private loading: boolean = false
+
+  @observable
+  private userArr: string[]
 
   private IReactionDisposer: () => void
 
@@ -51,11 +55,22 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
     super(props)
     this.IReactionDisposer = autorun(
       () => {
-        this.props.routerStore.history.listen(route=>{
+        this.props.routerStore.history.listen(route => {
           this.props.form.resetFields()
         })
       }
-    ) 
+    )
+  }
+
+  @action
+  getUserList = async () => {
+    const res = await this.api.revenue.getUserList()
+    runInAction('SET_USER', () => {
+      this.userArr = res.data
+    })
+  }
+  componentWillMount() {
+    this.getUserList()
   }
   componentDidMount() {
     this.IReactionDisposer()
@@ -79,22 +94,23 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
   }
 
   render() {
+    const optionUser = this.userArr
     const { form, filters } = this.props
     const { getFieldDecorator } = form
     return (
       <Form {...layout} >
         <Row>
           <Col span={span}>
-            <FormItem label="App ID" className={styles.searchInput}>
-              {getFieldDecorator('app_id', {
-                initialValue: filters.app_id
+            <FormItem label="File Name" className={styles.searchInput}>
+              {getFieldDecorator('file_name', {
+                initialValue: filters.file_name
               })(<Input autoComplete="off" />)}
             </FormItem>
           </Col>
           <Col span={span}>
-            <FormItem label="Platform" className='minInput'>
-              {getFieldDecorator('platform', {
-                initialValue: filters.platform
+            <FormItem label="Operator" className='minInput'>
+              {getFieldDecorator('operator', {
+                initialValue: filters.operator
               })(
                 <Select
                   allowClear
@@ -102,9 +118,9 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   mode='multiple'
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
-                  {platformOption.map(c => (
-                    <Select.Option {...c}>
-                      {c.key}
+                  {optionUser && optionUser.map((c, index) => (
+                    <Select.Option value={c} key={index}>
+                      {c}
                     </Select.Option>
                   ))}
                 </Select>
@@ -143,4 +159,4 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
   }
 }
 
-export default Form.create<IStoreProps>()(CurrencySearch)
+export default Form.create<IStoreProps>()(RevenueSearch)

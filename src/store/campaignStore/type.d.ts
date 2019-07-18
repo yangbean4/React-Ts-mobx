@@ -8,7 +8,7 @@ export interface ICampaignGroup {
     id?: number | string
     app_key?: string
     app_id?: string
-    platform?: string[]
+    platform?: string
     status?: number
     campaign_name?: string
     target_code?: string

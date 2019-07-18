@@ -19,4 +19,5 @@ export { default as endcardTemplate } from './endcardTemplate'
 export { default as creative } from './creative'
 export { default as campaigns } from './campaigns'
 export { default as leadContent } from './leadContent'
+export { default as revenue } from './revenue'
 

@@ -578,6 +578,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                             })(
                                 <Select
                                     showSearch
+                                    disabled={!this.isAdd}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                     {optionListDb.Account.map(c => (
@@ -587,7 +588,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     ))}
                                 </Select>
                             )}
-                            <Icon className={styles.uploadICON} onClick={() => this.toggleAppShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
+                            <Icon className={!this.isAdd ? styles.hidden : styles.uploadICON} onClick={() => this.toggleAppShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
                         </FormItem>
                         <FormItem label='Preload Number'>
                             {

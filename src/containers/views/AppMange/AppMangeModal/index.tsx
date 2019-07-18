@@ -590,6 +590,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(<Select
                                 showSearch
+                                disabled={!this.isAdd}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {this.Account && this.Account.map(c => (
@@ -598,7 +599,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                     </Select.Option>
                                 ))}
                             </Select>)}
-                            <Icon className={styles.uploadICON} onClick={() => this.toggleAppShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
+                            <Icon className={!this.isAdd ? styles.hidden : styles.uploadICON} onClick={() => this.toggleAppShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
                         </FormItem>
 
                         <FormItem className={this.props.type ? styles.vcMdoal : styles.btnBox} >

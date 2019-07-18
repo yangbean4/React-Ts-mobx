@@ -50,15 +50,15 @@ export const skipToOption = [
 export const igeFlag = [
   {
     key: 'Zepra Loading',
-    value: 1
+    value: 0
   },
   {
     key: 'Native Loading',
-    value: 2
+    value: 1
   },
   {
     key: 'Leadvideo',
-    value: 3
+    value: 2
   },
 ]
 

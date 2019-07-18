@@ -206,7 +206,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                         }
                         onOk()
                     } catch (err) {
-                        //console.log(err);
+                        console.log(err)
                     }
                     this.toggleLoading()
                 }
@@ -241,7 +241,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
         const colorKey = key.replace('image', 'color')
         const data = andColor ? {
             [`style_detail.${key}`]: '',
-            [`style_detail.${colorKey}`]: typeof andColor === 'boolean' ? InitColor[this.AppWall-1].ad_desc_color : andColor
+            [`style_detail.${colorKey}`]: typeof andColor === 'boolean' ? InitColor[this.AppWall - 1].ad_desc_color : andColor
         } : {
                 [`style_detail.${key}`]: '',
             }
@@ -283,6 +283,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             ige_carrier_support = [],
             frequency_num,
             frequency_time,
+            offer_rate,
             creative_type,
             accept_cpm, // 新增
             // pid_type = this.props.appGroup && this.props.appGroup.contains_native_s2s_pid_types === 1 ? 5 : undefined,
@@ -488,6 +489,25 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<InputNumber precision={0} />)}&nbsp;&nbsp;&nbsp;&nbsp;seconds
                     </FormItem>
+                    <FormItem label="Offer Rate">
+                        {getFieldDecorator('offer_rate', {
+                            initialValue: offer_rate,
+                            rules: [
+                                {
+                                    required: false, message: "Required"
+                                },
+                                {
+                                    validator: (r, v, callback) => {
+                                        console.log(v)
+                                        if (v < 1 && v !== null) {
+                                            callback('The offer rate shouldbe filled with an integer value of 1 - 100')
+                                        }
+                                        callback()
+                                    }
+                                }
+                            ]
+                        })(<InputNumber precision={0} min={1} max={100} formatter={value => `${value}%`} parser={value => value.replace('%', '')} />)}
+                    </FormItem>
                     <FormItem label="Lowest eCPM">
                         $&nbsp;{getFieldDecorator('accept_cpm', {
                             initialValue: accept_cpm,
@@ -543,7 +563,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: offer_num,
                             rules: [
                                 {
-                                    required: true, message: "Required"
+                                    required: true, message: 'Required'
                                 },
                                 {
                                     validator: (r, v, callback) => {
@@ -649,13 +669,13 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 </FormItem> */}
                                 <FormItem {...noLabelLayout}>title_text_color
                                     {getFieldDecorator('style_detail.title_text_color', {
-                                        initialValue: style_detail.title_text_color || InitColor[this.AppWall - 1].title_text_color,
-                                        rules: [
-                                            {
-                                                required: true, message: "Required"
-                                            }
-                                        ]
-                                    })(<InputColor />)}
+                                    initialValue: style_detail.title_text_color || InitColor[this.AppWall - 1].title_text_color,
+                                    rules: [
+                                        {
+                                            required: true, message: "Required"
+                                        }
+                                    ]
+                                })(<InputColor />)}
                                     <span className={styles.lineSpan}>   text   </span>
                                 </FormItem>
                                 <FormItem {...noLabelLayout}>
@@ -683,7 +703,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             <div className={`${styles.formItemBox} ${styles.noTitle}`}>
                                 <FormItem {...noLabelLayout}>
                                     {getFieldDecorator('style_detail.subtitle_color', {
-                                        initialValue: style_detail.subtitle_color || InitColor[this.AppWall-1].subtitle_color,
+                                        initialValue: style_detail.subtitle_color || InitColor[this.AppWall - 1].subtitle_color,
                                         rules: [
                                             {
                                                 required: true, message: "Required"

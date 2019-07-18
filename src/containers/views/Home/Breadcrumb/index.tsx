@@ -85,7 +85,7 @@ class Bread extends React.Component<IStoreProps> {
     const current = this.currentMenu
     const result = []
     const getPath = (item: IRouter): void => {
-      if (item && item.pid && item.hasBread !== false) {
+      if (item && (item.pid || item.isRoot) && item.hasBread !== false) {
         result.unshift(item)
         const pItem = array.find(ele => ele.id == item.pid)
         !item.isMenu && getPath(pItem)

@@ -1,4 +1,5 @@
 declare interface IStore {
+    revenueStore: IRevenueStore.RevenueStore
     appManageStore: IAppManageStore.AppManageStore
     creativeStore: ICreativeStore.CreativeStore
     campaignStore: ICampaignStore.CampaignStore

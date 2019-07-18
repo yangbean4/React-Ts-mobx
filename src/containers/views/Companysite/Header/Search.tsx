@@ -101,7 +101,7 @@ class CompanySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 </FormItem>
             </Col>
             <Col span={3} offset={1}>
-                <Button type="primary" onClick={this.submit}>Search</Button>
+                <Button type="primary" icon="search" onClick={this.submit}>Search</Button>
             </Col>
             <Col span={3} offset={1}>
               <span id='companyAddBtn'></span>

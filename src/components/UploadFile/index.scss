@@ -1,75 +1,144 @@
 @mixin full {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 :global {
-  .avatar-uploader {
-    display: block;
-    @include full();
-    .ant-form-item-children {
-      display: block;
-      @include full();
-      & > div {
+    .avatar-uploader {
         display: block;
         @include full();
-      }
-    }
 
-    .ant-upload {
-      @include full();
+        .ant-form-item-children {
+            display: block;
+            @include full();
+
+            &>div {
+                display: block;
+                @include full();
+            }
+        }
+
+        .ant-upload {
+            @include full();
+        }
     }
-  }
 }
 
 .box {
-  @include full();
-  position: relative;
-  &:hover .layer {
-    display: flex;
-  }
-  .layer {
     @include full();
-    display: none;
-    position: absolute;
-    z-index: 2;
-    // display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    background: rgba(00, 00, 00, 0.5);
-  }
-  .trueDom {
-    @include full();
-    position: absolute;
-    z-index: 1;
-  }
+    position: relative;
 
-  .imgBox {
-    width: 100%;
-    height: 100%;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 100%;
-  }
+    &:hover .layer {
+        display: flex;
+    }
+
+    .layer {
+        @include full();
+        display: none;
+        position: absolute;
+        z-index: 2;
+        // display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        background: rgba(00, 00, 00, 0.5);
+
+        .onlineWrap {
+            position: absolute;
+            z-index: 3;
+            left: 0;
+            bottom: -1px;
+            display: flex;
+            width: 100%;
+            height: 30px;
+
+            &>div {
+                flex: 1;
+                background: #ffffff;
+                line-height: 30px;
+                text-align: center;
+                font-size: 12px;
+                font-family: Montserrat-Light;
+                font-weight: 300;
+                color: rgba(62, 54, 100, 1);
+                border: 1px solid rgba(228, 237, 240, 1);
+                box-sizing: border-box;
+                cursor: pointer;
+            }
+        }
+
+
+    }
+
+
+    .trueDom {
+        @include full();
+        position: absolute;
+        z-index: 1;
+    }
+
+    .imgBox {
+        width: 100%;
+        height: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+    }
 }
 
 .fileBox {
-  display: flex;
-  & > * {
-    display: block;
-  }
-  .fileName {
-    flex: 1;
+    display: flex;
+
+    &>* {
+        display: block;
+    }
+
+    .fileName {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .fileIcon {
+        margin-left: 10px;
+        width: 1em;
+        height: 1em;
+        font-size: 16px;
+        color: #667ffd;
+    }
+}
+
+.videoWrapper {
+    width: 624px;
+    height: 288px;
+    background: rgba(250, 251, 255, 1);
+    border: 1px dashed rgba(228, 237, 240, 1);
+    border-radius: 4px 4px 0px 0px;
+}
+
+.linkUrlWrapper {
+    padding-top: 20px;
+    line-height: 20px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .fileIcon {
-    margin-left: 10px;
-    width: 1em;
-    height: 1em;
-    font-size: 16px;
-    color: #667ffd;
-  }
+    clear: both;
+    font-weight: 500;
+
+    .label {
+        float: left;
+        white-space: nowrap;
+        width: 58px;
+        font-size: 12px;
+        font-family: Montserrat-Light;
+        color: rgba(62, 54, 100, 1);
+    }
+
+    .linkUrl {
+        float: left;
+        margin-left: 10px;
+        width: 563px;
+        font-size: 12px;
+        font-family: Montserrat-Light;
+        color: rgba(62, 54, 100, 1);
+    }
 }

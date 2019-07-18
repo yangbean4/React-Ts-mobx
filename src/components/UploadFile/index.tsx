@@ -5,6 +5,7 @@ import { action, computed, runInAction, observable } from 'mobx';
 import { typeOf, testSize } from '@utils/index'
 import * as styles from './index.scss'
 import MyIcon from '../Icon'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 interface hasResult {
   result?: string
 }
@@ -27,7 +28,7 @@ export interface UploadFileProps {
   onChange?: (data: any) => void
   api?: (data: any) => Promise<any>
   children?: React.ReactNode
-  preData?: Object
+  preData?: object
   callBack?: (data) => void
   className?: string
   viewUrl?: string
@@ -38,6 +39,13 @@ class UploadFile extends React.Component<UploadFileProps> {
 
   @observable
   private previewVisible: boolean = false
+
+  @observable
+  private title: string = ''
+
+  @observable
+  private footer: (string | object) = null
+
   @observable
   private previewUrl: string
 
@@ -48,11 +56,13 @@ class UploadFile extends React.Component<UploadFileProps> {
 
   @action
   handleCancel = () => {
-    this.previewVisible = false;
+    this.previewVisible = false
   }
 
   @action
   eyeClick = (e: React.MouseEvent) => {
+    this.setTitle()
+    this.setFooter()
     e.stopPropagation()
     runInAction("set", () => {
       this.previewVisible = true;
@@ -67,11 +77,33 @@ class UploadFile extends React.Component<UploadFileProps> {
   @action
   removeFile = () => {
     this.props.onChange('');
-    runInAction("SET_URL", () => {
+    runInAction('SET_URL', () => {
       this.previewUrl = ''
     })
   }
 
+  @action
+  setTitle = () => {
+    const title = this.props.fileType === 'video' ? 'View' : ''
+    runInAction('SET_TITLE', () => {
+      this.title = title
+    })
+  }
+
+  @action
+  setFooter = () => {
+    const dom = this.props.fileType === 'video' ? (<CopyToClipboard onCopy={this.onCopy} text={this.useUrl}><Button type="primary">Copy Url</Button></CopyToClipboard>) : null
+    runInAction('SET_FOOTER', () => {
+      this.footer = dom
+    })
+  }
+  @action
+  showOnline = (e: React.MouseEvent) => {
+    e.stopPropagation()
+  }
+  onCopy = () => {
+    message.success('copy success')
+  }
   getUploadprops = (fun: Function,
     whs?: FileWHT,
     preData?,
@@ -107,7 +139,10 @@ class UploadFile extends React.Component<UploadFileProps> {
         if (isHtml && isLt2M && !isZip && whs) {
           const { width, height, isScale = false, WH_arr } = whs;
           return testSize(file, whs, isVideo ? 'video' : 'img').catch(() => {
-            const msg = isScale ? `Please upload ${fileName} at ${width}/${height}` : `Please upload ${fileName} at ${width}*${height}px`
+            let msg = isScale ? `Please upload ${fileName} at ${width}/${height}` : `Please upload ${fileName} at ${width}*${height}px`
+            if (WH_arr) {
+              msg = `Please upload ${fileName} at ${WH_arr[0].width}*${WH_arr[0].height}px or ${WH_arr[1].width}*${WH_arr[1].height}px`
+            }
             message.error(msg);
             return Promise.reject()
           })
@@ -161,13 +196,14 @@ class UploadFile extends React.Component<UploadFileProps> {
 
   render() {
 
-    const { api, wht, fileType, preData, callBack } = this.props;
+    const { api, wht, fileType, preData, callBack } = this.props
     const props = this.getUploadprops(api, wht, preData, fileType, callBack)
     const domCom = fileType === 'video' ?
       (<video style={{ width: '100%' }} src={this.useUrl} />)
-      : (<div className={styles.imgBox} style={{ backgroundImage: 'url(' + this.useUrl + ')' }}></div>)
+      : (<div className={styles.imgBox} style={{ backgroundImage: 'url(' + this.useUrl + ')' }} />)
 
     const isZip = fileType === '.zip'
+    const isVideo = fileType === 'video' ? true : false
 
     const uploadButton = (
       <div>
@@ -192,9 +228,19 @@ class UploadFile extends React.Component<UploadFileProps> {
               </div>
             ) : (<div className={styles.box}>
               <div className={styles.layer}>
-                <Button onClick={this.eyeClick} style={{ marginRight: 12 }} type="primary" shape="circle" icon="eye" />
+                <Button onClick={isVideo ? this.showOnline : this.eyeClick} style={{ marginRight: 12 }} type="primary" shape="circle" icon="eye" />
                 <Button onClick={this.delClick} type="primary" shape="circle" icon="delete" />
+                {
+                  isVideo ? (
+                    <div className={styles.onlineWrap}>
+                      <div className="online" onClick={this.eyeClick}>Online</div>
+                      <div className="offline" onClick={this.eyeClick} style={{ borderLeft: 'none' }}>Offline</div>
+                    </div>
+                  ) : ''
+                }
+
               </div>
+
               <div className={styles.trueDom}>
                 {domCom}
               </div>
@@ -203,17 +249,33 @@ class UploadFile extends React.Component<UploadFileProps> {
 
             : this.props.children || uploadButton}
         </Upload>
-        <Modal visible={this.previewVisible} footer={null} onCancel={this.handleCancel}>
+        <Modal
+          visible={this.previewVisible}
+          width={680}
+          onCancel={this.handleCancel}
+          title={this.title}
+          footer={this.footer}
+        >
           {
             fileType === 'video' ?
-              (<video style={{ width: '100%' }} controls autoPlay src={this.useUrl} />) :
+              (
+                <React.Fragment>
+                  <div className={styles.videoWrapper}>
+                    <video width="100%" height="100%" style={{ width: '100%' }} controls autoPlay src={this.useUrl} />
+                  </div>
+                  <div className={styles.linkUrlWrapper}>
+                    <div className={styles.label}>{this.setText}</div>
+                    <div className={styles.linkUrl}>{this.useUrl}</div>
+                  </div>
+                </React.Fragment>
+              ) :
               isZip ? <iframe src={this.props.viewUrl} />
                 : (<img alt="example" style={{ width: '100%' }} src={this.useUrl} />)
           }
         </Modal>
       </React.Fragment>
 
-    );
+    )
   }
 }
 

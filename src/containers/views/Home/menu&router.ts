@@ -9,6 +9,7 @@ const loadComponent = (loader: () => Promise<any>) =>
     })
 
 export const asynchronousComponents = {
+    Revenue: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Revenue')),
     //------------------Apps Manage
     AppManages: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppMange')),
     AppManagesModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppMange/AppMangeModal')),
@@ -84,6 +85,7 @@ export interface IMenu {
     authName?: string
     hasBread?: boolean
     breadcrumbRoot?: boolean
+    isRoot?: boolean
 }
 
 export interface IMenuInTree extends IMenu {
@@ -102,7 +104,7 @@ export const routerAndMenu: IRouter[] = [
         id: 5,
         isMenu: true,
         title: 'Apps',
-        icon: 'iconlog',
+        icon: 'iconfenlei-weixuanzhong',
         authName: 'Apps'
     },
     {
@@ -163,7 +165,7 @@ export const routerAndMenu: IRouter[] = [
         id: 8,
         isMenu: true,
         title: 'Offers',
-        icon: 'iconlog',
+        icon: 'icondingdan',
         authName: 'Offers'
     },
     // ---------Apps manage--------------
@@ -390,7 +392,7 @@ export const routerAndMenu: IRouter[] = [
         id: 6,
         isMenu: true,
         title: 'Company',
-        icon: 'iconlog',
+        icon: 'icongongsi',
         authName: 'Company'
     },
     {
@@ -452,7 +454,7 @@ export const routerAndMenu: IRouter[] = [
         id: 7,
         isMenu: true,
         title: 'Account',
-        icon: 'iconlog',
+        icon: 'iconqianbao',
         authName: 'Account'
     },
     {
@@ -507,7 +509,7 @@ export const routerAndMenu: IRouter[] = [
         component: 'AccountModel',
         isMenu: false
     },
-    // ----------------------------------------
+    // ----------------config------------------------
     {
         id: 1,
         title: 'Config',
@@ -564,6 +566,27 @@ export const routerAndMenu: IRouter[] = [
         component: 'Template',
         isMenu: false
     },
+    //----------------Revenue Import
+    {
+        id: 9,
+        isMenu: true,
+        path: '/revenue',
+        title: 'Revenue Import',
+        component: 'Revenue',
+        icon: 'iconshouru',
+        isRoot: true,
+        authName: 'Revenue Import',
+    },
+    // {
+    //     id: 91,
+    //     pid: 9,
+    //     isMenu: true,
+    //     path: '/revenue',
+    //     component: 'Revenue',
+    //     title: 'Revenue Import',
+    //     exact: true,
+    //     authName: 'Revenue Import-Revenue Import',
+    // },
     {
         id: 3,
         isMenu: true,
@@ -904,6 +927,25 @@ export const routerAndMenu: IRouter[] = [
         component: 'Logs',
         // authName: 'Config Manage-Template Manage'
     },
+    {
+        id: 49,
+        pid: 4,
+        isMenu: true,
+        path: '/log/revenue',
+        component: 'Logs',
+
+        // hasBread: true,
+        title: 'Revenue Import',
+    },
+    // {
+    //     id: 491,
+    //     pid: 49,
+    //     isMenu: true,
+    //     path: '/log/revenue',
+    //     title: 'Revenue Import',
+    //     component: 'Logs',
+    //     // authName: 'Authorization-User Manage'
+    // },
     {
         id: 45,
         pid: 4,

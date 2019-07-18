@@ -8,7 +8,7 @@ interface IProps {
   onOk: (id: number) => void
 }
 
-class AccountModel extends React.Component<IProps>{
+class AccountModel extends React.Component<IProps> {
 
   render() {
     const { visible } = this.props
@@ -21,7 +21,7 @@ class AccountModel extends React.Component<IProps>{
         onCancel={this.props.onCancel}
       >
         <AccountForm
-          type='Modal'
+          type="Modal"
           onOk={this.props.onOk}
           onCancel={this.props.onCancel}
         />

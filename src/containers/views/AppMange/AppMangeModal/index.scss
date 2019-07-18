@@ -2,61 +2,75 @@
   display: flex;
   flex-direction: column;
   padding-top: 30px;
+
   :global(.ant-form-item) {
-    margin-bottom: 30px;
-    :global(.ant-form-item-control-wrapper) {
-      width: 280px;
-      white-space: nowrap;
-      :global(.ant-form-item-control) {
-        height: 100%;
-        :global(.ant-upload-select) {
-          display: block;
-        }
+      margin-bottom: 30px;
+
+      :global(.ant-form-item-control-wrapper) {
+          width: 280px;
+          white-space: nowrap;
+
+          :global(.ant-form-item-control) {
+              height: 100%;
+
+              :global(.ant-upload-select) {
+                  display: block;
+              }
+          }
       }
     }
-  }
 
-  .btnBox {
-    margin-left: 12%;
-  }
-  .vcMdoal {
-    margin-left: 40%;
-  }
-  .btn2 {
-    margin-left: 20px;
-  }
-  .importBtn{
-    margin-left: 20px
-  }
-  .workBtn {
-    margin-left: 10px;
-    border-radius: 4px;
-    color: #667ffd;
-  }
-  .workPlus{
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    margin-left: 10px;
-    background: rgba(237, 240, 255, 1);
-    border-radius: 4px;
-    color: #667ffd;
-    position: absolute;
-    line-height: 30px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  .uploadICON{
-    width: 25px;
-    height: 25px;
-    line-height: 25px;
-    text-align: center;
-    vertical-align: middle;
-    margin-left: 10px;  
-    font-size: 12px;
-    transform:scale(0.8);
-    border-radius: 12.5px;
-    background: rgba(237,240,255,1);
-    color: rgba(102,127,253,1);
-  }
+    .btnBox {
+      margin-left: 12%;
+    }
+
+    .vcMdoal {
+      margin-left: 40%;
+    }
+
+    .btn2 {
+      margin-left: 20px;
+    }
+
+    .importBtn {
+      margin-left: 20px
+    }
+
+    .workBtn {
+      margin-left: 10px;
+      border-radius: 4px;
+      color: #667ffd;
+    }
+
+    .workPlus {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      margin-left: 10px;
+      background: rgba(237, 240, 255, 1);
+      border-radius: 4px;
+      color: #667ffd;
+      position: absolute;
+      line-height: 30px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .uploadICON {
+      width: 25px;
+      height: 25px;
+      line-height: 25px;
+      text-align: center;
+      vertical-align: middle;
+      margin-left: 10px;
+      font-size: 12px;
+      transform: scale(0.8);
+      border-radius: 12.5px;
+      background: rgba(237, 240, 255, 1);
+      color: rgba(102, 127, 253, 1);
+    }
+
+    .hidden {
+      display: none;
+    }
 }

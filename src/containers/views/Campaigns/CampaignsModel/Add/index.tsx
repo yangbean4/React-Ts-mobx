@@ -7,11 +7,13 @@ import { statusOption, platformOption, adTypeOption, bidTypeOption } from '../..
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import moment from 'moment'
+import { value } from '@views/LeadContent/LeadContentModal/Edit/index.scss';
 
 const FormItem = Form.Item
 
 const DateFormat = 'YYYY-MM-DD'
 const Now = moment().format(DateFormat)
+const IVE = 'IVE'
 
 const formItemLayout = {
     labelCol: {
@@ -41,8 +43,8 @@ interface IStoreProps {
     optionListDb?: ICampaignStore.OptionListDb
     getTargetCode?: () => Promise<any>
     getCommentsGroupId?: () => Promise<any>
-    campaign?: ICampaignStore.ICampainginForList
-    setCampaingn?: (Apps: ICampaignStore.ICampainginForList) => void
+    campaign?: ICampaignStore.ICampaignGroup
+    setCampaingn?: (Apps: ICampaignStore.ICampaignGroup) => void
     routerStore?: RouterStore
 }
 
@@ -68,6 +70,9 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     private loading: boolean = false
 
     @observable
+    private needing: boolean = true
+
+    @observable
     private platform: string = this.props.campaign ? this.props.campaign.platform : 'android'
 
     @observable
@@ -81,6 +86,17 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
     @observable
     private CampaignGroup: ICampaignStore.ICampaignGroup = {}
+
+    @computed
+    get resetPlatform() {
+        let platform = ''
+        if (this.props.campaign === undefined) {
+            platform = 'android'
+        } else {
+            platform = this.props.campaign.platform
+        }
+        return platform
+    }
 
     @computed
     get appTarget() {
@@ -134,7 +150,6 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     limitDecimals = (value: string | number): string => {
         const reg = /^(\-)*(\d+)\.(\d\d).*$/
-        console.log(value)
         if (typeof value === 'string') {
             return !isNaN(Number(value)) ? value.replace(reg, '$1$2.$3') : ''
         } else if (typeof value === 'number') {
@@ -142,6 +157,11 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         } else {
             return ''
         }
+    }
+
+    @action
+    selectOption = (value, option) => {
+        this.needing = option.props.children === IVE ? false : true
     }
 
     Cancel = () => {
@@ -225,15 +245,16 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
         if ((!isNaN(Id) && (!campaign.id || campaign.id !== Id))) {
             routerStore.push('/campaigns')
-        } else {
+        } else if (!this.isAdd) {
             this.getDetail()
         }
     }
     componentDidMount() {
-
+        console.log(this.props.campaign)
     }
 
     render() {
+
         const reData = this.CampaignGroup
         const { form, optionListDb } = this.props
         const { getFieldDecorator } = form
@@ -569,6 +590,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         })(
                             <Select
                                 showSearch
+                                onSelect={this.selectOption}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {this.creatives && this.creatives.filter(c => (!!c.name)).map(c => (
@@ -585,7 +607,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: endcard_id,
                             rules: [
                                 {
-                                    required: true, message: "Required"
+                                    required: this.needing, message: "Required"
                                 }
                             ]
                         })(
@@ -622,7 +644,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 }
                             ]
-                        })(<InputNumber disabled={!!id} />)}
+                        })(<InputNumber />)}
                     </FormItem>
                     <FormItem label="Campaign Kpi">
                         {getFieldDecorator('kpi', {
@@ -635,7 +657,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
                 </Form>
 
-            </div>
+            </div >
         )
     }
 }

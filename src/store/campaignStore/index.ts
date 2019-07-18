@@ -22,10 +22,10 @@ export class CampaignStore extends StoreExt {
      * @memberof CampaignStore
      */
     @observable
-    campaigns: ICampaignStore.ICampainginForList[] = []
+    campaigns: ICampaignStore.ICampaignGroup[] = []
 
     @observable
-    campaign: ICampaignStore.ICampainginForList
+    campaign: ICampaignStore.ICampaignGroup
     /**
      * table page
      *
@@ -59,7 +59,7 @@ export class CampaignStore extends StoreExt {
         TargetCode: [],
         CommentID: [],
     }
-    
+
     @action
     getTargetCode = async () => {
         const res = await this.api.appGroup.getCountry()
@@ -92,22 +92,6 @@ export class CampaignStore extends StoreExt {
             this.optionListDb = target
         })
     }
-    // @action
-    // getOptionListDb = async (id: number) => {
-    //     const keys = Object.keys(this.optionListDb)
-    //     const promiseAll = keys.map(key => this.api.campaigns[`get${key}`](
-    //         key === 'VC' && this.campaign ? { id: this.campaign.id || id } : undefined
-    //     ))
-    //     Promise.all(promiseAll).then(data => {
-    //         const target = {}
-    //         keys.forEach((key, index) => {
-    //             target[key] = data[index].data
-    //         })
-    //         runInAction('SET', () => {
-    //             this.optionListDb = target
-    //         })
-    //     })
-    // }
 
     @action
     setCampaignType = (campaignsType: string) => {
@@ -177,7 +161,7 @@ export class CampaignStore extends StoreExt {
     }
 
     @action
-    setCampaingn = (campaign: ICampaignStore.ICampainginForList) => {
+    setCampaingn = (campaign: ICampaignStore.ICampaignGroup) => {
         this.campaign = campaign
     }
     @action

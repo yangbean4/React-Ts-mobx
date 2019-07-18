@@ -137,7 +137,7 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
         </FormItem>
 
         <FormItem label="">
-          <Button className='addbtn-ml20' type="primary" onClick={this.submit}>Search</Button>
+          <Button className='addbtn-ml20' type="primary" icon="search" onClick={this.submit}>Search</Button>
         </FormItem>
       </Form>
     )

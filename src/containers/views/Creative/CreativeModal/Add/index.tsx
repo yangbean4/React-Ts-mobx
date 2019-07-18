@@ -139,7 +139,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get useIgeFlag() {
-        return [this.igeFlag, this.creativeTarget.ige_leadvideo_flag, 2].find(ele => ele !== undefined)
+        return [this.igeFlag, this.creativeTarget.ige_leadvideo_flag, 1].find(ele => ele !== undefined)
     }
 
     @computed
@@ -627,7 +627,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                     height: 1080,
                 }
             ],
-            size: 200
+            size: 500
         }, {
                 type: 4,
                 app_key: this.app_key
@@ -1027,8 +1027,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 </FormItem>
 
                                 <FormItem label="Appwall Description">
-                                    <Input autoComplete="off" value={this.appwall_description}
-                                        disabled={true} />
+                                    <Input autoComplete="off" value={this.appwall_description} disabled={true} />
                                 </FormItem>
                             </React.Fragment>
                         }
@@ -1126,7 +1125,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         initialValue: this.getInitialValue('ige_leadvideo_portrait_offline_url'),
                                         rules: [
                                             {
-                                                required: this.useIgeFlag !== 2, message: "Required"
+                                                required: this.useIgeFlag !== 1, message: "Required"
                                             }
                                         ]
                                     })(
@@ -1140,7 +1139,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         initialValue: this.getInitialValue('ige_leadvideo_landscape_offline_url'),
                                         rules: [
                                             {
-                                                required: this.useIgeFlag !== 2, message: "Required"
+                                                required: this.useIgeFlag !== 1, message: "Required"
                                             }
                                         ]
                                     })(
@@ -1596,7 +1595,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
                                         rules: [
                                             {
-                                                required: true, message: "Required"
+                                                required: false, message: "Required"
                                             }
                                         ]
                                     })(

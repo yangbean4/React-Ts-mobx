@@ -105,6 +105,7 @@ export interface Placement {
     ige_carrier_support?: string[]
     frequency_num?: number
     frequency_time?: number
+    offer_rate?: number
     accept_cpm?: number // 新增
     pid_type?: number
     min_offer_num?: number

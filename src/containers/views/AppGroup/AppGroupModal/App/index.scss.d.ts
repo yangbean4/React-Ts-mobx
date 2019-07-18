@@ -3,6 +3,7 @@
 export const appForm: string;
 export const btnBox: string;
 export const btnGroup: string;
+export const hidden: string;
 export const longLabel: string;
 export const submitBtn: string;
 export const uploadICON: string;
