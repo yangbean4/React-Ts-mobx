@@ -25,8 +25,8 @@ export interface UploadFileProps {
   fileType?: string
   value?: string
   urlGroup?: {
-    onlineUrl: string
-    offlineUrl: string
+    onlineUrl?: string
+    offlineUrl?: string
   }
   wht?: FileWHT
   onChange?: (data: any) => void
@@ -158,7 +158,7 @@ class UploadFile extends React.Component<UploadFileProps> {
           return testSize(file, whs, isVideo ? 'video' : 'img').catch(() => {
             let msg = isScale ? `Please upload ${fileName} at ${width}/${height}` : `Please upload ${fileName} at ${width}*${height}px`
             if (WH_arr) {
-              msg = `Please upload ${fileName} at ${WH_arr[0].width}*${WH_arr[0].height}px or ${WH_arr[1].width}*${WH_arr[1].height}px`
+              msg = `Please upload ${fileName} at ${WH_arr[0].width}*${WH_arr[0].height} or ${WH_arr[1].width}*${WH_arr[1].height}`
             }
             message.error(msg);
             return Promise.reject()
@@ -287,7 +287,7 @@ class UploadFile extends React.Component<UploadFileProps> {
                 </React.Fragment>
               ) :
               isZip ? <iframe src={this.props.viewUrl} />
-                : (<img alt="example" style={{ width: '100%' }} src={this.useUrl} />)
+                : (<img alt="example" style={{ maxHeight: '600px', display: 'block', margin: '0 auto' }} src={this.useUrl} />)
           }
         </Modal>
       </React.Fragment>

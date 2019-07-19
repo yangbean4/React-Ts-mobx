@@ -471,7 +471,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
      */
 
     getUploadprops = (fun: (data: any) => Promise<any>, wht?: FileWHT, preData?: Object,
-        fileType?: string, cb?: Function): UploadFileProps => {
+        fileType?: string, key?: string, cb?: Function): UploadFileProps => {
         const data = {
             api: fun,
             wht,
@@ -479,7 +479,18 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             fileType,
             cb
         }
+        if (fileType === 'video' && key) {
+            const online = key.replace(/offline/, 'online')
+            const offline = key.replace(/online/, 'offline')
 
+            return {
+                ...data,
+                urlGroup: {
+                    [online]: this.getInitialValue(online),
+                    [offline]: this.getInitialValue(offline),
+                }
+            }
+        }
         return data
     }
 
@@ -540,6 +551,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                     maxW_H: 1.80,
                     width: 16,
                     height: 9,
+                    isScale: true,
                 }
             } else if (width === 'portrait' || (width === 9 && height === 16)) {
                 return {
@@ -547,6 +559,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                     maxW_H: 0.57,
                     width: 9,
                     height: 16,
+                    isScale: true,
                 }
             } else {
                 return {
@@ -573,46 +586,42 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
         const theVideoUrlPropsForVideoOrIge = this.getUploadprops(this.api.creative.uploadVideo, {
             ...getScale(this.videoType),
-            isScale: true,
             time: 30,
             size: 4000
         }, {
                 type: this.useCreativeType === 2 ? 3 : 4,
                 video_type: this.videoType === 'portrait' ? 2 : 1,
                 app_key: this.app_key
-            }, 'video')
+            }, 'video', 'common_landscape_creative_offline_url')
 
         const igeLeadVideoUrlProps = this.getUploadprops(this.api.creative.uploadVideo, {
             ...getScale(this.videoType),
-            isScale: true,
             time: 8,
             size: 1000
         }, {
                 type: 5,
                 video_type: this.videoType === 'portrait' ? 2 : 1,
                 app_key: this.app_key
-            }, 'video')
+            }, 'video', 'ige_leadvideo_landscape_offline_url')
 
 
         const igeCarouselVideoUrlPropsPortrait = this.getUploadprops(this.api.creative.uploadVideo, {
             ...getScale(9, 16),
-            isScale: true,
             size: 1500
         }, {
                 type: 6,
                 video_type: 2,
                 app_key: this.app_key
-            }, 'video')
+            }, 'video', 'ige_portrait_offline_url')
 
         const igeCarouselVideoUrlPropsLandscape = this.getUploadprops(this.api.creative.uploadVideo, {
             ...getScale(16, 9),
-            isScale: true,
             size: 1500
         }, {
                 type: 7,
                 video_type: 1,
                 app_key: this.app_key
-            }, 'video')
+            }, 'video', 'ige_landscape_offline_url')
 
         const theVideoUrlPropsForPlayicon = this.getUploadprops(this.api.creative.uploadVideo, {
             width: 1,
@@ -623,18 +632,12 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 type: 8,
                 // video_type: this.videoType === 'portrait' ? 2 : 1,
                 app_key: this.app_key
-            }, 'video')
+            }, 'video', 'playicon_creative_offline_url')
 
         const ige_firstframe_image = this.getUploadprops(this.api.creative.handleUploadImg, {
             WH_arr: [
-                {
-                    width: 1080,
-                    height: 1920,
-                },
-                {
-                    width: 1920,
-                    height: 1080,
-                }
+                getScale(16, 9),
+                getScale(9, 16),
             ],
             size: 500
         }, {
@@ -655,7 +658,6 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
         const igePortraitCover = this.getUploadprops(this.api.creative.handleUploadImg, {
             ...getScale(9, 16),
-            isScale: true,
             size: 200
         }, {
                 type: 3,
@@ -891,25 +893,31 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             </Select>
                                         )}
                                 </FormItem>
-                                <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
-                                    {this.videoType === 'portrait' ?
-                                        [
-                                            getFieldDecorator('common_portrait_creative_offline_url', {
-                                                initialValue: this.getInitialValue('common_portrait_creative_offline_url'),
-                                                rules: [
-                                                    {
-                                                        required: true, message: "Required"
-                                                    }
-                                                ]
-                                            })(
-                                                <UploadFile {...theVideoUrlPropsForIVEOffline} >
-                                                    <Button>
-                                                        <MyIcon type="iconshangchuan1" /> Upload Offline
-                                                    </Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <span>5M</span>
-                                                </UploadFile>
-                                            ),
-                                            getFieldDecorator('common_portrait_creative_online_url', {
+                                {/* TODO: 解决 没有Required提示并且不能提交的问题 */}
+
+                                {this.videoType === 'portrait' ?
+                                    <React.Fragment>
+                                        <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
+                                            {
+                                                getFieldDecorator('common_portrait_creative_offline_url', {
+                                                    initialValue: this.getInitialValue('common_portrait_creative_offline_url'),
+                                                    rules: [
+                                                        {
+                                                            required: true, message: "Required"
+                                                        }
+                                                    ]
+                                                })(
+                                                    <UploadFile {...theVideoUrlPropsForIVEOffline} >
+                                                        <Button>
+                                                            <MyIcon type="iconshangchuan1" /> Upload Offline
+                                                        </Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <span>5M</span>
+                                                    </UploadFile>
+                                                )
+                                            }
+                                        </FormItem>
+                                        <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
+                                            {getFieldDecorator('common_portrait_creative_online_url', {
                                                 initialValue: this.getInitialValue('common_portrait_creative_online_url'),
                                                 rules: [
                                                     {
@@ -917,50 +925,57 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                     }
                                                 ]
                                             })(
-
                                                 <UploadFile {...theVideoUrlPropsForIVEOnline} >
                                                     <Button style={{ marginBottom: '10px' }}>
                                                         <MyIcon type="iconshangchuan1" /> Upload Online
                                                     </Button>&nbsp;&nbsp;&nbsp;&nbsp;
                                                     <span>4M</span>
                                                 </UploadFile>
-                                            )
-                                        ]
-                                        : [
-                                            getFieldDecorator('common_landscape_creative_offline_url', {
-                                                initialValue: this.getInitialValue('common_landscape_creative_offline_url'),
-                                                rules: [
-                                                    {
-                                                        required: true, message: "Required"
-                                                    }
-                                                ]
-                                            })(
-                                                <UploadFile {...theVideoUrlPropsForIVEOffline} >
-                                                    <Button>
-                                                        <MyIcon type="iconshangchuan1" /> Upload Offline
-                                                    </Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <span>5M</span>
-                                                </UploadFile>
-                                            ),
-                                            getFieldDecorator('common_landscape_creative_online_url', {
-                                                initialValue: this.getInitialValue('common_landscape_creative_online_url'),
-                                                rules: [
-                                                    {
-                                                        required: true, message: "Required"
-                                                    }
-                                                ]
-                                            })(
+                                            )}
+                                        </FormItem>
+                                    </React.Fragment>
+                                    : <React.Fragment>
+                                        <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
+                                            {
+                                                getFieldDecorator('common_landscape_creative_offline_url', {
+                                                    initialValue: this.getInitialValue('common_landscape_creative_offline_url'),
+                                                    rules: [
+                                                        {
+                                                            required: true, message: "Required"
+                                                        }
+                                                    ]
+                                                })(
+                                                    <UploadFile {...theVideoUrlPropsForIVEOffline} >
+                                                        <Button>
+                                                            <MyIcon type="iconshangchuan1" /> Upload Offline
+                                                                </Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <span>5M</span>
+                                                    </UploadFile>
+                                                )
+                                            }
+                                        </FormItem>
+                                        <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
+                                            {
+                                                getFieldDecorator('common_landscape_creative_online_url', {
+                                                    initialValue: this.getInitialValue('common_landscape_creative_online_url'),
+                                                    rules: [
+                                                        {
+                                                            required: true, message: "Required"
+                                                        }
+                                                    ]
+                                                })(
 
-                                                <UploadFile {...theVideoUrlPropsForIVEOnline} >
-                                                    <Button style={{ marginBottom: '10px' }}>
-                                                        <MyIcon type="iconshangchuan1" /> Upload Online
-                                                    </Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <span>4M</span>
-                                                </UploadFile>
-                                            )
-                                        ]
-                                    }
-                                </FormItem>
+                                                    <UploadFile {...theVideoUrlPropsForIVEOnline} >
+                                                        <Button style={{ marginBottom: '10px' }}>
+                                                            <MyIcon type="iconshangchuan1" /> Upload Online
+                                                            </Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <span>4M</span>
+                                                    </UploadFile>
+                                                )
+                                            }
+                                        </FormItem>
+                                    </React.Fragment>
+                                }
                                 <FormItem label="Minimum Playing Time">
                                     {getFieldDecorator('playback_time', {
                                         initialValue: playback_time,
