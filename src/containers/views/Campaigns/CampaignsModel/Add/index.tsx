@@ -69,11 +69,14 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private loading: boolean = false
 
-    @observable
-    private needing: boolean = true
+    // @observable
+    // private needing: boolean = true
 
     @observable
     private platform: string = this.props.campaign ? this.props.campaign.platform : 'android'
+
+    @observable
+    private creative_id: string = undefined
 
     @observable
     private appIDAndroid: any = []
@@ -86,6 +89,19 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
     @observable
     private CampaignGroup: ICampaignStore.ICampaignGroup = {}
+
+    @computed
+    get creativeId() {
+        return this.creative_id || (this.props.campaign || {}).creative_id
+    }
+
+    @computed
+    get needing() {
+        // debugger
+        const tt = (this.creatives || []).find(ele => ele.id === this.creativeId)
+        const is = !(tt && tt.creative_type === 1)
+        return is
+    }
 
     @computed
     get resetPlatform() {
@@ -160,13 +176,9 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
-    selectOption = (value, option) => {
+    selectOption = (value) => {
         runInAction('SET_NEDDING', () => {
-            if (option.key == 1) {
-                this.needing = false
-            } else {
-                this.needing = true
-            }
+            this.creative_id = value
         })
     }
 
@@ -596,7 +608,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         })(
                             <Select
                                 showSearch
-                                onSelect={this.selectOption}
+                                onChange={(val) => this.selectOption(val)}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {this.creatives && this.creatives.filter(c => (!!c.name)).map(c => (

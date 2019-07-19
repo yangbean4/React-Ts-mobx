@@ -489,25 +489,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<InputNumber precision={0} />)}&nbsp;&nbsp;&nbsp;&nbsp;seconds
                     </FormItem>
-                    <FormItem label="Offer Rate">
-                        {getFieldDecorator('offer_rate', {
-                            initialValue: offer_rate,
-                            rules: [
-                                {
-                                    required: false, message: "Required"
-                                },
-                                {
-                                    validator: (r, v, callback) => {
-                                        console.log(v)
-                                        if (v < 1 && v !== null) {
-                                            callback('The offer rate shouldbe filled with an integer value of 1 - 100')
-                                        }
-                                        callback()
-                                    }
-                                }
-                            ]
-                        })(<InputNumber precision={0} min={1} max={100} />)}&nbsp;&nbsp;&nbsp;&nbsp;%
-                    </FormItem>
+
                     <FormItem label="Lowest eCPM">
                         $&nbsp;{getFieldDecorator('accept_cpm', {
                             initialValue: accept_cpm,
@@ -527,6 +509,25 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                         })(<InputNumber precision={2} />)}
                     </FormItem>
 
+                    <FormItem label="Offer Rate">
+                        {getFieldDecorator('offer_rate', {
+                            initialValue: offer_rate,
+                            rules: [
+                                {
+                                    required: false, message: "Required"
+                                },
+                                {
+                                    validator: (r, v, callback) => {
+                                        console.log(v)
+                                        if (v < 1 && v !== null) {
+                                            callback('The offer rate shouldbe filled with an integer value of 1 - 100')
+                                        }
+                                        callback()
+                                    }
+                                }
+                            ]
+                        })(<InputNumber precision={0} min={1} max={100} />)}&nbsp;&nbsp;&nbsp;&nbsp;%
+                    </FormItem>
                     <Col span={4} className={styles.companyTag}>
                         <div className={styles.tagWrapper}>
                             <span>PID Type</span>
