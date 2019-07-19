@@ -1,4 +1,5 @@
 declare interface IStore {
+    offerQueryStore: IOfferQueryStore.OfferQueryStore
     revenueStore: IRevenueStore.RevenueStore
     appManageStore: IAppManageStore.AppManageStore
     creativeStore: ICreativeStore.CreativeStore

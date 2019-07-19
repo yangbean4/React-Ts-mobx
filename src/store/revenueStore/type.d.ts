@@ -1,5 +1,4 @@
 import { RevenueStore as RevenueStoreModel } from './index'
-import { string } from 'prop-types';
 
 export as namespace IRevenueStore
 

@@ -9,6 +9,8 @@ const loadComponent = (loader: () => Promise<any>) =>
     })
 
 export const asynchronousComponents = {
+    OfferQuery: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/OfferQuery')),
+
     Revenue: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Revenue')),
     //------------------Apps Manage
     AppManages: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppMange')),
@@ -167,6 +169,16 @@ export const routerAndMenu: IRouter[] = [
         title: 'Offers',
         icon: 'icondingdan',
         authName: 'Offers'
+    },
+    {
+        id: 86,
+        pid: 8,
+        isMenu: true,
+        exact: true,
+        title: 'Offer Query',
+        authName: 'Offers-Offer Query',
+        component: 'OfferQuery',
+        path: '/query'
     },
     // ---------Apps manage--------------
     {

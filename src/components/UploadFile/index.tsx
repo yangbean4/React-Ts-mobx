@@ -264,7 +264,7 @@ class UploadFile extends React.Component<UploadFileProps> {
                     <video width="100%" height="100%" style={{ width: '100%' }} controls autoPlay src={this.useUrl} />
                   </div>
                   <div className={styles.linkUrlWrapper}>
-                    <div className={styles.label}>{this.setText}</div>
+                    <div className={styles.label}>Offline Url</div>
                     <div className={styles.linkUrl}>{this.useUrl}</div>
                   </div>
                 </React.Fragment>
