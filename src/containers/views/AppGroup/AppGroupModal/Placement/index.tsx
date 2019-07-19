@@ -11,7 +11,6 @@ interface TableProps {
   data: any[]
 }
 
-
 @observer
 class VcTable extends ComponentExt<TableProps> {
 

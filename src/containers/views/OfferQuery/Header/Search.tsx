@@ -9,7 +9,7 @@ import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 
 const FormItem = Form.Item
-const url = 'http://san-manage.test2.com/api/offerQuery/listDetail'
+const url = process.env.BASEURL + '/api/offerQuery/listDetailExport'
 
 const span = 6
 const layout = {
@@ -65,17 +65,17 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
         if (!err) {
           this.toggleLoading()
           try {
-            const data = {
-              ...values,
-              export: n,
-            }
-            if (!n) {
-              changeFilter(data)
-            } else {
-              createForm(data, url)
-            }
 
-          } catch (err) { }
+            !n ? changeFilter(values) : createForm({
+              ...values,
+              export: n
+            }, url)
+            // REVIEW:为什么不能直接请求
+            // const cb = !n ? changeFilter : this.api.offerQuery.exportData
+            // cb(values)
+          } catch (err) {
+            console.log(err)
+          }
           this.toggleLoading()
         }
       }

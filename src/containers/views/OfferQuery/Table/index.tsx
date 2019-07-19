@@ -77,18 +77,61 @@ class QueryTable extends ComponentExt<IProps> {
       >
         <Table.Column<IOfferQueryStore.IQuery> key="id" title="Offer ID" dataIndex="id" width={200} />
         <Table.Column<IOfferQueryStore.IQuery> key="app_key" title="App Key" dataIndex="app_key" width={200} />
-        <Table.Column<IOfferQueryStore.IQuery> key="app_id" title="App ID" dataIndex="app_id" width={300} />
+        <Table.Column<IOfferQueryStore.IQuery> key="app_id" title="App ID" dataIndex="app_id" width={300}
+          render={(_, record) => (
+            <span>
+              {
+                this.$checkAuth('Offers-Apps Manage-Edit') ?
+                  (<a key='form' href="javascript:;" onClick={() => { this.props.routerStore.push(`/offer/edit/${record.app_key}`) }}>
+                    {_}
+                  </a>) : { _ }
+              }
+            </span>
+          )} />
         <Table.Column<IOfferQueryStore.IQuery> key="platform" title="Platform" dataIndex="platform" width={200} />
         <Table.Column<IOfferQueryStore.IQuery> key="sen_account" title="Sen Account" dataIndex="sen_account" width={230} />
-        <Table.Column<IOfferQueryStore.IQuery> key="campaign_id" title="Campaign ID" dataIndex="campaign_id" width={230} />
+        <Table.Column<IOfferQueryStore.IQuery> key="campaign_id" title="Campaign ID" dataIndex="campaign_id" width={230}
+          render={(_, record) => (
+            <span>
+              {
+                this.$checkAuth('Offers-Campaigns-Edit') ?
+                  (<a key='form' href="javascript:;" onClick={() => { this.props.routerStore.push(`/campaigns/edit/${_}`) }}>
+                    {_}
+                  </a>) : { _ }
+              }
+            </span>
+          )}
+        />
         <Table.Column<IOfferQueryStore.IQuery> key="campaign_name" title="Campaign Name" dataIndex="campaign_name" width={250} />
         <Table.Column<IOfferQueryStore.IQuery> key="geo" title="GEO" dataIndex="geo" width={150} />
         <Table.Column<IOfferQueryStore.IQuery> key="bid" title="Bid($)" dataIndex="bid" width={150} />
         <Table.Column<IOfferQueryStore.IQuery> key="ad_type" title="Ad Type" dataIndex="ad_type" width={200} />
         <Table.Column<IOfferQueryStore.IQuery> key="campaign_status" title="Campaign Status" dataIndex="campaign_status" width={250} />
-        <Table.Column<IOfferQueryStore.IQuery> key="creative_id" title="Creative ID" dataIndex="creative_id" width={200} />
+        <Table.Column<IOfferQueryStore.IQuery> key="creative_id" title="Creative ID" dataIndex="creative_id" width={200}
+          render={(_, record) => (
+            <span>
+              {
+                this.$checkAuth('Offers-Creatives-Creatives-Edit') ?
+                  (<a key='form' href="javascript:;" onClick={() => { this.props.routerStore.push(`/creative/edit/${record.app_key}`) }}>
+                    {_}
+                  </a>) : { _ }
+              }
+            </span>
+          )}
+        />
         <Table.Column<IOfferQueryStore.IQuery> key="creative_type" title="Creative Type" dataIndex="creative_type" width={200} />
-        <Table.Column<IOfferQueryStore.IQuery> key="endcard_id" title="Endcard ID" dataIndex="endcard_id" width={200} />
+        <Table.Column<IOfferQueryStore.IQuery> key="endcard_id" title="Endcard ID" dataIndex="endcard_id" width={200}
+          render={(_, record) => (
+            <span>
+              {
+                this.$checkAuth('Offers-Endcards-Endcard-Edit') ?
+                  (<a key='form' href="javascript:;" onClick={() => { this.props.routerStore.push(`/creative/edit/${record.app_key}`) }}>
+                    {_}
+                  </a>) : { _ }
+              }
+            </span>
+          )}
+        />
         <Table.Column<IOfferQueryStore.IQuery> key="offer_status" fixed="right" title="Offer Status" dataIndex="offer_status" width={150} />
       </Table>
     )

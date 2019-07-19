@@ -94,6 +94,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     private app_key: string = this.props.app_key || this.creativeTarget.app_key || undefined
 
     @observable
+    private online: number
+
+    @observable
     private noChange: boolean = true
 
     @observable
@@ -530,7 +533,6 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             ige_prefail = 0
         } = this.creativeTarget
 
-
         const getScale = (width: string | number, height?: number) => {
             if (width === 'landscape' || (width === 16 && height === 9)) {
                 return {
@@ -553,12 +555,19 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             }
         }
 
-
-
-        const theVideoUrlPropsForIVE = this.getUploadprops(this.api.creative.uploadZip, {
+        const theVideoUrlPropsForIVEOffline = this.getUploadprops(this.api.creative.uploadZip, {
             size: 5000
         }, {
                 type: 9,
+                is_online: 0,
+                app_key: this.app_key
+            }, '.zip')
+
+        const theVideoUrlPropsForIVEOnline = this.getUploadprops(this.api.creative.uploadZip, {
+            size: 4000
+        }, {
+                type: 9,
+                is_online: 1,
                 app_key: this.app_key
             }, '.zip')
 
@@ -662,7 +671,6 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 type: 3,
                 app_key: this.app_key
             })
-
 
         return (
             <React.Fragment>
@@ -892,11 +900,20 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             }
                                         ]
                                     })(
-                                        <UploadFile {...theVideoUrlPropsForIVE} onChange={() => this.noChangeChange()} viewUrl={this.iveViewUrl}>
-                                            <Button>
-                                                <MyIcon type="iconshangchuan1" /> Upload IVE
-                                            </Button>
-                                        </UploadFile>
+                                        <div>
+                                            <UploadFile {...theVideoUrlPropsForIVEOnline} onChange={() => this.noChangeChange()} viewUrl={this.iveViewUrl}>
+                                                <Button style={{ marginBottom: '10px' }}>
+                                                    <MyIcon type="iconshangchuan1" /> Upload Online
+                                                </Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <span>4M</span>
+                                            </UploadFile>
+                                            <UploadFile {...theVideoUrlPropsForIVEOffline} onChange={() => this.noChangeChange()} viewUrl={this.iveViewUrl}>
+                                                <Button>
+                                                    <MyIcon type="iconshangchuan1" /> Upload Offline
+                                                </Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <span>5M</span>
+                                            </UploadFile>
+                                        </div>
                                     ) : getFieldDecorator('common_landscape_creative_offline_url', {
                                         initialValue: this.getInitialValue('common_landscape_creative_offline_url'),
                                         rules: [
@@ -905,11 +922,20 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                             }
                                         ]
                                     })(
-                                        <UploadFile {...theVideoUrlPropsForIVE} onChange={() => this.noChangeChange()} viewUrl={this.iveViewUrl}>
-                                            <Button>
-                                                <MyIcon type="iconshangchuan1" /> Upload IVE
-                                            </Button>
-                                        </UploadFile>
+                                        <div>
+                                            <UploadFile {...theVideoUrlPropsForIVEOnline} onChange={() => this.noChangeChange()} viewUrl={this.iveViewUrl}>
+                                                <Button style={{ marginBottom: '10px' }}>
+                                                    <MyIcon type="iconshangchuan1" /> Upload Online
+                                                </Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <span>4M</span>
+                                            </UploadFile>
+                                            <UploadFile {...theVideoUrlPropsForIVEOffline} onChange={() => this.noChangeChange()} viewUrl={this.iveViewUrl}>
+                                                <Button>
+                                                    <MyIcon type="iconshangchuan1" /> Upload Offline
+                                                </Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <span>5M</span>
+                                            </UploadFile>
+                                        </div>
                                     )
                                     }
                                 </FormItem>
@@ -1389,8 +1415,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 </FormItem>
 
                                 <FormItem label="Appwall Description">
-                                    <Input autoComplete="off" value={this.appwall_description}
-                                        disabled={true} />
+                                    <Input
+                                        autoComplete="off"
+                                        value={this.appwall_description}
+                                        disabled={true}
+                                    />
                                 </FormItem>
                             </React.Fragment>
                         }

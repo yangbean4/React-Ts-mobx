@@ -24,6 +24,10 @@ export interface FileWHT {
 export interface UploadFileProps {
   fileType?: string
   value?: string
+  urlGroup?: {
+    onlineUrl: string
+    offlineUrl: string
+  }
   wht?: FileWHT
   onChange?: (data: any) => void
   api?: (data: any) => Promise<any>
@@ -44,6 +48,12 @@ class UploadFile extends React.Component<UploadFileProps> {
   private title: string = ''
 
   @observable
+  private videoUrl: string = ''
+
+  @observable
+  private videoType: string = ''
+
+  @observable
   private footer: (string | object) = null
 
   @observable
@@ -54,17 +64,24 @@ class UploadFile extends React.Component<UploadFileProps> {
     return this.props.value ? this.previewUrl || this.props.value : ''
   }
 
+  @computed
+  get showLine() {
+    return this.previewUrl ? false : this.props.urlGroup && Object.values(this.props.urlGroup).some(ele => !!ele)
+  }
+
   @action
   handleCancel = () => {
     this.previewVisible = false
   }
 
   @action
-  eyeClick = (e: React.MouseEvent) => {
+  eyeClick = (e: React.MouseEvent, type?) => {
     this.setTitle()
     this.setFooter()
     e.stopPropagation()
     runInAction("set", () => {
+      this.videoUrl = type === 1 ? this.props.urlGroup.onlineUrl : type === 2 ? this.props.urlGroup.offlineUrl : this.props.value;
+      this.videoType = type === 1 ? 'Online' : type === 2 ? 'Offline' : ''
       this.previewVisible = true;
     })
   }
@@ -228,13 +245,13 @@ class UploadFile extends React.Component<UploadFileProps> {
               </div>
             ) : (<div className={styles.box}>
               <div className={styles.layer}>
-                <Button onClick={isVideo ? this.showOnline : this.eyeClick} style={{ marginRight: 12 }} type="primary" shape="circle" icon="eye" />
+                <Button onClick={this.showLine ? this.showOnline : this.eyeClick} style={{ marginRight: 12 }} type="primary" shape="circle" icon="eye" />
                 <Button onClick={this.delClick} type="primary" shape="circle" icon="delete" />
                 {
-                  isVideo ? (
+                  this.showLine ? (
                     <div className={styles.onlineWrap}>
-                      <div className="online" onClick={this.eyeClick}>Online</div>
-                      <div className="offline" onClick={this.eyeClick} style={{ borderLeft: 'none' }}>Offline</div>
+                      <div className="online" onClick={(e) => this.eyeClick(e, 1)}>Online</div>
+                      <div className="offline" onClick={(e) => this.eyeClick(e, 2)} style={{ borderLeft: 'none' }}>Offline</div>
                     </div>
                   ) : ''
                 }
@@ -264,8 +281,8 @@ class UploadFile extends React.Component<UploadFileProps> {
                     <video width="100%" height="100%" style={{ width: '100%' }} controls autoPlay src={this.useUrl} />
                   </div>
                   <div className={styles.linkUrlWrapper}>
-                    <div className={styles.label}>Offline Url</div>
-                    <div className={styles.linkUrl}>{this.useUrl}</div>
+                    <div className={styles.label}>{this.videoType} Url</div>
+                    <div className={styles.linkUrl}>{this.videoUrl || this.useUrl}</div>
                   </div>
                 </React.Fragment>
               ) :

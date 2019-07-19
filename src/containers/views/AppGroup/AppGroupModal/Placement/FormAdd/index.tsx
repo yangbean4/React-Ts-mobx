@@ -506,7 +506,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={0} min={1} max={100} formatter={value => `${value}%`} parser={value => value.replace('%', '')} />)}
+                        })(<InputNumber precision={0} min={1} max={100} />)}&nbsp;&nbsp;&nbsp;&nbsp;%
                     </FormItem>
                     <FormItem label="Lowest eCPM">
                         $&nbsp;{getFieldDecorator('accept_cpm', {

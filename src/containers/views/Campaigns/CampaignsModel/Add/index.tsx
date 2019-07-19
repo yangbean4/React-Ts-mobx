@@ -161,7 +161,13 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     selectOption = (value, option) => {
-        this.needing = option.props.children === IVE ? false : true
+        runInAction('SET_NEDDING', () => {
+            if (option.key == 1) {
+                this.needing = false
+            } else {
+                this.needing = true
+            }
+        })
     }
 
     Cancel = () => {
@@ -594,7 +600,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {this.creatives && this.creatives.filter(c => (!!c.name)).map(c => (
-                                    <Select.Option key={c.id} value={c.id}>
+                                    <Select.Option key={c.creative_type} value={c.id}>
                                         {c.name}
                                     </Select.Option>
                                 ))}
