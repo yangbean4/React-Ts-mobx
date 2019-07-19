@@ -181,7 +181,7 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {optionListDb.account_id && optionListDb.account_id.map((c) => (
-                    <Select.Option key={c.id} value={c.name}>
+                    <Select.Option key={c.id} value={c.id}>
                       {c.name}
                     </Select.Option>
                   ))}
