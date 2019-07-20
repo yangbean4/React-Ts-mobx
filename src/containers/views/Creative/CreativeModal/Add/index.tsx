@@ -486,8 +486,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             return {
                 ...data,
                 urlGroup: {
-                    [online]: this.getInitialValue(online),
-                    [offline]: this.getInitialValue(offline),
+                    onlineUrl: this.getInitialValue(online),
+                    offlineUrl: this.getInitialValue(offline),
                 }
             }
         }
@@ -921,7 +921,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                         }
                                                     ]
                                                 })(
-                                                    <UploadFile {...theVideoUrlPropsForIVEOffline} >
+                                                    <UploadFile {...theVideoUrlPropsForIVEOffline} hasView>
                                                         <Button>
                                                             <MyIcon type="iconshangchuan1" /> Upload Offline
                                                         </Button>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -939,7 +939,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                     }
                                                 ]
                                             })(
-                                                <UploadFile {...theVideoUrlPropsForIVEOnline} >
+                                                <UploadFile {...theVideoUrlPropsForIVEOnline} hasView>
                                                     <Button style={{ marginBottom: '10px' }}>
                                                         <MyIcon type="iconshangchuan1" /> Upload Online
                                                     </Button>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -959,7 +959,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                         }
                                                     ]
                                                 })(
-                                                    <UploadFile {...theVideoUrlPropsForIVEOffline} >
+                                                    <UploadFile {...theVideoUrlPropsForIVEOffline} hasView>
                                                         <Button>
                                                             <MyIcon type="iconshangchuan1" /> Upload Offline
                                                                 </Button>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -979,7 +979,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                     ]
                                                 })(
 
-                                                    <UploadFile {...theVideoUrlPropsForIVEOnline} >
+                                                    <UploadFile {...theVideoUrlPropsForIVEOnline} hasView>
                                                         <Button style={{ marginBottom: '10px' }}>
                                                             <MyIcon type="iconshangchuan1" /> Upload Online
                                                             </Button>&nbsp;&nbsp;&nbsp;&nbsp;

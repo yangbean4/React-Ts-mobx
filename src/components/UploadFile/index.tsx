@@ -36,6 +36,7 @@ export interface UploadFileProps {
   callBack?: (data) => void
   className?: string
   viewUrl?: string
+  hasView?: boolean
 }
 
 @observer
@@ -59,9 +60,13 @@ class UploadFile extends React.Component<UploadFileProps> {
   @observable
   private previewUrl: string
 
+  @observable
+  private btnVisible: boolean = false
+
   @computed
   get useUrl() {
-    return this.props.value ? this.previewUrl || this.props.value : ''
+    // this.props.value ? this.previewUrl || this.props.value : ''
+    return this.props.value
   }
 
   @computed
@@ -83,6 +88,7 @@ class UploadFile extends React.Component<UploadFileProps> {
       this.videoUrl = type === 1 ? this.props.urlGroup.onlineUrl : type === 2 ? this.props.urlGroup.offlineUrl : this.props.value;
       this.videoType = type === 1 ? 'Online' : type === 2 ? 'Offline' : ''
       this.previewVisible = true;
+      this.btnVisible = false;
     })
   }
 
@@ -109,15 +115,30 @@ class UploadFile extends React.Component<UploadFileProps> {
 
   @action
   setFooter = () => {
-    const dom = this.props.fileType === 'video' ? (<CopyToClipboard onCopy={this.onCopy} text={this.useUrl}><Button type="primary">Copy Url</Button></CopyToClipboard>) : null
+    const dom = this.props.fileType !== '.zip' ? (<CopyToClipboard onCopy={this.onCopy} text={this.videoUrl || this.useUrl}><Button type="primary">Copy Url</Button></CopyToClipboard>) : null
     runInAction('SET_FOOTER', () => {
       this.footer = dom
     })
   }
   @action
   showOnline = (e: React.MouseEvent) => {
+    // e.stopPropagation()
+    console.log(222)
+
+    this.btnVisible = true;
+  }
+
+  @action
+  hideBtn = (e: React.MouseEvent) => {
+    // e.stopPropagation()
+    console.log(111)
+    this.btnVisible = false;
+  }
+
+  stop = (e: React.MouseEvent) => {
     e.stopPropagation()
   }
+
   onCopy = () => {
     message.success('copy success')
   }
@@ -207,7 +228,7 @@ class UploadFile extends React.Component<UploadFileProps> {
   }
 
   viewFile = () => {
-    window.open(this.props.viewUrl)
+    window.open(this.props.viewUrl || this.useUrl)
   }
 
 
@@ -236,19 +257,20 @@ class UploadFile extends React.Component<UploadFileProps> {
         >
           {this.useUrl ? (
             isZip ? (
-              <div className={styles.fileBox}>
+              <div className={styles.fileBox} onClick={this.stop}>
                 <span className={styles.fileName} title={this.useUrl}>{this.useUrl}</span>
                 <MyIcon className={styles.fileIcon} type="iconguanbi" onClick={this.delClick} />
                 {
-                  this.props.viewUrl && <Icon className={styles.fileIcon} type="eye" onClick={this.viewFile} />
+                  (this.props.viewUrl || this.props.hasView) && <Icon className={styles.fileIcon} type="eye" onClick={this.viewFile} />
                 }
+                <CopyToClipboard onCopy={this.onCopy} text={this.useUrl}><Icon className={styles.fileIcon} type="copy" /></CopyToClipboard>
               </div>
-            ) : (<div className={styles.box}>
+            ) : (<div className={styles.box} onClick={this.stop} onMouseLeave={this.hideBtn}>
               <div className={styles.layer}>
                 <Button onClick={this.showLine ? this.showOnline : this.eyeClick} style={{ marginRight: 12 }} type="primary" shape="circle" icon="eye" />
                 <Button onClick={this.delClick} type="primary" shape="circle" icon="delete" />
                 {
-                  this.showLine ? (
+                  this.btnVisible ? (
                     <div className={styles.onlineWrap}>
                       <div className="online" onClick={(e) => this.eyeClick(e, 1)}>Online</div>
                       <div className="offline" onClick={(e) => this.eyeClick(e, 2)} style={{ borderLeft: 'none' }}>Offline</div>
@@ -267,6 +289,7 @@ class UploadFile extends React.Component<UploadFileProps> {
             : this.props.children || uploadButton}
         </Upload>
         <Modal
+          destroyOnClose
           visible={this.previewVisible}
           width={680}
           onCancel={this.handleCancel}
@@ -286,8 +309,14 @@ class UploadFile extends React.Component<UploadFileProps> {
                   </div>
                 </React.Fragment>
               ) :
-              isZip ? <iframe src={this.props.viewUrl} />
-                : (<img alt="example" style={{ maxHeight: '600px', display: 'block', margin: '0 auto' }} src={this.useUrl} />)
+              isZip ? <iframe src={this.props.viewUrl || this.useUrl} />
+                : <React.Fragment>
+                  <img alt="example" style={{ maxHeight: '600px', display: 'block', margin: '0 auto' ,maxWidth :'100%'}} src={this.useUrl} />
+                  <div className={styles.linkUrlWrapper}>
+                    <div className={styles.label}> Url</div>
+                    <div className={styles.linkUrl}>{this.useUrl}</div>
+                  </div>
+                </React.Fragment>
           }
         </Modal>
       </React.Fragment>
