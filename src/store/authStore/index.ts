@@ -12,7 +12,7 @@ const getAuthTree = (permission: string[]) => {
             const { name, children, id } = item
             const key = pre ? `${pre}-${name}` : name
             target[key] = permission.includes(id)
-            if (children) {
+            if (children && children.length) {
                 addAuth(children, key)
             }
         })

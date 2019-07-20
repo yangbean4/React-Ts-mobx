@@ -84,7 +84,7 @@ class QueryTable extends ComponentExt<IProps> {
                 this.$checkAuth('Offers-Apps Manage-Edit') ?
                   (<a key='form' href="javascript:;" onClick={() => { this.props.routerStore.push(`/offer/edit/${record.app_key}`) }}>
                     {_}
-                  </a>) : { _ }
+                  </a>) :  _ 
               }
             </span>
           )} />
@@ -97,7 +97,7 @@ class QueryTable extends ComponentExt<IProps> {
                 this.$checkAuth('Offers-Campaigns-Edit') ?
                   (<a key='form' href="javascript:;" onClick={() => { this.props.routerStore.push(`/campaigns/edit/${_}`) }}>
                     {_}
-                  </a>) : { _ }
+                  </a>) : _ 
               }
             </span>
           )}
@@ -117,7 +117,7 @@ class QueryTable extends ComponentExt<IProps> {
                     state:{editId:_}
                   }) }}>
                     {_}
-                  </a>) : { _ }
+                  </a>) : _ 
               }
             </span>
           )}
@@ -133,7 +133,7 @@ class QueryTable extends ComponentExt<IProps> {
                     state:{editId:_}
                   }) }}>
                     {_}
-                  </a>) : { _ }
+                  </a>) : _ 
               }
             </span>
           )}
