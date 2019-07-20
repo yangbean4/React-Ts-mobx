@@ -912,6 +912,23 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                 {this.videoType === 'portrait' ?
                                     <React.Fragment>
                                         <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
+                                            {getFieldDecorator('common_portrait_creative_online_url', {
+                                                initialValue: this.getInitialValue('common_portrait_creative_online_url'),
+                                                rules: [
+                                                    {
+                                                        required: true, message: "Required"
+                                                    }
+                                                ]
+                                            })(
+                                                <UploadFile {...theVideoUrlPropsForIVEOnline} hasView>
+                                                    <Button style={{ marginBottom: '10px' }}>
+                                                        <MyIcon type="iconshangchuan1" /> Upload Online
+                                                    </Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <span>	&lt;=4M</span>
+                                                </UploadFile>
+                                            )}
+                                        </FormItem>
+                                        <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
                                             {
                                                 getFieldDecorator('common_portrait_creative_offline_url', {
                                                     initialValue: this.getInitialValue('common_portrait_creative_offline_url'),
@@ -925,49 +942,14 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                         <Button>
                                                             <MyIcon type="iconshangchuan1" /> Upload Offline
                                                         </Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                        <span>5M</span>
+                                                        <span> 	&lt;=5M</span>
                                                     </UploadFile>
                                                 )
                                             }
                                         </FormItem>
-                                        <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
-                                            {getFieldDecorator('common_portrait_creative_online_url', {
-                                                initialValue: this.getInitialValue('common_portrait_creative_online_url'),
-                                                rules: [
-                                                    {
-                                                        required: true, message: "Required"
-                                                    }
-                                                ]
-                                            })(
-                                                <UploadFile {...theVideoUrlPropsForIVEOnline} hasView>
-                                                    <Button style={{ marginBottom: '10px' }}>
-                                                        <MyIcon type="iconshangchuan1" /> Upload Online
-                                                    </Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <span>4M</span>
-                                                </UploadFile>
-                                            )}
-                                        </FormItem>
+
                                     </React.Fragment>
                                     : <React.Fragment>
-                                        <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
-                                            {
-                                                getFieldDecorator('common_landscape_creative_offline_url', {
-                                                    initialValue: this.getInitialValue('common_landscape_creative_offline_url'),
-                                                    rules: [
-                                                        {
-                                                            required: true, message: "Required"
-                                                        }
-                                                    ]
-                                                })(
-                                                    <UploadFile {...theVideoUrlPropsForIVEOffline} hasView>
-                                                        <Button>
-                                                            <MyIcon type="iconshangchuan1" /> Upload Offline
-                                                                </Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                <span>5M</span>
-                                                    </UploadFile>
-                                                )
-                                            }
-                                        </FormItem>
                                         <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
                                             {
                                                 getFieldDecorator('common_landscape_creative_online_url', {
@@ -983,11 +965,31 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                         <Button style={{ marginBottom: '10px' }}>
                                                             <MyIcon type="iconshangchuan1" /> Upload Online
                                                             </Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                            <span>4M</span>
+                                                            <span>&lt;=4M</span>
                                                     </UploadFile>
                                                 )
                                             }
                                         </FormItem>
+                                        <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
+                                            {
+                                                getFieldDecorator('common_landscape_creative_offline_url', {
+                                                    initialValue: this.getInitialValue('common_landscape_creative_offline_url'),
+                                                    rules: [
+                                                        {
+                                                            required: true, message: "Required"
+                                                        }
+                                                    ]
+                                                })(
+                                                    <UploadFile {...theVideoUrlPropsForIVEOffline} hasView>
+                                                        <Button>
+                                                            <MyIcon type="iconshangchuan1" /> Upload Offline
+                                                                </Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <span> 	&lt;=5M</span>
+                                                    </UploadFile>
+                                                )
+                                            }
+                                        </FormItem>
+
                                     </React.Fragment>
                                 }
                                 <FormItem label="Minimum Playing Time">
