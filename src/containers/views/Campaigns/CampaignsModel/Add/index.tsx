@@ -7,7 +7,6 @@ import { statusOption, platformOption, adTypeOption, bidTypeOption } from '../..
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import moment from 'moment'
-import { value } from '@views/LeadContent/LeadContentModal/Edit/index.scss';
 
 const FormItem = Form.Item
 
@@ -43,8 +42,6 @@ interface IStoreProps {
     optionListDb?: ICampaignStore.OptionListDb
     getTargetCode?: () => Promise<any>
     getCommentsGroupId?: () => Promise<any>
-    campaign?: ICampaignStore.ICampaignGroup
-    setCampaingn?: (Apps: ICampaignStore.ICampaignGroup) => void
     routerStore?: RouterStore
 }
 
@@ -58,8 +55,8 @@ interface IProps extends IStoreProps {
 @inject(
     (store: IStore): IProps => {
         const { campaignStore, routerStore } = store
-        const { createCampaingn, setCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId, campaign } = campaignStore
-        return { routerStore, setCampaingn, createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId, campaign }
+        const { createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId } = campaignStore
+        return { routerStore, createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId }
     }
 )
 
@@ -73,7 +70,12 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     // private needing: boolean = true
 
     @observable
-    private platform: string = this.props.campaign ? this.props.campaign.platform : 'android'
+    private ID: string = ''
+
+
+    @observable
+    private CampaignGroup: ICampaignStore.ICampaignGroup = {}
+
 
     @observable
     private creative_id: string = undefined
@@ -85,14 +87,14 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     private appIDIOS: any = []
 
     @observable
-    private appIdKey: string = this.props.campaign ? this.props.campaign.app_key : undefined
-
+    private _appIdKey: string = undefined
     @observable
-    private CampaignGroup: ICampaignStore.ICampaignGroup = {}
+    private _platform: string = ''
+
 
     @computed
     get creativeId() {
-        return this.creative_id || (this.props.campaign || {}).creative_id
+        return this.creative_id || this.CampaignGroup.creative_id
     }
 
     @computed
@@ -104,14 +106,12 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @computed
-    get resetPlatform() {
-        let platform = ''
-        if (this.props.campaign === undefined) {
-            platform = 'android'
-        } else {
-            platform = this.props.campaign.platform
-        }
-        return platform
+    get platform() {
+        return this._platform || this.CampaignGroup.platform || 'android'
+    }
+    @computed
+    get appIdKey() {
+        return this._appIdKey || this.CampaignGroup.app_key
     }
 
     @computed
@@ -136,7 +136,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get isAdd() {
-        return !this.props.campaign
+        return !this.ID
     }
 
     @computed
@@ -151,8 +151,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     getDetail = async () => {
-        const res = await this.api.campaigns.editBeforeCampaigns({ id: this.props.campaign.id })
-        this.props.setCampaingn(res.data)
+        const res = await this.api.campaigns.editBeforeCampaigns({ id: this.ID })
         runInAction('SET_APPManage', () => {
             this.CampaignGroup = { ...res.data }
         })
@@ -160,7 +159,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     AppIdChange = (value) => {
-        this.appIdKey = value
+        this._appIdKey = value
     }
 
     @action
@@ -190,7 +189,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         if (e) {
             e.preventDefault()
         }
-        const { routerStore, createCampaingn, form, modifyCampaingn, type, campaign } = this.props
+        const { routerStore, createCampaingn, form, modifyCampaingn, type } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
@@ -240,7 +239,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
     @action
     setPlatform = (value) => {
-        this.platform = value
+        this._platform = value
     }
 
     @action
@@ -256,19 +255,16 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         this.props.getCommentsGroupId()
         this.init()
         const {
-            campaign = {}, routerStore
+            routerStore
         } = this.props
         const routerId = routerStore.location.pathname.toString().split('/').pop()
         const Id = Number(routerId)
-
-        if ((!isNaN(Id) && (!campaign.id || campaign.id !== Id))) {
-            routerStore.push('/campaigns')
-        } else if (!this.isAdd) {
+        if (!isNaN(Id)) {
+            runInAction('SETID', () => {
+                this.ID = routerId
+            })
             this.getDetail()
         }
-    }
-    componentDidMount() {
-        console.log(this.props.campaign)
     }
 
     render() {

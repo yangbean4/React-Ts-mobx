@@ -592,7 +592,21 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 type: this.useCreativeType === 2 ? 3 : 4,
                 video_type: this.videoType === 'portrait' ? 2 : 1,
                 app_key: this.app_key
-            }, 'video', 'common_landscape_creative_offline_url')
+            }, 'video', (() => {
+                if (this.useCreativeType === 2) {
+                    if (this.videoType === 'portrait') {
+                        return 'common_portrait_creative_offline_url'
+                    } else {
+                        return 'common_landscape_creative_offline_url'
+                    }
+                } else if (this.useCreativeType === 3) {
+                    if (this.videoType === 'portrait') {
+                        return 'common_portrait_creative_online_url'
+                    } else {
+                        return 'common_landscape_creative_online_url'
+                    }
+                }
+            })())
 
         const igeLeadVideoUrlProps = this.getUploadprops(this.api.creative.uploadVideo, {
             ...getScale(this.videoType),
@@ -602,7 +616,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 type: 5,
                 video_type: this.videoType === 'portrait' ? 2 : 1,
                 app_key: this.app_key
-            }, 'video', 'ige_leadvideo_landscape_offline_url')
+            }, 'video', this.videoType === 'portrait' ? 'ige_leadvideo_portrait_offline_url' : 'ige_leadvideo_landscape_offline_url')
 
 
         const igeCarouselVideoUrlPropsPortrait = this.getUploadprops(this.api.creative.uploadVideo, {

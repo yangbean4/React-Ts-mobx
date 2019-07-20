@@ -66,7 +66,7 @@ class UploadFile extends React.Component<UploadFileProps> {
 
   @computed
   get showLine() {
-    return this.previewUrl ? false : this.props.urlGroup && Object.values(this.props.urlGroup).some(ele => !!ele)
+    return this.previewUrl ? false : this.props.urlGroup && Object.values(this.props.urlGroup).every(ele => !!ele)
   }
 
   @action
