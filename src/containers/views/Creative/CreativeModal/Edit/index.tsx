@@ -174,12 +174,7 @@ class PID extends ComponentExt<IStoreProps> {
       runInAction('Change_', () => {
         this.targetCreative = creative
       })
-      // const state = routerStore.location.state
-      // if (state && state.type) {
-      //   // this.editPid()
-      // } else {
 
-      // }
 
       const routerId = routerStore.location.pathname.toString().split('/').pop()
 
@@ -188,6 +183,11 @@ class PID extends ComponentExt<IStoreProps> {
         this.thisDataList = Detail.data
         this.app_key = routerId
       })
+      const state = routerStore.location.state
+      if (state && state.editId) {
+        const index =this.thisDataList.findIndex(ele=>ele.id === state.editId)
+        index!==-1 && this.editPid(index)
+      } 
 
     } catch (error) {
       this.props.routerStore.push('/creative');

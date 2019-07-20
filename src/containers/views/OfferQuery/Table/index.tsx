@@ -66,7 +66,7 @@ class QueryTable extends ComponentExt<IProps> {
         locale={{ emptyText: 'No Data' }}
         loading={getOfferQueryLoading}
         dataSource={offerList}
-        scroll={{ y: scrollY, x: '200%' }}
+        scroll={{ y: scrollY, x: '190%' }}
         pagination={{
           current: page,
           pageSize,
@@ -112,7 +112,10 @@ class QueryTable extends ComponentExt<IProps> {
             <span>
               {
                 this.$checkAuth('Offers-Creatives-Creatives-Edit') ?
-                  (<a key='form' href="javascript:;" onClick={() => { this.props.routerStore.push(`/creative/edit/${record.app_key}`) }}>
+                  (<a key='form' href="javascript:;" onClick={() => { this.props.routerStore.push({
+                    pathname: `/creative/edit/${record.app_key}`,
+                    state:{editId:_}
+                  }) }}>
                     {_}
                   </a>) : { _ }
               }
@@ -125,7 +128,10 @@ class QueryTable extends ComponentExt<IProps> {
             <span>
               {
                 this.$checkAuth('Offers-Endcards-Endcard-Edit') ?
-                  (<a key='form' href="javascript:;" onClick={() => { this.props.routerStore.push(`/creative/edit/${record.app_key}`) }}>
+                  (<a key='form' href="javascript:;" onClick={() => { this.props.routerStore.push({
+                    pathname: `/endcard/edit/${record.app_key}`,
+                    state:{editId:_}
+                  }) }}>
                     {_}
                   </a>) : { _ }
               }
