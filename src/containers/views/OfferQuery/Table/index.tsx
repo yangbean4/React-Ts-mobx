@@ -46,7 +46,7 @@ class QueryTable extends ComponentExt<IProps> {
   }
 
   routerGo = (router) => {
-    const uri = `${window.location.origin}/#${router}`
+    const uri = `${window.location.origin}${window.location.pathname}#${router}`
     console.log(uri)
     window.open(uri)
   }
@@ -84,8 +84,7 @@ class QueryTable extends ComponentExt<IProps> {
         onChange={handleTableChange}
       >
         <Table.Column<IOfferQueryStore.IQuery> key="id" title="Offer ID" dataIndex="id" width={200} />
-        <Table.Column<IOfferQueryStore.IQuery> key="app_key" title="App Key" dataIndex="app_key" width={200} />
-        <Table.Column<IOfferQueryStore.IQuery> key="app_id" title="App ID" dataIndex="app_id" width={300}
+        <Table.Column<IOfferQueryStore.IQuery> key="app_key" title="App Key" dataIndex="app_key" width={200}
           render={(_, record) => (
             <span>
               {
@@ -95,7 +94,9 @@ class QueryTable extends ComponentExt<IProps> {
                   </a>) : _
               }
             </span>
-          )} />
+          )}
+        />
+        <Table.Column<IOfferQueryStore.IQuery> key="app_id" title="App ID" dataIndex="app_id" width={300} />
         <Table.Column<IOfferQueryStore.IQuery> key="platform" title="Platform" dataIndex="platform" width={200} />
         <Table.Column<IOfferQueryStore.IQuery> key="sen_account" title="Sen Account" dataIndex="sen_account" width={230} />
         <Table.Column<IOfferQueryStore.IQuery> key="campaign_id" title="Campaign ID" dataIndex="campaign_id" width={230}
