@@ -924,7 +924,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                     <Button style={{ marginBottom: '10px' }}>
                                                         <MyIcon type="iconshangchuan1" /> Upload Online
                                                     </Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <span>	&lt;=4M</span>
+                                                    <span>	  ≤4M</span>
                                                 </UploadFile>
                                             )}
                                         </FormItem>
@@ -942,7 +942,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                         <Button>
                                                             <MyIcon type="iconshangchuan1" /> Upload Offline
                                                         </Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                        <span> 	&lt;=5M</span>
+                                                        <span> 	 ≤5M</span>
                                                     </UploadFile>
                                                 )
                                             }
@@ -965,7 +965,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                         <Button style={{ marginBottom: '10px' }}>
                                                             <MyIcon type="iconshangchuan1" /> Upload Online
                                                             </Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                            <span>&lt;=4M</span>
+                                                            <span>  ≤4M</span>
                                                     </UploadFile>
                                                 )
                                             }
@@ -984,7 +984,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                         <Button>
                                                             <MyIcon type="iconshangchuan1" /> Upload Offline
                                                                 </Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                <span> 	&lt;=5M</span>
+                                                                <span>  ≤5M</span>
                                                     </UploadFile>
                                                 )
                                             }

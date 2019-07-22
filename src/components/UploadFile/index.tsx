@@ -226,8 +226,13 @@ class UploadFile extends React.Component<UploadFileProps> {
     }
   }
 
+  @action
   viewFile = () => {
-    window.open(this.props.viewUrl || this.useUrl)
+    if (this.useUrl.includes('.html')) {
+      this.previewVisible = true
+    } else {
+      window.open(this.props.viewUrl || this.useUrl)
+    }
   }
 
 
