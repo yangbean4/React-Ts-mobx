@@ -6,6 +6,7 @@ import { ComponentExt } from '@utils/reactExt'
 import { statusOption } from '@config/web'
 import FormAdd from '../Add'
 import * as style from './index.scss'
+import { queryURL } from '@utils/index'
 
 interface TableProps {
   onEdit: (index: number) => void
@@ -183,13 +184,16 @@ class PID extends ComponentExt<IStoreProps> {
         this.thisDataList = Detail.data
         this.app_key = routerId
       })
-      const state = routerStore.location.state
-      if (state && state.editId) {
-        const index =this.thisDataList.findIndex(ele=>ele.id === state.editId)
-        index!==-1 && this.editPid(index)
-      } 
+
+      const editId = queryURL('editId')
+      debugger
+      if (editId) {
+        const index = this.thisDataList.findIndex(ele => ele.id.toString() === editId.toString())
+        index !== -1 && this.editPid(index)
+      }
 
     } catch (error) {
+      console.log(error)
       this.props.routerStore.push('/creative');
     }
   }

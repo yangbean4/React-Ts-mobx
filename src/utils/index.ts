@@ -212,8 +212,8 @@ export function clearCookie(name: string) {
  * @returns {string}
  */
 export function queryURL(name: string): string {
-    const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i')
-    const result = window.location.search.substr(1).match(reg)
+    const reg = new RegExp(`(/?|&)${name}=([^&]*)(&|$)`, 'i')
+    const result = window.location.href.substr(1).match(reg)
     if (result !== null) {
         return decodeURI(result[2])
     }

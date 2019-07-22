@@ -44,9 +44,17 @@ class QueryTable extends ComponentExt<IProps> {
   downLoadExel = (operator: IRevenueStore.IRevenue) => {
 
   }
+
+  routerGo = (router) => {
+    const uri = `${window.location.origin}/#${router}`
+    console.log(uri)
+    window.open(uri)
+  }
+
   componentDidMount() {
     this.props.getOfferQuerys()
   }
+
   render() {
     const {
       scrollY,
@@ -66,7 +74,7 @@ class QueryTable extends ComponentExt<IProps> {
         locale={{ emptyText: 'No Data' }}
         loading={getOfferQueryLoading}
         dataSource={offerList}
-        scroll={{ y: scrollY, x: '190%' }}
+        scroll={{ y: scrollY, x: '140%' }}
         pagination={{
           current: page,
           pageSize,
@@ -82,9 +90,9 @@ class QueryTable extends ComponentExt<IProps> {
             <span>
               {
                 this.$checkAuth('Offers-Apps Manage-Edit') ?
-                  (<a key='form' href="javascript:;" onClick={() => { this.props.routerStore.push(`/offer/edit/${record.app_key}`) }}>
+                  (<a key='form' href="javascript:;" onClick={() => { this.routerGo(`/offer/edit/${record.app_key}`) }}>
                     {_}
-                  </a>) :  _ 
+                  </a>) : _
               }
             </span>
           )} />
@@ -95,9 +103,9 @@ class QueryTable extends ComponentExt<IProps> {
             <span>
               {
                 this.$checkAuth('Offers-Campaigns-Edit') ?
-                  (<a key='form' href="javascript:;" onClick={() => { this.props.routerStore.push(`/campaigns/edit/${_}`) }}>
+                  (<a key='form' href="javascript:;" onClick={() => { this.routerGo(`/campaigns/edit/${_}`) }}>
                     {_}
-                  </a>) : _ 
+                  </a>) : _
               }
             </span>
           )}
@@ -112,12 +120,12 @@ class QueryTable extends ComponentExt<IProps> {
             <span>
               {
                 this.$checkAuth('Offers-Creatives-Creatives-Edit') ?
-                  (<a key='form' href="javascript:;" onClick={() => { this.props.routerStore.push({
-                    pathname: `/creative/edit/${record.app_key}`,
-                    state:{editId:_}
-                  }) }}>
+                  (<a key='form' href="javascript:;" onClick={() => {
+                    this.routerGo(`/creative/edit/${record.app_key}?editId=${_}`,
+                    )
+                  }}>
                     {_}
-                  </a>) : _ 
+                  </a>) : _
               }
             </span>
           )}
@@ -128,12 +136,12 @@ class QueryTable extends ComponentExt<IProps> {
             <span>
               {
                 this.$checkAuth('Offers-Endcards-Endcard-Edit') ?
-                  (<a key='form' href="javascript:;" onClick={() => { this.props.routerStore.push({
-                    pathname: `/endcard/edit/${record.app_key}`,
-                    state:{editId:_}
-                  }) }}>
+                  (<a key='form' href="javascript:;" onClick={() => {
+                    this.routerGo(`/endcard/edit/${record.app_key}?editId=${_}`,
+                    )
+                  }}>
                     {_}
-                  </a>) : _ 
+                  </a>) : _
               }
             </span>
           )}
