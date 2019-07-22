@@ -172,6 +172,11 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     setUrl = (data) => {
         this.gjbUrl = data.data.url
+        setImmediate(() => {
+            this.props.form.setFieldsValue({
+                endcard_image_url_web_show: data.data.url_web_show
+            })
+        })
     }
 
     Cancel = () => {
@@ -185,6 +190,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
         const { routerStore, createEndcard, form, modifyEndcard, endcardId, endcard, app_key } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
+                console.log(values)
                 if (!err) {
                     this.toggleLoading()
                     try {
