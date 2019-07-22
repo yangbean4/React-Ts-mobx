@@ -520,7 +520,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     validator: (r, v, callback) => {
                                         console.log(v)
                                         if (v < 1 && v !== null) {
-                                            callback('The offer rate shouldbe filled with an integer value of 1 - 100')
+                                            callback('The offer rate should be filled with an integer value of 1 - 100')
                                         }
                                         callback()
                                     }

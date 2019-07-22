@@ -82,7 +82,6 @@ class UploadFile extends React.Component<UploadFileProps> {
   @action
   eyeClick = (e: React.MouseEvent, type?) => {
     this.setTitle()
-    this.setFooter()
     e.stopPropagation()
     runInAction("set", () => {
       this.videoUrl = type === 1 ? this.props.urlGroup.onlineUrl : type === 2 ? this.props.urlGroup.offlineUrl : this.props.value;
@@ -113,13 +112,13 @@ class UploadFile extends React.Component<UploadFileProps> {
     })
   }
 
-  @action
-  setFooter = () => {
-    const dom = this.props.fileType !== '.zip' ? (<CopyToClipboard onCopy={this.onCopy} text={this.videoUrl || this.useUrl}><Button type="primary">Copy Url</Button></CopyToClipboard>) : null
-    runInAction('SET_FOOTER', () => {
-      this.footer = dom
-    })
-  }
+  // @action
+  // setFooter = () => {
+  //   const dom = 
+  //   runInAction('SET_FOOTER', () => {
+  //     this.footer = dom
+  //   })
+  // }
   @action
   showOnline = (e: React.MouseEvent) => {
     // e.stopPropagation()
@@ -294,7 +293,7 @@ class UploadFile extends React.Component<UploadFileProps> {
           width={680}
           onCancel={this.handleCancel}
           title={this.title}
-          footer={this.footer}
+          footer={(this.props.fileType !== '.zip' ? (<CopyToClipboard onCopy={this.onCopy} text={this.videoUrl || this.useUrl}><Button type="primary">Copy Url</Button></CopyToClipboard>) : null)}
         >
           {
             fileType === 'video' ?
@@ -311,7 +310,7 @@ class UploadFile extends React.Component<UploadFileProps> {
               ) :
               isZip ? <iframe src={this.props.viewUrl || this.useUrl} />
                 : <React.Fragment>
-                  <img alt="example" style={{ maxHeight: '600px', display: 'block', margin: '0 auto' ,maxWidth :'100%'}} src={this.useUrl} />
+                  <img alt="example" style={{ maxHeight: '600px', display: 'block', margin: '0 auto', maxWidth: '100%' }} src={this.useUrl} />
                   <div className={styles.linkUrlWrapper}>
                     <div className={styles.label}> Url</div>
                     <div className={styles.linkUrl}>{this.useUrl}</div>
