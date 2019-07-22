@@ -4,6 +4,7 @@ export const box: string;
 export const fileBox: string;
 export const fileIcon: string;
 export const fileName: string;
+export const frame: string;
 export const imgBox: string;
 export const label: string;
 export const layer: string;

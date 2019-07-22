@@ -228,11 +228,12 @@ class UploadFile extends React.Component<UploadFileProps> {
 
   @action
   viewFile = () => {
-    if (this.useUrl.includes('.html')) {
-      this.previewVisible = true
-    } else {
-      window.open(this.props.viewUrl || this.useUrl)
-    }
+    window.open(this.props.viewUrl || this.useUrl)
+    // if (this.useUrl.includes('.html')) {
+    //   this.previewVisible = true
+    // } else {
+    //   window.open(this.props.viewUrl || this.useUrl)
+    // }
   }
 
 
@@ -313,7 +314,7 @@ class UploadFile extends React.Component<UploadFileProps> {
                   </div>
                 </React.Fragment>
               ) :
-              isZip ? <iframe src={this.props.viewUrl || this.useUrl} />
+              isZip ? <iframe className={styles.frame} src={this.props.viewUrl || this.useUrl} />
                 : <React.Fragment>
                   <img alt="example" style={{ maxHeight: '600px', display: 'block', margin: '0 auto', maxWidth: '100%' }} src={this.useUrl} />
                   <div className={styles.linkUrlWrapper}>
