@@ -60,11 +60,11 @@ export const adTypeOption = [
 
 export const statusCampaignOption = [
   {
-    key: 'suspend ',
+    key: 'suspend',
     value: '0'
   },
   {
-    key: 'published ',
+    key: 'published',
     value: '1'
   }
 ]
@@ -75,7 +75,7 @@ export const statusOfferOption = [
     value: '0'
   },
   {
-    key: 'published ',
+    key: 'published',
     value: '1'
   },
   {

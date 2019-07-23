@@ -139,6 +139,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     AppWallCahnge = (e) => {
         this.AppWall = e.target.value
         this.removeFile('endcard_image_url_web_show')
+        this.gjbUrl = ''
         this.props.form.setFieldsValue({
             endcard_image_url_web_show: ''
         })
