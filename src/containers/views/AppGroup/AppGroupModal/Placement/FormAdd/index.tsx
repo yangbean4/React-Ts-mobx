@@ -518,15 +518,15 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 },
                                 {
                                     validator: (r, v, callback) => {
-                                        console.log(v)
-                                        if (v < 1 && v !== null) {
-                                            callback('The offer rate should be filled with an integer value of 1 - 100')
+
+                                        if (v < 0 || v > 100) {
+                                            callback('The offer rate should be filled with an integer value of 0 - 100')
                                         }
                                         callback()
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={0} min={1} max={100} />)}&nbsp;&nbsp;&nbsp;&nbsp;%
+                        })(<InputNumber precision={0} min={0} max={100} />)}&nbsp;&nbsp;&nbsp;&nbsp;%
                     </FormItem>
                     <Col span={4} className={styles.companyTag}>
                         <div className={styles.tagWrapper}>
