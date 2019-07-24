@@ -142,7 +142,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get useIgeFlag() {
-        return [this.igeFlag, this.creativeTarget.ige_leadvideo_flag, 1].find(ele => ele !== undefined)
+        return [this.igeFlag, this.creativeTarget.ige_leadvideo_flag, 0].find(ele => ele !== undefined)
     }
 
     @computed
@@ -1204,7 +1204,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         initialValue: this.getInitialValue('ige_leadvideo_portrait_offline_url'),
                                         rules: [
                                             {
-                                                required: this.useIgeFlag !== 1, message: "Required"
+                                                required: this.useIgeFlag !== 0, message: "Required"
                                             }
                                         ]
                                     })(
@@ -1218,7 +1218,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         initialValue: this.getInitialValue('ige_leadvideo_landscape_offline_url'),
                                         rules: [
                                             {
-                                                required: this.useIgeFlag !== 1, message: "Required"
+                                                required: this.useIgeFlag !== 0, message: "Required"
                                             }
                                         ]
                                     })(
