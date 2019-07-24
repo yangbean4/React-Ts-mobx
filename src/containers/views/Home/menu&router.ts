@@ -600,23 +600,7 @@ export const routerAndMenu: IRouter[] = [
         isRoot: true,
         authName: 'Revenue Import',
     },
-    // {
-    //     id: 91,
-    //     pid: 9,
-    //     isMenu: true,
-    //     path: '/revenue',
-    //     component: 'Revenue',
-    //     title: 'Revenue Import',
-    //     exact: true,
-    //     authName: 'Revenue Import-Revenue Import',
-    // },
-    {
-        id: 3,
-        isMenu: true,
-        title: 'Authorization',
-        icon: 'iconjiaoseshezhi',
-        authName: 'Authorization',
-    },
+
     // ----------------------------------------------Creative Analysis
     {
         id: 10,
@@ -707,6 +691,24 @@ export const routerAndMenu: IRouter[] = [
         isMenu: false
     },
     // ----------------------------------------------Creative Analysis
+
+    // {
+    //     id: 91,
+    //     pid: 9,
+    //     isMenu: true,
+    //     path: '/revenue',
+    //     component: 'Revenue',
+    //     title: 'Revenue Import',
+    //     exact: true,
+    //     authName: 'Revenue Import-Revenue Import',
+    // },
+    {
+        id: 3,
+        isMenu: true,
+        title: 'Authorization',
+        icon: 'iconjiaoseshezhi',
+        authName: 'Authorization',
+    },
     {
         id: 31,
         pid: 3,
