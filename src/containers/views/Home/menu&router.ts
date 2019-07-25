@@ -75,8 +75,8 @@ export const asynchronousComponents = {
     Category: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Users')),
     CategoryModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/Users/UserModal')),
 
-    Scene: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Users')),
-    SceneModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/Users/UserModal')),
+    Scene: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Scene')),
+    SceneModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/Scene/SceneModal')),
 
     Task: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Users')),
     TaskModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/Users/UserModal')),

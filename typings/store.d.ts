@@ -23,4 +23,5 @@ declare interface IStore {
     templateStore: ITemplateStore.TemplatesStore
     configStore: IConfigStore.ConfigStore
     leadContentStore: ILeadContentStore.LeadContentStore
+    sceneStore: ISceneStore.SceneStore
 }

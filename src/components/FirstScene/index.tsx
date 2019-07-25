@@ -71,6 +71,7 @@ interface sceneList {
 interface sceneType {
   id: number // to  sen_category_scene_config_id
   name: string
+  id_name: string
 }
 
 const copy = (onj) => JSON.parse(JSON.stringify(onj))
@@ -82,7 +83,6 @@ class FirstScene extends React.Component<Iprop> {
     wht: {
       size: 5000
     },
-    preData: this.props.preData,
     api: this.props.api,
   }
   private defaultList = {
@@ -140,9 +140,11 @@ class FirstScene extends React.Component<Iprop> {
   }
 
   imgAdd = (index: number, url: string) => {
-    const value = JSON.parse(JSON.stringify(this.props.value))
-    value[index].scene_image_url = (value[index].scene_image_url || []).concat(url)
-    this.props.onChange(value)
+    if (url) {
+      const value = JSON.parse(JSON.stringify(this.props.value))
+      value[index].scene_image_url = (value[index].scene_image_url || []).concat(url)
+      this.props.onChange(value)
+    }
   }
 
   removeImg = (imgIndex: number, listIndex: number, e: React.MouseEvent): void => {
@@ -180,7 +182,7 @@ class FirstScene extends React.Component<Iprop> {
               <div className={styles.SceneList} key={index}>
                 <div className={styles.imgList}>
                   {
-                    ele.scene_image_url.map((img, ind) => {
+                    (ele.scene_image_url || []).map((img, ind) => {
                       return (
                         <div key={img} className={styles.imgBox}>
                           {
@@ -197,6 +199,7 @@ class FirstScene extends React.Component<Iprop> {
                     !this.props.disabled && <UploadFile
                       className={styles.uploadGroup}
                       {...this.upLoadProps}
+                      preData={this.props.preData}
                       onChange={(url) => this.imgAdd(index, url)}
                     >
                       <Icon type='plus' />
@@ -213,9 +216,9 @@ class FirstScene extends React.Component<Iprop> {
                       onChange={(val) => this.setType(index, val)}
                       filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     >
-                      {this.props.sceneTypeList.map(c => (
+                      {(this.props.sceneTypeList || []).map(c => (
                         <Select.Option disabled={c.id !== ele.sen_category_scene_config_id && this.hasUseType.has(c.id)} value={c.id} key={c.id}>
-                          {c.name}
+                          {c.id_name}
                         </Select.Option>
                       ))}
                     </Select>
