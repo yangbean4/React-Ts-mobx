@@ -24,4 +24,5 @@ declare interface IStore {
     configStore: IConfigStore.ConfigStore
     leadContentStore: ILeadContentStore.LeadContentStore
     sceneStore: ISceneStore.SceneStore
+    categoryConfigStore: ICategoryConfigStore.CategoryConfig
 }

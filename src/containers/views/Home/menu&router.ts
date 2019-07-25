@@ -72,15 +72,14 @@ export const asynchronousComponents = {
     LeadContentAdd: loadComponent(() => import(/* webpackChunkName: "LeadContentAdd" */ '@views/LeadContent/LeadContentModal/Add')),
     LeadContentEdit: loadComponent(() => import(/* webpackChunkName: "CreativeEdit" */ '@views/LeadContent/LeadContentModal/Edit')),
     // Category Config
-    Category: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Users')),
-    CategoryModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/Users/UserModal')),
-
     Scene: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Scene')),
     SceneModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/Scene/SceneModal')),
 
+    Category: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/CreateAnalysis/CategoryConfig')),
+    CategoryModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/CreateAnalysis/CategoryConfig/CategoryModel')),
+
     Task: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Users')),
     TaskModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/Users/UserModal')),
-
 
 }
 
