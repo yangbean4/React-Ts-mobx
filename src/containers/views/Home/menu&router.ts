@@ -70,17 +70,7 @@ export const asynchronousComponents = {
     // 
     LeadContent: loadComponent(() => import(/* webpackChunkName: "LeadContent" */ '@views/LeadContent')),
     LeadContentAdd: loadComponent(() => import(/* webpackChunkName: "LeadContentAdd" */ '@views/LeadContent/LeadContentModal/Add')),
-    LeadContentEdit: loadComponent(() => import(/* webpackChunkName: "CreativeEdit" */ '@views/LeadContent/LeadContentModal/Edit')),
-    // Category Config
-    Scene: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Scene')),
-    SceneModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/Scene/SceneModal')),
-
-    Category: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/CreateAnalysis/CategoryConfig')),
-    CategoryModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/CreateAnalysis/CategoryConfig/CategoryModel')),
-
-    Task: loadComponent(() => import(/* webpackChunkName: "Users" */ '@views/Users')),
-    TaskModal: loadComponent(() => import(/* webpackChunkName: "UserModal" */ '@views/Users/UserModal')),
-
+    LeadContentEdit: loadComponent(() => import(/* webpackChunkName: "CreativeEdit" */ '@views/LeadContent/LeadContentModal/Edit'))
 }
 
 // 所有路由的key
@@ -599,98 +589,6 @@ export const routerAndMenu: IRouter[] = [
         isRoot: true,
         authName: 'Revenue Import',
     },
-
-    // ----------------------------------------------Creative Analysis
-    {
-        id: 10,
-        isMenu: true,
-        title: 'Creative Analysis',
-        icon: 'iconjiaoseshezhi',
-        authName: 'Creative Analysis',
-    },
-    // Category Config
-    {
-        id: 101,
-        pid: 10,
-        isMenu: true,
-        path: '/category',
-        title: 'Category Config',
-        component: 'Category',
-        exact: true,
-        authName: 'Creative Analysis-Category Config'
-    },
-    {
-        id: 1011,
-        pid: 101,
-        path: '/category/add',
-        title: 'Add Category',
-        component: 'CategoryModal',
-        isMenu: false
-    },
-    {
-        id: 1012,
-        pid: 101,
-        path: '/category/edit/:id',
-        title: 'Edit Category',
-        component: 'CategoryModal',
-        isMenu: false
-    },
-    // Scene Config
-    {
-        id: 102,
-        pid: 10,
-        isMenu: true,
-        path: '/scene',
-        title: 'Scene Config',
-        component: 'Scene',
-        exact: true,
-        authName: 'Creative Analysis-Scene Config'
-    },
-    {
-        id: 1021,
-        pid: 102,
-        path: '/scene/add',
-        title: 'Add Scene',
-        component: 'SceneModal',
-        isMenu: false
-    },
-    {
-        id: 1022,
-        pid: 102,
-        path: '/scene/edit/:id',
-        title: 'Edit Scene',
-        component: 'SceneModal',
-        isMenu: false
-    },
-
-    {
-        id: 103,
-        pid: 10,
-        isMenu: true,
-        path: '/task',
-        title: 'Task List',
-        component: 'Task',
-        exact: true,
-        authName: 'Creative Analysis-Task List'
-    },
-    {
-        id: 1031,
-        pid: 103,
-        path: '/task/add',
-        title: 'Add Task',
-        component: 'TaskModal',
-        isMenu: false
-    },
-    {
-        id: 1032,
-        pid: 103,
-        path: '/task/edit/:id',
-        title: 'Edit Task',
-        component: 'TaskModal',
-        isMenu: false
-    },
-    // ----------------------------------------------Creative Analysis
-
     // {
     //     id: 91,
     //     pid: 9,

@@ -19,11 +19,6 @@ export default {
     return http.post(`${basePath}uploadTemplate`, data || {})
   },
   uploadTemplateImage(data): Promise<any> {
-    return http.post(`${basePath}uploadTemplateImage`, data || {})
+    return http.post(`${basePath}uploadTemplateImage `, data || {})
   },
-
-  uploadFirstSceneImage(data): Promise<any> {
-    return http.post(`${basePath}uploadFirstScene`, data || {})
-  },
-
 }

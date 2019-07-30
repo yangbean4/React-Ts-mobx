@@ -186,6 +186,7 @@ class PID extends ComponentExt<IStoreProps> {
       })
 
       const editId = queryURL('editId')
+      debugger
       if (editId) {
         const index = this.thisDataList.findIndex(ele => ele.id.toString() === editId.toString())
         index !== -1 && this.editPid(index)
