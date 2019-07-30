@@ -109,7 +109,7 @@ class ConfigTable extends ComponentExt<IProps> {
                 this.hideRoleModalVisible()
                 break;
             case 'copy':
-                this.setTargetConfig({ ...this.targetConfig, config_version: copyTo, is_duplicate: 1 })
+                this.setTargetConfig({ ...this.targetConfig, config_version: copyTo, is_duplicate: 1, pkg_name })
                 this.goEdit(id, copyTo ? `?copyTo=${copyTo}` : undefined)
                 break;
             case 'edit':
