@@ -46,12 +46,12 @@ import FirstScene, { formItemClassName } from '@components/FirstScene'
 import React from 'react'
 import * as styles from './index.scss'
 import UploadFile, { UploadFileProps, FileWHT } from '@components/UploadFile'
-import { Icon, Row, Col, Select, Checkbox, Modal, Button, message } from 'antd'
+import { Icon, Row, Col, Select, Checkbox, Modal, Button, message,Form,Input } from 'antd'
 import MyIcon from '../Icon'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { observable, action, runInAction, observe } from 'mobx';
 import { observer } from 'mobx-react'
-
+import { FormComponentProps } from 'antd/lib/form'
 interface Iprop {
   value?: sceneList[]
   onChange?: (data: sceneList[]) => void
@@ -75,9 +75,9 @@ interface sceneType {
 }
 
 const copy = (onj) => JSON.parse(JSON.stringify(onj))
-
+const FormItem = Form.Item
 @observer
-class FirstScene extends React.Component<Iprop> {
+class FirstScene extends React.Component<Iprop & FormComponentProps> {
 
   private upLoadProps = {
     wht: {
@@ -86,9 +86,10 @@ class FirstScene extends React.Component<Iprop> {
     api: this.props.api,
   }
   private defaultList = {
+    id:null,
     scene_image_url: [],
     sen_category_scene_config_id: undefined,
-    is_scene: 1
+    is_scene: 0,
   }
 
   @observable
@@ -152,11 +153,11 @@ class FirstScene extends React.Component<Iprop> {
 
     const value = JSON.parse(JSON.stringify(this.props.value))
     const imgArr = value[listIndex].scene_image_url
-    if (imgArr.length > 1) {
+    // if (imgArr.length > 1) {
       imgArr.splice(imgIndex, 1)
       value[listIndex].scene_image_url = imgArr
       this.props.onChange(value)
-    }
+    // }
   }
 
   setType = (index, value) => {
@@ -173,7 +174,11 @@ class FirstScene extends React.Component<Iprop> {
 
 
   render() {
+    const { form } = this.props;
+    // debugger
+    const { getFieldDecorator } = form;
     const value = this.props.value || []
+    const len = value.length;
     return (
       <div className={styles.FirstScene}>
         {
@@ -229,19 +234,20 @@ class FirstScene extends React.Component<Iprop> {
                   </Checkbox>
                   </div>
                   <div>
-
                     <MyIcon
                       className={styles.dynamic}
                       type="icontianjia"
                       onClick={() => this.addList(index)}
                     />
                   </div>
+                  {len > 1 ?
                   <div>
                     <MyIcon
                       className={styles.dynamic}
                       type="iconjianshao"
                       onClick={() => this.removeList(index)} />
-                  </div>
+                  </div> : null
+                  }
                 </div>
               </div>
             )
@@ -271,7 +277,7 @@ class FirstScene extends React.Component<Iprop> {
 
 
 
-export default FirstScene
+export default Form.create<Iprop>()(FirstScene)
 
 export const formItemClassName = styles.formItemClassName
 

@@ -5,7 +5,7 @@ import { inject, observer } from 'mobx-react'
 import { observable, action } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
-import {match} from 'react-router-dom'
+import { match } from 'react-router-dom'
 // console.log(match)
 interface IStoreProps {
     getCategoryloading?: boolean
@@ -15,7 +15,8 @@ interface IStoreProps {
     pageSize?: number
     total?: number
     routerStore?: RouterStore,
-    match?:any
+    match?: any
+    handleTableChange?: (pagination: PaginationConfig) => void
 }
 
 interface IProps extends IStoreProps {
@@ -29,10 +30,11 @@ interface IProps extends IStoreProps {
             getCategoryloading,
             categoryList,
             getCategoryConfigDetail,
-            page, pageSize, total
+            page, pageSize, total,
+            handleTableChange
         } = categoryConfigStore;
         return {
-            categoryList, getCategoryConfigDetail,routerStore
+            page, pageSize, handleTableChange, total, getCategoryloading, categoryList, getCategoryConfigDetail, routerStore,
         }
     }
 )
@@ -44,7 +46,7 @@ class CategoryTable extends ComponentExt<IProps> {
     }
 
     componentDidMount() {
-        console.log(this.props.match)
+        // console.log(this.props.match)
         this.props.getCategoryConfigDetail()
     }
 
@@ -57,10 +59,10 @@ class CategoryTable extends ComponentExt<IProps> {
             page,
             pageSize,
             total,
+            handleTableChange
         } = this.props;
         return (
             <React.Fragment>
-
                 <Table<ICategoryConfigStore.IList>
                     className="center-table"
                     style={{ width: '100%' }}
@@ -75,9 +77,10 @@ class CategoryTable extends ComponentExt<IProps> {
                         total,
                         ...PageConfig
                     }}
+                    onChange={handleTableChange}
 
                 >
-                    <Table.Column<ICategoryConfigStore.IList> key="category_id" title="Category" dataIndex="category_id" width={200} />
+                    <Table.Column<ICategoryConfigStore.IList> key="category_name" title="Category" dataIndex="category_name" width={200} />
                     <Table.Column<ICategoryConfigStore.IList> key="scene" title="Scene" dataIndex="scene" />
 
                     <Table.Column<ICategoryConfigStore.IList>
@@ -87,7 +90,7 @@ class CategoryTable extends ComponentExt<IProps> {
                         render={(_, record) => (
                             <span>
                                 {
-                                    this.$checkAuth('Authorization-User Manage-Edit', [
+                                    this.$checkAuth('Creative Analysis-Category Config-Edit', [
                                         (<a key='form' href="javascript:;" onClick={() => this.modifyUser(record)}>
                                             <Icon type="form" />
                                         </a>)

@@ -9,8 +9,8 @@ import * as style from './index.scss'
 import { queryURL } from '@utils/index'
 
 interface TableProps {
-  onEdit: (index: number) => void
-  onCopy: (index: number) => void
+  onEdit: (index: any) => void
+  onCopy: (index: any) => void
   data: any[]
 }
 
@@ -76,7 +76,7 @@ class VcTable extends ComponentExt<TableProps> {
           width={120}
           render={(_, record, index) => (
             <span>
-              <a href="javascript:;" onClick={() => onEdit(index)}>
+              <a href="javascript:;" onClick={() => onEdit(record)}>
                 <Icon type="form" />
               </a>
               {
@@ -84,7 +84,7 @@ class VcTable extends ComponentExt<TableProps> {
                   <React.Fragment>
                     <Divider key='Divider1' type="vertical" />
 
-                    <a href="javascript:;" onClick={() => onCopy(index)}>
+                    <a href="javascript:;" onClick={() => onCopy(record)}>
                       <Icon type="copy" />
                     </a>
                   </React.Fragment>
@@ -186,6 +186,7 @@ class PID extends ComponentExt<IStoreProps> {
       })
 
       const editId = queryURL('editId')
+      // debugger
       if (editId) {
         const index = this.thisDataList.findIndex(ele => ele.id.toString() === editId.toString())
         index !== -1 && this.editPid(index)
@@ -210,15 +211,16 @@ class PID extends ComponentExt<IStoreProps> {
   }
 
   editPid = (index?) => {
-    const data = index === undefined ? this.targetCreative : this.thisDataList[index]
+    const data = index === undefined ? this.targetCreative : index;
+    debugger;
     runInAction('set_GJB', () => {
       this.GJB = data
     })
     this.toggleIsTable()
   }
 
-  onCopy = async (index: number) => {
-    await this.api.creative.copyCreative({ id: this.thisDataList[index].id })
+  onCopy = async (index: any) => {
+    await this.api.creative.copyCreative({ id: index.id })
     this.initDetail()
   }
   lastStep = () => {

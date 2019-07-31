@@ -3,6 +3,17 @@ import { ICategoryConfigStore as CategoryConfigStore } from './index'
 export as namespace ICategoryConfigStore
 export interface ICategoryConfigStore extends CategoryConfigStore { }
 
+export interface categoryIdList {
+    id?:number|string,
+    name?:string
+}
+
+export interface IList {
+    category_id?:number,
+    scene?:string,
+    Operate?:string|number
+}
+
 
 export interface SearchParams {
     category_id?: string,
@@ -25,3 +36,4 @@ export interface showCategoryParams{
     isdelete_number?:any[],
     screne_id?:any[]
 }
+

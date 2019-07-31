@@ -25,4 +25,8 @@ export default {
   categoryAppId(): Promise<any> {
     return http.post(`${basePath}categoryAppId`)
   },
+
+  getCategoryId(): Promise<any> {
+    return http.post(`/api/app/category `)
+  },
 }

@@ -11,7 +11,7 @@ export interface IScene {
     status?: 0 | 1
     category_name?: string
     status?: string
-
+    app_key_app_id?:string
     app_key?: string
     first_scene?: sceneItem[]
     category_id?: string
@@ -37,6 +37,12 @@ export interface ICategory {
     category_id?: string
     category_name?: string
     scene?: sceneType[]
+}
+
+
+export interface ICategoryLists {
+    id?:number,
+    name?:string
 }
 
 export interface sceneType {

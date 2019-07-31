@@ -5,7 +5,7 @@ import { Icon, Form, Input, Select, Button, message, Col, Row, DatePicker } from
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-let id: number = 0;
+let id:number = 0;
 const FormItem = Form.Item
 const InputGroup = Input.Group;
 const formItemLayout = {
@@ -34,8 +34,8 @@ interface IProps {
     getCategoryInfo: () => Promise<any>,
     setCategoryId: (params: number) => void
     getCategoryConfigDetail: () => Promise<any>,
-    addCategorySubmit: () => Promise<any>,
-    categoryIdList?: [],
+    addCategorySubmit: (flag: number) => Promise<any>,
+    categoryIdList?: ICategoryConfigStore.categoryIdList[],
     addCategory: ICategoryConfigStore.addCategoryParams
     changeAddCategory: (params: any) => void
     showCategoryParams: ICategoryConfigStore.showCategoryParams
@@ -66,25 +66,21 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private origin_param: ICategoryConfigStore.showCategoryParams = {}
 
-
+    @observable
     private tem_isdelete: any[] = [];
-
-
     private check_number(rule, value, callback) {
         var re = /^\d+$/;
-
         if (re.test(value)) {
             callback();
         } else {
             callback('code must be number');
         }
     };
-
+    @action
     change_tem_isdelete = (obj: any) => {
         // debugger;
         this.tem_isdelete.push(obj)
     }
-
 
     @action
     toggleLoading = () => {
@@ -92,33 +88,51 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     componentWillMount() {
-        this.init()
+        this.init();
     }
+
+    @action
     init = async () => {
-        const { routerStore } = this.props;
+        const { routerStore, category_id } = this.props;
         const routerId = routerStore.location.pathname.split('/').pop();
+        
+        console.log(routerId);
+
         if (routerId != 'add') {
             await this.props.setCategoryId(parseInt(routerId));
+            setImmediate(() => {
+                const {  showCategoryParams } = this.props;
+                id = showCategoryParams.number.length;
+                console.log(this.props.showCategoryParams);
+                runInAction('get', () => {
+                    this.temp_params = Object.assign({}, showCategoryParams);
+                    this.origin_param = Object.assign({}, showCategoryParams)
+                    let arr = this.temp_params.number.map((_, index) => index);
+                    this.props.form.setFieldsValue({
+                        keys: arr
+                    });
+                })
+            })
+
+        } else {
+            console.log(category_id)
+            if (!category_id) {
+                // routerStore.push('/category')
+                console.log(1)
+            }
+            setImmediate(() => {
+                runInAction('set', () => {
+                    this.props.form.setFieldsValue({
+                        keys: [0]
+                    });
+                })
+            })
         }
 
-        const { showCategoryParams } = this.props;
-        setImmediate(() => {
-            runInAction('set', () => {
-                this.temp_params = Object.assign({}, showCategoryParams)
-                this.origin_param = Object.assign({}, showCategoryParams)
-            })
-        })
-
-        id = showCategoryParams.number.length;
-        let arr = showCategoryParams.number.map((_, index) => index)
-
-        this.props.form.setFieldsValue({
-            keys: arr
-        });
     }
 
     componentDidMount() {
-        console.log('mount')
+        console.log(this.props.addCategory.category_id)
     }
     componentWillUnmount() {
         console.log(11)
@@ -130,19 +144,34 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
         if (e) {
             e.preventDefault()
         }
-        const { form, changeAddCategory } = this.props;
+        const { form, changeAddCategory, routerStore } = this.props;
+        const routerId = routerStore.location.pathname.split('/').pop();
         form.validateFields(
             async (err, values): Promise<any> => {
                 console.log(values);
                 if (!err) {
-                    let { codes, names, category_id, id, isdelete } = values;
+                    let { codes, names, category_id, id, isdelete, keys } = values;
                     let arr = [];
-                    for (let i in codes) {
+                    let flags = codes.some((val, idx) => {
+                        return codes.includes(val, idx + 1);
+                    })
+                    let flags_name = names.some((val, idx) => {
+                        return names.includes(val, idx + 1);
+                    })
+                    if (flags) {
+                        message.error('code is repeat');
+                        return
+                    }
+                    if (flags_name) {
+                        message.error('scren_name is repeat');
+                        return
+                    }
+
+                    for (let i in keys) {
                         let obj: myObj = {};
-                        obj.scene_code = codes[i];
-                        obj.scene_name = names[i];
-                        obj.id = id[i];
-                        obj.isdelete = isdelete[i];
+                        obj.scene_code = codes[keys[i]];
+                        obj.scene_name = names[keys[i]];
+                        obj.id = id[keys[i]] || '';
                         arr.push(obj);
                     }
                     arr = arr.concat(this.tem_isdelete);
@@ -151,12 +180,17 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
                         data: arr
                     }
 
+                    // debugger
                     this.toggleLoading();
                     try {
                         changeAddCategory(datas);
-                        this.props.addCategorySubmit()
+                        if (routerId == 'add') {
+                            await this.props.addCategorySubmit(0)
+                        } else {
+                            await this.props.addCategorySubmit(1)
+                        }
                     } catch (err) {
-                        //console.log(err);
+                        console.log(err);
                     }
                     this.toggleLoading()
                 }
@@ -166,6 +200,7 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
 
     remove = (k) => {
         const { form } = this.props;
+
         // can use data-binding to get
         const keys = form.getFieldValue('keys');
         // We need at least one passenger
@@ -175,26 +210,40 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
         form.setFieldsValue({
             keys: keys.filter(key => key !== k),
         });
+
+        if (this.temp_params.screne_id[k]) {
+            runInAction('set_delete', () => {
+
+                let delete_obj = {
+                    "id": this.temp_params.screne_id[k],
+                    "scene_code": this.temp_params.scene_code[k],
+                    "scene_name": this.temp_params.scene_name[k],
+                    "is_delete": 1
+                }
+                //将删除的数据存入新的数组中
+                this.change_tem_isdelete(delete_obj)
+            })
+        }
+
     }
 
     add = (k) => {
         const { form } = this.props;
-        // can use data-binding to get
         const keys = form.getFieldValue('keys');
-        const index = keys.findIndex(key => key === k)
-        // const nextKeys = keys.concat(id++);
+        const index = keys.findIndex(key => key === k);
+        console.log(keys)
         const nextKeys = [...keys]
-        nextKeys.splice(index + 1, 0, id++)
+        nextKeys.splice(index + 1, 0, ++id)
+        // debugger;
         form.setFieldsValue({
             keys: nextKeys,
         });
     }
 
     render() {
-        const { form, categoryIdList, addCategory, showCategoryParams, category_id } = this.props
+        const { form, categoryIdList, addCategory, showCategoryParams, category_id, routerStore } = this.props
         const { getFieldDecorator, getFieldValue } = form;
-        let a = showCategoryParams.number;
-        // console.log(a)
+        const routerId = routerStore.location.pathname.split('/').pop();
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -213,7 +262,9 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
         };
         getFieldDecorator('keys', { initialValue: this.temp_params.number || [] });
         const keys = getFieldValue('keys');
+        // console.log(keys)
         const formItems = keys.map((k, index) => (
+            // console.log(k)
             <span key={k}>
                 <Form.Item
                     {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
@@ -223,23 +274,23 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
                     {getFieldDecorator(`codes[${k}]`,
                         {
                             initialValue: this.temp_params.scene_code[k],
-                            validateTrigger: ['onChange', 'onBlur'],
+                            validateTrigger: [ 'onBlur'],
                             rules: [
                                 {
                                     required: true,
                                     whitespace: true,
                                     message: "required",
                                 }
-                                , {
-                                    validator: this.check_number,
-                                }
+                                // , {
+                                //     validator: this.check_number,
+                                // }
                             ],
-                        })(<Input placeholder="code" style={{ width: '20%', marginRight: 8, marginBottom: 0 }} />)}
+                        })(<Input placeholder="code" autoComplete="off" style={{ width: '20%', marginRight: 8, marginBottom: 0 }} />)}
 
                     <Form.Item style={{ display: 'inline-block', width: '60%', marginBottom: 0 }}>
                         {getFieldDecorator(`names[${k}]`, {
                             initialValue: this.temp_params.scene_name[k],
-                            validateTrigger: ['onChange', 'onBlur'],
+                            validateTrigger: ['onBlur'],
                             rules: [
                                 {
                                     required: true,
@@ -247,7 +298,7 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
                                     message: "require",
                                 },
                             ],
-                        })(<Input placeholder="scene" style={{ width: '60%', marginRight: 8 }} />)}
+                        })(<Input placeholder="scene" autoComplete="off"  style={{ width: '60%', marginRight: 8 }} />)}
                         <Icon style={{ margin: 5 }}
                             className="dynamic-delete-button"
                             type="plus-circle"
@@ -279,7 +330,7 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
                 <Form className={styles.userModal} >
                     <FormItem {...formItemLayout} label="Category">
                         {getFieldDecorator('category_id', {
-                            initialValue: category_id,
+                            initialValue: routerId == 'add'? '' : category_id,
                             rules: [
                                 {
                                     required: true, message: "Required"
@@ -288,11 +339,11 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
                         })(<Select
                             allowClear
                             showSearch
-                            disabled={addCategory.category_id ? false : true}
+                            disabled={routerId != 'add' ? true : false}
                         >
                             {categoryIdList.map(c => (
-                                <Select.Option {...c}>
-                                    {c.key}
+                                <Select.Option key={c.name} value={c.id}>
+                                    {c.name}
                                 </Select.Option>
                             ))}
                         </Select>)}

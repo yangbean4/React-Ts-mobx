@@ -54,7 +54,8 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
 
 
     defaultValue = () => {
-        return [new Date(), new Date()].map(val => moment(val, dateFormat))
+        let d = new Date(new Date().setDate(new Date().getDate() - 1))
+        return [d, d].map(val => moment(val, dateFormat))
     }
 
     submit = (e?: React.FormEvent<any>): void => {
@@ -75,10 +76,16 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             }
         )
     }
+    onKeyup = (e)=> {
+        if(e.nativeEvent.keyCode === 13) {
+          this.submit();
+        }
+    }
 
     componentDidMount() {
         this.props.getGeo();
         this.props.getPkgname();
+        this.submit();
     }
 
     render() {
@@ -91,14 +98,14 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                         <FormItem label="App ID" className={styles.searchInput}>
                             {getFieldDecorator('app_id', {
                                 initialValue: filters.app_id
-                            })(<Input autoComplete="off" />)}
+                            })(<Input autoComplete="off" onKeyUp={this.onKeyup}  />)}
                         </FormItem>
                     </Col>
                     <Col span={span}>
                         <FormItem label="Task Name" className={styles.searchInput}>
                             {getFieldDecorator('task_name', {
                                 initialValue: filters.task_name
-                            })(<Input autoComplete="off" />)}
+                            })(<Input autoComplete="off" onKeyUp={this.onKeyup}  />)}
                         </FormItem>
                     </Col>
                     <Col span={span}>

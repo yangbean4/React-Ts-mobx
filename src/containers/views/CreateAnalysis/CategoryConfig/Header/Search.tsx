@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
-import { observable, action } from 'mobx'
+import { observable, action, runInAction } from 'mobx'
 import { Form, Input, Select, Row, Col, Button } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
@@ -21,13 +21,14 @@ interface IStoreProps {
     changeFilter?: (params: ICategoryConfigStore.SearchParams) => void
     filters?: ICategoryConfigStore.SearchParams,
     categoryList?:[],
-    categoryIdList?:[],
+    getList?:() => Promise<any>
+    categoryIdList?:[ICategoryConfigStore.categoryIdList],
 }
 
 @inject(
     (store: IStore): IStoreProps => {
-        const { changeFilter ,filters,categoryList,categoryIdList} = store.categoryConfigStore
-        return { changeFilter,filters,categoryList,categoryIdList}
+        const { changeFilter ,filters,categoryList,categoryIdList,getList} = store.categoryConfigStore
+        return { changeFilter,filters,categoryList,categoryIdList,getList}
     }
 )
 @observer
@@ -38,6 +39,16 @@ class CategorySearch extends ComponentExt<IStoreProps & FormComponentProps> {
     @action
     toggleLoading = () => {
         this.loading = !this.loading
+    }
+    componentDidMount() {
+        this.init();
+    }
+
+    init = async()=>{
+        await this.props.getList();
+        this.props.changeFilter({
+            scene:''
+        })
     }
 
     submit = (e?: React.FormEvent<any>): void => {
@@ -58,9 +69,16 @@ class CategorySearch extends ComponentExt<IStoreProps & FormComponentProps> {
             }
         )
     }
+    onKeyup = (e)=> {
+        if(e.nativeEvent.keyCode === 13) {
+          this.submit();
+        }
+    }
 
     render() {
-        const { form, filters, categoryIdList } = this.props
+        const { form, filters, categoryIdList } = this.props;
+        // debugger
+        console.log(categoryIdList)
         const { getFieldDecorator } = form
         return (
             <Form {...layout} >
@@ -71,14 +89,16 @@ class CategorySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                                 initialValue: filters.category_id
                             })(
                                 <Select
+                                    mode="multiple"
                                     allowClear
                                     showSearch
                                     getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
-                                    {categoryIdList.map(c => (
-                                        <Select.Option {...c}>
-                                            {c.key}
+
+                                    {categoryIdList.map((c,index) => (
+                                        <Select.Option key={c.name} value={c.id}>
+                                            {c.name}
                                         </Select.Option>
                                     ))}
                                 </Select>
@@ -88,8 +108,8 @@ class CategorySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                     <Col span={span}>
                         <FormItem label="Scene" className='minInput'>
                             {getFieldDecorator('scene', {
-                                initialValue: filters.Scene
-                            })(<Input autoComplete="off" />)}
+                                initialValue: filters.scene
+                            })(<Input autoComplete="off" onKeyUp={this.onKeyup}  />)}
                         </FormItem>
                     </Col>
 

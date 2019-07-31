@@ -86,6 +86,8 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     changeIgePkgname = (value: string) => {
         this.selectIgePkgname = this.props.optionListDb.IgePkgname[value];
+        debugger
+        console.log(this.selectIgePkgname)
         this.props.form.setFieldsValue({
             app_id: '',
             pkg_name: '',
@@ -99,13 +101,15 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
      * 通过appid 获取ccene列表
      */
     @action
-    getSceneList = async (appid: string) => {
-        const res = await this.api.scene.getScenes({
-            app_id: appid,
-            status: 1
-        })
+    getSceneList = async (app_key: string) => {
+        const res = await this.api.scene.categoryAppId()
+        console.log(res)
+
+        let tem = res.data;
+        tem = tem.find(n => n.app_key === app_key);
         runInAction('SET_SCENELIST', () => {
-            this.sceneList = res.data;
+            this.sceneList = tem.scene || [];
+            console.log(this.sceneList)
         })
     }
 
@@ -137,13 +141,18 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
      * appid变更后获取有关数据
      */
     @action
-    changeAppid = (app_id: string) => {
-        const o = this.selectIgePkgname.find(v => v.app_id === app_id) || {};
+    changeAppid = (app_key: string) => {
+        // this.props.optionListDb.IgePkgname;
+        debugger
+        // const temp = JSON.parse(JSON.stringify(this.props.optionListDb));
+        // console.log(temp)
+        const o = this.selectIgePkgname.find(v => v.app_key == app_key) || {};
+        this.sceneList = o.scene;
         Promise.all([
-            this.getSceneList(o.app_id),
-            this.getPkgnameList(o.app_id)
+            // this.getSceneList(app_key),
+            this.getPkgnameList(app_key)
         ]);
-        this.addSceneModalAppKey = o.app_key;
+        this.addSceneModalAppKey = app_key;
         this.props.form.setFieldsValue({
             pkg_name: '',
             scene_id: ''
@@ -190,11 +199,13 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
         const { routerStore, createTask, form } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
+                console.log(values)
                 if (!err) {
                     this.toggleLoading()
                     try {
                         let data = { message: '' }
-                        values.date = values.date.map(m => m.format(dateFormat)).join(',')
+                        values.date = values.date.map(m => m.format('YYYY-MM-DD')).join(' - ');
+                        console.log(values.date);
                         data = await createTask(values)
                         message.success(data.message)
                         routerStore.push('/task')
@@ -214,7 +225,7 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
     render() {
         const { task, form, optionListDb } = this.props
         const { getFieldDecorator } = form
-
+        // debugger
         return (
             <div className='sb-form'>
                 <Form className={styles.taskModal} >
@@ -253,7 +264,7 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
                         )}
                     </FormItem>
                     <FormItem {...formItemLayout} label="APP ID">
-                        {getFieldDecorator('app_id', {
+                        {getFieldDecorator('app_key', {
                             initialValue: task.app_id,
                             rules: [
                                 {
@@ -269,7 +280,7 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {this.selectIgePkgname.map(c => (
-                                    <Select.Option key={c.app_key} value={c.app_id}>
+                                    <Select.Option key={c.app_key} value={c.app_key}>
                                         {c.t}
                                     </Select.Option>
                                 ))}
@@ -317,7 +328,7 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
                             >
                                 {this.sceneList.map(c => (
                                     <Select.Option key={c.id} value={c.id}>
-                                        {c.scene_name}
+                                        {c.id_name}
                                     </Select.Option>
                                 ))}
                             </Select>

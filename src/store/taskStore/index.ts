@@ -54,7 +54,9 @@ export class TaskStore extends StoreExt {
     total: number = 0
 
     @observable
-    filters: ITaskStore.SearchParams = {}
+    filters: ITaskStore.SearchParams = {
+        
+    }
 
     @observable
     optionListDb: ITaskStore.OptionListDb = {
@@ -81,7 +83,8 @@ export class TaskStore extends StoreExt {
 
     @action
     getOptionListDb = async () => {
-        const keys = Object.keys(this.optionListDb).filter(k => k !== 'PkgnameData')
+        const keys = Object.keys(this.optionListDb).filter(k => k !== 'PkgnameData');
+        debugger;
         const promiseAll = keys.map(key => 'Country' === key
             ? this.api.appGroup[`get${key}`]()
             : this.api.task[`get${key}`]())

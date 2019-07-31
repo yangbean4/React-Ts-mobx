@@ -22,16 +22,16 @@ const layout = {
 interface IStoreProps {
   changeFilter?: (params: ISceneStore.SearchParams) => void
   filters?: ISceneStore.SearchParams
-  getCategory?: () => Promise<any>
-  categoryList?: ISceneStore.ICategory[]
+  getCategoryIdLists?: () => Promise<any>
+  IcategorIdList?: ISceneStore.ICategoryLists[]
 }
 
 
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { changeFilter, filters, getCategory, categoryList } = store.sceneStore
-    return { changeFilter, filters, getCategory, categoryList }
+    const { changeFilter, filters, getCategoryIdLists, IcategorIdList } = store.sceneStore
+    return { changeFilter, filters, getCategoryIdLists, IcategorIdList }
   }
 )
 @observer
@@ -64,7 +64,12 @@ class SceneSearch extends ComponentExt<IStoreProps & FormComponentProps> {
     )
   }
   componentWillMount() {
-    this.props.getCategory()
+    this.props.getCategoryIdLists()
+  }
+  onKeyup = (e)=> {
+      if(e.nativeEvent.keyCode === 13) {
+        this.submit();
+      }
   }
 
   render() {
@@ -77,7 +82,7 @@ class SceneSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <FormItem label="App ID">
               {getFieldDecorator('app_id', {
                 initialValue: filters.app_id
-              })(<Input autoComplete="off" />)}
+              })(<Input autoComplete="off" onKeyUp={this.onKeyup} />)}
             </FormItem>
           </Col>
           <Col span={span}>
@@ -92,9 +97,9 @@ class SceneSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
-                  {this.props.categoryList.map(c => (
-                    <Select.Option value={c.app_id} key={c.app_id} >
-                      {c.app_key_app_id}
+                  {this.props.IcategorIdList.map(c => (
+                    <Select.Option value={c.id} key={c.name} >
+                      {c.name}
                     </Select.Option>
                   ))}
                 </Select>

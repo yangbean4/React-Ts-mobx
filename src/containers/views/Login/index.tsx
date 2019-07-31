@@ -51,6 +51,7 @@ class Login extends React.Component<IStoreProps & FormComponentProps> {
                         const { authTree } = await this.props.login({ user_name, pwd, captcha })
                         await this.props.getSidebar()
                         const go = menu.find(me => authTree[me.authName] && !!me.path)
+                        debugger;
                         if (go) {
                             this.props.routerStore.replace(go.path)
                         } else {

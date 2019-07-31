@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Table, Icon, Divider, Modal, Row, Col, Input, Button } from 'antd'
+import { Table, Icon, Divider, Modal, Row, Col, Input, Button, Tooltip } from 'antd'
 import { PaginationConfig } from 'antd/lib/pagination'
 import { inject, observer } from 'mobx-react'
 import { observable, action, runInAction } from 'mobx'
@@ -8,6 +8,7 @@ import { ComponentExt } from '@utils/reactExt'
 import { statusEnum } from '../web.config'
 
 import * as styles from '../index.scss'
+console.log(styles)
 
 interface IStoreProps {
     getTaskLoading?: boolean
@@ -80,8 +81,9 @@ class AppGroupTable extends ComponentExt<IProps> {
      * 进入预览页面
      */
     showSceneImage = (task: ITaskStore.ITaskForList) => {
-        const config = statusEnum.Waiting === task.task_process_status ? task.sen_scene_img_list : task.sen_scene_img_config
+        const config = statusEnum.Waiting === task.task_process_status ? task.sen_scene_img_list : task.sen_scene_img_config;
         this.props.setSceneViewConfig(config);
+        // debugger
         this.props.routerStore.push(`/task/sceneImage`)
     }
     /**
@@ -89,9 +91,11 @@ class AppGroupTable extends ComponentExt<IProps> {
      */
     startTask = async (task: ITaskStore.ITaskForList) => {
         await this.api.task.startTask({ id: task.id });
-        this.props.setTaskAttr(task, {
-            task_process_status: statusEnum.Waiting
-        });
+        this.props.getTaskList()
+        // this.props.setTaskAttr(task, {
+        //     task_process_status: statusEnum.Waiting
+        // });
+
     }
 
     /**
@@ -102,10 +106,11 @@ class AppGroupTable extends ComponentExt<IProps> {
             taskId: task.id,
             status: statusEnum.Pause
         });
-
+        // this.props.getTaskList()
         this.props.setTaskAttr(task, {
             task_process_status: statusEnum.Pause
         });
+
 
     }
 
@@ -181,12 +186,18 @@ class AppGroupTable extends ComponentExt<IProps> {
                     <Table.Column<ITaskStore.ITaskForList> key="app_id" title="App ID" dataIndex="app_id" width={200} />
                     <Table.Column<ITaskStore.ITaskForList> key="scene_name" title="Scene Name" dataIndex="scene_name" width={200} />
                     <Table.Column<ITaskStore.ITaskForList> key="geo" title="GEO" dataIndex="geo" width={100} />
-                    <Table.Column<ITaskStore.ITaskForList> key="date" title="Task Date" dataIndex="date" width={200} />
+                    <Table.Column<ITaskStore.ITaskForList> key="date" title="Task Date" dataIndex="date" width={200}
+                    render={(_)=>(
+                        <Tooltip placement="leftBottom" title={_}>
+                            <div title={_} className={styles.colClass}>{_}</div>
+                        </Tooltip>
+                    )}
+                    />
                     <Table.Column<IAccountStore.IAccount>
                         key="task_process_status"
                         title="Status"
                         dataIndex="task_process_status"
-                        width={100}
+                        width={200}
                         render={(_) => (
                             // statusOption.find(item => item.value === _).key
                             statusEnum[_]
@@ -201,7 +212,9 @@ class AppGroupTable extends ComponentExt<IProps> {
                         width={200}
                         render={(_, task) => (
                             <div>
-                                {_}
+                                <Tooltip placement="leftBottom" title={_}>
+                                    <div title={_} className={styles.colClass}>{_}</div>
+                                </Tooltip>
                                 <a className={styles.remarkBtn} onClick={() => this.showEditRemarkModal(task)}>
                                     <Icon type="edit" theme="filled" />
                                 </a>

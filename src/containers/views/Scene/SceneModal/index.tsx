@@ -137,10 +137,18 @@ class SceneModal extends ComponentExt<IProps & FormComponentProps> {
         const { routerStore, createScene, modifyScene, form } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
+                console.log(values);
+                debugger
                 if (!err) {
+                    if(!values.first_scene[0].scene_image_url || !values.first_scene[0].sen_category_scene_config_id){
+                        message.error('please select first scene!');
+                        return;
+                    }
+
                     this.toggleLoading()
                     try {
                         let data = { message: '' }
+                        debugger
                         if (this.typeIsAdd) {
                             data = await createScene(values)
                         } else {
@@ -162,7 +170,7 @@ class SceneModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     render() {
-        const { form, categoryList, isInModal, appKey } = this.props
+        const { form, categoryList, isInModal, appKey,routerStore } = this.props
         const { getFieldDecorator } = form
         const {
             app_key = appKey || undefined,
@@ -170,10 +178,26 @@ class SceneModal extends ComponentExt<IProps & FormComponentProps> {
             category_id = undefined,
             status = 1,
             first_scene = [{}]
-        } = this.sceneTarget
+        } = this.sceneTarget;
+        const routerId = routerStore.location.pathname.toString().split('/').pop()
+        const Id = Number(routerId) || '';
         return (
             <div className='sb-form'>
                 <Form className={styles.sceneModal} {...formItemLayout}>
+
+                {Id ?
+                    <FormItem label="Scene ID">
+                    {getFieldDecorator('Id', {
+                        initialValue: Id,
+                        rules: [
+                            {
+                                required: true, message: "Required"
+                            }
+                        ]
+                    })(<Input autoComplete="off" disabled={true} />)}
+                </FormItem>
+                    :null}
+                
                     <FormItem label="Status" style={{ display: isInModal ? 'none' : 'block' }}>
                         {getFieldDecorator('status', {
                             initialValue: status,
@@ -208,7 +232,12 @@ class SceneModal extends ComponentExt<IProps & FormComponentProps> {
                             <React.Fragment>
                                 <FormItem label="APP ID" className='app_id'>
                                     {getFieldDecorator('app_key', {
-                                        initialValue: app_key
+                                        initialValue: app_key,
+                                        rules: [
+                                            {
+                                                required: true, message: "Required"
+                                            }
+                                        ]
                                     })(
                                         <Select
                                             allowClear
@@ -249,7 +278,7 @@ class SceneModal extends ComponentExt<IProps & FormComponentProps> {
                         ) : (
                                 <React.Fragment>
                                     <FormItem label="APP ID">
-                                        <Input disabled value={this.sceneTarget.app_id} />
+                                        <Input disabled value={this.sceneTarget.app_key_app_id} />
                                     </FormItem>
                                     <FormItem label="Category">
                                         <Input disabled value={this.sceneTarget.category_name} />

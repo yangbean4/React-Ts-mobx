@@ -4,7 +4,11 @@ import { StoreExt } from '@utils/reactExt'
 import { number } from 'prop-types';
 import { getEnabledCategories } from 'trace_events';
 import { async } from 'q';
-
+import { value } from '@views/Creative/CreativeModal/Edit/index.scss';
+import { message } from 'antd';
+import { asCreateObservableOptions } from 'mobx/lib/internal';
+import { getMaxListeners } from 'cluster';
+import { routerStore } from './../'
 export class CategoryConfigStore extends StoreExt {
     /**
      * 加载Category时的loading
@@ -61,7 +65,9 @@ export class CategoryConfigStore extends StoreExt {
 
 
     @observable
-    categoryIdList = [];
+    categoryIdList: ICategoryConfigStore.categoryIdList[] = [
+        
+    ];
     /**
     * 加载Category时的loading
     *
@@ -69,8 +75,6 @@ export class CategoryConfigStore extends StoreExt {
     * @memberof CategoryConfig
     */
 
-    @observable
-    IList: any[] = [];
 
     @observable
     filters: ICategoryConfigStore.SearchParams = {}
@@ -95,6 +99,19 @@ export class CategoryConfigStore extends StoreExt {
         screne_id: []
     }
 
+    @action
+    getList = async () => {
+        try {
+            const res = await this.api.categoryConfig.getList();
+            console.log(res.data)
+            runInAction('getList', () => {
+                this.categoryIdList = res.data;
+            })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     //获取详情
     @action
     getCategoryConfigDetail = async () => {
@@ -103,18 +120,15 @@ export class CategoryConfigStore extends StoreExt {
             const res = await this.api.categoryConfig.getDetail({ page: this.page, pageSize: this.pageSize, ...this.filters });
             runInAction('SET_CATAGORYLIST', () => {
                 this.categoryList = res.data;
-                for (let i in res.data) {
-                    this.categoryIdList.push({
-                        key: res.data[i].category_name,
-                        value: res.data[i].category_id
-                    })
-                }
-                console.log(this.categoryIdList);
                 this.total = res.total;
+            })
+            runInAction('HIDE_CATAGORYLIST', () => {
+                this.getCategoryloading = false
             })
         } catch (err) {
             console.log(err)
         }
+
 
     }
 
@@ -133,9 +147,10 @@ export class CategoryConfigStore extends StoreExt {
             // let isdelete_number = [];
             let screne_id = [];
             for (let i = 0; i < datas.length; i++) {
+                const code = datas[i].scene_code;
                 isdelete_number.push('0');
                 arrNumber.push(i);
-                scene_code.push(datas[i].scene_code.toString())
+                scene_code.push((code == 0 || code) ? code.toString() :'')
                 scene_name.push(datas[i].scene_name);
                 screne_id.push(datas[i].id);
             }
@@ -166,10 +181,24 @@ export class CategoryConfigStore extends StoreExt {
 
     @action
 
-    addCategorySubmit = async () => {
+    addCategorySubmit = async (flag: number) => {
+        console.log(this.addCategory);
         try {
-            const res = await this.api.categoryConfig.addCategory(this.addCategory);
-            console.log(res);
+            if (flag == 0) {
+                const res = await this.api.categoryConfig.addCategory(this.addCategory);
+                if(res.errorcode == 0){
+                    message.success(res.message);
+                    routerStore.push('/category')
+                }
+            } else {
+                const res = await this.api.categoryConfig.editCategory(this.addCategory);
+                console.log(res);
+                if(res.errorcode == 0){
+                    message.success(res.message)
+                    routerStore.push('/category')
+                }
+            }
+
         }
         catch (err) {
             console.log(err)
@@ -191,7 +220,23 @@ export class CategoryConfigStore extends StoreExt {
     @action
     changeAddCategory = async (data) => {
         this.addCategory = data;
-        this.addCategorySubmit();
+        // this.addCategorySubmit();
+    }
+
+    @action
+    changePageSize = (pageSize: number) => {
+        this.pageSize = pageSize
+        this.getCategoryConfigDetail()
+    }
+
+    handleTableChange = (pagination: PaginationConfig) => {
+        const { current, pageSize } = pagination
+        if (current !== this.page) {
+            this.changepage(current)
+        }
+        if (pageSize !== this.pageSize) {
+            this.changePageSize(pageSize)
+        }
     }
 
 }

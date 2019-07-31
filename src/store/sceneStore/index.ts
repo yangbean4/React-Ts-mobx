@@ -23,6 +23,11 @@ export class SceneStore extends StoreExt {
     @observable
     categoryList: ISceneStore.ICategory[] = []
 
+    @observable
+    IcategorIdList:ISceneStore.ICategoryLists[] = [];
+
+
+
     /**
      * table page
      *
@@ -114,19 +119,28 @@ export class SceneStore extends StoreExt {
         this.changepage(1)
     }
 
+    @action
+    getCategoryIdLists = async () => {
+        const res = await this.api.scene.getCategoryId();
+        runInAction('set', () => {
+            this.IcategorIdList = res.data;
+        })
+        return res.data
+    }
+
 
 
     @action
     getCategory = async () => {
-        if (this.categoryList.length) {
-            return this.categoryList
-        } else {
+        // if (this.categoryList.length) {
+        //     return this.categoryList
+        // } else {
             const res = await this.api.scene.categoryAppId()
             runInAction('set', () => {
                 this.categoryList = res.data
             })
             return res.data
-        }
+        // }
 
     }
 

@@ -624,7 +624,7 @@ export const routerAndMenu: IRouter[] = [
         id: 1011,
         pid: 101,
         path: '/category/add',
-        title: 'Add Category',
+        title: 'Add',
         component: 'CategoryModal',
         isMenu: false
     },
