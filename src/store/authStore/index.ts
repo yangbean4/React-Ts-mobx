@@ -8,15 +8,16 @@ import { COOKIE_KEYS, LOCALSTORAGE_KEYS } from '@constants/index'
 const getAuthTree = (permission: string[]) => {
     const target = {}
     const addAuth = (menu, pre?) => {
-        menu.forEach(item => {
+        const childrenAuth = menu.map(item => {
             const { name, children, id } = item
             const key = pre ? `${pre}-${name}` : name
-            target[key] = permission.includes(id)
-            if (children && children.length) {
-                addAuth(children, key)
-            }
+            const auth = children && children.length ? addAuth(children, key).hasAuth : permission.includes(id)
+            return target[key] = auth
         })
-        return target
+        return {
+            target,
+            hasAuth: childrenAuth.some(ele => ele === true),
+        }
     }
     return addAuth
 }
@@ -59,7 +60,7 @@ export class AuthStore extends StoreExt {
         }
 
         const { permission, menu } = userInfo
-        const authTree = getAuthTree(permission)(menu || [])
+        const authTree = getAuthTree(permission)(menu || []).target
         localStorage.setItem(LOCALSTORAGE_KEYS.AUTHTARGET, JSON.stringify(authTree))
 
         this.setUserInfo(userInfo)
