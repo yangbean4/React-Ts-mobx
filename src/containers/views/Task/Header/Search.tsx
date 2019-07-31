@@ -85,7 +85,7 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
     componentDidMount() {
         this.props.getGeo();
         this.props.getPkgname();
-        this.submit();
+        // this.submit();
     }
 
     render() {
@@ -168,7 +168,7 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                     <Col span={span}>
                         <FormItem label="Date">
                             {getFieldDecorator('date', {
-                                initialValue: this.defaultValue()
+                                initialValue: ''
                             })(<RangePicker format={dateFormat} />)}
                         </FormItem>
                     </Col>

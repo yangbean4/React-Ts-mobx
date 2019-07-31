@@ -23,7 +23,6 @@ class SceneModal extends ComponentExt<IProps & FormComponentProps> {
 
     componentWillMount() {
         if (!this.props.sceneImageConfig) {
-            debugger
             this.props.routerStore.push(`/task`)
         }
     }

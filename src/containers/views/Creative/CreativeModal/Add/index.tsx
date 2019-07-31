@@ -569,7 +569,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         }
 
         const theVideoUrlPropsForIVEOffline = this.getUploadprops(this.api.creative.uploadZip, {
-            size: 5000
+            size: 5 * 1024
         }, {
                 type: 9,
                 is_online: 0,
@@ -577,7 +577,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             }, '.zip')
 
         const theVideoUrlPropsForIVEOnline = this.getUploadprops(this.api.creative.uploadZip, {
-            size: 4000
+            size: 4 * 1024
         }, {
                 type: 9,
                 is_online: 1,
@@ -587,7 +587,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         const theVideoUrlPropsForVideoOrIge = this.getUploadprops(this.api.creative.uploadVideo, {
             ...getScale(this.videoType),
             time: 30,
-            size: 4000
+            size: 4 * 1024
         }, {
                 type: this.useCreativeType === 2 ? 3 : 4,
                 video_type: this.videoType === 'portrait' ? 2 : 1,
@@ -611,7 +611,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         const igeLeadVideoUrlProps = this.getUploadprops(this.api.creative.uploadVideo, {
             ...getScale(this.videoType),
             time: 8,
-            size: 1000
+            size: 1 * 1024
         }, {
                 type: 5,
                 video_type: this.videoType === 'portrait' ? 2 : 1,
@@ -641,7 +641,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             width: 1,
             height: 1,
             isScale: true,
-            size: 4000
+            size: 4 * 1024
         }, {
                 type: 8,
                 // video_type: this.videoType === 'portrait' ? 2 : 1,

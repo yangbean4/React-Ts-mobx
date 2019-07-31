@@ -141,16 +141,17 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
      * appid变更后获取有关数据
      */
     @action
-    changeAppid = (app_key: string) => {
+    changeAppid = (app_key: string,option) => {
         // this.props.optionListDb.IgePkgname;
         debugger
         // const temp = JSON.parse(JSON.stringify(this.props.optionListDb));
         // console.log(temp)
+        console.log(option)
         const o = this.selectIgePkgname.find(v => v.app_key == app_key) || {};
         this.sceneList = o.scene;
         Promise.all([
             // this.getSceneList(app_key),
-            this.getPkgnameList(app_key)
+            this.getPkgnameList(option.key)
         ]);
         this.addSceneModalAppKey = app_key;
         this.props.form.setFieldsValue({
@@ -280,7 +281,7 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {this.selectIgePkgname.map(c => (
-                                    <Select.Option key={c.app_key} value={c.app_key}>
+                                    <Select.Option key={c.app_id} value={c.app_key}>
                                         {c.t}
                                     </Select.Option>
                                 ))}
