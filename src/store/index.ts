@@ -49,3 +49,9 @@ export { default as leadContentStore } from './leadContentStore'
 export { default as revenueStore } from './revenueStore'
 
 export { default as offerQueryStore } from './offerQueryStore'
+
+export { default as taskStore } from './taskStore'
+
+export { default as sceneStore } from './sceneStore'
+
+export { default as categoryConfigStore } from './CategoryConfig'

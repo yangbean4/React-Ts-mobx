@@ -173,7 +173,7 @@ class UploadFile extends React.Component<UploadFileProps> {
           message.error(`Failure，The file size cannot exceed ${msg}!`);
         }
         // && !isVideo
-        if (isHtml && isLt2M && !isZip && whs) {
+        if (isHtml && isLt2M && !isZip && ((whs.width && whs.height) || whs.isScale) || Array.isArray(whs.WH_arr)) {
           const { width, height, isScale = false, WH_arr } = whs;
           return testSize(file, whs, isVideo ? 'video' : 'img').catch(() => {
             let msg = isScale ? `Please upload ${fileName} at ${width}/${height}` : `Please upload ${fileName} at ${width}*${height}px`

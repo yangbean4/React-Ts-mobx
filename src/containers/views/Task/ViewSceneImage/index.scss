@@ -1,0 +1,29 @@
+.viewModal {
+    background-color: #fff;
+    width: 100%;
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0px 2px 20px 0px rgba(52,57,87,0.1);
+}
+
+.imageList {
+    margin-bottom: 10px;
+}
+
+.imagelistImg {
+    width: 180px;
+    height: 101px;
+    margin-right: 10px;
+    border-radius: 2px;
+    background-color: #fafbff;
+    text-align: center;
+    :global(img) {
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+.imageInfo {
+    :global(.ant-checkbox-wrapper-disabled span) {
+        color: #645e84;
+    }
+}

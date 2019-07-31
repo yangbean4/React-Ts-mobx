@@ -18,9 +18,12 @@ declare interface IStore {
     globalStore: IGlobalStore.GlobalStore
     routerStore: RouterStore,
     logsStore: ILogsStore.LogsStore,
-    permissionStore: IPermissionStore.PermissionStore,
+    permissionStore: IPermissionStore.PermissionStore
     customStore: ICustomStore.CustomStore
     templateStore: ITemplateStore.TemplatesStore
     configStore: IConfigStore.ConfigStore
     leadContentStore: ILeadContentStore.LeadContentStore
+    taskStore: ITaskStore.TaskStore
+    sceneStore: ISceneStore.SceneStore
+    categoryConfigStore: ICategoryConfigStore.CategoryConfig
 }

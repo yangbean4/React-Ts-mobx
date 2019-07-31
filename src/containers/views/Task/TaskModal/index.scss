@@ -1,0 +1,30 @@
+.taskModal {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  :global(.ant-form-item) {
+    margin-bottom: 30px;
+    :global(.ant-form-item-control-wrapper) {
+        white-space: nowrap;
+        line-height: 30px;
+    }
+    :global(.ant-form-item-control-wrapper) {
+      width: 320px;
+    }
+  }
+  :global(.ant-form-item-control) {
+      height: auto;
+      line-height: 30px;
+  }
+
+  .btnBox {
+    margin-left: 12%;
+  }
+
+  .btn2 {
+    margin-left: 20px;
+  }
+  .videoMsg {
+      margin-left: 1em;
+  }
+}

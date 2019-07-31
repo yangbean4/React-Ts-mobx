@@ -20,20 +20,22 @@ const layout = {
 
 
 interface IStoreProps {
-  changeFilter?: (params: IUserStore.SearchParams) => void
-  filters?: IUserStore.SearchParams
+  changeFilter?: (params: ISceneStore.SearchParams) => void
+  filters?: ISceneStore.SearchParams
+  getCategory?: () => Promise<any>
+  categoryList?: ISceneStore.ICategory[]
 }
 
 
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { changeFilter, filters } = store.userStore
-    return { changeFilter, filters }
+    const { changeFilter, filters, getCategory, categoryList } = store.sceneStore
+    return { changeFilter, filters, getCategory, categoryList }
   }
 )
 @observer
-class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
+class SceneSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   @observable
   private loading: boolean = false
 
@@ -61,6 +63,9 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
       }
     )
   }
+  componentWillMount() {
+    this.props.getCategory()
+  }
 
   render() {
     const { form, filters } = this.props
@@ -69,17 +74,31 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
       <Form {...layout} >
         <Row>
           <Col span={span}>
-            <FormItem label="User Name">
-              {getFieldDecorator('user_name', {
-                initialValue: filters.user_name
+            <FormItem label="App ID">
+              {getFieldDecorator('app_id', {
+                initialValue: filters.app_id
               })(<Input autoComplete="off" />)}
             </FormItem>
           </Col>
           <Col span={span}>
-            <FormItem label="Owner" className='minInput'>
-              {getFieldDecorator('owner', {
-                initialValue: filters.owner
-              })(<Input autoComplete="off" />)}
+            <FormItem label="Category" className='category_id'>
+              {getFieldDecorator('category_id', {
+                initialValue: filters.category_id
+              })(
+                <Select
+                  allowClear
+                  showSearch
+                  mode="multiple"
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {this.props.categoryList.map(c => (
+                    <Select.Option value={c.app_id} key={c.app_id} >
+                      {c.app_key_app_id}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
             </FormItem>
           </Col>
           <Col span={span}>
@@ -90,6 +109,7 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   allowClear
                   showSearch
+                  mode="multiple"
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
@@ -106,7 +126,7 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <Button type="primary" onClick={this.submit}>Search</Button>
           </Col>
           <Col span={3} offset={1}>
-            <span id='customAddBtn'></span>
+            <span id='SceneAddBtn'></span>
           </Col>
         </Row>
       </Form>
@@ -114,4 +134,4 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   }
 }
 
-export default Form.create<IStoreProps>()(UserSearch)
+export default Form.create<IStoreProps>()(SceneSearch)

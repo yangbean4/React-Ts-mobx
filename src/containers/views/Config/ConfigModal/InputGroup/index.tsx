@@ -28,6 +28,11 @@ class InputGroup extends ComponentExt<IProps & FormComponentProps> {
     if (keys.length === 1) {
       return;
     }
+    const index = keys.find(key => key === k)
+
+    const arr = JSON.parse(JSON.stringify(this.props.value))
+    arr.splice(index, 1)
+    this.props.onChange(arr)
 
     // can use data-binding to set
     form.setFieldsValue({

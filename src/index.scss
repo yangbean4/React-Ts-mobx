@@ -16,6 +16,50 @@
             height: 30px;
             line-height: 30px;
         }
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        ::-webkit-scrollbar-track-piece {
+            background-color: #f8f8f8;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border: 3px solid #f6f6f6;
+            background-color: #ccc;
+            -webkit-border-radius: 20px;
+        }
+
+        ::-webkit-scrollbar-thumb:active {
+            -webkit-border-radius: 20px;
+            background-color: #7f7f7f;
+        }
+
+        ::-webkit-scrollbar-corner {
+            background-color: #f6f6f6;
+            -webkit-border-bottom-right-radius: 5px;
+        }
+
+        .navigation::-webkit-scrollbar {
+            width: 3px;
+            height: 0px;
+        }
+
+        .navigation::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        .navigation::-webkit-scrollbar-track-piece {
+            background-color: #404040;
+        }
+
+        .navigation::-webkit-scrollbar-thumb {
+            border: 1px solid rgb(52, 143, 247);
+            background-color: rgb(52, 143, 247);
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+        }
 
         @media screen and(max-width: 1340px) {
             .ant-modal {

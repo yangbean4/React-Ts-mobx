@@ -6,6 +6,7 @@ import { FormComponentProps } from 'antd/lib/form'
 import { statusOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
+import FirstScene, { formItemClassName, firstSceneValidator } from '@components/FirstScene'
 
 const FormItem = Form.Item
 
@@ -82,6 +83,7 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
         const { routerStore, user, createUser, modifyUser, form } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
+                console.log(values)
                 if (!err) {
                     this.toggleLoading()
                     try {
@@ -196,6 +198,43 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                             </Radio.Group>
                         )}
                     </FormItem>
+                    {/* <FormItem {...formItemMax} label="First Scene" className={formItemClassName}>
+                        {getFieldDecorator('FirstScene', {
+                            initialValue: [{
+                                "id": 1,
+                                "scene_image_url": ["http://aa.png", "http://bb.png"],
+                                "sen_category_scene_config_id": 111,
+                                "is_scene": 0
+                            },
+                            {
+                                "id": 2,
+                                "scene_image_url": ["http://cc.png", "http://dd.png"],
+                                "sen_category_scene_config_id": 222,
+                                "is_scene": 1
+                            }
+                            ],
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                },
+                                {
+                                    validator: firstSceneValidator
+                                }
+                            ]
+                        })(
+                            <FirstScene
+                                preData={{ app_id: 123 }}
+                                api={this.api.util.uploadFirstSceneImage}
+                                sceneTypeList={[{
+                                    id: 111, name: 'aaaa'
+                                }, {
+                                    id: 222, name: 'bbbb'
+                                }, {
+                                    id: 333, name: 'cccc'
+                                }]} />
+                        )}
+                    </FormItem> */}
+
                     <FormItem className={styles.btnBox}>
                         <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
                         <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>

@@ -90,15 +90,15 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
     if (e) {
       e.preventDefault()
     }
-    const { form, targetConfig, type } = this.props
+    const { form } = this.props
     form.validateFields(
       async (err, values): Promise<any> => {
         let per = values;
         per.config_version = per.config_version ? `v${per.config_version}` : per.config_version
-        // per.copyTo = per.copyTo ? `v${per.copyTo}` : per.copyTo
-        per.pkg_name = this.props.type === 'add' ? this.usePkgnameData[per.pkg_name] : this.usePlatform === 'android' ? targetConfig.pkg_name : targetConfig.bundle_id
+        per.copyTo = per.copyTo ? `v${per.copyTo}` : per.copyTo
+        per.pkg_name = this.usePkgnameData[per.pkg_name]
         const cb = () => {
-          console.log(per);
+
           this.props.onOk(per)
           this.props.form.resetFields()
         }
@@ -184,7 +184,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
 
           <FormItem label={this.usePlatform === 'android' ? "Pkg Name" : "Bundle Id"}>
             {
-              type !== 'add' ? <p>{this.usePlatform === 'android' ? targetConfig.pkg_name : targetConfig.bundle_id}</p>
+              type !== 'add' ? <p>{targetConfig.pkg_name}</p>
                 : this.typeIsAdd ? [getFieldDecorator('pkg_name', {
                   rules: [
                     {
