@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, runInAction } from 'mobx'
-import { Form, Icon, Input, Button, Row, Col } from 'antd'
+import { Form, Icon, Input, Button, Row, Col, message } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { hot } from 'react-hot-loader'
-
+import menu from '@views/Home/menu&router'
 import * as styles from './index.scss'
 
 const FormItem = Form.Item
@@ -48,9 +48,14 @@ class Login extends React.Component<IStoreProps & FormComponentProps> {
                         captcha: captcha
                     } = values
                     try {
-                        await this.props.login({ user_name, pwd, captcha })
+                        const { authTree } = await this.props.login({ user_name, pwd, captcha })
                         await this.props.getSidebar()
-                        this.props.routerStore.replace(`/config`)
+                        const go = menu.find(me => authTree[me.authName] && !!me.path)
+                        if (go) {
+                            this.props.routerStore.replace(go.path)
+                        } else {
+                            message.error('no auth')
+                        }
                     } catch (error) {
                         this.props.getCaptcha();
                     }
@@ -109,7 +114,7 @@ class Login extends React.Component<IStoreProps & FormComponentProps> {
                                 {getFieldDecorator('captcha', {
                                     rules: [{ required: true, message: 'Please input the captcha you got!' }],
                                 })(
-                                    <Input />
+                                    <Input autoComplete="off" />
                                 )}
                             </Col>
                             <Col span={12}>

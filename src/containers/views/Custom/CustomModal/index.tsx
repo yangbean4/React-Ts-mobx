@@ -292,6 +292,7 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
         const {
             primary_name = '',
             status = 1,
+            template_type = undefined,
             config = JSON.parse(JSON.stringify(defaultOption))
         } = custom || {}
 
@@ -316,7 +317,7 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input disabled={!this.typeIsAdd} />)}
+                        })(<Input autoComplete="off" disabled={!this.typeIsAdd} />)}
                     </FormItem>
                     {
                         sortArr.map(key => {
@@ -348,6 +349,7 @@ class CustomModal extends ComponentExt<IProps & FormComponentProps> {
                             </FormItem>
                         })
                     }
+
 
                     <FormItem {...formItemLayout} label="Status">
                         {getFieldDecorator('status', {

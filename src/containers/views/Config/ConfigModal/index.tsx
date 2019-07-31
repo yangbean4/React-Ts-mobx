@@ -265,18 +265,18 @@ class ConfigModal extends ComponentExt<IStoreProps> {
                 <div className={style.head}>
                     <div className={style.row}>
                         <div className={style.title}>
-                            Pkg Name
-                    </div>
-                        <div className={style.value}>
-                            {targetConfig.pkg_name}
-                        </div>
-                    </div>
-                    <div className={style.row}>
-                        <div className={style.title}>
                             Platform
                     </div>
                         <div className={style.value}>
                             {targetConfig.platform}
+                        </div>
+                    </div>
+                    <div className={style.row}>
+                        <div className={style.title}>
+                            {targetConfig.platform === 'android' ? "Pkg Name" : "Bundle Id"}
+                        </div>
+                        <div className={style.value}>
+                            {targetConfig.pkg_name}
                         </div>
                     </div>
                     <div className={style.row}>

@@ -4,6 +4,9 @@ import { StoreExt } from '@utils/reactExt'
 import { LOCALSTORAGE_KEYS } from '@constants/index'
 
 export class GlobalStore extends StoreExt {
+
+    @observable
+    breadcrumbArr: IGlobalStore.menu[] = []
     /**
      * 菜单栏折叠
      *
@@ -31,6 +34,11 @@ export class GlobalStore extends StoreExt {
     setOpenKeys = (openKeys: string[]) => {
         this.navOpenKeys = openKeys
         localStorage.setItem(LOCALSTORAGE_KEYS.NAV_OPEN_KEYS, JSON.stringify(openKeys))
+    }
+
+    @action
+    setBreadcrumbArr = (menus?: IGlobalStore.menu[]) => {
+        this.breadcrumbArr = menus || []
     }
 }
 

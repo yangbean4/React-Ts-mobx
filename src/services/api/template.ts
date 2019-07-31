@@ -1,6 +1,5 @@
 
 import http from '@services/http'
-import { tree } from '@views/Config/ConfigModal/choseSelectModal/index.scss';
 const basePath = '/api/templateDetail/'
 export default {
   getTemplates(data): Promise<any> {

@@ -1,0 +1,37 @@
+.accountModal {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  :global(.ant-form-item) {
+    margin-bottom: 25px;
+    :global(.ant-form-item-control-wrapper) {
+      // width: 280px;
+    }
+  }
+
+  .btnBox {
+    margin-left: 12%;
+  }
+
+  .btn2 {
+    margin-left: 20px;
+  }
+}
+.modalBtn {
+  position: relative;
+}
+.btn {
+  position: absolute;
+  left: 432px;
+}
+.workBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-left: 10px;
+  background: rgba(237, 240, 255, 1);
+  border-radius: 4px;
+  color: #667ffd;
+  position: absolute;
+  line-height: 30px;
+}

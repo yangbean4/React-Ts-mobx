@@ -10,6 +10,7 @@ export interface ITemplate {
   version?: string
   template_url?: string
   template_md5?: string
+  template_type?: number
 }
 
 export interface SearchParams {

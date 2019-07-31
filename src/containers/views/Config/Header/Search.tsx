@@ -68,7 +68,14 @@ class ConfigSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <FormItem label="Pkg Name">
               {getFieldDecorator('pkg_name', {
                 initialValue: filters.pkg_name
-              })(<Input />)}
+              })(<Input autoComplete="off" />)}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="Bundle ID">
+              {getFieldDecorator('bundle_id', {
+                initialValue: filters.bundle_id
+              })(<Input autoComplete="off" />)}
             </FormItem>
           </Col>
           <Col span={span}>

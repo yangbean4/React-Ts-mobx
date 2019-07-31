@@ -1,0 +1,97 @@
+.app {}
+
+.hasHelp {}
+
+.help {}
+
+.btnBox {}
+
+.appForm {
+    :global(.ant-form-item-label) {
+        height: 30px;
+        line-height: 30px;
+    }
+
+    :global(.ant-form-item-control-wrapper) {
+        white-space: nowrap;
+        line-height: 30px;
+
+        :global(.ant-form-item-control) {
+            height: 100%;
+            line-height: 30px;
+        }
+
+        :global(.ant-upload) {
+            vertical-align: top;
+        }
+    }
+
+    .longLabel {
+        :global(.ant-form-item-label) {
+            width: 250px;
+        }
+    }
+}
+
+.btnGroup {
+    margin-top: 20px;
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .submitBtn {
+        margin-right: 20px;
+    }
+}
+
+.workBtn {
+    margin-left: 10px;
+    border-radius: 4px;
+    color: #667ffd;
+}
+
+.workPlus {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 10px;
+    background: rgba(237, 240, 255, 1);
+    border-radius: 4px;
+    color: #667ffd;
+    position: absolute;
+    line-height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.uploadICON {
+    width: 25px !important;
+    height: 25px !important;
+    line-height: 25px !important;
+    text-align: center;
+    vertical-align: middle !important;
+    margin-left: 10px;
+    font-size: 12px !important;
+    transform: scale(0.8) !important;
+    border-radius: 12.5px;
+    background: rgba(237, 240, 255, 1);
+    color: rgba(102, 127, 253, 1);
+}
+
+.hidden {
+    display: none;
+}
+
+.btnGroup {
+    display: flex;
+    width: 100%;
+}
+
+.btnBox {
+    margin-left: 16.5%;
+}
+
+.submitBtn {
+    margin-right: 30px;
+}

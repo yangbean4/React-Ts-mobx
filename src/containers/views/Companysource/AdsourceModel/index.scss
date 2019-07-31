@@ -1,0 +1,28 @@
+.CompanyModal {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  :global(.ant-form-item) {
+    margin-bottom: 30px;
+    :global(.ant-form-item-control-wrapper) {
+      width: 280px;
+    }
+    :global(.ant-form-item-label) {
+      width: 220px;
+    }
+  }
+
+  .btnBox {
+    margin-left: 14%;
+  }
+  .modalBtn {
+    position: relative
+  }
+  .btn{
+    position: absolute;
+    left: 432px;
+  }
+  .btn2 {
+    margin-left: 20px;
+  }
+}

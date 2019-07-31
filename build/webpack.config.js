@@ -42,7 +42,7 @@ const webPackConfig = {
         rules: [...styleRules, ...jsRules, ...fileRules]
     },
     plugins,
-    optimization,
+    // optimization,
     stats: { children: false },
     devtool: config.sourceMap
 }

@@ -1,0 +1,55 @@
+@import "_base.scss";
+.templateModal {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  :global(.ant-form-item-label) {
+    font-size: 14px;
+    font-family: Montserrat-Light;
+    color: #3e3664;
+  }
+  .textItem {
+    line-height: 21px;
+
+    :global(label) {
+      top: -10px;
+    }
+
+    :global(.ant-form-item-control) {
+      width: 282px;
+      height: 36px;
+      font-size: 14px;
+      line-height: 21px;
+      font-family: Montserrat-Light;
+      font-weight: 300;
+      color: rgba(154, 151, 174, 1);
+    }
+  }
+  :global(.ant-form-item) {
+    margin-bottom: 30px;
+    :global(.ant-form-item-control-wrapper) {
+      width: 280px;
+      height: auto;
+      :global(.ant-checkbox-group) {
+        border: 1px solid $border-color-base;
+        width: 280px;
+        :global(.ant-checkbox-group-item) {
+          display: block;
+          margin: 8px;
+        }
+      }
+      :global(.ant-tree) {
+        max-height: 200px;
+        border: 1px solid $border-color-base;
+      }
+    }
+  }
+
+  .btnBox {
+    margin-left: 12%;
+  }
+
+  .btn2 {
+    margin-left: 20px;
+  }
+}

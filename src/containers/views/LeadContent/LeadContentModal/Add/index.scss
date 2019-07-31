@@ -1,0 +1,126 @@
+.leadContentModal {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  :global(.ant-form-item) {
+    margin-bottom: 30px;
+    // :global(.ant-form-item-control-wrapper) {
+    //   width: 280px;
+    // }
+  }
+
+  .btnBox {
+    margin-left: 12%;
+  }
+  .vcMdoal {
+    margin-left: 40%;
+  }
+  .btn2 {
+    margin-left: 20px;
+  }
+}
+
+.hasImg {
+  height: 120px;
+  .GroupBox {
+    margin-right: 20px;
+    float: left;
+    text-align: center;
+  }
+}
+.imgBox {
+  width: 100px;
+  height: 100px;
+  background: rgba(248, 248, 248, 1);
+  border: 1px solid rgba(228, 237, 240, 1);
+  border-radius: 2px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+.imgTitle {
+  width: 100%;
+  text-align: center;
+  height: 11px;
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(154, 151, 174, 1);
+}
+
+.UploadBox {
+  .title {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(154, 151, 174, 1);
+    & > div {
+      width: max-content;
+    }
+  }
+  .imgbox {
+    width: max-content;
+    height: max-content;
+  }
+  .sunjiao {
+    background-color: #fafbff;
+    border: 1px solid rgba(228, 237, 240, 1);
+    :global(img) {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .heng {
+    width: 192px;
+    height: 108px;
+  }
+  .shu {
+    height: 192px;
+    width: 108px;
+  }
+}
+
+.autoHeight {
+  height: max-content;
+  :global {
+    .ant-form-item-children {
+      height: max-content;
+    }
+    .ant-form-item-control {
+      height: max-content;
+    }
+  }
+}
+.nolabel {
+  margin-left: 12.5%;
+}
+
+.btnUploadGroup {
+  & > :global(div) {
+    float: left;
+  }
+  .btnUpload {
+    width: 60px;
+    height: 60px;
+    border: 1px solid rgba(228, 237, 240, 1);
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    :global(img) {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.wang {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.full {
+  width: 100%;
+  height: 100%;
+}

@@ -5,7 +5,7 @@ import { Menu } from 'antd'
 import pathToRegexp from 'path-to-regexp'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-import menu, { router, IMenu, IMenuInTree, templateId, logId, logMenu } from '../menu&router'
+import menu, { router, IMenu, IMenuInTree, templateId, logId, routerAndMenu } from '../menu&router'
 import { arrayToTree, queryArray } from '@utils/index'
 import { clearAuth } from '@utils/checkAuth'
 import Icon from '@components/Icon'
@@ -58,7 +58,7 @@ class SiderMenu extends ComponentExt<IStoreProps> {
                     path: `/template/${encodeURI(item.id)}`
                 }
             })
-            const addLog: IMenu[] = logMenu.concat(tmp.map((item, index) => {
+            const addLog: IMenu[] = tmp.map((item, index) => {
                 return {
                     pid: logId,
                     id: (logId * 1000) + index,
@@ -66,10 +66,15 @@ class SiderMenu extends ComponentExt<IStoreProps> {
                     title: item.primary_name,
                     path: `/log/${(item.primary_name)}`
                 }
-            }))
+            })
             return pop.concat(addTmp, addLog)
         }
         return merge([], this.props.tmpSidebar)
+    }
+
+    @computed
+    get allRouterAndMenu() {
+        return [].concat.call(this.addSideBar, routerAndMenu)
     }
 
     @computed
@@ -148,7 +153,10 @@ class SiderMenu extends ComponentExt<IStoreProps> {
         }
         return map[key] || []
     }
+    // 选中给子节点添加上active的样式
+    addActive = (item, key, domEvent) => {
 
+    }
     // 递归生成菜单
     getMenus = (menuTree: IMenuInTree[]) => {
         return menuTree.map(item => {
@@ -156,8 +164,17 @@ class SiderMenu extends ComponentExt<IStoreProps> {
                 if (item.pid) {
                     this.levelMap[item.id] = item.pid
                 }
-                const authArr = item.children.map(ele => ele.authName).filter(ele => !!ele);
-                const auth = authArr.length > 0 ? authArr.join('|') : item.authName
+                const getAuthArr = (item): string[] => {
+                    if (item.children) {
+                        return item.children.map(ele => getAuthArr(ele))
+                    } else {
+                        return [item.authName]
+                    }
+                }
+                const authArr = getAuthArr(item).join(',').split(',').filter(ele => !!ele)
+
+                const auth = item.id.toString().indexOf('4') === 0 ? 'Log' : authArr.join('|')
+
                 return (
                     this.$checkAuth(auth, (
                         <SubMenu
@@ -193,7 +210,7 @@ class SiderMenu extends ComponentExt<IStoreProps> {
         const menuItems = this.getMenus(this.menuTree)
         // 寻找选中路由
         let currentMenu: IMenu = null
-        for (const item of this.menuConfig) {
+        for (const item of this.allRouterAndMenu) {
             if (item.path && pathToRegexp(item.path).exec(this.currentRoute)) {
                 currentMenu = item
                 break
@@ -201,7 +218,7 @@ class SiderMenu extends ComponentExt<IStoreProps> {
         }
         let selectedKeys: string[] = null
         if (currentMenu) {
-            selectedKeys = this.getPathArray(this.menuConfig, currentMenu)
+            selectedKeys = this.getPathArray(this.allRouterAndMenu, currentMenu)
         }
         if (!selectedKeys) {
             selectedKeys = ['1']

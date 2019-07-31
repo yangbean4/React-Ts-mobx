@@ -1,0 +1,14 @@
+.colorBox {
+  width: 129px;
+  position: relative;
+  display: inline-block;
+  .viewColor {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: 8px;
+    right: 10px;
+    pointer-events: none;
+    border: 1px solid rgba(228, 237, 240, 1);
+  }
+}

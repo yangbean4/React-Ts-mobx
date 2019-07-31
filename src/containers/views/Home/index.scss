@@ -8,12 +8,12 @@
   // background: #f9f9f9;
   overflow-x: scroll;
   width: 100%;
-  & > div {
+  // padding: 20px;
+  & > div:nth-of-type(1) {
     // min-width: 1160px;
     // max-width: 1480px;
     width: 100%;
     margin: 0 auto;
-
     display: flex;
     padding: 20px;
     flex: 1;
@@ -21,7 +21,7 @@
     overflow-y: auto;
     // box-shadow: $box-shadow-base;
     border-radius: $border-radius-lg;
-    & > div:first-of-type {
+    :global(.searchForm) {
       padding: 20px;
       padding-bottom: 0;
       background-color: $background-color-white;
@@ -38,7 +38,6 @@
       }
       & :global(.ant-form-item-label) {
         text-align: left;
-        color: red;
         margin-left: 20px;
       }
       & :global(label) {
@@ -55,5 +54,8 @@
       box-shadow: $box-shadow-base;
       border-radius: $border-radius-lg;
     }
+  }
+  & > div:nth-of-type(2) {
+    height: 50px;
   }
 }

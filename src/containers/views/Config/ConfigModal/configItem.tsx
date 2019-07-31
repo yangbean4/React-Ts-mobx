@@ -7,7 +7,7 @@ import { conItem, conItemTreeItem } from './type'
 import myIcon from '@components/Icon'
 import { typeOf } from '@utils/index'
 import InputGroup from './InputGroup/index'
-import InputColor from './InputColor/index'
+import InputColor from '@components/InputColor/index'
 
 const RadioGroup = Radio.Group
 
@@ -185,7 +185,7 @@ class ConfigItem extends React.Component<IProps> {
         // Component1 = React.createElement('div', {
         //   key: 'color-box',
         // }, [
-        //     <Input key="input" value={value} onDoubleClick={() => this.onTogglePicker()} />,
+        //     <Input autoComplete="off" key="input" value={value} onDoubleClick={() => this.onTogglePicker()} />,
         //     this.pickerVisible && (
         //       <div style={{ position: 'absolute', zIndex: 10 }} key='color'>
         //         <SketchPicker

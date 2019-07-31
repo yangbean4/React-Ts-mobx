@@ -9,7 +9,7 @@ import { conItemTreeItem } from './type'
 // import { SketchPicker } from 'react-color'
 import InputGroup from './InputGroup/index'
 import { _nameCase, typeOf } from '@utils/index'
-import InputColor from './InputColor/index'
+import InputColor from '@components/InputColor/index'
 
 const FormItem = Form.Item
 const RadioGroup = Radio.Group;
@@ -212,14 +212,14 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
             <FormItem {...layout}>
               {getFieldDecorator('default', {
                 initialValue: config.default
-              })(<Input placeholder='default' />)}
+              })(<Input autoComplete="off" placeholder='default' />)}
             </FormItem>
           </Col>),
           (<Col span={span} key='unit'>
             <FormItem {...layout}>
               {getFieldDecorator('unit', {
                 initialValue: config.unit
-              })(<Input placeholder='unit' />)}
+              })(<Input autoComplete="off" placeholder='unit' />)}
             </FormItem>
           </Col>)
         ]
@@ -267,6 +267,11 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
             {/* <Button onDoubleClick={this.choseSelect} key='Button' type="dashed">edit Select</Button> */}
             {getFieldDecorator('default', {
               initialValue: config.default,
+              rules: [
+                {
+                  required: true, message: "Required"
+                }
+              ]
             })(<Select
               dropdownRender={
                 menu => (
@@ -329,7 +334,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
                                 }
                               ]
                             }
-                          )(<Input />)
+                          )(<Input autoComplete="off" />)
                         }
                       </Radio>
                     ))
@@ -344,6 +349,11 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
           <FormItem {...layout} className='gouSelect'>
             {getFieldDecorator('default', {
               initialValue: config.default,
+              rules: [
+                {
+                  required: true, message: "Required"
+                }
+              ]
             })(<Select
               dropdownRender={
                 menu => (
@@ -398,7 +408,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
                     required: true, message: "Required"
                   }
                 ]
-              })(<Input placeholder='name' />)}
+              })(<Input autoComplete="off" placeholder='name' />)}
             </FormItem>
           </Col>
           <Col span={span}>
@@ -431,7 +441,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
           </Col>
           {this.getChild(config)}
           <Col span={3} offset={1}>
-            <Button type="primary" onClick={this.submit}>OK</Button>
+            <Button type="primary" disabled={this.props.config.children && this.props.config.children.some(ele => ele.isEdit)} onClick={this.submit}>OK</Button>
           </Col>
         </Row>
         {

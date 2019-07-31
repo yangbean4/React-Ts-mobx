@@ -8,6 +8,9 @@
     :global(.ant-form-item-control-wrapper) {
       width: 280px;
       height: auto;
+      :global(.ant-form-item-control) {
+        height: auto;
+      }
       :global(.ant-checkbox-group) {
         border: 1px solid $border-color-base;
         width: 280px;

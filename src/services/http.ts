@@ -14,6 +14,7 @@ interface httpOption {
     onUploadProgress?: (progressEvent: any) => void
     andAuth?: boolean
     useRes?: boolean
+    headers?: object
 }
 
 
@@ -49,13 +50,14 @@ methods.forEach(v => {
             baseUrl,
             onUploadProgress,
             andAuth = true,
-            useRes = false
+            useRes = false,
+            headers
         } = option
         const axiosConfig: AxiosRequestConfig = {
             method: v,
             url,
             baseURL: baseUrl || DEFAULTCONFIG.baseURL,
-            headers: !andAuth ? {} : { Authorization: `Bearer ${getCookie(COOKIE_KEYS.TOKEN)}` },
+            headers: !andAuth ? { ...headers } : { ...headers, Authorization: `Bearer ${getCookie(COOKIE_KEYS.TOKEN)}` },
             onUploadProgress: onUploadProgress
         }
         const instance = axios.create(DEFAULTCONFIG)

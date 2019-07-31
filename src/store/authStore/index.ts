@@ -12,7 +12,7 @@ const getAuthTree = (permission: string[]) => {
             const { name, children, id } = item
             const key = pre ? `${pre}-${name}` : name
             target[key] = permission.includes(id)
-            if (children) {
+            if (children && children.length) {
                 addAuth(children, key)
             }
         })
@@ -65,7 +65,7 @@ export class AuthStore extends StoreExt {
         this.setUserInfo(userInfo)
         setCookie(COOKIE_KEYS.TOKEN, token)
         localStorage.setItem(LOCALSTORAGE_KEYS.USERINFO, JSON.stringify(userInfo))
-        return res
+        return { authTree }
     }
 
 

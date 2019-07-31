@@ -1,0 +1,50 @@
+@import "_base.scss";
+.box {
+  width: 100%;
+  height: max-content;
+  :global {
+    .sb-form {
+      .ant-form {
+        border-radius: unset;
+        box-shadow: unset;
+      }
+    }
+  }
+}
+.head {
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(228, 237, 240, 1);
+  .row {
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+    .title {
+      text-align: right;
+      width: 30%;
+      max-width: 200px;
+      color: rgba(62, 55, 100, 1);
+      margin-right: 20px;
+    }
+    .value {
+      font-weight: 300;
+      flex: 1;
+      color: rgba(154, 151, 174, 1);
+    }
+  }
+}
+
+.addbtn {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.btnGroup {
+  margin-top: 20px;
+  margin-bottom: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .submitBtn {
+    margin-right: 20px;
+  }
+}

@@ -1,6 +1,10 @@
 @import "_base.scss";
 
 :global {
+  .ant-tabs .ant-tabs-top-content,
+  .ant-tabs .ant-tabs-bottom-content {
+    overflow-x: scroll;
+  }
   .dropZone > .itemBox {
     & > .haveChild > .ant-form-item-label > label {
       height: 40px;
@@ -136,7 +140,7 @@
       }
       :global(.li) {
         width: 260px;
-        height: 40px;
+        height: 30px;
         background: rgba(255, 255, 255, 1);
         border: 1px solid rgba(228, 237, 240, 1);
         border-radius: 4px;
@@ -216,7 +220,7 @@
         border: 0;
         :global(.btn) {
           width: 88px;
-          height: 40px;
+          height: 30px;
           background: rgba(255, 255, 255, 1);
           border: 1px solid rgba(228, 237, 240, 1);
           border-radius: 4px;
@@ -252,8 +256,9 @@
 }
 
 :global(.Basic) {
+  min-width: 960px;
   :global(.additemGroup) {
-    margin-left: 90px;
+    margin-left: 110px;
     :global(.ggg) {
       margin-left: 80px;
     }
@@ -342,21 +347,42 @@
 }
 
 :global(.PID) {
+  width: 100%;
+  overflow-x: scroll;
   :global(.Basic) {
     :global(.dropZone > .addItemHasChildren) {
       margin-left: 0;
     }
+    :global(.additemGroup) {
+      margin-left: 120px;
+    }
   }
   :global {
+    .formBox {
+      min-width: 960px;
+    }
+
     .dropZone > .itemBox {
       & > .haveChild > .ant-form-item-label > label {
         margin-right: 28px;
         float: right;
       }
       & > .ggg {
-        margin-left: 80px;
+        margin-left: 220px;
+        .ant-col-6.ant-form-item-label {
+          width: 20%;
+        }
         .ggg {
-          margin-left: 80px;
+          margin-left: 200px;
+        }
+        .ant-form-item-label {
+          text-align: left;
+        }
+        .addConfigItem {
+          .ant-col-offset-3:first-child {
+            margin-left: 0;
+            margin-right: 8.9%;
+          }
         }
       }
     }

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
-import { observable, action } from 'mobx'
+import { observable, action, runInAction } from 'mobx'
 import { Form, Button, Modal, Tree } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
@@ -50,8 +50,10 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
   @observable
   private loading: boolean = false
 
+  @observable
   private checkedKeys: string[]
 
+  @observable
   private showErrMsg: boolean = false
 
   @observable
@@ -68,8 +70,8 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
   }
 
   @action
-  toggleMsgShow = () => {
-    this.showErrMsg = !this.showErrMsg
+  toggleMsgShow = (type?) => {
+    this.showErrMsg = type === undefined ? !this.showErrMsg : type
   }
   componentWillMount() {
     this.props.fullTemplate()
@@ -79,8 +81,8 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
     if (e) {
       e.preventDefault()
     }
-
-    if (this.checkedKeys.length === 1) {
+    if (this.checkedKeys && this.checkedKeys.length === 1) {
+      this.toggleMsgShow(false)
       const arr = this.checkedKeys[0].split('.')
       this.props.onOK({
         template_pid: Number(arr[0]),
@@ -88,7 +90,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
       })
       this.onCancel()
     } else {
-      this.toggleMsgShow()
+      this.toggleMsgShow(true)
     }
   }
 
@@ -113,8 +115,13 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
     return template_pid !== undefined && templateId !== undefined ? [`${template_pid}.${templateId}`] : []
   }
 
+  @action
   onCheck = (checkedKeys) => {
-    this.checkedKeys = checkedKeys
+    console.log(checkedKeys)
+    const set = new Set(this.checkedKeys)
+    runInAction('setkey', () => {
+      this.checkedKeys = checkedKeys.filter(ele => !set.has(ele))
+    })
   }
   addTemplate = () => {
     this.toggleModalVisible()
@@ -126,7 +133,6 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
   }
   render() {
     const { form, visible, onCancel, templateTree } = this.props
-
     return (
 
       <React.Fragment>
@@ -135,6 +141,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
           visible={visible}
           onOk={this.submit}
           onCancel={this.onCancel}
+          destroyOnClose={true}
           footer={[
             <Button key='cancel' loading={this.loading} onClick={onCancel} >Cancel</Button>,
             <Button key='submit' type="primary" loading={this.loading} onClick={this.submit} >Submit</Button>
@@ -146,6 +153,7 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                 templateTree.length ?
                   <Tree
                     checkable
+                    checkedKeys={this.checkedKeys}
                     defaultExpandAll
                     defaultCheckedKeys={this.getTrueKey()}
                     onCheck={this.onCheck}

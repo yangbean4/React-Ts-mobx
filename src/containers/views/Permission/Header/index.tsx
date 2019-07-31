@@ -25,7 +25,7 @@ class Header extends React.Component<IStoreProps> {
 
     render() {
         return (
-            <div>
+            <div className='searchForm'>
                 <Search />
                 <PortalsBtn querySelector='#addPermissionBtn'>
 

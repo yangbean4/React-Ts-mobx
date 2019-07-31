@@ -1,8 +1,8 @@
 export const value_typeOption = [
   {
-    key: 'Rewarded Video',
+    key: 'Reward Video',
     value: 1,
-    phpKey: "RewalledVideo"
+    phpKey: "RewardVideo"
   },
   {
     key: 'Playicon',
@@ -13,5 +13,10 @@ export const value_typeOption = [
     key: ' Appwall',
     value: 2,
     phpKey: "Appwall"
+  },
+  {
+    key: ' Reward s2s',
+    value: 4,
+    phpKey: "RewardS2s"
   }
 ]

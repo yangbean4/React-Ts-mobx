@@ -2,7 +2,7 @@ import * as React from 'react'
 import { observable, action, runInAction, computed } from 'mobx'
 import { observer } from 'mobx-react'
 
-import { Form, Input, Select, Button } from 'antd'
+import { Form, Input, Select, Radio } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import Basic from '../Basic'
@@ -13,7 +13,7 @@ import { arrayToTree, queryArray } from '@utils/index'
 import { conItem } from '../type'
 
 const FormItem = Form.Item
-
+const RadioGroup = Radio.Group;
 
 interface IProps {
   data?: any[]
@@ -56,7 +56,7 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
   get addList() {
     const name = value_typeOption.find(ele => ele.value === this.usePid_type).phpKey
     let arr = (this.props.addConfigGroup[name] || []).filter(ele => {
-      return ele.key !== 'pid_type' && ele.key !== 'placement_id'
+      return ele.key !== 'pid_type' && ele.key !== 'placement_id' && ele.key !== 'PID_status'
     })
     const toTree = (list) => list ? arrayToTree<conItem>(list, 'id', 'pid') : []
     let mmArr = toTree(arr);
@@ -129,6 +129,20 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
     const { getFieldDecorator } = form
     return (
       <div className={styles.formPid}>
+        <FormItem className={styles.minitem} label='PID Status'>
+          {getFieldDecorator('pid_status', {
+            initialValue: this.getValue('PID_status') === undefined ? 1 : this.getValue('PID_status'),
+            rules: [
+              {
+                required: true, message: "Required"
+              }
+            ]
+          })(<RadioGroup>
+            <Radio value={0}>OFF</Radio>
+            <Radio value={1}>ON</Radio>
+          </RadioGroup>)}
+
+        </FormItem>
         <FormItem className={styles.minitem} label='PID Type'>
           {getFieldDecorator('pid_type', {
             initialValue: this.getValue('pid_type') || this.usePid_type,
@@ -164,7 +178,7 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
                 required: true, message: "Required"
               }
             ]
-          })(<Input placeholder='name' disabled={!this.isAdd} />)}
+          })(<Input autoComplete="off" disabled={!this.isAdd} />)}
         </FormItem>
         <Basic
           onCancel={this.props.onCancel}

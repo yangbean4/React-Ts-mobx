@@ -10,7 +10,7 @@ import { Router } from 'react-router-dom'
 
 import registerServiceWorker from './sw'
 import AppRouter from '@shared/App'
-import * as store from './store'
+import * as store from './store/index'
 
 registerServiceWorker()
 configure({ enforceActions: 'observed' })

@@ -1,11 +1,11 @@
 
 export const statusOption = [
   {
-    key: 'android',
+    key: 'Android',
     value: 'android'
   },
   {
-    key: 'ios',
+    key: 'iOS',
     value: 'ios'
   }
 ]

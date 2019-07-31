@@ -31,7 +31,7 @@ export default {
   },
 
   fullConfig(): Promise<any> {
-    return http.post(`${basePath}appConfigList`)
+    return http.post(`/api/app/pkgNameAndBundleId`)
   },
   checkConfig(data): Promise<any> {
     return http.post(`${basePath}checkConfig`, data)
