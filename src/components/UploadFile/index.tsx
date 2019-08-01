@@ -142,7 +142,7 @@ class UploadFile extends React.Component<UploadFileProps> {
     message.success('copy success')
   }
   getUploadprops = (fun: Function,
-    whs?: FileWHT,
+    whs: FileWHT = {},
     preData?,
     type = ".png, .jpg, .jpeg, .gif",
     cb?: Function) => {
@@ -164,6 +164,7 @@ class UploadFile extends React.Component<UploadFileProps> {
         const houz = file.name.split('.').pop()
         const isHtml = isVideo || type.includes(houz)
         const size = isVideo ? 0 : whs.size;
+        debugger;
         if (!isHtml) {
           message.error(`Upload failed! The file must be in ${type} format.`);
         }

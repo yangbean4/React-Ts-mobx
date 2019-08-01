@@ -568,13 +568,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             }
         }
 
-        const theVideoUrlPropsForIVEOffline = this.getUploadprops(this.api.creative.uploadZip, {
-            size: 5 * 1024
-        }, {
-                type: 9,
-                is_online: 0,
-                app_key: this.app_key
-            }, '.zip')
+        const theVideoUrlPropsForIVEOffline = this.getUploadprops(this.api.creative.uploadZip, undefined, {
+            type: 9,
+            is_online: 0,
+            app_key: this.app_key
+        }, '.zip')
 
         const theVideoUrlPropsForIVEOnline = this.getUploadprops(this.api.creative.uploadZip, {
             size: 4 * 1024
@@ -942,7 +940,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                         <Button>
                                                             <MyIcon type="iconshangchuan1" /> Upload Offline
                                                         </Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                        <span> 	 ≤5M</span>
+                                                        {/* <span> 	 ≤5M</span> */}
                                                     </UploadFile>
                                                 )
                                             }
@@ -984,7 +982,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                                         <Button>
                                                             <MyIcon type="iconshangchuan1" /> Upload Offline
                                                                 </Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                <span>  ≤5M</span>
+                                                                {/* <span>  ≤5M</span> */}
                                                     </UploadFile>
                                                 )
                                             }

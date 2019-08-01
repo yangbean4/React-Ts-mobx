@@ -94,8 +94,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
     form.validateFields(
       async (err, values): Promise<any> => {
         let per = values;
-        debugger
-        let js_vs = (val)=>{
+        let js_vs = (val) => {
           return val.indexOf('v') == -1 ? 'v' + val : val
         }
         per.config_version = per.config_version ? js_vs(per.config_version) : per.config_version
