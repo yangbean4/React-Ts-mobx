@@ -100,8 +100,8 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
      * 通过appid 获取ccene列表
      */
     @action
-    getSceneList = async (app_key: string) => {
-        console.log(11111111)
+    getSceneList = async (app_key: string,scren_name:string) => {
+        debugger
         try{
             const res = await this.api.task.getTaskendScence({
                 app_key
@@ -109,8 +109,16 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
             console.log(res)
             runInAction('SET_SCENELIST', () => {
                 this.sceneList = res.data[app_key] || [];
-                console.log(this.sceneList)
+                const _id = this.sceneList.find((item) => 
+                    item.name === scren_name
+                )
+                console.log(this.sceneList);
+                this.props.form.setFieldsValue({
+                    scene_id:_id.id
+                })
             })
+
+
         }catch(err){
             console.log(err)
         }
@@ -130,8 +138,10 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
      * 弹窗中添加scene成功
      */
     addSceneDone = (scene: ISceneStore.IScene) => {
+        console.log(scene);
+        const scren_name = scene.scene_name;
         const appKey = this.props.form.getFieldValue('app_key')
-        this.getSceneList(appKey)
+        this.getSceneList(appKey,scren_name)
         this.toggleSceneModal();
     }
 

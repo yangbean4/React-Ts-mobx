@@ -4,12 +4,15 @@
     padding: 20px;
     border-radius: 6px;
     box-shadow: 0px 2px 20px 0px rgba(52,57,87,0.1);
+    overflow: scroll;
 }
 
 .imageList {
     margin-bottom: 20px;
     display: flex;
     margin-top: 20px;
+    flex-wrap:wrap;
+    max-width: 1600px;
 }
 
 .imagelistImg {
@@ -19,6 +22,7 @@
     border-radius: 2px;
     background-color: #fafbff;
     text-align: center;
+    margin-bottom: 10px;
     :global(img) {
         max-width: 100%;
         max-height: 100%;
