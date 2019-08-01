@@ -186,10 +186,9 @@ class PID extends ComponentExt<IStoreProps> {
       })
 
       const editId = queryURL('editId')
-      // debugger
       if (editId) {
-        const index = this.thisDataList.findIndex(ele => ele.id.toString() === editId.toString())
-        index !== -1 && this.editPid(index)
+        const index = this.thisDataList.find(ele => ele.id.toString() === editId.toString())
+        index && this.editPid(index)
       }
 
     } catch (error) {
@@ -210,9 +209,18 @@ class PID extends ComponentExt<IStoreProps> {
     this.toggleIsTable()
   }
 
-  editPid = (index?) => {
-    const data = index === undefined ? this.targetCreative : index;
-    debugger;
+  editPid = (data = {}) => {
+    // let data;
+
+    // if(index == 0){
+    //   data = this.targetCreative[index];
+    // }else if(index === undefined){
+    //   data = this.targetCreative;
+    // }else{
+    //   data = index;
+    // }
+
+    // debugger;
     runInAction('set_GJB', () => {
       this.GJB = data
     })
