@@ -171,7 +171,7 @@ class AppGroupTable extends ComponentExt<IProps> {
                     locale={{ emptyText: 'No Data' }}
                     loading={getTaskLoading}
                     dataSource={taskList}
-                    scroll={{ y: scrollY, x: '180%' }}
+                    scroll={{ y: scrollY, x: '140%' }}
                     pagination={{
                         current: page,
                         pageSize,
@@ -180,7 +180,7 @@ class AppGroupTable extends ComponentExt<IProps> {
                     }}
                     onChange={handleTableChange}
                 >
-                    <Table.Column<ITaskStore.ITaskForList> key="id" title="ID" dataIndex="id" />
+                    <Table.Column<ITaskStore.ITaskForList> key="id" title="ID" dataIndex="id" width={100} />
                     <Table.Column<ITaskStore.ITaskForList> key="task_name" title="Task Name" dataIndex="task_name" width={200} />
                     <Table.Column<ITaskStore.ITaskForList> key="ige_pkgname" title="IGE Pkgname" dataIndex="ige_pkgname" width={200} />
                     <Table.Column<ITaskStore.ITaskForList> key="app_id" title="App ID" dataIndex="app_id" width={200} />
@@ -197,13 +197,17 @@ class AppGroupTable extends ComponentExt<IProps> {
                         key="task_process_status"
                         title="Status"
                         dataIndex="task_process_status"
-                        width={200}
+                        width={100}
                         render={(_) => (
                             // statusOption.find(item => item.value === _).key
                             statusEnum[_]
                         )}
                     />
-                    <Table.Column<ITaskStore.ITaskForList> key="pkg_name" title="Pkgname" dataIndex="pkg_name" width={200} />
+                    <Table.Column<ITaskStore.ITaskForList> key="pkg_name" title="Pkgname" dataIndex="pkg_name" width={200} 
+                     render={(_) => (
+                        _ ? _ : '-'
+                    )}
+                    />
                     <Table.Column<ITaskStore.ITaskForList> key="priority" title="Priority" dataIndex="priority" width={100} />
                     <Table.Column<ITaskStore.ITaskForList>
                         key="remark"
@@ -211,10 +215,12 @@ class AppGroupTable extends ComponentExt<IProps> {
                         dataIndex="remark"
                         width={200}
                         render={(_, task) => (
-                            <div>
-                                <Tooltip placement="leftBottom" title={_}>
-                                    <div title={_} className={styles.colClass}>{_}</div>
-                                </Tooltip>
+                            <div style={{'display':'flex'}}>
+                                <div>
+                                    <Tooltip placement="leftBottom" title={_}>
+                                        <div className={styles.colClass}>{_}</div>
+                                    </Tooltip>
+                                </div>
                                 <a className={styles.remarkBtn} onClick={() => this.showEditRemarkModal(task)}>
                                     <Icon type="edit" theme="filled" />
                                 </a>

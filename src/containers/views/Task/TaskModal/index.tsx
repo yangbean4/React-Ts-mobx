@@ -86,7 +86,6 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     changeIgePkgname = (value: string) => {
         this.selectIgePkgname = this.props.optionListDb.IgePkgname[value];
-        debugger
         console.log(this.selectIgePkgname)
         this.props.form.setFieldsValue({
             app_id: '',
@@ -102,15 +101,19 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
      */
     @action
     getSceneList = async (app_key: string) => {
-        const res = await this.api.scene.categoryAppId()
-        console.log(res)
-
-        let tem = res.data;
-        tem = tem.find(n => n.app_key === app_key);
-        runInAction('SET_SCENELIST', () => {
-            this.sceneList = tem.scene || [];
-            console.log(this.sceneList)
-        })
+        console.log(11111111)
+        try{
+            const res = await this.api.task.getTaskendScence({
+                app_key
+            });
+            console.log(res)
+            runInAction('SET_SCENELIST', () => {
+                this.sceneList = res.data[app_key] || [];
+                console.log(this.sceneList)
+            })
+        }catch(err){
+            console.log(err)
+        }
     }
 
     @action
@@ -127,8 +130,8 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
      * 弹窗中添加scene成功
      */
     addSceneDone = (scene: ISceneStore.IScene) => {
-        const appId = this.props.form.getFieldValue('app_id')
-        this.getSceneList(appId)
+        const appKey = this.props.form.getFieldValue('app_key')
+        this.getSceneList(appKey)
         this.toggleSceneModal();
     }
 
@@ -143,12 +146,16 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     changeAppid = (app_key: string,option) => {
         // this.props.optionListDb.IgePkgname;
-        debugger
+        // debugger
         // const temp = JSON.parse(JSON.stringify(this.props.optionListDb));
         // console.log(temp)
+        
         console.log(option)
         const o = this.selectIgePkgname.find(v => v.app_key == app_key) || {};
         this.sceneList = o.scene;
+        this.props.form.setFieldsValue({
+            app_id:  option.key
+        })
         Promise.all([
             // this.getSceneList(app_key),
             this.getPkgnameList(option.key)
@@ -166,7 +173,7 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
         const keys = ['app_id', 'geo', 'date', 'pkg_name'];
         validateFields(keys, async (err, values) => {
             if (err) return;
-
+            console.log(values)
             let res = await this.api.task.getDemoNum({
                 app_id: values.app_id,
                 geo: values.geo,
@@ -207,6 +214,10 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
                         let data = { message: '' }
                         values.date = values.date.map(m => m.format('YYYY-MM-DD')).join(' - ');
                         console.log(values.date);
+                        // values = values.filter((item)=>{
+                        //     item
+                        // })
+                        delete values.app_id
                         data = await createTask(values)
                         message.success(data.message)
                         routerStore.push('/task')
@@ -266,7 +277,7 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
                     <FormItem {...formItemLayout} label="APP ID">
                         {getFieldDecorator('app_key', {
-                            initialValue: task.app_id,
+                            initialValue: task.app_key,
                             rules: [
                                 {
                                     required: true, message: "Required"
@@ -286,6 +297,13 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
                                     </Select.Option>
                                 ))}
                             </Select>
+                        )}
+                    </FormItem>
+                    <FormItem {...formItemLayout} label="APP ID" style={{display:'none'}}>
+                        {getFieldDecorator('app_id', {
+                            initialValue: task.app_id
+                        })(
+                            <Input autoComplete="off" />
                         )}
                     </FormItem>
                     <FormItem {...formItemLayout} label="GEO">
@@ -329,7 +347,7 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
                             >
                                 {this.sceneList.map(c => (
                                     <Select.Option key={c.id} value={c.id}>
-                                        {c.id_name}
+                                        {c.name}
                                     </Select.Option>
                                 ))}
                             </Select>
@@ -406,7 +424,7 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
                 <Modal
                     title="Add Scene"
                     visible={this.addSceneModalVisible}
-                    width="70%"
+                    width="60%"
                     footer={null}
                     onCancel={this.toggleSceneModal}
                     destroyOnClose

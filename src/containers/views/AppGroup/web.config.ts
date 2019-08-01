@@ -94,7 +94,7 @@ export const adType = [
   },
   {
     key: 'New',
-    value: 9
+    value: 2
   }
 ]
 

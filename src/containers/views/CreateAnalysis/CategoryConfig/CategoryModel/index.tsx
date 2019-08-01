@@ -158,12 +158,8 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
                     let flags_name = names.some((val, idx) => {
                         return names.includes(val, idx + 1);
                     })
-                    if (flags) {
-                        message.error('code is repeat');
-                        return
-                    }
-                    if (flags_name) {
-                        message.error('scren_name is repeat');
+                    if (flags || flags_name) {
+                        message.error('scene is already exist!');
                         return
                     }
 

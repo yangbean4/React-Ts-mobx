@@ -54,7 +54,7 @@ export const adTypeOption = [
   },
   {
     key: 'New',
-    value: '9'
+    value: '2'
   }
 ]
 

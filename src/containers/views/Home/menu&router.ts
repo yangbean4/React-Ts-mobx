@@ -606,7 +606,7 @@ export const routerAndMenu: IRouter[] = [
         id: 10,
         isMenu: true,
         title: 'Creative Analysis',
-        icon: 'iconjiaoseshezhi',
+        icon: 'iconfenxi',
         authName: 'Creative Analysis',
     },
     // Category Config

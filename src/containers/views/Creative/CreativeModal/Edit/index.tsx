@@ -168,22 +168,26 @@ class PID extends ComponentExt<IStoreProps> {
   @action
   initDetail = async () => {
     try {
-      const creativeStr = localStorage.getItem('TargetCreative') || '{}';
-      const creative = JSON.parse(creativeStr)
+      // const creativeStr = localStorage.getItem('TargetCreative') || '{}';
+      // const creative = JSON.parse(creativeStr)
       const { routerStore } = this.props
 
-      runInAction('Change_', () => {
-        this.targetCreative = creative
-      })
+      // runInAction('Change_', () => {
+      //   this.targetCreative = creative
+      // })
 
 
       const routerId = routerStore.location.pathname.toString().split('/').pop()
 
       const Detail = await this.api.creative.getCreative({ app_key: routerId })
+      const { platform, app_id } = Detail.data[0]
+
       runInAction('Change_', () => {
         this.thisDataList = Detail.data
         this.app_key = routerId
+        this.targetCreative = { platform, app_id }
       })
+
 
       const editId = queryURL('editId')
       if (editId) {

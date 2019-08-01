@@ -174,13 +174,13 @@ class PID extends ComponentExt<IStoreProps> {
   @action
   initDetail = async () => {
     try {
-      const endcardStr = localStorage.getItem('TargetEndcard') || '{}';
-      const endcard = JSON.parse(endcardStr)
+      // const endcardStr = localStorage.getItem('TargetEndcard') || '{}';
+      // const endcard = JSON.parse(endcardStr)
       const { routerStore } = this.props
 
-      runInAction('Change_', () => {
-        this.targetEndcard = endcard
-      })
+      // runInAction('Change_', () => {
+      //   this.targetEndcard = endcard
+      // })
       // const state = routerStore.location.state
       // if (state && state.type) {
       //   // this.editPid()
@@ -191,9 +191,11 @@ class PID extends ComponentExt<IStoreProps> {
       const routerId = routerStore.location.pathname.toString().split('/').pop()
 
       const Detail = await this.api.endcard.getEndcard({ app_key: routerId })
+      const { platform, app_id } = Detail.data[0];
       runInAction('Change_', () => {
         this.thisDataList = Detail.data
         this.app_key = routerId
+        this.targetEndcard = { platform, app_id };
       })
       const editId = queryURL('editId')
       if (editId) {

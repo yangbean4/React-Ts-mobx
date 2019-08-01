@@ -94,7 +94,11 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
     form.validateFields(
       async (err, values): Promise<any> => {
         let per = values;
-        per.config_version = per.config_version ? `v${per.config_version}` : per.config_version
+        debugger
+        let js_vs = (val)=>{
+          return val.indexOf('v') == -1 ? 'v' + val : val
+        }
+        per.config_version = per.config_version ? js_vs(per.config_version) : per.config_version
         // per.copyTo = per.copyTo ? `v${per.copyTo}` : per.copyTo
         per.pkg_name = this.props.type === 'add' ? this.usePkgnameData[per.pkg_name] : this.usePlatform === 'android' ? targetConfig.pkg_name : targetConfig.bundle_id
         const cb = () => {

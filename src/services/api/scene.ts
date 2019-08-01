@@ -28,5 +28,6 @@ export default {
 
   getCategoryId(): Promise<any> {
     return http.post(`/api/app/category `)
-  },
+  }
+  
 }

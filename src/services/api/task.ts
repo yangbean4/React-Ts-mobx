@@ -52,5 +52,10 @@ export default {
      */
     getDemoNum(data): Promise<any> {
         return http.post(`${basePath}demoNum`, data || {})
+    },
+
+    getTaskendScence(data):Promise<any> {
+        return http.post(`${basePath}sceneInfo`, data || {})
     }
+
 }

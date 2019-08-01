@@ -3,6 +3,8 @@
   .SceneList {
     .imgList {
       display: flex;
+      flex-wrap:wrap;
+      max-width: 900px;
       .imgBox {
         width: 180px;
         height: 101px;
@@ -16,6 +18,7 @@
         .img {
           max-width: 100%;
           max-height: 100%;
+          margin-bottom: 10px;
         }
         &:hover .zheZhao {
           display: block;

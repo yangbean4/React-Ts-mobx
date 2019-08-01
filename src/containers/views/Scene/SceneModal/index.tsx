@@ -138,17 +138,35 @@ class SceneModal extends ComponentExt<IProps & FormComponentProps> {
         form.validateFields(
             async (err, values): Promise<any> => {
                 console.log(values);
-                debugger
                 if (!err) {
-                    if(!values.first_scene[0].scene_image_url || !values.first_scene[0].sen_category_scene_config_id){
-                        message.error('please select first scene!');
+                    let flag_img = false;
+                    let flag_id = false;//判断有没有未传图片和选择id的
+
+                    for(let i in values.first_scene){
+                        if(!values.first_scene[i].scene_image_url){
+                            flag_img = true;
+                            break;
+                        }
+                    }
+                    for(let i in values.first_scene){
+                        if(!values.first_scene[i].sen_category_scene_config_id){
+                            flag_id = true;
+                            break;
+                        }
+                    }
+                    if(flag_img){
+                        message.error('Failure，Please upload the scene image!');
                         return;
                     }
+                    if(flag_id){
+                        message.error('Failure，Please select the scene name!');
+                        return;
+                    }
+                    // debugger;
 
                     this.toggleLoading()
                     try {
                         let data = { message: '' }
-                        debugger
                         if (this.typeIsAdd) {
                             data = await createScene(values)
                         } else {
@@ -158,7 +176,7 @@ class SceneModal extends ComponentExt<IProps & FormComponentProps> {
                         if (this.props.isInModal) {
                             this.props.onSave && this.props.onSave(values);
                         } else {
-                            routerStore.push('/scene')
+                            this.typeIsAdd ? routerStore.push('/scene') : null;
                         }
                     } catch (err) {
                         console.log(err);

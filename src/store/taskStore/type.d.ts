@@ -8,6 +8,7 @@ export interface ITask {
     task_name?: string
     ige_pkgname?: string
     app_id?: string
+    app_key?: string
     scene_id?: string
     geo?: string
     date?: string
@@ -39,7 +40,7 @@ export interface ITaskForList {
 export interface SearchParams {
     app_id?: string,
     task_name?: string,
-    GEO?: (number | string)[],
+    geo?: (number | string)[],
     status?: string[],
     pkg_name?: string[],
     date?: string

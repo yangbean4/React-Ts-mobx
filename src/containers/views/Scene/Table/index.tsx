@@ -106,9 +106,9 @@ class SceneTable extends ComponentExt<IProps> {
                     }}
                     onChange={handleTableChange}
                 >
-                    <Table.Column<ISceneStore.IScene> key="id" title="ID" dataIndex="id" width={100} />
+                    <Table.Column<ISceneStore.IScene> key="id" title="ID" dataIndex="id" width={80} />
                     <Table.Column<ISceneStore.IScene> key="scene_name" title="Scene Name" dataIndex="scene_name" width={200} />
-                    <Table.Column<ISceneStore.IScene> key="app_id" title="App ID" dataIndex="app_id" width={100} />
+                    <Table.Column<ISceneStore.IScene> key="app_id" title="App ID" dataIndex="app_id" width={200} />
                     <Table.Column<ISceneStore.IScene>
                         key="category_name"
                         title="Category"

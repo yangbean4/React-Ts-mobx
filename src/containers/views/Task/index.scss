@@ -25,12 +25,14 @@
 
 .taskTable {
     .remarkBtn {
-        display: none;
+        // display: none;
+        visibility: hidden;
         margin-left: .5em;
     }
     :global(.ant-table-row-hover) {
         .remarkBtn {
             display: inline;
+            visibility: visible;
         }
     }
     :global(.ant-table-thead > tr > th, .ant-table-tbody > tr > td) {
@@ -40,7 +42,7 @@
     }
     .colClass {
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
         // width: 200px;

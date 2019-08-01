@@ -66,8 +66,10 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
-                    this.toggleLoading()
-                    values.date = values.date.map(val => val.format('YYYY-MM-DD')).join(' - ')
+                    this.toggleLoading();
+                    if(values.date){
+                        values.date = values.date.map(val => val.format('YYYY-MM-DD')).join(' - ')
+                    }
                     try {
                         changeFilter(values)
                     } catch (err) { }
@@ -110,7 +112,7 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                     </Col>
                     <Col span={span}>
                         <FormItem label="GEO" className='minInput'>
-                            {getFieldDecorator('GEO')(
+                            {getFieldDecorator('geo')(
                                 <Select
                                     allowClear
                                     mode='multiple'
