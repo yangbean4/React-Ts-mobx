@@ -50,7 +50,7 @@ class Logs extends ComponentExt<IProps> {
                 className="center-table"
                 style={{ width: '100%' }}
                 bordered
-                rowKey={row => row.add_time + row.operator}
+                rowKey={row => JSON.stringify(row)}
                 loading={logsLoading}
                 dataSource={logsList}
                 scroll={{ y: scrollY }}
