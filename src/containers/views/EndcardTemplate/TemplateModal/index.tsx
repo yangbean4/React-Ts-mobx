@@ -186,7 +186,9 @@ class EndcardTemplateModal extends ComponentExt<IProps & FormComponentProps> {
                 const formData = new FormData()
                 const file = data.file
                 formData.append('file', file)
-
+                if (!this.typeIsAdd) {
+                    formData.append('id', this.props.endcardTemplate.id.toString())
+                }
                 fun(formData).then(res => {
                     const data = res.data
                     this.props.form.setFieldsValue({

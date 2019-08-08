@@ -46,9 +46,6 @@ class CategorySearch extends ComponentExt<IStoreProps & FormComponentProps> {
 
     init = async()=>{
         await this.props.getList();
-        this.props.changeFilter({
-            scene:''
-        })
     }
 
     submit = (e?: React.FormEvent<any>): void => {

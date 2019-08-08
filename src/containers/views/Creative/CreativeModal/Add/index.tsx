@@ -1114,11 +1114,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                     {getFieldDecorator('video_type',
                                         {
                                             initialValue: video_type,
-                                            rules: [
-                                                {
-                                                    required: true, message: "Required"
-                                                }
-                                            ]
+                                            // rules: [
+                                            //     {
+                                            //         required: true, message: "Required"
+                                            //     }
+                                            // ]
                                         })(
                                             <Select
                                                 showSearch
@@ -1145,11 +1145,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                     </div>
                                     {this.videoType === 'portrait' ? getFieldDecorator('common_portrait_creative_online_url', {
                                         initialValue: this.getInitialValue('common_portrait_creative_online_url'),
-                                        rules: [
-                                            {
-                                                required: true, message: "Required"
-                                            }
-                                        ]
+                                        // rules: [
+                                        //     {
+                                        //         required: true, message: "Required"
+                                        //     }
+                                        // ]
                                     })(
                                         <UploadFile
                                             className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`}
@@ -1159,11 +1159,11 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                                         </UploadFile>
                                     ) : getFieldDecorator('common_landscape_creative_online_url', {
                                         initialValue: this.getInitialValue('common_landscape_creative_online_url'),
-                                        rules: [
-                                            {
-                                                required: true, message: "Required"
-                                            }
-                                        ]
+                                        // rules: [
+                                        //     {
+                                        //         required: true, message: "Required"
+                                        //     }
+                                        // ]
                                     })(
                                         <UploadFile
                                             className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`}

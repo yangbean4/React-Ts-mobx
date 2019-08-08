@@ -139,11 +139,12 @@ class ConfigTable extends ComponentExt<IProps> {
 
     @action
     setTargetConfig(config, id?) {
-        const { pkg_name, platform, config_version, versionArr = [], is_duplicate = 0 } = config
+        const { pkg_name, platform, config_version, versionArr = [], is_duplicate = 0, bundle_id } = config
         const ver = id === undefined ? undefined : versionArr.find(item => item.id === id).version
         const gg = {
             is_duplicate,
-            pkg_name, platform, config_version: ver || config_version, config_deploy_id: id ? Number(id) : id
+            pkg_name: platform === 'android' ? pkg_name : bundle_id,
+            platform, config_version: ver || config_version, config_deploy_id: id ? Number(id) : id
         }
         this.props.setTargetConfig(gg)
         localStorage.setItem('TargetConfig', JSON.stringify(gg))
