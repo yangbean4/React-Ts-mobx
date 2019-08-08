@@ -98,7 +98,15 @@ class ConfigTable extends ComponentExt<IProps> {
 
     @action
     handelOk = (data) => {
-        const { id, copyTo, pkg_name } = data;
+        const { id, copyTo, pkg_name, platform } = data;
+        const setTargetConfig = (data) => {
+            this.setTargetConfig({
+                ...data,
+                ...(
+                    platform === 'android' ? { pkg_name, } : { bundle_id: pkg_name }
+                )
+            })
+        }
         switch (this.modelType) {
             case 'delete':
                 this.delParom = {
@@ -109,7 +117,7 @@ class ConfigTable extends ComponentExt<IProps> {
                 this.hideRoleModalVisible()
                 break;
             case 'copy':
-                this.setTargetConfig({ ...this.targetConfig, config_version: copyTo, is_duplicate: 1, pkg_name })
+                setTargetConfig({ ...this.targetConfig, config_version: copyTo, is_duplicate: 1, pkg_name })
                 this.goEdit(id, copyTo ? `?copyTo=${copyTo}` : undefined)
                 break;
             case 'edit':
@@ -117,7 +125,7 @@ class ConfigTable extends ComponentExt<IProps> {
                 this.goEdit(id)
                 break;
             case 'add':
-                this.setTargetConfig(data)
+                setTargetConfig(data)
                 this.props.routerStore.push(`/config/add`)
                 break;
         }
