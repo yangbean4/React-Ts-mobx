@@ -4,6 +4,9 @@
   padding-top: 30px;
   :global(.ant-form-item) {
     margin-bottom: 30px;
+    :global(.ant-form-item-control) {
+      height: auto;
+    }
     :global(.ant-form-item-control-wrapper) {
       width: 280px;
     }

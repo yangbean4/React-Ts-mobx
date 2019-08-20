@@ -227,7 +227,7 @@ class ConfigTable extends ComponentExt<IProps> {
                     className="center-table"
                     style={{ width: '100%' }}
                     bordered
-                    rowKey={(row) => row.pkg_name + row.platform}
+                    rowKey={(row) => row.pkg_name + row.bundle_id + row.platform}
                     loading={getConfigLoading}
                     dataSource={configsList}
                     scroll={{

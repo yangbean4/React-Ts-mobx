@@ -55,3 +55,5 @@ export { default as taskStore } from './taskStore'
 export { default as sceneStore } from './sceneStore'
 
 export { default as categoryConfigStore } from './CategoryConfig'
+
+export { default as whiteBlackListStore } from './WhiteBlackList'

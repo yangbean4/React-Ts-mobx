@@ -35,7 +35,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
           this.toggleLoading()
           try {
             // this.confirmModal ? this.props.onCancel(values) : onSubmit(values)
-            onSubmit(values)
+            await onSubmit(values)
           } catch (err) { }
           this.toggleLoading()
         }
@@ -252,7 +252,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
             </div>
           </Col>
         </Row>
-        <Button type="primary" className='submitBtn' onClick={this.submit}>Submit</Button>
+        <Button type="primary" className='submitBtn' loading={this.loading} onClick={this.submit}>Submit</Button>
         <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
       </div>
     )

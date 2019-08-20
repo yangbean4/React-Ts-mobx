@@ -5,7 +5,7 @@ import { Icon, Form, Input, Select, Button, message, Col, Row, DatePicker } from
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-let id:number = 0;
+let id: number = 0;
 const FormItem = Form.Item
 const InputGroup = Input.Group;
 const formItemLayout = {
@@ -95,13 +95,13 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
     init = async () => {
         const { routerStore, category_id } = this.props;
         const routerId = routerStore.location.pathname.split('/').pop();
-        
+
         console.log(routerId);
 
         if (routerId != 'add') {
             await this.props.setCategoryId(parseInt(routerId));
             setImmediate(() => {
-                const {  showCategoryParams } = this.props;
+                const { showCategoryParams } = this.props;
                 id = showCategoryParams.number.length;
                 console.log(this.props.showCategoryParams);
                 runInAction('get', () => {
@@ -270,7 +270,7 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
                     {getFieldDecorator(`codes[${k}]`,
                         {
                             initialValue: this.temp_params.scene_code[k],
-                            validateTrigger: [ 'onBlur'],
+                            validateTrigger: ['onBlur'],
                             rules: [
                                 {
                                     required: true,
@@ -294,7 +294,7 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
                                     message: "require",
                                 },
                             ],
-                        })(<Input placeholder="scene" autoComplete="off"  style={{ width: '60%', marginRight: 8 }} />)}
+                        })(<Input placeholder="scene" autoComplete="off" style={{ width: '60%', marginRight: 8 }} />)}
                         <Icon style={{ margin: 5 }}
                             className="dynamic-delete-button"
                             type="plus-circle"
@@ -326,7 +326,7 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
                 <Form className={styles.userModal} >
                     <FormItem {...formItemLayout} label="Category">
                         {getFieldDecorator('category_id', {
-                            initialValue: routerId == 'add'? '' : category_id,
+                            initialValue: routerId == 'add' ? '' : category_id,
                             rules: [
                                 {
                                     required: true, message: "Required"
@@ -335,6 +335,7 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
                         })(<Select
                             allowClear
                             showSearch
+                            getPopupContainer={trigger => trigger.parentElement}
                             disabled={routerId != 'add' ? true : false}
                         >
                             {categoryIdList.map(c => (

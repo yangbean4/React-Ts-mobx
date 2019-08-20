@@ -1,10 +1,10 @@
 export const statusOption = [
   {
-    key: 'Enable',
+    key: 'Published',
     value: 'published'
   },
   {
-    key: 'Disable',
+    key: 'Suspend',
     value: 'suspend'
   }
 ]

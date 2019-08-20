@@ -359,6 +359,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                                 showSearch
                                 onChange={this.languageChange}
                                 disabled={!this.isAdd}
+                                getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {

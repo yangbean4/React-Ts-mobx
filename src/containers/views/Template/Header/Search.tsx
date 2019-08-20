@@ -103,7 +103,7 @@ class TemplateSearch extends ComponentExt<IStoreProps & FormComponentProps> {
               {getFieldDecorator('version')(<Input autoComplete="off" />)}
             </FormItem>
           }
-          <Button type="primary" className='addbtn-ml20 addbtn-mb20' onClick={() => this.submit()} >Search</Button>
+          <Button type="primary" className='addbtn-ml20 addbtn-mb20' onClick={() => this.submit()}  htmlType="submit">Search</Button>
           <span id='templateAddBtn' className='addbtn-mb20'>
           </span>
         </Form>

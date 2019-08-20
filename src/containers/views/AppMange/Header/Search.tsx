@@ -30,7 +30,7 @@ interface IStoreProps {
 
 @inject(
   (store: IStore): IStoreProps => {
-    const {routerStore} = store
+    const { routerStore } = store
     const { changeFilter, filters } = store.appManageStore
     return { changeFilter, filters, routerStore }
   }
@@ -51,11 +51,11 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
     super(props)
     this.IReactionDisposer = autorun(
       () => {
-        this.props.routerStore.history.listen(route=>{
+        this.props.routerStore.history.listen(route => {
           this.props.form.resetFields()
         })
       }
-    ) 
+    )
   }
   componentDidMount() {
     this.IReactionDisposer()
@@ -100,6 +100,7 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode='multiple'
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {platformOption.map(c => (
@@ -120,6 +121,7 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode='multiple'
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {statusOption.map(c => (
@@ -132,7 +134,7 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
             </FormItem>
           </Col>
           <Col span={3} offset={1}>
-            <Button type="primary" icon="search" onClick={this.submit}>Search</Button>
+            <Button type="primary" icon="search" onClick={this.submit} htmlType="submit">Search</Button>
           </Col>
           <Col span={3} offset={1}>
             <span id='currencyAddBtn'></span>

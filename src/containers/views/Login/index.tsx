@@ -35,7 +35,7 @@ class Login extends React.Component<IStoreProps & FormComponentProps> {
     @observable
     private loading: boolean = false
 
-    submit = (e: React.FormEvent<any>): void => {
+    submit = (e?: React.FormEvent<any>): void => {
         e.preventDefault()
         this.props.form.validateFields(
             async (err, values): Promise<any> => {

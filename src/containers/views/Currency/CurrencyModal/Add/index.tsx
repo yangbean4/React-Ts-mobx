@@ -223,6 +223,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                                 })(
                                     <Select
                                         showSearch
+                                        getPopupContainer={trigger => trigger.parentElement}
                                         onChange={(val) => this.setPlatform(val)}
                                         filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
@@ -247,6 +248,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(<Select
                                 showSearch
+                                getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {this.usePkgnameData.map(c => (
@@ -279,21 +281,21 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                     <FormItem label="VC Exchange Rate">
                         {getFieldDecorator('vc_exchange_rate', {
                             initialValue: vc_exchange_rate,
-                            validateTrigger: 'blur',
+                            // validateTrigger: 'blur',
                             rules: [
                                 {
                                     required: false, message: "Required",
                                 },
                                 {
                                     validator: (r, v, callback) => {
-                                        if (v != undefined && v <= 0) {
-                                            callback('The Exchange Rate should be a positive integer!')
+                                        if (v < 0) {
+                                            callback('The VC Exchange Rate is a non-negative integer!')
                                         }
                                         callback()
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={0} />)}
+                        })(<InputNumber precision={0} min={0} max={100000} />)}
                         <span>=1$</span>
                     </FormItem>
 

@@ -26,4 +26,5 @@ declare interface IStore {
     taskStore: ITaskStore.TaskStore
     sceneStore: ISceneStore.SceneStore
     categoryConfigStore: ICategoryConfigStore.categoryConfigStore
+    whiteBlackListStore: IWhiteBlackListStore.WhiteBlackListStore
 }

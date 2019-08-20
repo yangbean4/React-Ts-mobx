@@ -81,7 +81,7 @@ class PermissionSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             </FormItem>
           </Col>
           <Col span={3} offset={1}>
-            <Button type="primary" onClick={this.submit}>Search</Button>
+            <Button type="primary" onClick={this.submit}  htmlType="submit">Search</Button>
           </Col>
           <Col span={3} offset={1}>
             <span id='addPermissionBtn'></span>

@@ -84,6 +84,7 @@ class LeadContentSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode='multiple'
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {platformOption.map(c => (
@@ -96,7 +97,7 @@ class LeadContentSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             </FormItem>
           </Col>
           <Col span={3} offset={1}>
-            <Button type="primary" icon="search" onClick={this.submit}>Search</Button>
+            <Button type="primary" icon="search" onClick={this.submit} htmlType="submit">Search</Button>
           </Col>
           <Col span={3} offset={1}>
             <span id='leadContentAddBtn'></span>

@@ -111,6 +111,7 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode="multiple"
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {platformOption.map(c => (
@@ -131,6 +132,7 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode="multiple"
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {creativeOption.map(c => (
@@ -151,6 +153,7 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode="multiple"
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {optionListDb.geo && optionListDb.geo.map((c) => (
@@ -178,6 +181,7 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode="multiple"
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {optionListDb.account_id && optionListDb.account_id.map((c) => (
@@ -198,6 +202,7 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode="multiple"
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {adTypeOption.map((c) => (
@@ -218,6 +223,7 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode="multiple"
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {statusCampaignOption.map((c) => (
@@ -238,6 +244,7 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode="multiple"
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {statusOfferOption.map((c) => (
@@ -249,8 +256,22 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
               )}
             </FormItem>
           </Col>
+          <Col span={span}>
+            <FormItem label="Creative ID" className="minInput">
+              {getFieldDecorator('creative_id', {
+                initialValue: filters.creative_id
+              })(<Input autoComplete="off" />)}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="Endcard ID" className="minInput">
+              {getFieldDecorator('endcard_id', {
+                initialValue: filters.endcard_id
+              })(<Input autoComplete="off" />)}
+            </FormItem>
+          </Col>
           <Col span={3} offset={1}>
-            <Button type="primary" icon="search" onClick={this.submit}>Search</Button>
+            <Button type="primary" icon="search" onClick={this.submit} htmlType="submit">Search</Button>
           </Col>
           <Col span={3} offset={1} onClick={(e) => this.submit(e, 1)}>
             <Button type="primary">

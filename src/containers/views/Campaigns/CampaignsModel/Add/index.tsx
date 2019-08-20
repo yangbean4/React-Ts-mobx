@@ -352,6 +352,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                 <Select
                                     showSearch
                                     disabled={!this.isAdd}
+                                    getPopupContainer={trigger => trigger.parentElement}
                                     onChange={(val) => this.setPlatform(val)}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
@@ -375,6 +376,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             <Select
                                 showSearch
                                 disabled={!this.isAdd}
+                                getPopupContainer={trigger => trigger.parentElement}
                                 onChange={(val) => this.AppIdChange(val)}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
@@ -409,6 +411,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             <Select
                                 showSearch
                                 mode="multiple"
+                                getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {optionListDb.TargetCode.map(c => (
@@ -441,6 +444,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             <Select
                                 showSearch
                                 onChange={(val) => this.setPlatform(val)}
+                                getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {bidTypeOption.map(c => (
@@ -538,6 +542,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         })(
                             <Select
                                 showSearch
+                                getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {optionListDb.CommentID.map(c => (
@@ -560,6 +565,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         })(
                             <Select
                                 showSearch
+                                getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {adTypeOption.map(c => (
@@ -604,6 +610,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         })(
                             <Select
                                 showSearch
+                                getPopupContainer={trigger => trigger.parentElement}
                                 onChange={(val) => this.selectOption(val)}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
@@ -627,6 +634,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         })(
                             <Select
                                 showSearch
+                                getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {

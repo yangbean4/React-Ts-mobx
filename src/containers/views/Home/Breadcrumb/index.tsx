@@ -79,6 +79,7 @@ class Bread extends React.Component<IStoreProps> {
   @computed
   get getPathArray() {
     if (this.props.breadcrumbArr.length > 0) {
+      this.setDocTitle(this.props.breadcrumbArr)
       return this.props.breadcrumbArr
     }
     const array = this.allConfig
@@ -92,8 +93,14 @@ class Bread extends React.Component<IStoreProps> {
       }
     }
     getPath(current)
-    // console.log(result)
+    this.setDocTitle(result)
     return result
+  }
+  /**
+   * 设置网页标题
+   */
+  setDocTitle = (titles) => {
+    document.title = titles.map(v => v.title).join(' > ')
   }
   goto = (ele, index, arr) => {
     if (arr.length > 1 && index === 0 && ele.path) {

@@ -1,7 +1,7 @@
 // tslint:disable-next-line: jsdoc-format
 /**
  * ex:
-* 
+*
 import FirstScene, { formItemClassName } from '@components/FirstScene'
     <FormItem {...formItemMax} label="First Scene" className={formItemClassName}>
                         {getFieldDecorator('FirstScene', {
@@ -46,7 +46,7 @@ import FirstScene, { formItemClassName } from '@components/FirstScene'
 import React from 'react'
 import * as styles from './index.scss'
 import UploadFile, { UploadFileProps, FileWHT } from '@components/UploadFile'
-import { Icon, Row, Col, Select, Checkbox, Modal, Button, message,Form,Input } from 'antd'
+import { Icon, Row, Col, Select, Checkbox, Modal, Button, message, Form, Input } from 'antd'
 import MyIcon from '../Icon'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { observable, action, runInAction, observe } from 'mobx';
@@ -86,7 +86,7 @@ class FirstScene extends React.Component<Iprop & FormComponentProps> {
     api: this.props.api,
   }
   private defaultList = {
-    id:null,
+    id: null,
     scene_image_url: [],
     sen_category_scene_config_id: undefined,
     is_scene: 0,
@@ -154,9 +154,9 @@ class FirstScene extends React.Component<Iprop & FormComponentProps> {
     const value = JSON.parse(JSON.stringify(this.props.value))
     const imgArr = value[listIndex].scene_image_url
     // if (imgArr.length > 1) {
-      imgArr.splice(imgIndex, 1)
-      value[listIndex].scene_image_url = imgArr
-      this.props.onChange(value)
+    imgArr.splice(imgIndex, 1)
+    value[listIndex].scene_image_url = imgArr
+    this.props.onChange(value)
     // }
   }
 
@@ -217,6 +217,7 @@ class FirstScene extends React.Component<Iprop & FormComponentProps> {
                     <Select
                       showSearch
                       disabled={this.props.disabled}
+                      getPopupContainer={trigger => trigger.parentElement}
                       value={ele.sen_category_scene_config_id}
                       onChange={(val) => this.setType(index, val)}
                       filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
@@ -241,12 +242,12 @@ class FirstScene extends React.Component<Iprop & FormComponentProps> {
                     />
                   </div>
                   {len > 1 ?
-                  <div>
-                    <MyIcon
-                      className={styles.dynamic}
-                      type="iconjianshao"
-                      onClick={() => this.removeList(index)} />
-                  </div> : null
+                    <div>
+                      <MyIcon
+                        className={styles.dynamic}
+                        type="iconjianshao"
+                        onClick={() => this.removeList(index)} />
+                    </div> : null
                   }
                 </div>
               </div>

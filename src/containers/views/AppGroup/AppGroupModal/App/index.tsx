@@ -346,6 +346,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     <Select
                                         disabled={!this.isAdd}
                                         onChange={this.platformChange}
+                                        getPopupContainer={trigger => trigger.parentElement}
                                         showSearch
                                         filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
@@ -455,6 +456,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 })(
                                     <Select
                                         showSearch
+                                        getPopupContainer={trigger => trigger.parentElement}
                                         filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
                                         {optionListDb.Spec.map(c => (
@@ -477,6 +479,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 })(
                                     <Select
                                         showSearch
+                                        getPopupContainer={trigger => trigger.parentElement}
                                         filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
                                         {optionListDb.Category.map(c => (
@@ -499,6 +502,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 })(
                                     <Select
                                         showSearch
+                                        getPopupContainer={trigger => trigger.parentElement}
                                         filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
                                         {optionListDb.Frame.map(c => (
@@ -521,6 +525,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 })(
                                     <Select
                                         showSearch
+                                        getPopupContainer={trigger => trigger.parentElement}
                                         filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
                                         {optionListDb.Style.map(c => (
@@ -579,6 +584,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 <Select
                                     showSearch
                                     disabled={!this.isAdd}
+                                    getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                     {optionListDb.Account.map(c => (
@@ -592,7 +598,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                         </FormItem>
                         <FormItem label='Preload Number'>
                             {
-                                ['IGE', 'Video', 'Playicon', 'Recover Offer'].map(key => {
+                                ['IVE', 'IGE', 'Video', 'Playicon', 'Recover Offer'].map(key => {
                                     const rowKey = getKey(key)
                                     return (
                                         <FormItem key={key} {...minLayout} label={key}>
@@ -605,14 +611,14 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                                     },
                                                     {
                                                         validator: (r, v, callback) => {
-                                                            if (v <= 0) {
-                                                                callback('The Exchange Rate should be a positive integer!')
+                                                            if (v < 0) {
+                                                                callback('The preload number is a non-negative integer!')
                                                             }
                                                             callback()
                                                         }
                                                     }
                                                 ]
-                                            })(<InputNumber precision={0} />)}
+                                            })(<InputNumber precision={0} min={0} max={1000} />)}
                                         </FormItem>
                                     )
                                 })
@@ -651,6 +657,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                             })(
                                 <Select
                                     showSearch
+                                    getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                     {web.recoverFlag.map(c => (
@@ -721,6 +728,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                                 <Select
                                                     showSearch
                                                     mode="multiple"
+                                                    getPopupContainer={trigger => trigger.parentElement}
                                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                                 >
                                                     {optionListDb.Country.map(c => (
@@ -774,6 +782,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                             })(
                                 <Select
                                     showSearch
+                                    getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                     {web.adType.map(c => (

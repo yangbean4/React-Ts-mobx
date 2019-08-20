@@ -10,6 +10,9 @@
       height: 30px;
       line-height: 30px;
     }
+    :global(.ant-select){
+      z-index: 99!important;
+    }
 
     :global(.ant-form-item-control) {
       height: 30px;

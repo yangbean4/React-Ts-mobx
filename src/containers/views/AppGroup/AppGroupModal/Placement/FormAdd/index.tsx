@@ -416,6 +416,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 <Select
                                     mode="multiple"
                                     showSearch
+                                    getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                     {web.IGE.map(c => (
@@ -442,6 +443,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 <Select
                                     mode="multiple"
                                     showSearch
+                                    getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                     {web.creative_type.map(c => (
@@ -462,14 +464,14 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 },
                                 {
                                     validator: (r, v, callback) => {
-                                        if (v <= 0) {
-                                            callback('The Exchange Rate should be a positive integer!')
+                                        if (v < 0) {
+                                            callback('The frequency number is a non-negative integer!')
                                         }
                                         callback()
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={0} />)}
+                        })(<InputNumber precision={0} min={0} max={1000} />)}
                     </FormItem>
                     <FormItem label="Frequency Time">
                         {getFieldDecorator('frequency_time', {
@@ -480,14 +482,14 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 },
                                 {
                                     validator: (r, v, callback) => {
-                                        if (v <= 0) {
-                                            callback('The Exchange Rate should be a positive integer!')
+                                        if (v < 0) {
+                                            callback('The frequency time is a non-negative integer!')
                                         }
                                         callback()
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={0} />)}&nbsp;&nbsp;&nbsp;&nbsp;seconds
+                        })(<InputNumber precision={0} min={0} max={100000} />)}&nbsp;&nbsp;&nbsp;&nbsp;seconds
                     </FormItem>
 
                     <FormItem label="Lowest eCPM">
@@ -499,14 +501,14 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 },
                                 {
                                     validator: (r, v, callback) => {
-                                        if (v <= 0) {
-                                            callback('TheLowest eCPM should be a positive integer!')
+                                        if (v < 0) {
+                                            callback('The Lowest eCPM cannot be negative number!')
                                         }
                                         callback()
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={2} />)}
+                        })(<InputNumber precision={2} min={0} max={1000} />)}
                     </FormItem>
 
                     <FormItem label="Offer Rate">
@@ -548,6 +550,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     disabled={!this.isAdd || this.props.appGroup && this.props.appGroup.contains_native_s2s_pid_types === 1}
                                     onChange={this.pidTypeChange}
                                     showSearch
+                                    getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                     {optionListDb.PidType.map(c => (
@@ -568,14 +571,15 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 },
                                 {
                                     validator: (r, v, callback) => {
-                                        if (v <= 0) {
-                                            callback('The Exchange Rate should be a positive integer!')
+                                        if (v < 0) {
+                                            callback('The offer number is a non-negative integer!')
                                         }
                                         callback()
                                     }
                                 }
                             ]
-                        })(<InputNumber disabled={this.usePidtype === 1 || this.usePidtype === 3} precision={0} />)}
+                        })(<InputNumber disabled={this.usePidtype === 1 || this.usePidtype === 3}
+                            precision={0} min={0} max={1000} />)}
                     </FormItem>
 
                     <FormItem label="Mini Offer Number">
@@ -587,14 +591,15 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                 },
                                 {
                                     validator: (r, v, callback) => {
-                                        if (v <= 0) {
-                                            callback('The Exchange Rate should be a positive integer!')
+                                        if (v < 0) {
+                                            callback('The mini offer number is a non-negative integer!')
                                         }
                                         callback()
                                     }
                                 }
                             ]
-                        })(<InputNumber disabled={this.usePidtype === 1 || this.usePidtype === 3} precision={0} />)}
+                        })(<InputNumber disabled={this.usePidtype === 1 || this.usePidtype === 3}
+                            precision={0} min={0} max={1000} />)}
                     </FormItem>
 
                     {
@@ -607,16 +612,16 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     },
                                     {
                                         validator: (r, v, callback) => {
-                                            if (v <= 0) {
-                                                callback('The Exchange Rate should be a positive integer!')
+                                            if (v < 0) {
+                                                callback('The pid budget is a non-negative integer!')
                                             }
                                             callback()
                                         }
                                     }
                                 ]
-                            })(<InputNumber precision={0} />)}
+                            })(<InputNumber precision={0} min={0} max={100000} />)}
                             $
-<Popover content={(<p>Support the network type of ige offer.</p>)}>
+                            <Popover content={(<p>Support the network type of ige offer.</p>)}>
                                 <Icon className={styles.workBtn} type="question-circle" />
                             </Popover>
                         </FormItem>
@@ -885,6 +890,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                         })(
                                             <Select
                                                 showSearch
+                                                getPopupContainer={trigger => trigger.parentElement}
                                                 disabled={!this.isAdd && !!vc_id}
                                                 onChange={this.VcChange}
                                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}

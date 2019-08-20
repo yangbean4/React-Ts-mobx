@@ -238,10 +238,10 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                     // this.showModel(values, modifyAppManage, routerStore)
                                     this.$message.error('The status of the app is modified to disable, all campaigns under this app will be suspended')
                                 } else {
-                                    cb()
+                                    await cb()
                                 }
                             } else {
-                                cb()
+                                await cb()
                             }
 
                         }
@@ -397,6 +397,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                     <Select
                                         showSearch
                                         disabled={!this.isAdd}
+                                        getPopupContainer={trigger => trigger.parentElement}
                                         onChange={(val) => this.setPlatform(val)}
                                         filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
@@ -490,6 +491,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                             })(<Select
                                 showSearch
                                 // disabled={!this.isAdd}
+                                getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {optionListDb.Category.map(c => (
@@ -510,6 +512,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(<Select
                                 showSearch
+                                getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {optionListDb.Spec.map(c => (
@@ -531,6 +534,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(<Select
                                 showSearch
+                                getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {optionListDb.Frame.map(c => (
@@ -551,6 +555,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(<Select
                                 showSearch
+                                getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {optionListDb.Style.map(c => (
@@ -591,6 +596,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                             })(<Select
                                 showSearch
                                 disabled={!this.isAdd}
+                                getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {this.Account && this.Account.map(c => (

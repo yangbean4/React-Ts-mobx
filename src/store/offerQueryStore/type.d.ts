@@ -32,4 +32,6 @@ export interface SearchParams {
   ad_type?: string[]
   campaign_status?: string[]
   offer_status?: string[]
+  creative_id?: string[]
+  endcard_id?: string[]
 }

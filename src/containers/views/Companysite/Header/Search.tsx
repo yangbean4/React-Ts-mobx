@@ -93,19 +93,19 @@ class CompanySearch extends ComponentExt<IStoreProps & FormComponentProps> {
     return (
       <Form {...layout} >
         <Row>
-            <Col span={span}>
-                <FormItem label="Subsite Company">
-                {getFieldDecorator('company_name', {
-                    initialValue: filters.company
-                })(<Input autoComplete="off" />)}
-                </FormItem>
-            </Col>
-            <Col span={3} offset={1}>
-                <Button type="primary" icon="search" onClick={this.submit}>Search</Button>
-            </Col>
-            <Col span={3} offset={1}>
-              <span id='companyAddBtn'></span>
-            </Col>
+          <Col span={span}>
+            <FormItem label="Subsite Company">
+              {getFieldDecorator('company_name', {
+                initialValue: filters.company
+              })(<Input autoComplete="off" />)}
+            </FormItem>
+          </Col>
+          <Col span={3} offset={1}>
+            <Button type="primary" icon="search" onClick={this.submit} htmlType="submit">Search</Button>
+          </Col>
+          <Col span={3} offset={1}>
+            <span id='companyAddBtn'></span>
+          </Col>
         </Row>
       </Form>
     )

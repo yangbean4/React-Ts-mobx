@@ -20,15 +20,15 @@ const layout = {
 interface IStoreProps {
     changeFilter?: (params: ICategoryConfigStore.SearchParams) => void
     filters?: ICategoryConfigStore.SearchParams,
-    categoryList?:[],
-    getList?:() => Promise<any>
-    categoryIdList?:[ICategoryConfigStore.categoryIdList],
+    categoryList?: [],
+    getList?: () => Promise<any>
+    categoryIdList?: [ICategoryConfigStore.categoryIdList],
 }
 
 @inject(
     (store: IStore): IStoreProps => {
-        const { changeFilter ,filters,categoryList,categoryIdList,getList} = store.categoryConfigStore
-        return { changeFilter,filters,categoryList,categoryIdList,getList}
+        const { changeFilter, filters, categoryList, categoryIdList, getList } = store.categoryConfigStore
+        return { changeFilter, filters, categoryList, categoryIdList, getList }
     }
 )
 @observer
@@ -44,7 +44,7 @@ class CategorySearch extends ComponentExt<IStoreProps & FormComponentProps> {
         this.init();
     }
 
-    init = async()=>{
+    init = async () => {
         await this.props.getList();
     }
 
@@ -66,11 +66,6 @@ class CategorySearch extends ComponentExt<IStoreProps & FormComponentProps> {
             }
         )
     }
-    onKeyup = (e)=> {
-        if(e.nativeEvent.keyCode === 13) {
-          this.submit();
-        }
-    }
 
     render() {
         const { form, filters, categoryIdList } = this.props;
@@ -89,11 +84,13 @@ class CategorySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                                     mode="multiple"
                                     allowClear
                                     showSearch
+                                    // style={{'zIndex':99}}
                                     getPopupContainer={trigger => trigger.parentElement}
+                                    // getPopupContainer={() => document.getElementById('app')}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
 
-                                    {categoryIdList.map((c,index) => (
+                                    {categoryIdList.map((c, index) => (
                                         <Select.Option key={c.name} value={c.id}>
                                             {c.name}
                                         </Select.Option>
@@ -106,12 +103,12 @@ class CategorySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                         <FormItem label="Scene" className='minInput'>
                             {getFieldDecorator('scene', {
                                 initialValue: filters.scene
-                            })(<Input autoComplete="off" onKeyUp={this.onKeyup}  />)}
+                            })(<Input autoComplete="off" />)}
                         </FormItem>
                     </Col>
 
                     <Col span={3} offset={1}>
-                        <Button type="primary" onClick={this.submit}>Search</Button>
+                        <Button type="primary" onClick={this.submit} htmlType="submit">Search</Button>
                     </Col>
                     <Col span={3} offset={1}>
                         <span id='customAddBtn'></span>

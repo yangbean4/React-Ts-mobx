@@ -116,6 +116,7 @@ class RevenueSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode='multiple'
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {optionUser && optionUser.map((c, index) => (
@@ -136,6 +137,7 @@ class RevenueSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode='multiple'
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {statusOption.map(c => (
@@ -148,7 +150,7 @@ class RevenueSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             </FormItem>
           </Col>
           <Col span={3} offset={1}>
-            <Button type="primary" icon="search" onClick={this.submit}>Search</Button>
+            <Button type="primary" icon="search" onClick={this.submit} htmlType="submit">Search</Button>
           </Col>
           <Col span={3} offset={1}>
             <span id='currencyAddBtn'></span>

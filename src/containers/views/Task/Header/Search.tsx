@@ -67,7 +67,7 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             async (err, values): Promise<any> => {
                 if (!err) {
                     this.toggleLoading();
-                    if(values.date){
+                    if (values.date) {
                         values.date = values.date.map(val => val.format('YYYY-MM-DD')).join(' - ')
                     }
                     try {
@@ -78,16 +78,10 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             }
         )
     }
-    onKeyup = (e)=> {
-        if(e.nativeEvent.keyCode === 13) {
-          this.submit();
-        }
-    }
 
     componentDidMount() {
         this.props.getGeo();
         this.props.getPkgname();
-        // this.submit();
     }
 
     render() {
@@ -100,14 +94,14 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                         <FormItem label="App ID" className={styles.searchInput}>
                             {getFieldDecorator('app_id', {
                                 initialValue: filters.app_id
-                            })(<Input autoComplete="off" onKeyUp={this.onKeyup}  />)}
+                            })(<Input autoComplete="off" />)}
                         </FormItem>
                     </Col>
                     <Col span={span}>
                         <FormItem label="Task Name" className={styles.searchInput}>
                             {getFieldDecorator('task_name', {
                                 initialValue: filters.task_name
-                            })(<Input autoComplete="off" onKeyUp={this.onKeyup}  />)}
+                            })(<Input autoComplete="off" />)}
                         </FormItem>
                     </Col>
                     <Col span={span}>
@@ -117,6 +111,7 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                                     allowClear
                                     mode='multiple'
                                     showSearch
+                                    getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                     {optionListDb.Country.map(c => (
@@ -156,6 +151,7 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                                     allowClear
                                     mode='multiple'
                                     showSearch
+                                    getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                     {optionListDb.PkgnameData.map(c => (
@@ -176,7 +172,7 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                     </Col>
 
                     <Col span={3} offset={1}>
-                        <Button type="primary" icon="search" onClick={this.submit}>Search</Button>
+                        <Button type="primary" icon="search" onClick={this.submit} htmlType="submit">Search</Button>
                     </Col>
                     <Col span={3} offset={1}>
                         <span id='taskAddBtn'></span>

@@ -304,7 +304,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
             try {
 
               const dataArr = this.fromUseList(this.useConfigList, values, 0, !this.props.type)
-              onSubmit(dataArr)
+              await onSubmit(dataArr)
               // this.confirmModal ? this.props.onCancel(dataArr) : onSubmit(dataArr)
             } catch (error) {
             }
@@ -726,7 +726,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           !item.isEdit ?
             (<div
               key={Key + indexPath}
-              // draggable={this.showWork} 
+              // draggable={this.showWork}
               className="itemBox" data-index={`${indexPath}-${item.key}`}
             >
               <FormItem className={(this.showWork ? 'hasWork work' : 'noWork work') + (item.children ? ' haveChild' : ' noChild')} key='FormItem' label={camelCase(item.key)}>
@@ -764,7 +764,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           {renderItem(this.useConfigList)}
           <Button type="primary" loading={this.loading} className='submitBtn' onClick={this.submit}>Submit</Button>
           {
-            // type有值说明不是Pid中的 
+            // type有值说明不是Pid中的
             this.showWork && BasicType ? <Button className="cancelBtn" onClick={this.toggleWork}>Cancel</Button>
               : BasicType === "basic1" ? null : <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
           }

@@ -148,20 +148,20 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     languageChange = (language) => {
         const data = this.props.form.getFieldsValue(['version', 'order_id',])
         this.props.form.setFieldsValue({
-            endcard_name: `${this.appName}_${data.order_id}_${data.version}_${language}`
+            endcard_name: `${this.appName.split(/:|\/|-|–/)[0]}_${data.order_id}_${data.version}_${language}`
         })
     }
     order_idChange = (order_id) => {
         const data = this.props.form.getFieldsValue(['version', 'order_id', 'language'])
         this.props.form.setFieldsValue({
-            endcard_name: `${this.appName}_${order_id.target.value}_${data.version}_${data.language}`
+            endcard_name: `${this.appName.split(/:|\/|-|–/)[0]}_${order_id.target.value}_${data.version}_${data.language}`
         })
     }
 
     versionChange = (version) => {
         const data = this.props.form.getFieldsValue(['version', 'order_id', 'language'])
         this.props.form.setFieldsValue({
-            endcard_name: `${this.appName}_${data.order_id}_${version.target.value}_${data.language}`
+            endcard_name: `${this.appName.split(/:|\/|-|–/)[0]}_${data.order_id}_${version.target.value}_${data.language}`
         })
     }
 
@@ -245,7 +245,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
         const appName = this.usePkgnameData.find(ele => ele.app_key === app_key).app_name
         const data = this.props.form.getFieldsValue(['version', 'order_id', 'language'])
         this.props.form.setFieldsValue({
-            endcard_name: `${appName}_${data.order_id}_${data.version}_${data.language}`
+            endcard_name: `${appName.split(/:|\/|-|–/)[0]}_${data.order_id}_${data.version}_${data.language}`
         })
         runInAction('set_key', () => {
             this.app_key = app_key
@@ -419,6 +419,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                                 })(
                                     <Select
                                         showSearch
+                                        getPopupContainer={trigger => trigger.parentElement}
                                         onChange={(val) => this.setPlatform(val)}
                                         filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
@@ -444,6 +445,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                             })(<Select
                                 showSearch
                                 onChange={this.setAppid}
+                                getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {this.usePkgnameData.map((c) => (
