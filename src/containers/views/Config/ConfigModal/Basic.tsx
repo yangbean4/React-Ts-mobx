@@ -689,8 +689,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     const { template_pid = undefined, templateId = undefined, option = '' } = this.nowHandelConfig || {}
     const getAddGroup = (item, indexPath) => {
       let valueTypeArr = BasicType === "basic1" ? ['string', 'color', 'select', 'array', 'radio', 'template']
-        // : !BasicType ? ['string', 'color', 'select', 'array', 'radio'] //让PID也有template
-        : ['string', 'color', 'select', 'array', 'radio', 'template']
+        : !BasicType ? ['string', 'color', 'select', 'array', 'radio']
+          : ['string', 'color', 'select', 'array', 'radio', 'template']
       if (BasicType !== "basic1" && indexPath.split('.').length !== 3) {
         // 不是basic1就可以包含'multiple',在嵌套不超过三层时可以是multiple
         valueTypeArr.push('multiple')
