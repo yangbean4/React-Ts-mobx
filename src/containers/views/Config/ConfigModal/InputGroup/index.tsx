@@ -28,12 +28,11 @@ class InputGroup extends ComponentExt<IProps & FormComponentProps> {
     if (keys.length === 1) {
       return;
     }
-    const index = keys.find(key => key === k)
+    const index = keys.findIndex(key => key === k)
 
     const arr = JSON.parse(JSON.stringify(this.props.value))
     arr.splice(index, 1)
     this.props.onChange(arr)
-
     // can use data-binding to set
     form.setFieldsValue({
       keys: keys.filter(key => key !== k),
@@ -52,8 +51,12 @@ class InputGroup extends ComponentExt<IProps & FormComponentProps> {
     });
   }
 
-  onChange = (e, index) => {
+  onChange = (e, k) => {
     let value = e.target.value;
+    const { form } = this.props;
+    // can use data-binding to get
+    const keys = form.getFieldValue('keys');
+    const index = keys.findIndex(key => key === k)
     const arr = JSON.parse(JSON.stringify(this.props.value))
     arr[index] = value
     this.props.onChange(arr)
