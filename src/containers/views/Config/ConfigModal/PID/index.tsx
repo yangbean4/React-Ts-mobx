@@ -297,7 +297,8 @@ class PID extends ComponentExt<IProps> {
                             <FormPid
                                 data={this.GJB}
                                 addConfigGroup={this.addConfigGroup}
-                                onCancel={this.toggleIsTable}
+                                // onCancel={this.toggleIsTable}
+                                onCancel={this.props.onCancel}
                                 pidList={this.tableData.map(ele => ele.placement_id)}
                                 onSubmit={this.pidFormSubmit} />
                         </div>
