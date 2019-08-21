@@ -259,23 +259,24 @@ class PID extends ComponentExt<IProps> {
     }
 
     lastStep = () => {
-        this.confirmModal = Modal.confirm({
-            okText: 'Yes',
-            cancelText: 'No',
-            content: 'Save the Settings of this page?',
-            onCancel: () => {
-                this.props.onCancel()
-                setImmediate(() => {
-                    this.confirmModal.destroy()
-                })
-            },
-            onOk: () => {
-                this.props.onCancel(true)
-                setImmediate(() => {
-                    this.confirmModal.destroy()
-                })
-            }
-        })
+        this.props.onCancel()
+        // this.confirmModal = Modal.confirm({
+        //     okText: 'Yes',
+        //     cancelText: 'No',
+        //     content: 'Save the Settings of this page?',
+        //     onCancel: () => {
+        //         this.props.onCancel()
+        //         setImmediate(() => {
+        //             this.confirmModal.destroy()
+        //         })
+        //     },
+        //     onOk: () => {
+        //         this.props.onCancel(true)
+        //         setImmediate(() => {
+        //             this.confirmModal.destroy()
+        //         })
+        //     }
+        // })
     }
 
     componentWillMount() {
