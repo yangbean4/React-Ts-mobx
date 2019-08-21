@@ -127,11 +127,12 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
     const { form, data } = this.props
 
     const { getFieldDecorator } = form
+    const Status = this.getValue('PID_status') || this.getValue('pid_status')
     return (
       <div className={styles.formPid}>
         <FormItem className={styles.minitem} label='PID Status'>
           {getFieldDecorator('pid_status', {
-            initialValue: this.getValue('PID_status') === undefined ? 1 : this.getValue('PID_status'),
+            initialValue: Status === undefined ? 1 : Status,
             rules: [
               {
                 required: true, message: "Required"
