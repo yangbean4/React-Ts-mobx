@@ -185,6 +185,7 @@ class ConfigModal extends ComponentExt<IStoreProps> {
                 this.editData = editData
                 this.addConfigGroup = Detail.data
             })
+            return;
         } catch (error) {
             //console.log(error);
             this.props.routerStore.push('/config')
@@ -192,16 +193,16 @@ class ConfigModal extends ComponentExt<IStoreProps> {
 
     }
 
-    runInit = () => {
+    runInit = async () => {
         const location = this.props.routerStore.location;
         const isAdd = location.pathname.includes('add')
 
         if (isAdd) {
-            this.initDetail()
+            return await this.initDetail()
         } else {
             const routerId = location.pathname.split('/').pop()
             const Id = Number(routerId)
-            this.initDetail(!isNaN(Id) ? Id : null)
+            return await this.initDetail(!isNaN(Id) ? Id : null)
         }
     }
 

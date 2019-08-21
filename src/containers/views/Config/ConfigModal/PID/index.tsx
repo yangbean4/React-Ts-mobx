@@ -29,6 +29,7 @@ interface TableProps {
     onDelete: (index: number) => void
     onEdit: (index: number) => void
     data: any[]
+    loading: boolean
 }
 
 @observer
@@ -52,13 +53,14 @@ class PidTable extends ComponentExt<TableProps> {
     ]
 
     render() {
-        const { data, onDelete, onEdit } = this.props;
+        const { data, onDelete, onEdit, loading } = this.props;
 
         return (
             <Table<pidItem>
                 className="center-table"
                 style={{ width: '100%' }}
                 bordered
+                loading={loading}
                 rowKey={(row) => row.placement_id + row.pid_type}
                 dataSource={data}
                 scroll={{ y: scrollY }}
@@ -107,7 +109,7 @@ interface IProps extends IStoreProps {
     onSubmit: (data) => Promise<any>
     editData: any[]
     configId?: string
-    RefreshData?: () => void
+    RefreshData?: () => Promise<any>
 }
 
 @inject(
@@ -123,6 +125,10 @@ class PID extends ComponentExt<IProps> {
 
     @observable
     private addConfigGroup = {}
+
+
+    @observable
+    private tableLoading: boolean = false
 
     @observable
     private loading: boolean = false
@@ -181,6 +187,12 @@ class PID extends ComponentExt<IProps> {
     toggleLoading = () => {
         this.loading = !this.loading
     }
+
+    @action
+    toggleTableLoading = () => {
+        this.tableLoading = !this.tableLoading
+    }
+
     @action
     setThisDataList = (arr) => {
         this.thisDataList = arr
@@ -221,8 +233,10 @@ class PID extends ComponentExt<IProps> {
                 pid: [data]
             })
             if (res.errorcode === 0) {
+                // this.toggleTableLoading()
                 this.initDetail()
-                this.props.RefreshData()
+                // this.setThisDataList([])
+                await this.props.RefreshData()
                 this.setThisDataList(null)
                 this.toggleIsTable()
             }
@@ -276,7 +290,7 @@ class PID extends ComponentExt<IProps> {
                     this.isTable ? <div className="tableBox">
                         <Button type="primary" className='addbtn-mb20' onClick={() => this.editPid()}>+ Add</Button>
 
-                        <PidTable data={this.tableData} onEdit={this.editPid} onDelete={this.deletePid} />
+                        <PidTable loading={this.tableLoading} data={this.tableData} onEdit={this.editPid} onDelete={this.deletePid} />
                         <Button type="primary" className='submitBtn' loading={this.loading} onClick={this.submit}>Submit</Button>
                         <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
                     </div> : <div className="formBox">
