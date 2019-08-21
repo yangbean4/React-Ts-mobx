@@ -654,23 +654,28 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   // ------------------------------------
 
   lastStep = () => {
-    this.confirmModal = Modal.confirm({
-      okText: 'Yes',
-      cancelText: 'No',
-      content: 'Save the Settings of this page?',
-      onCancel: () => {
-        this.props.onCancel()
-        setImmediate(() => {
-          this.confirmModal.destroy()
-        })
-      },
-      onOk: () => {
-        this.props.onCancel(true)
-        setImmediate(() => {
-          this.confirmModal.destroy()
-        })
-      }
-    })
+
+    if (!this.props.type) {
+      this.props.onCancel()
+    } else {
+      this.confirmModal = Modal.confirm({
+        okText: 'Yes',
+        cancelText: 'No',
+        content: 'Save the Settings of this page?',
+        onCancel: () => {
+          this.props.onCancel()
+          setImmediate(() => {
+            this.confirmModal.destroy()
+          })
+        },
+        onOk: () => {
+          this.props.onCancel(true)
+          setImmediate(() => {
+            this.confirmModal.destroy()
+          })
+        }
+      })
+    }
   }
 
   formObjToVal = (obj, keyStr: string) => {
