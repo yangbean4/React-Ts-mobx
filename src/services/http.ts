@@ -15,6 +15,7 @@ interface httpOption {
     andAuth?: boolean
     useRes?: boolean
     headers?: object
+    responseType?: string
 }
 
 
@@ -51,19 +52,24 @@ methods.forEach(v => {
             onUploadProgress,
             andAuth = true,
             useRes = false,
-            headers
+            headers,
+            responseType = 'json'
         } = option
         const axiosConfig: AxiosRequestConfig = {
             method: v,
             url,
             baseURL: baseUrl || DEFAULTCONFIG.baseURL,
             headers: !andAuth ? { ...headers } : { ...headers, Authorization: `Bearer ${getCookie(COOKIE_KEYS.TOKEN)}` },
-            onUploadProgress: onUploadProgress
+            onUploadProgress: onUploadProgress,
+            responseType: responseType
         }
         const instance = axios.create(DEFAULTCONFIG)
 
         instance.interceptors.response.use(
             response => {
+                if (responseType !== 'json') {
+                    return response
+                }
                 let rdata = null
                 if (typeof response.data === 'object' && !isNaN(response.data.length)) {
                     rdata = response.data[0]

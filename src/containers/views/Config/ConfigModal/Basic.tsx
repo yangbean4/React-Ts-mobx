@@ -1,7 +1,7 @@
 import React from 'react'
 import { observer, inject } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Button, Modal } from 'antd'
+import { Form, Button, Modal, message } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import ConfigItem from './configItem'
@@ -262,17 +262,48 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
   get configList(): conItemTree {
     const platform = (this.props.targetConfig || {}).platform === 'android' ? 2 : 1
     const arr = this.fmtConfigList
+
     // this.props.editData
     // const fmt = this.haveUseEditData ? arr.filter(a => editDataSortTarget.hasOwnProperty(_nameCase(a.key))) : arr
     const fmt = this.haveUseEditData ? this.diffTree(arr, this.useEditData) : arr
-    return fmt.filter(ele => ele.platform != platform)
-      .slice().sort((a, b) => a.sort - b.sort)
+
+    const list = fmt.filter(ele => ele.platform != platform).slice()
+    if (location.pathname.includes('add')) {
+      return list.sort((a, b) => a.sort - b.sort)
+    }
+    return list;
+    // .sort((a, b) => a.sort - b.sort)
     // .slice().sort((a, b) => editDataSortTarget[_nameCase(b.key)] - editDataSortTarget[_nameCase(a.key)])
   }
 
   @computed
   get useConfigList(): conItemTree {
-    return this.thisConfigList || this.configList
+    // return this.thisConfigList || this.configList
+    let list = this.thisConfigList || this.configList
+    // 新增的configversion参数是只读的，但是服务端不返回只读这个字段，所以这里手动给加上
+    if (Array.isArray(list)) {
+      list = list.map(item => {
+        if (item.key === 'configversion' && item.value_type === '9') {
+          item.isReadOnly = true
+        }
+        return item;
+      })
+    }
+    return list
+  }
+
+  /**
+   * 这玩意主要用于检测是否还存在字段是编辑状态
+   */
+  @computed
+  get hasEditing() {
+    return !!this.useConfigList.find(function find(value) {
+      let result = value.isEdit;
+      if (!result && value.children) {
+        result = !!value.children.find(find)
+      }
+      return result
+    })
   }
 
   diffTree = (arr, data) => {
@@ -292,6 +323,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     if (e) {
       e.preventDefault()
     }
+
     const waitItemNum = this.useConfigList.filter(ele => ele.isEdit).length
     this.waitItemNum = waitItemNum
     this.toggleLoading(true)
@@ -302,7 +334,6 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           if (waitItemNum) {
           } else {
             try {
-
               const dataArr = this.fromUseList(this.useConfigList, values, 0, !this.props.type)
               await onSubmit(dataArr)
               // this.confirmModal ? this.props.onCancel(dataArr) : onSubmit(dataArr)
@@ -443,7 +474,6 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
 
   @action
   addConfigItem = (indexPath, config?: conItem) => {
-
     const errorCb = () => {
       this.waitItemNum = 0
       // addConfigItem组件提交过程中出问题了 结束提交过程
@@ -693,9 +723,12 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
     const { getFieldDecorator } = form
     const { template_pid = undefined, templateId = undefined, option = '' } = this.nowHandelConfig || {}
     const getAddGroup = (item, indexPath) => {
-      let valueTypeArr = BasicType === "basic1" ? ['string', 'color', 'select', 'array', 'radio', 'template']
-        : !BasicType ? ['string', 'color', 'select', 'array', 'radio']
-          : ['string', 'color', 'select', 'array', 'radio', 'template']
+      const arr = ['string', 'color', 'select', 'array', 'radio', 'int', 'float', 'bool'];
+      console.log(BasicType)
+      // let valueTypeArr = BasicType === "basic1" ? [...arr, 'template']
+      //   : !BasicType ? arr
+      //     : [...arr, 'template']
+      let valueTypeArr = [...arr, 'template'];
       if (BasicType !== "basic1" && indexPath.split('.').length !== 3) {
         // 不是basic1就可以包含'multiple',在嵌套不超过三层时可以是multiple
         valueTypeArr.push('multiple')
@@ -726,7 +759,8 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
         let _val = this.formObjToVal(this.useEditData, Key)
         _val = typeOf(_val) === 'object' ? _val.value : _val
         // 仅剩一条的话不能删除
-        const workTypeArr = arr.length === 1 ? ['add', 'copy', 'up', 'down'] : ['acc', 'add', 'copy', 'up', 'down']
+        const workTypeArr = item.isReadOnly ? [] : arr.length === 1 ? ['add', 'copy', 'up', 'down'] : ['acc', 'add', 'copy', 'up', 'down']
+
         return (
           !item.isEdit ?
             (<div
@@ -745,6 +779,13 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                     rules: [
                       {
                         required: true, message: "Required"
+                      }, {
+                        validator(rules, value, cb) {
+                          if (item.value_type === '4' && Array.isArray(value) && value.filter(v => v).length === 0) {
+                            return cb('Required')
+                          }
+                          cb();
+                        }
                       }
                     ]
                   })(
@@ -767,7 +808,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
       <div className='Basic' >
         <Form className="dropZone" {...layout}>
           {renderItem(this.useConfigList)}
-          <Button type="primary" loading={this.loading} className='submitBtn' onClick={this.submit}>Submit</Button>
+          <Button type="primary" disabled={this.hasEditing} loading={this.loading} className='submitBtn' onClick={this.submit}>Submit</Button>
           {
             // type有值说明不是Pid中的
             this.showWork && BasicType ? <Button className="cancelBtn" onClick={this.toggleWork}>Cancel</Button>

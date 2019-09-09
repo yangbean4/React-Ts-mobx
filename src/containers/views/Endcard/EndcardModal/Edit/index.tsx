@@ -9,7 +9,7 @@ import * as style from './index.scss'
 import { queryURL } from '@utils/index'
 
 interface TableProps {
-  onEdit: (index: number) => void
+  onEdit: (item: IEndcardStore.IEndcard) => void
   onCopy: (index: number) => void
   data: any[]
 }
@@ -80,7 +80,7 @@ class VcTable extends ComponentExt<TableProps> {
           width={120}
           render={(_, record, index) => (
             <span>
-              <a href="javascript:;" onClick={() => onEdit(index)}>
+              <a href="javascript:;" onClick={() => onEdit(record)}>
                 <Icon type="form" />
               </a>
 
@@ -199,8 +199,8 @@ class PID extends ComponentExt<IStoreProps> {
       })
       const editId = queryURL('editId')
       if (editId) {
-        const index = this.thisDataList.findIndex(ele => ele.id.toString() === editId.toString())
-        index !== -1 && this.editPid(index)
+        const item = this.thisDataList.find(ele => ele.id.toString() === editId.toString())
+        item && this.editPid(item)
       }
 
     } catch (error) {
@@ -220,8 +220,8 @@ class PID extends ComponentExt<IStoreProps> {
     this.toggleIsTable()
   }
 
-  editPid = (index?) => {
-    const data = index === undefined ? this.targetEndcard : this.thisDataList[index]
+  editPid = (editItem?) => {
+    const data = editItem === undefined ? this.targetEndcard : editItem
     runInAction('set_GJB', () => {
       this.GJB = data
     })

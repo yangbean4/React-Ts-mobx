@@ -4,5 +4,33 @@
         width: 160px !important;
     }
   }
-  
+}
+
+.exportModal {
+  display: flex;
+  flex-direction: column;
+
+  :global(.ant-form-item) {
+    :global(.ant-form-item-control-wrapper) {
+      white-space: nowrap;
+      line-height: 30px;
+    }
+  }
+
+  :global(.ant-form-item-control) {
+    height: auto;
+    line-height: 30px;
+  }
+
+  .btnBox {
+    margin-left: 12%;
+  }
+
+  .btn2 {
+    margin-left: 20px;
+  }
+
+  .videoMsg {
+    margin-right: 1em;
+  }
 }

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Input, Select, Radio, Button, InputNumber, Upload, Icon as AntIcon, Popover } from 'antd'
+import { Form, Input, Select, Radio, Button, InputNumber, Upload, Icon as AntIcon, Popover, Spin } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import * as web from '../../web.config'
 import { ComponentExt } from '@utils/reactExt'
@@ -71,6 +71,12 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
     private loading: boolean = false
 
     @observable
+    private importLoading: boolean = false
+
+    @observable
+    private uploadLoading: boolean = false
+
+    @observable
     private appGroup: IAppGroupStore.IAppGroup = {}
 
     @observable
@@ -123,6 +129,11 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
+    toggleUploadLoading = () => {
+        this.uploadLoading = !this.uploadLoading
+    }
+
+    @action
     inAppstoreChange = (e) => {
         const value = e.target.value
         runInAction('set_STore', () => {
@@ -153,6 +164,42 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     platformChange = value => {
         this.platform = value
+    }
+
+    @action
+    toggleImportLoading = () => {
+        this.importLoading = !this.importLoading
+    }
+
+    importAppInfo = async () => {
+        this.props.form.validateFields(['platform', 'pkg_name'], async (err, values) => {
+            if (err) return;
+            try {
+                this.toggleImportLoading()
+                const res = await this.api.appsManage.getAppInfo(values)
+                let fields: any = {
+                    app_name: res.data.title,
+                    logo: res.data.logo
+                }
+                if (values.platform === 'ios') {
+                    fields.bundle_id = res.data.bundle_id
+                }
+                if (res.data.category_id) {
+                    let category = this.props.optionListDb.Category.find(v => v.name === res.data.category_id)
+                    if (category) {
+                        fields.category = category.id
+                    }
+                }
+                this.props.form.setFieldsValue(fields)
+
+                runInAction('set_logo', () => {
+                    this.logo = fields.logo
+                })
+                this.toggleImportLoading()
+            } catch (err) {
+                console.error(err)
+            }
+        })
     }
 
 
@@ -191,6 +238,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
     removeFile = () => {
         runInAction('SET_URL', () => {
             this.logo = ''
+            this.uploadLoading = false
         })
         this.props.form.setFieldsValue({
             logo: ''
@@ -256,11 +304,13 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
             customRequest: (data) => {
                 const formData = new FormData()
                 formData.append('file', data.file)
+                this.toggleUploadLoading()
                 this.api.appGroup.uploadIcon(formData).then(res => {
                     const logo = res.data.url
                     this.props.form.setFieldsValue({
                         logo: logo
                     })
+                    this.toggleUploadLoading()
 
                     const fileRender = new FileReader()
                     fileRender.onload = (ev) => {
@@ -363,9 +413,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                             {getFieldDecorator('not_in_appstore', {
                                 initialValue: not_in_appstore,
                                 rules: [
-                                    {
-                                        required: true, message: "Required"
-                                    }
+                                    { required: true, message: "Required" }
                                 ]
                             })(
                                 <Radio.Group
@@ -390,6 +438,10 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                         },
                                     ]
                                 })(<Input autoComplete="off" disabled={!this.isAdd && !!bundle_id} />)}
+                                <Button type="primary" style={{ marginLeft: '10px' }}
+                                    onClick={this.importAppInfo}
+                                    loading={this.importLoading}
+                                    disabled={!this.useNot_in_appstore}>Import</Button>
                             </FormItem> : <FormItem label="Pkg Name">
                                     {getFieldDecorator('pkg_name', {
                                         initialValue: pkg_name,
@@ -411,6 +463,10 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                         ]
                                         //  disabled={!this.useNot_in_appstore || (!this.isAdd && !!pkg_name)}
                                     })(<Input autoComplete="off" disabled={!this.isAdd && !!pkg_name} />)}
+                                    <Button type="primary" style={{ marginLeft: '10px' }}
+                                        onClick={this.importAppInfo}
+                                        loading={this.importLoading}
+                                        disabled={!this.useNot_in_appstore}>Import</Button>
                                 </FormItem>
                         }
 
@@ -439,7 +495,8 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(
                                 <Upload {...props}>
-                                    {this.logo || logo ? <img style={{ width: '100px' }} src={this.logo || logo} alt="avatar" /> : <AntIcon className={styles.workPlus} type='plus' />}
+                                    {this.logo || logo ? <img style={{ width: '100px' }} src={this.logo || logo} alt="avatar" />
+                                        : <AntIcon className={styles.workPlus} type={this.uploadLoading ? 'loading' : 'plus'} />}
                                 </Upload>
                             )}
                         </FormItem>

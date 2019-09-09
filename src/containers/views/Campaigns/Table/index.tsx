@@ -5,7 +5,7 @@ import { inject, observer } from 'mobx-react'
 import { observable, action, runInAction } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
-import { statusOption } from '../web.config'
+import { statusOption, trackingTypeOption } from '../web.config'
 
 interface IStoreProps {
     getCampaignsLoading?: boolean
@@ -21,7 +21,7 @@ interface IStoreProps {
 }
 
 interface IProps extends IStoreProps {
-    scrollY: number
+    // scrollY: number
 }
 
 @inject(
@@ -98,7 +98,7 @@ class CampaignsTable extends ComponentExt<IProps> {
                     rowKey="id"
                     loading={getCampaignsLoading}
                     dataSource={campaigns}
-                    scroll={{ y: scrollY, x: '130%' }}
+                    scroll={{ y: scrollY, x: 2030 }}
                     pagination={{
                         current: page,
                         pageSize,
@@ -114,6 +114,14 @@ class CampaignsTable extends ComponentExt<IProps> {
                     <Table.Column<ICampaignStore.ICampainginForList> key="campaign_name" title="Campaign Name" dataIndex="campaign_name" width={200} />
                     <Table.Column<ICampaignStore.ICampainginForList> key="target_code" title="Target Code" dataIndex="target_code" width={200} />
                     <Table.Column<ICampaignStore.ICampainginForList> key="ad_type" title="Ad Type" dataIndex="ad_type" width={100} />
+
+                    <Table.Column<ICampaignStore.ICampainginForList>
+                        key="tracking_url_type"
+                        title="Tracking Type"
+                        dataIndex="tracking_type"
+                        width={120}
+                        render={(_, record) => (trackingTypeOption.find(v => v.value === record.tracking_url_type) || { key: '--' }).key}
+                    />
 
                     <Table.Column<ICampaignStore.ICampainginForList> key="user_name" title="SEN Account" dataIndex="user_name" width={200} />
                     <Table.Column<ICampaignStore.ICampainginForList> key="start_time" title="Start Time" dataIndex="start_time" width={200} />

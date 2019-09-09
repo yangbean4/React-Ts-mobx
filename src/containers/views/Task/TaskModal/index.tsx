@@ -9,6 +9,7 @@ import PageLoading from '@components/PageLoading'
 import moment from 'moment'
 import * as styles from './index.scss'
 import * as taskStyles from '../index.scss'
+import { queryType } from '../web.config'
 
 const SceneModal = Loadable({
     loader: () => import(/* webpackChunkName: "UserModal" */ '@views/Scene/SceneModal'),
@@ -100,27 +101,23 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
      * 通过appid 获取ccene列表
      */
     @action
-    getSceneList = async (app_key: string,scren_name:string) => {
-        debugger
-        try{
+    getSceneList = async (app_key: string, scren_name: string) => {
+        try {
             const res = await this.api.task.getTaskendScence({
                 app_key
             });
-            console.log(res)
             runInAction('SET_SCENELIST', () => {
                 this.sceneList = res.data[app_key] || [];
-                const _id = this.sceneList.find((item) => 
+                const _id = this.sceneList.find((item) =>
                     item.name === scren_name
                 )
                 console.log(this.sceneList);
                 this.props.form.setFieldsValue({
-                    scene_id:_id.id
+                    scene_id: _id.id
                 })
             })
-
-
-        }catch(err){
-            console.log(err)
+        } catch (err) {
+            console.error(err)
         }
     }
 
@@ -141,7 +138,7 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
         console.log(scene);
         const scren_name = scene.scene_name;
         const appKey = this.props.form.getFieldValue('app_key')
-        this.getSceneList(appKey,scren_name)
+        this.getSceneList(appKey, scren_name)
         this.toggleSceneModal();
     }
 
@@ -154,17 +151,17 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
      * appid变更后获取有关数据
      */
     @action
-    changeAppid = (app_key: string,option) => {
+    changeAppid = (app_key: string, option) => {
         // this.props.optionListDb.IgePkgname;
         // debugger
         // const temp = JSON.parse(JSON.stringify(this.props.optionListDb));
         // console.log(temp)
-        
+
         console.log(option)
         const o = this.selectIgePkgname.find(v => v.app_key == app_key) || {};
         this.sceneList = o.scene;
         this.props.form.setFieldsValue({
-            app_id:  option.key
+            app_id: option.key
         })
         Promise.all([
             // this.getSceneList(app_key),
@@ -183,12 +180,12 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
         const keys = ['app_id', 'geo', 'date', 'pkg_name'];
         validateFields(keys, async (err, values) => {
             if (err) return;
-            console.log(values)
             let res = await this.api.task.getDemoNum({
                 app_id: values.app_id,
                 geo: values.geo,
                 pkg_name: values.pkg_name,
-                report_date: values.date.map(m => m.format(dateFormat)).join(',')
+                report_date: values.date.map(m => m.format(dateFormat)).join(','),
+                type: queryType.query
             });
 
             runInAction('SET_VIDEO_NUM', () => {
@@ -309,7 +306,7 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
                             </Select>
                         )}
                     </FormItem>
-                    <FormItem {...formItemLayout} label="APP ID" style={{display:'none'}}>
+                    <FormItem {...formItemLayout} label="APP ID" style={{ display: 'none' }}>
                         {getFieldDecorator('app_id', {
                             initialValue: task.app_id
                         })(

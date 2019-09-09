@@ -48,6 +48,9 @@
   :global(.submitBtn) {
     margin: 20px 0 40px 260px;
   }
+  :global(.ant-input-number) {
+    width: auto;
+  }
   // ?-----------
   :global(.POP) {
     :global(.ant-input) {
@@ -286,6 +289,7 @@
     float: left;
     display: inline-block;
     height: 100%;
+    line-height: 30px;
     width: max-content;
     :global(.ant-input) {
       width: 140px;
@@ -386,5 +390,11 @@
         }
       }
     }
+  }
+}
+
+:global(.number-no-handle) {
+  :global(.ant-input-number-handler-wrap) {
+    display: none;
   }
 }

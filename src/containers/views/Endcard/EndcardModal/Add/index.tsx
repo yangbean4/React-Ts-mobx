@@ -17,7 +17,7 @@ const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
         sm: { span: 5 },
-        lg: { span: 3 }
+        lg: { span: 4 }
     },
     wrapperCol: {
         xs: { span: 24 },
@@ -30,7 +30,7 @@ const bigLayout = {
     labelCol: {
         xs: { span: 24 },
         sm: { span: 5 },
-        lg: { span: 3 }
+        lg: { span: 4 }
     },
     wrapperCol: {
         xs: { span: 24 },

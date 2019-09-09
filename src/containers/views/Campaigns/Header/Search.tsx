@@ -4,7 +4,7 @@ import { observable, action, runInAction, autorun } from 'mobx'
 import { Form, Input, Row, Col, Button, Select } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
-import { platformOption, statusOption, adTypeOption } from '../web.config'
+import { platformOption, statusOption, adTypeOption, trackingTypeOption } from '../web.config'
 
 const FormItem = Form.Item
 
@@ -195,6 +195,27 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {statusOption.map(c => (
+                    <Select.Option {...c}>
+                      {c.key}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="Tracking Type">
+              {getFieldDecorator('tracking_url_type', {
+                initialValue: filters.tracking_url_type
+              })(
+                <Select
+                  allowClear
+                  showSearch
+                  mode='multiple'
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {trackingTypeOption.map(c => (
                     <Select.Option {...c}>
                       {c.key}
                     </Select.Option>

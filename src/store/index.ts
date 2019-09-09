@@ -57,3 +57,5 @@ export { default as sceneStore } from './sceneStore'
 export { default as categoryConfigStore } from './CategoryConfig'
 
 export { default as whiteBlackListStore } from './WhiteBlackList'
+
+export { default as h5ExportStore } from './h5exportStore'

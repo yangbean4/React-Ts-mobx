@@ -27,6 +27,12 @@ export default {
 
   showGrabMessage(data): Promise<any> {
     return http.post(`${basePath}grabMessage`, data)
-  }
+  },
 
+  /**
+   * 获取IOS/Android信息
+   */
+  getAppInfo(data): Promise<any> {
+    return http.post(`${basePath}grapAppInfo`, data)
+  }
 }

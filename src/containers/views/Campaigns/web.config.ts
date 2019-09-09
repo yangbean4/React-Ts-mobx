@@ -41,3 +41,26 @@ export const bidTypeOption = [
     value: 'CPI'
   }
 ]
+
+export const trackingTypeOption = [
+  {
+    key: 'Install',
+    value: 0
+  },
+  {
+    key: 'Deeplink',
+    value: 1
+  },
+  {
+    key: 'Pull Live Install',
+    value: 20
+  },
+  {
+    key: 'Pull Live Deeplink',
+    value: 21
+  },
+  {
+    key: 'Click Injection',
+    value: 30
+  }
+]

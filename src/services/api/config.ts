@@ -53,4 +53,10 @@ export default {
   allTemplateInfo(): Promise<any> {
     return http.post(`${basePath}template/allTemplateInfo`)
   },
+  /**
+   * 验证新增的key是否存在
+   */
+  checkingField(data): Promise<any> {
+    return http.post(`${basePath}checkingField`, data)
+  },
 }

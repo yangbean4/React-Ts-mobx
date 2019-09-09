@@ -39,4 +39,16 @@ export const value_typeOption = [
     key: 'multiple',
     value: '8',
   },
+  {
+    key: 'int',
+    value: '9'
+  },
+  {
+    key: 'float',
+    value: '10'
+  },
+  {
+    key: 'bool',
+    value: '11'
+  }
 ]

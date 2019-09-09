@@ -5,6 +5,9 @@
       display: flex;
       flex-wrap:wrap;
       max-width: 900px;
+      :global(.ant-spin-nested-loading) {
+        height: max-content;
+      }
       .imgBox {
         width: 180px;
         height: 101px;

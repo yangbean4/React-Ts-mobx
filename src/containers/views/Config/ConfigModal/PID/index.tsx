@@ -203,7 +203,11 @@ class PID extends ComponentExt<IProps> {
         const { onSubmit } = this.props
         this.toggleLoading()
         // this.confirmModal ? this.props.onCancel(this.useData) : onSubmit(this.useData)
-        await onSubmit(this.useData)
+        try {
+            await onSubmit(this.useData)
+        } catch (e) {
+            console.error(e)
+        }
         this.toggleLoading()
     }
 

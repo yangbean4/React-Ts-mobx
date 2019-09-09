@@ -8,7 +8,8 @@ export default function Query() {
   return (
     <div className={styles.container}>
       <Header />
-      <AutoSizer className={styles.tableBox}>{({ height }) => <QueryTable scrollY={height - 160} />}</AutoSizer>
+      <QueryTable />
+      {/* <AutoSizer className={styles.tableBox}>{({ height }) => <QueryTable scrollY={height - 160} />}</AutoSizer> */}
     </div>
   )
 }

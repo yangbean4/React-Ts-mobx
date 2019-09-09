@@ -77,7 +77,7 @@ export class TemplatesStore extends StoreExt {
         } else {
             let data = []
             try {
-                const res = await this.api.template.getTemplates({ pid })
+                const res = await this.api.template.getTemplateDetailIdName({ pid })
                 data = res.data
             } catch (error) {
 

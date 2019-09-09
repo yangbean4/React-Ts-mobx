@@ -165,13 +165,12 @@ class AppGroupTable extends ComponentExt<IProps> {
                 <Table<ITaskStore.ITaskForList>
 
                     className="center-table"
-                    style={{ width: '100%' }}
                     bordered
                     rowKey="id"
                     locale={{ emptyText: 'No Data' }}
                     loading={getTaskLoading}
                     dataSource={taskList}
-                    scroll={{ y: scrollY, x: '140%' }}
+                    scroll={{ y: scrollY, x: 2280 }}
                     pagination={{
                         current: page,
                         pageSize,
@@ -180,18 +179,18 @@ class AppGroupTable extends ComponentExt<IProps> {
                     }}
                     onChange={handleTableChange}
                 >
-                    <Table.Column<ITaskStore.ITaskForList> key="id" title="ID" dataIndex="id" width={100} />
+                    <Table.Column<ITaskStore.ITaskForList> key="id" title="ID" dataIndex="id" width={60} />
                     <Table.Column<ITaskStore.ITaskForList> key="task_name" title="Task Name" dataIndex="task_name" width={200} />
                     <Table.Column<ITaskStore.ITaskForList> key="ige_pkgname" title="IGE Pkgname" dataIndex="ige_pkgname" width={200} />
                     <Table.Column<ITaskStore.ITaskForList> key="app_id" title="App ID" dataIndex="app_id" width={200} />
                     <Table.Column<ITaskStore.ITaskForList> key="scene_name" title="Scene Name" dataIndex="scene_name" width={200} />
-                    <Table.Column<ITaskStore.ITaskForList> key="geo" title="GEO" dataIndex="geo" width={100} />
+                    <Table.Column<ITaskStore.ITaskForList> key="geo" title="GEO" dataIndex="geo" width={70} />
                     <Table.Column<ITaskStore.ITaskForList> key="date" title="Task Date" dataIndex="date" width={200}
-                    render={(_)=>(
-                        <Tooltip placement="leftBottom" title={_}>
-                            <div title={_} className={styles.colClass}>{_}</div>
-                        </Tooltip>
-                    )}
+                        render={(_) => (
+                            <Tooltip placement="leftBottom" title={_}>
+                                <div title={_} className={styles.colClass}>{_}</div>
+                            </Tooltip>
+                        )}
                     />
                     <Table.Column<IAccountStore.IAccount>
                         key="task_process_status"
@@ -203,10 +202,10 @@ class AppGroupTable extends ComponentExt<IProps> {
                             statusEnum[_]
                         )}
                     />
-                    <Table.Column<ITaskStore.ITaskForList> key="pkg_name" title="Pkgname" dataIndex="pkg_name" width={200} 
-                     render={(_) => (
-                        _ ? _ : '-'
-                    )}
+                    <Table.Column<ITaskStore.ITaskForList> key="pkg_name" title="Pkgname" dataIndex="pkg_name" width={200}
+                        render={(_) => (
+                            _ ? _ : '-'
+                        )}
                     />
                     <Table.Column<ITaskStore.ITaskForList> key="priority" title="Priority" dataIndex="priority" width={100} />
                     <Table.Column<ITaskStore.ITaskForList>
@@ -215,7 +214,7 @@ class AppGroupTable extends ComponentExt<IProps> {
                         dataIndex="remark"
                         width={200}
                         render={(_, task) => (
-                            <div style={{'display':'flex'}}>
+                            <div style={{ 'display': 'flex' }}>
                                 <div>
                                     <Tooltip placement="leftBottom" title={_}>
                                         <div className={styles.colClass}>{_}</div>

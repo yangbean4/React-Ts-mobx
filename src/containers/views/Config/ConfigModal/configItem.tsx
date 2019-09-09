@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { observable, action, computed } from 'mobx'
-import { Input, Select, Radio, Divider, Icon } from 'antd'
+import { Input, Select, Radio, InputNumber } from 'antd'
 import { conItem, conItemTreeItem } from './type'
 // import { SketchPicker } from 'react-color'
 import myIcon from '@components/Icon'
@@ -86,8 +86,9 @@ class ConfigItem extends React.Component<IProps> {
 
   @computed
   get useTarget() {
-    if (this.likeTemp && this.props.value) {
-      return this.firstTmpArr.find(ele => ele.id === this.props.value)
+    if (this.likeTemp && (this.props.value || this.props.config.default)) {
+      const v = this.props.value || this.props.config.default
+      return this.firstTmpArr.find(ele => ele.id == v)
     }
     return undefined
   }
@@ -145,7 +146,8 @@ class ConfigItem extends React.Component<IProps> {
     }, [
         this.renderFormItem(),
         // value_type为5 时为radio unit是radio的待选项
-        value_type !== '5' && value_type !== '7' ? React.createElement('span', { className: 'unit', key: 'unit' }, unit && unit.toLowerCase ? unit.toLowerCase() : unit) : null
+        ['5', '7', '11'].includes(value_type) === false
+          ? React.createElement('span', { className: 'unit', key: 'unit' }, unit && unit.toLowerCase ? unit.toLowerCase() : unit) : null
       ])
   }
 
@@ -155,7 +157,8 @@ class ConfigItem extends React.Component<IProps> {
       key,
       value_type,
       unit,
-      option
+      option,
+      isReadOnly = false
     } = config
     let Component, Component1, children = null, props = {
       // 因为是自定义的组件由getFieldDecorator包裹，
@@ -164,7 +167,7 @@ class ConfigItem extends React.Component<IProps> {
       // defaultValue的话初始值getFieldDecorator-rules检测不到有值。
       // 所以这里依然用defaultValue去将初始值设置具体的输入组件上
 
-      // 这个逻辑相当于该组件作为中间组件，去接管getFieldDecorator设置过来的value  和onchange 
+      // 这个逻辑相当于该组件作为中间组件，去接管getFieldDecorator设置过来的value  和onchange
       defaultValue: value,
       value: value,
       key: key,
@@ -214,12 +217,15 @@ class ConfigItem extends React.Component<IProps> {
           allowClear: true,
           showSearch: true,
 
-          // value: value,
+          // value: value ? +value : value,
           // onChange: (val) => this.triggerChange(val),
 
           getPopupContainer: trigger => trigger.parentElement,
           filterOption: (input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0,
           // dropdownRender,
+        }
+        if (_value_type === '7') {
+          addProp.value = value ? +value : value
         }
         const optionArr = this.useSelectPid || config.unit ? this.selectOptionList :
           typeOf(option) === 'array' ? option.map((ele, index) => {
@@ -239,6 +245,7 @@ class ConfigItem extends React.Component<IProps> {
           })
             : typeOf(option) === 'object' ? Object.entries(option).map(([key, value]) => ({ label: value, value: key }))
               : JSON.parse(option || '[]') || []
+
         children = optionArr.map((c, i) => (
           <Select.Option key={c.label + i} value={c.value}>
             {c.label}
@@ -306,9 +313,41 @@ class ConfigItem extends React.Component<IProps> {
 
         break;
       }
+      // int
+      case '9': {
+        Component = InputNumber
+        addProp = {
+          precision: 0,
+          formatter: v => v.toString()
+        }
+        break;
+      }
+      // float
+      case '10': {
+        Component = InputNumber
+        addProp = {
+          className: 'number-no-handle',
+          formatter: v => v.toString()
+        }
+        break;
+      }
+      // boolean
+      case '11': {
+        Component = RadioGroup
+
+        children = [true, false].map(k => (
+          <Radio key={k.toString()} value={k}>
+            {k.toString()}
+          </Radio>
+        ))
+        break;
+      }
       default: {
         return null
       }
+    }
+    if (isReadOnly === true) {
+      addProp ? addProp.disabled = true : (addProp = { disabled: true })
     }
     return Component1 || React.createElement(Component, { ...props, ...addProp }, children)
   }

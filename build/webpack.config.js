@@ -48,6 +48,7 @@ const webPackConfig = {
 }
 if (isDev) {
     webPackConfig.devServer = {
+        host: '0.0.0.0',
         port,
         proxy,
         compress: true,

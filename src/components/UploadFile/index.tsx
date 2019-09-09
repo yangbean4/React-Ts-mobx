@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { Upload, Modal, message, Icon, Button } from 'antd'
+import { Upload, Modal, message, Icon, Button, Spin } from 'antd'
 import { action, computed, runInAction, observable } from 'mobx';
 import { typeOf, testSize } from '@utils/index'
 import * as styles from './index.scss'
@@ -44,6 +44,9 @@ class UploadFile extends React.Component<UploadFileProps> {
 
   @observable
   private previewVisible: boolean = false
+
+  @observable
+  private loading: boolean = false
 
   @observable
   private title: string = ''
@@ -114,7 +117,7 @@ class UploadFile extends React.Component<UploadFileProps> {
 
   // @action
   // setFooter = () => {
-  //   const dom = 
+  //   const dom =
   //   runInAction('SET_FOOTER', () => {
   //     this.footer = dom
   //   })
@@ -125,6 +128,11 @@ class UploadFile extends React.Component<UploadFileProps> {
     console.log(222)
 
     this.btnVisible = true;
+  }
+
+  @action
+  toggleLoading = () => {
+    this.loading = !this.loading
   }
 
   @action
@@ -147,7 +155,11 @@ class UploadFile extends React.Component<UploadFileProps> {
     type = ".png, .jpg, .jpeg, .gif",
     cb?: Function) => {
 
-    const errorCb = (error) => { console.log(error); this.removeFile() };
+    const errorCb = (error) => {
+      console.log(error);
+      this.removeFile()
+      this.toggleLoading()
+    };
     const isVideo = type === 'video'
     const isZip = type === '.zip'
     const fileName = isVideo ? 'Video' : 'Image'
@@ -164,20 +176,26 @@ class UploadFile extends React.Component<UploadFileProps> {
         const houz = file.name.split('.').pop()
         const isHtml = isVideo || type.includes(houz)
         const size = isVideo ? 0 : whs.size;
-        debugger;
-        if (!isHtml) {
+
+        if (!isHtml || (isVideo && file.type.substring(0, 5) !== 'video')) {
           message.error(`Upload failed! The file must be in ${type} format.`);
+          return false
         }
         const isLt2M = !size || file.size / 1024 < size;
         if (!isLt2M) {
           const msg = size >= 1000 ? `${size / 1000} M` : `${size}kb`
           message.error(`Failure，The file size cannot exceed ${msg}!`);
+          return false
         }
         // && !isVideo
         if (isHtml && isLt2M && !isZip && ((whs.width && whs.height) || whs.isScale) || Array.isArray(whs.WH_arr)) {
           const { width, height, isScale = false, WH_arr } = whs;
-          return testSize(file, whs, isVideo ? 'video' : 'img').catch(() => {
-            let msg = isScale ? `Please upload ${fileName} at ${width}/${height}` : `Please upload ${fileName} at ${width}*${height}px`
+          return testSize(file, whs, isVideo ? 'video' : 'img').catch((err) => {
+            if (err) {
+              message.error(err);
+              return Promise.reject()
+            }
+            let msg = isScale ? `Please upload ${fileName} at ${width}:${height}` : `Please upload ${fileName} at ${width}*${height}px`
             if (WH_arr) {
               msg = `Please upload ${fileName} at ${WH_arr[0].width}*${WH_arr[0].height} or ${WH_arr[1].width}*${WH_arr[1].height}`
             }
@@ -197,11 +215,11 @@ class UploadFile extends React.Component<UploadFileProps> {
             formData.append(key, _value)
           })
         }
-
+        this.toggleLoading()
         fun(formData).then(res => {
           const Rdata = res.data
           this.props.onChange(Rdata.url)
-
+          this.toggleLoading()
           if (isZip) {
             runInAction('SET_URL', () => {
               this.previewUrl = file.name
@@ -238,6 +256,7 @@ class UploadFile extends React.Component<UploadFileProps> {
   }
 
 
+
   render() {
 
     const { api, wht, fileType, preData, callBack } = this.props
@@ -258,42 +277,44 @@ class UploadFile extends React.Component<UploadFileProps> {
 
     return (
       <React.Fragment>
-        <Upload
-          {...props}
-        >
-          {this.useUrl ? (
-            isZip ? (
-              <div className={styles.fileBox} onClick={this.stop}>
-                <span className={styles.fileName} title={this.useUrl}>{this.useUrl}</span>
-                <MyIcon className={styles.fileIcon} type="iconguanbi" onClick={this.delClick} />
-                {
-                  (this.props.viewUrl || this.props.hasView) && <Icon className={styles.fileIcon} type="eye" onClick={this.viewFile} />
-                }
-                <CopyToClipboard onCopy={this.onCopy} text={this.useUrl}><Icon className={styles.fileIcon} type="copy" /></CopyToClipboard>
-              </div>
-            ) : (<div className={styles.box} onClick={this.stop} onMouseLeave={this.hideBtn}>
-              <div className={styles.layer}>
-                <Button onClick={this.showLine ? this.showOnline : this.eyeClick} style={{ marginRight: 12 }} type="primary" shape="circle" icon="eye" />
-                <Button onClick={this.delClick} type="primary" shape="circle" icon="delete" />
-                {
-                  this.btnVisible ? (
-                    <div className={styles.onlineWrap}>
-                      <div className="online" onClick={(e) => this.eyeClick(e, 1)}>Online</div>
-                      <div className="offline" onClick={(e) => this.eyeClick(e, 2)} style={{ borderLeft: 'none' }}>Offline</div>
-                    </div>
-                  ) : ''
-                }
+        <Spin spinning={this.loading}>
+          <Upload
+            {...props}
+          >
+            {this.useUrl ? (
+              isZip ? (
+                <div className={styles.fileBox} onClick={this.stop}>
+                  <span className={styles.fileName} title={this.useUrl}>{this.useUrl}</span>
+                  <MyIcon className={styles.fileIcon} type="iconguanbi" onClick={this.delClick} />
+                  {
+                    (this.props.viewUrl || this.props.hasView) && <Icon className={styles.fileIcon} type="eye" onClick={this.viewFile} />
+                  }
+                  <CopyToClipboard onCopy={this.onCopy} text={this.useUrl}><Icon className={styles.fileIcon} type="copy" /></CopyToClipboard>
+                </div>
+              ) : (<div className={styles.box} onClick={this.stop} onMouseLeave={this.hideBtn}>
+                <div className={styles.layer}>
+                  <Button onClick={this.showLine ? this.showOnline : this.eyeClick} style={{ marginRight: 12 }} type="primary" shape="circle" icon="eye" />
+                  <Button onClick={this.delClick} type="primary" shape="circle" icon="delete" />
+                  {
+                    this.btnVisible ? (
+                      <div className={styles.onlineWrap}>
+                        <div className="online" onClick={(e) => this.eyeClick(e, 1)}>Online</div>
+                        <div className="offline" onClick={(e) => this.eyeClick(e, 2)} style={{ borderLeft: 'none' }}>Offline</div>
+                      </div>
+                    ) : ''
+                  }
 
-              </div>
+                </div>
 
-              <div className={styles.trueDom}>
-                {domCom}
+                <div className={styles.trueDom}>
+                  {domCom}
+                </div>
               </div>
-            </div>
-              ))
+                ))
 
-            : this.props.children || uploadButton}
-        </Upload>
+              : this.props.children || uploadButton}
+          </Upload>
+        </Spin>
         <Modal
           destroyOnClose
           visible={this.previewVisible}

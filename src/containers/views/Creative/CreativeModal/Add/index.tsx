@@ -295,20 +295,20 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         if (!err) {
           this.toggleLoading()
           try {
-            if (this.useCreativeType === 3) {
+            if (this.useCreativeType === 3 || (this.useCreativeType === 4 && values.skip_to === 'ige')) {
               const {
                 ige_portrait_offline_url = '',
                 ige_landscape_offline_url = '',
                 ige_portrait_video_cover_url = '',
                 ige_landscape_video_cover_url = '',
               } = values
-              console.log(values)
               if (
                 (!ige_portrait_video_cover_url && !ige_landscape_video_cover_url) ||
                 (ige_portrait_offline_url && !ige_portrait_video_cover_url) ||
                 (ige_landscape_offline_url && !ige_landscape_video_cover_url)
               ) {
-                const error = 'Please upload the landscape cover image./Please upload the portrait cover image.'
+                // const error = 'Please upload the landscape cover image./Please upload the portrait cover image.'
+                const error = 'Please upload the IGE carousel resource!'
                 message.error(error)
                 throw new Error(error)
               }
@@ -325,6 +325,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 desc: this.appwall_description
               }
             }
+
 
             if (this.isAdd) {
               if (app_key) {
@@ -358,21 +359,6 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                   if (res.data.errorcode !== 0) {
 
                     message.error(`${values.creative_name} is in use. Please remove the corresponding relation before deleting it！`)
-                    // this.confirmModal = Modal.confirm({
-                    //     // okText: 'Yes',
-                    //     cancelText: 'Ok',
-                    //     content: ,
-                    //     onCancel: () => {
-                    //         setImmediate(() => {
-                    //             this.confirmModal.destroy()
-                    //         })
-                    //     },
-                    //     onOk: () => {
-                    //         setImmediate(() => {
-                    //             this.confirmModal.destroy()
-                    //         })
-                    //     }
-                    // })
                   } else {
                     await cb()
                   }
@@ -388,6 +374,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
           this.toggleLoading()
         } else {
           console.log(this.useCreativeType === 4 ? Number(this.useCreativeType) * 10 + (this.useSkipTo === 'ige' ? 0 : 1) : this.useCreativeType)
+          console.error(err)
         }
       }
     )
@@ -457,6 +444,16 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         creative_type: 4,
         skip_to: data.creative_type === 40 ? 'ige' : 'gp'
       }
+    }
+    if (!this.isAdd && data.skip_to === 'gp') {
+      Object.keys(data).forEach(k => {
+        if (data[k] === null) {
+          data[k] = undefined
+        }
+      })
+      data.playback_time = data.playback_time || undefined;
+      data.long_play_time = data.long_play_time || undefined;
+      data.lead_is_show_content = data.ige_pkgname ? data.lead_is_show_content : undefined;
     }
     runInAction('SET_APPGroup', () => {
       this.creativeTarget = data
@@ -546,7 +543,6 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
       ige_landscape_video_cover_url = '',
       ige_prefail = 0
     } = this.creativeTarget
-
     const getScale = (width: string | number, height?: number) => {
       if (width === 'landscape' || (width === 16 && height === 9)) {
         return {
@@ -689,6 +685,216 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         app_key: this.app_key
       })
 
+    const igeNormal = () => <React.Fragment>
+      <FormItem label="IGE Video">
+        {getFieldDecorator('video_type',
+          {
+            initialValue: video_type
+          })(
+            <Select
+              showSearch
+              disabled={!this.isAdd && (skip_to !== 'gp' || this.getInitialValue('common_portrait_creative_online_url') || this.getInitialValue('common_landscape_creative_online_url'))}
+              getPopupContainer={trigger => trigger.parentElement}
+              onChange={(val) => this.setVideoType(val)}
+              filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            >
+              {videoType.map(c => (
+                <Select.Option {...c}>
+                  {c.key}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
+      </FormItem>
+      <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
+        <div className={styles.title}>
+          <div className="left">
+            {this.videoType}
+          </div>
+          <div className="right">
+            {this.videoType === 'portrait' ? '9:16' : '16:9'}
+          </div>
+        </div>
+        {this.videoType === 'portrait' ? getFieldDecorator('common_portrait_creative_online_url', {
+          initialValue: this.getInitialValue('common_portrait_creative_online_url'),
+        })(
+          <UploadFile
+            className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`}
+            {...theVideoUrlPropsForVideoOrIge}
+          >
+            <div className={styles.full} />
+          </UploadFile>
+        ) : getFieldDecorator('common_landscape_creative_online_url', {
+          initialValue: this.getInitialValue('common_landscape_creative_online_url'),
+        })(
+          <UploadFile
+            className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`}
+            {...theVideoUrlPropsForVideoOrIge}
+          >
+            <div className={styles.full} />
+          </UploadFile>
+        )
+        }
+      </FormItem>
+
+      <FormItem label="IGE Leadvideo">
+        <Select
+          showSearch
+          disabled={true}
+          value={this.videoType}
+          getPopupContainer={trigger => trigger.parentElement}
+          filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+        >
+          {videoType.map(c => (
+            <Select.Option {...c}>
+              {c.key}
+            </Select.Option>
+          ))}
+        </Select>
+      </FormItem>
+      <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
+        <div className={styles.title}>
+          <div className="left">
+            {this.videoType}
+          </div>
+          <div className="right">
+            {this.videoType === 'portrait' ? '9:16' : '16:9'}
+          </div>
+        </div>
+        {this.videoType === 'portrait'
+          ? getFieldDecorator('ige_leadvideo_portrait_offline_url', {
+            initialValue: this.getInitialValue('ige_leadvideo_portrait_offline_url'),
+            rules: [
+              {
+                required: this.useIgeFlag !== 0, message: "Please upload the leadvideo resources!"
+              }
+            ]
+          })(
+            <UploadFile
+              className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`}
+              {...igeLeadVideoUrlProps}
+            >
+              <div className={styles.full} />
+            </UploadFile>
+          ) : getFieldDecorator('ige_leadvideo_landscape_offline_url', {
+            initialValue: this.getInitialValue('ige_leadvideo_landscape_offline_url'),
+            rules: [
+              {
+                required: this.useIgeFlag !== 0, message: "Please upload the leadvideo resources!"
+              }
+            ]
+          })(
+            <UploadFile
+              className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`}
+              {...igeLeadVideoUrlProps}
+            >
+              <div className={styles.full} />
+            </UploadFile>
+          )}
+      </FormItem>
+      {/* ige-----load-------box */}
+      <Row style={{ paddingBottom: 20 }}>
+        <Col span={5}>
+          <p style={{ textAlign: 'right', marginRight: '12px' }}>IGE Carousel Video:</p>
+        </Col>
+        <Col span={8}>
+          <div className={styles.wang}>
+            <div className={styles.UploadBox}>
+              <div className={styles.title}>
+                <div className="left">
+                  Portrait
+                                                </div>
+                <div className="right">
+                  9:16
+                                                </div>
+              </div>
+              <div>
+                {getFieldDecorator('ige_portrait_offline_url', {
+                  initialValue: this.getInitialValue('ige_portrait_offline_url'),
+                })(
+                  <UploadFile
+                    className={`${styles.sunjiao} ${styles.shu}`}
+                    {...igeCarouselVideoUrlPropsPortrait}
+                  >
+                    <div className={styles.full} />
+                  </UploadFile>
+                )}
+              </div>
+            </div>
+            <div className={styles.UploadBox}>
+              <div className={styles.title}>
+                <div className="left">
+                  Landscape
+                                                </div>
+                <div className="right">
+                  16:9
+                                                </div>
+              </div>
+              <div>
+                {getFieldDecorator('ige_landscape_offline_url', {
+                  initialValue: this.getInitialValue('ige_landscape_offline_url'),
+                })(
+                  <UploadFile
+                    className={`${styles.sunjiao} ${styles.heng}`}
+                    {...igeCarouselVideoUrlPropsLandscape}
+                  >
+                    <div className={styles.full} />
+                  </UploadFile>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.wang}>
+            <div className={styles.UploadBox}>
+              <div className={styles.title}>
+                <div className="left">
+                  Portrait
+                                                </div>
+                <div className="right">
+                  9:16
+                                                </div>
+              </div>
+              <div>
+                {getFieldDecorator('ige_portrait_video_cover_url', {
+                  initialValue: this.getInitialValue('ige_portrait_video_cover_url'),
+                })(
+                  <UploadFile
+                    className={`${styles.sunjiao} ${styles.shu}`}
+                    {...igePortraitCover}
+                  >
+                    <div className={styles.full} />
+                  </UploadFile>
+                )}
+              </div>
+            </div>
+            <div className={styles.UploadBox}>
+              <div className={styles.title}>
+                <div className="left">
+                  Landscape
+                                                </div>
+                <div className="right">
+                  16:9
+                                                </div>
+              </div>
+              <div>
+                {getFieldDecorator('ige_landscape_video_cover_url', {
+                  initialValue: this.getInitialValue('ige_landscape_video_cover_url'),
+                })(
+                  <UploadFile
+                    className={`${styles.sunjiao} ${styles.heng}`}
+                    {...igeLandscapeCover}
+                  >
+                    <div className={styles.full} />
+                  </UploadFile>
+                )}
+              </div>
+            </div>
+          </div>
+        </Col>
+      </Row>
+    </React.Fragment>
+
     return (
       <React.Fragment>
         <AccountModel
@@ -794,7 +1000,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             <FormItem label="Order ID"  >
               {getFieldDecorator('order_id', {
                 initialValue: order_id,
-                validateTrigger: 'blur',
+                // validateTrigger: 'blur',
                 rules: [
                   {
                     required: true, message: "Required"
@@ -840,7 +1046,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
               })(<Input autoComplete="off" disabled={true} />)}
             </FormItem>
 
-            <FormItem label="Icon" className={styles.autoHeight}>
+            <FormItem label="Icon" className={styles.autoHeight + ' ' + styles.icon}>
               {getFieldDecorator('creative_icon_url', {
                 initialValue: this.getInitialValue('creative_icon_url') || this.appLogo,
                 rules: [
@@ -922,12 +1128,12 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                         initialValue: this.getInitialValue('common_portrait_creative_online_url'),
                         rules: [
                           {
-                            required: true, message: "Required"
+                            required: true, message: "Please upload the IVE online resources!"
                           }
                         ]
                       })(
                         <UploadFile {...theVideoUrlPropsForIVEOnline} hasView>
-                          <Button style={{ marginBottom: '10px' }}>
+                          <Button>
                             <MyIcon type="iconshangchuan1" /> Upload Online
                                                     </Button>&nbsp;&nbsp;&nbsp;&nbsp;
                                                     <span>	  ≤4M</span>
@@ -940,7 +1146,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                           initialValue: this.getInitialValue('common_portrait_creative_offline_url'),
                           rules: [
                             {
-                              required: true, message: "Required"
+                              required: true, message: "Please upload the IVE offline resources!"
                             }
                           ]
                         })(
@@ -962,13 +1168,13 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                           initialValue: this.getInitialValue('common_landscape_creative_online_url'),
                           rules: [
                             {
-                              required: true, message: "Required"
+                              required: true, message: "Please upload the IVE online resources!"
                             }
                           ]
                         })(
 
                           <UploadFile {...theVideoUrlPropsForIVEOnline} hasView>
-                            <Button style={{ marginBottom: '10px' }}>
+                            <Button>
                               <MyIcon type="iconshangchuan1" /> Upload Online
                                                             </Button>&nbsp;&nbsp;&nbsp;&nbsp;
                                                             <span>  ≤4M</span>
@@ -982,7 +1188,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                           initialValue: this.getInitialValue('common_landscape_creative_offline_url'),
                           rules: [
                             {
-                              required: true, message: "Required"
+                              required: true, message: "Please upload the IVE offline resources!"
                             }
                           ]
                         })(
@@ -1084,7 +1290,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                     initialValue: this.getInitialValue('common_portrait_creative_offline_url'),
                     rules: [
                       {
-                        required: true, message: "Required"
+                        required: true, message: "Please upload the video resources!"
                       }
                     ]
                   })(
@@ -1098,7 +1304,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                     initialValue: this.getInitialValue('common_landscape_creative_offline_url'),
                     rules: [
                       {
-                        required: true, message: "Required"
+                        required: true, message: "Please upload the video resources!"
                       }
                     ]
                   })(
@@ -1119,217 +1325,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             }
             {
               this.useCreativeType === 3 && <React.Fragment>
-                <FormItem label="IGE Video">
-                  {getFieldDecorator('video_type',
-                    {
-                      initialValue: video_type,
-                      rules: [
-                        {
-                          required: true, message: "Required"
-                        }
-                      ]
-                    })(
-                      <Select
-                        showSearch
-                        disabled={!this.isAdd}
-                        getPopupContainer={trigger => trigger.parentElement}
-                        onChange={(val) => this.setVideoType(val)}
-                        filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                      >
-                        {videoType.map(c => (
-                          <Select.Option {...c}>
-                            {c.key}
-                          </Select.Option>
-                        ))}
-                      </Select>
-                    )}
-                </FormItem>
-                <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
-                  <div className={styles.title}>
-                    <div className="left">
-                      {this.videoType}
-                    </div>
-                    <div className="right">
-                      {this.videoType === 'portrait' ? '9:16' : '16:9'}
-                    </div>
-                  </div>
-                  {this.videoType === 'portrait' ? getFieldDecorator('common_portrait_creative_online_url', {
-                    initialValue: this.getInitialValue('common_portrait_creative_online_url'),
-                  })(
-                    <UploadFile
-                      className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`}
-                      {...theVideoUrlPropsForVideoOrIge}
-                    >
-                      <div className={styles.full} />
-                    </UploadFile>
-                  ) : getFieldDecorator('common_landscape_creative_online_url', {
-                    initialValue: this.getInitialValue('common_landscape_creative_online_url'),
-                  })(
-                    <UploadFile
-                      className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`}
-                      {...theVideoUrlPropsForVideoOrIge}
-                    >
-                      <div className={styles.full} />
-                    </UploadFile>
-                  )
-                  }
-                </FormItem>
-
-                <FormItem label="IGE Leadvideo">
-                  <Select
-                    showSearch
-                    disabled={true}
-                    value={this.videoType}
-                    getPopupContainer={trigger => trigger.parentElement}
-                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                  >
-                    {videoType.map(c => (
-                      <Select.Option {...c}>
-                        {c.key}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </FormItem>
-                <FormItem className={`${styles.autoHeight} ${styles.nolabel} ${styles.UploadBox}`}>
-                  <div className={styles.title}>
-                    <div className="left">
-                      {this.videoType}
-                    </div>
-                    <div className="right">
-                      {this.videoType === 'portrait' ? '9:16' : '16:9'}
-                    </div>
-                  </div>
-                  {this.videoType === 'portrait' ? getFieldDecorator('ige_leadvideo_portrait_offline_url', {
-                    initialValue: this.getInitialValue('ige_leadvideo_portrait_offline_url'),
-                    rules: [
-                      {
-                        required: this.useIgeFlag !== 0, message: "Required"
-                      }
-                    ]
-                  })(
-                    <UploadFile
-                      className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`}
-                      {...igeLeadVideoUrlProps}
-                    >
-                      <div className={styles.full} />
-                    </UploadFile>
-                  ) : getFieldDecorator('ige_leadvideo_landscape_offline_url', {
-                    initialValue: this.getInitialValue('ige_leadvideo_landscape_offline_url'),
-                    rules: [
-                      {
-                        required: this.useIgeFlag !== 0, message: "Required"
-                      }
-                    ]
-                  })(
-                    <UploadFile
-                      className={this.videoType === 'portrait' ? `${styles.sunjiao} ${styles.shu}` : `${styles.sunjiao} ${styles.heng}`}
-                      {...igeLeadVideoUrlProps}
-                    >
-                      <div className={styles.full} />
-                    </UploadFile>
-                  )}
-                </FormItem>
-                {/* ige-----load-------box */}
-                <Row>
-                  <Col span={5}>
-                    <p style={{ textAlign: 'right', marginRight: '12px' }}>IGE Carousel Video:</p>
-                  </Col>
-                  <Col span={8}>
-                    <div className={styles.wang}>
-                      <div className={styles.UploadBox}>
-                        <div className={styles.title}>
-                          <div className="left">
-                            Portrait
-                                                </div>
-                          <div className="right">
-                            9:16
-                                                </div>
-                        </div>
-                        <div>
-                          {getFieldDecorator('ige_portrait_offline_url', {
-                            initialValue: this.getInitialValue('ige_portrait_offline_url'),
-                          })(
-                            <UploadFile
-                              className={`${styles.sunjiao} ${styles.shu}`}
-                              {...igeCarouselVideoUrlPropsPortrait}
-                            >
-                              <div className={styles.full} />
-                            </UploadFile>
-                          )}
-                        </div>
-                      </div>
-                      <div className={styles.UploadBox}>
-                        <div className={styles.title}>
-                          <div className="left">
-                            Landscape
-                                                </div>
-                          <div className="right">
-                            16:9
-                                                </div>
-                        </div>
-                        <div>
-                          {getFieldDecorator('ige_landscape_offline_url', {
-                            initialValue: this.getInitialValue('ige_landscape_offline_url'),
-                          })(
-                            <UploadFile
-                              className={`${styles.sunjiao} ${styles.heng}`}
-                              {...igeCarouselVideoUrlPropsLandscape}
-                            >
-                              <div className={styles.full} />
-                            </UploadFile>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className={styles.wang}>
-                      <div className={styles.UploadBox}>
-                        <div className={styles.title}>
-                          <div className="left">
-                            Portrait
-                                                </div>
-                          <div className="right">
-                            9:16
-                                                </div>
-                        </div>
-                        <div>
-                          {getFieldDecorator('ige_portrait_video_cover_url', {
-                            initialValue: this.getInitialValue('ige_portrait_video_cover_url'),
-                          })(
-                            <UploadFile
-                              className={`${styles.sunjiao} ${styles.shu}`}
-                              {...igePortraitCover}
-                            >
-                              <div className={styles.full} />
-                            </UploadFile>
-                          )}
-                        </div>
-                      </div>
-                      <div className={styles.UploadBox}>
-                        <div className={styles.title}>
-                          <div className="left">
-                            Landscape
-                                                </div>
-                          <div className="right">
-                            16:9
-                                                </div>
-                        </div>
-                        <div>
-                          {getFieldDecorator('ige_landscape_video_cover_url', {
-                            initialValue: this.getInitialValue('ige_landscape_video_cover_url'),
-                          })(
-                            <UploadFile
-                              className={`${styles.sunjiao} ${styles.heng}`}
-                              {...igeLandscapeCover}
-                            >
-                              <div className={styles.full} />
-                            </UploadFile>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
+                {igeNormal()}
                 <FormItem label="IGE Pkgname"  >
                   {getFieldDecorator('ige_pkgname', {
                     initialValue: ige_pkgname,
@@ -1345,7 +1341,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 <FormItem label="IGE Leadvideo Flag">
                   {getFieldDecorator('ige_leadvideo_flag',
                     {
-                      initialValue: ige_leadvideo_flag,
+                      initialValue: 0,
                       rules: [
                         {
                           required: true, message: "Required"
@@ -1490,10 +1486,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                   </div>
                   {getFieldDecorator('playicon_creative_offline_url', {
                     initialValue: this.getInitialValue('playicon_creative_offline_url'),
-
                     rules: [
                       {
-                        required: true, message: "Required"
+                        required: true, message: "Please upload the playicon resources!"
                       }
                     ]
                   })(
@@ -1529,6 +1524,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 </FormItem>
                 {
                   this.useSkipTo === 'ige' && <React.Fragment>
+                    {igeNormal()}
                     <FormItem label="IGE Pkgname"  >
                       {getFieldDecorator('ige_pkgname', {
                         initialValue: ige_pkgname,
@@ -1554,6 +1550,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                           <Select
                             showSearch
                             getPopupContainer={trigger => trigger.parentElement}
+                            onChange={(val) => this.setIgeFlag(val)}
                             filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                           >
                             {igeFlag.map(c => (
@@ -1674,7 +1671,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             {
               (this.useCreativeType === 3 || (this.useCreativeType === 4 && this.useSkipTo === 'ige')) &&
               <React.Fragment>
-                <FormItem label="IGE First Frame" className={`${styles.autoHeight}  ${styles.UploadBox}`}>
+                <FormItem label="IGE First Frame" className={`${styles.autoHeight}  ${styles.UploadBox} ${styles.igeFirstFrame}`}>
                   {getFieldDecorator('ige_firstframe_image_url', {
                     initialValue: this.getInitialValue('ige_firstframe_image_url'),
 
@@ -1715,26 +1712,27 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
             }
 
 
-
-            <FormItem label="If Show Comment">
-              {getFieldDecorator('if_show_comment', {
-                initialValue: Number(if_show_comment),
-                rules: [
-                  {
-                    required: true, message: "Required"
-                  }
-                ]
-              })(
-                <Radio.Group>
-                  {YesOrNo.map(c => (
-                    <Radio key={c.key} value={c.value}>
-                      {c.key}
-                    </Radio>
-                  ))}
-                </Radio.Group>
-              )}
-            </FormItem>
-
+            {
+              this.useSkipTo === 'ige' &&
+              <FormItem label="If Show Comment">
+                {getFieldDecorator('if_show_comment', {
+                  initialValue: Number(if_show_comment),
+                  rules: [
+                    {
+                      required: true, message: "Required"
+                    }
+                  ]
+                })(
+                  <Radio.Group>
+                    {YesOrNo.map(c => (
+                      <Radio key={c.key} value={c.value}>
+                        {c.key}
+                      </Radio>
+                    ))}
+                  </Radio.Group>
+                )}
+              </FormItem>
+            }
             {
               (this.useCreativeType === 3 || (this.useCreativeType === 4 && this.useSkipTo === 'ige')) && <React.Fragment>
 

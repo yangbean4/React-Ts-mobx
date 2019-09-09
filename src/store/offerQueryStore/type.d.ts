@@ -7,6 +7,7 @@ export interface OfferQueryStore extends OfferQueryStoreModel { }
 export interface IQuery {
   id?: number
   app_id?: string
+  app_key?: string
   platform?: string[]
   creative_type?: string[]
   geo?: string[]

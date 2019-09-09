@@ -12,6 +12,8 @@ export const creativeModal: string;
 export const full: string;
 export const hasImg: string;
 export const heng: string;
+export const icon: string;
+export const igeFirstFrame: string;
 export const imgBox: string;
 export const imgTitle: string;
 export const imgbox: string;

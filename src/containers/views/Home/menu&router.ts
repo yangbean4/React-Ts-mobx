@@ -86,6 +86,9 @@ export const asynchronousComponents = {
   // white/black list
   WhiteBlackList: loadComponent(() => import(/* webpackChunkName: "WhileBlackList" */ '@views/WhiteBlackList')),
   WhiteBlackModal: loadComponent(() => import(/* webpackChunkName: "WhiteBlackAdd" */ '@views/WhiteBlackList/WhiteBlackModal')),
+  // H5 Export
+  H5ExportList: loadComponent(() => import(/* webpackChunkName: "WhileBlackList" */ '@views/H5Export')),
+  H5ExportModal: loadComponent(() => import(/* webpackChunkName: "WhiteBlackAdd" */ '@views/H5Export/H5ExportModal')),
 }
 
 // 所有路由的key
@@ -220,6 +223,24 @@ export const routerAndMenu: IRouter[] = [
     authName: 'Offers-Offer Query',
     component: 'OfferQuery',
     path: '/query'
+  },
+  {
+    id: 87,
+    pid: 8,
+    isMenu: true,
+    exact: true,
+    title: 'H5 Export',
+    authName: 'Offers-H5 Export',
+    component: 'H5ExportList',
+    path: '/h5Export'
+  },
+  {
+    id: 871,
+    pid: 87,
+    isMenu: false,
+    path: '/h5Export/add',
+    title: 'Add H5 Export ',
+    component: 'H5ExportModal',
   },
   // ---------Apps manage--------------
   {
@@ -865,7 +886,15 @@ export const routerAndMenu: IRouter[] = [
     // authName: 'Apps-Apps Manage',
     component: 'Logs'
   },
-
+  {
+    id: 486,
+    pid: 48,
+    isMenu: true,
+    title: 'H5 Export',
+    path: '/log/sen_h5',
+    // authName: 'Apps-Apps Manage',
+    component: 'Logs'
+  },
   {
     id: 482,
     pid: 48,

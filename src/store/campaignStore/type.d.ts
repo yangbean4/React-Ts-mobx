@@ -42,6 +42,7 @@ export interface SearchParams {
     account?: string[],
     status?: string[],
     platform?: string[],
+    tracking_url_type?: string[]
 }
 
 export interface ICampainginForList {
@@ -49,6 +50,7 @@ export interface ICampainginForList {
     app_id?: string
     platform?: string
     id?: number
+    tracking_url_type?: number
 }
 
 export interface OptionListDb {

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { observable, action, runInAction, when, autorun, computed } from 'mobx'
-import { Form, Input, Row, Col, Button, Select, Radio, Divider, Icon } from 'antd'
+import { Form, Input, Row, Col, Button, Select, Radio, Divider, Icon, InputNumber, message } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import { value_typeOption } from '../as.config'
@@ -88,7 +88,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
   @computed
   get useSelectPid() {
     if (this.props.config.default) {
-      const target = this.firstTmpArr.find(ele => ele.id === this.props.config.default) || {}
+      const target = this.firstTmpArr.find(ele => ele.id == this.props.config.default) || {}
       return target.pid || this.props.config.template_pid
     } else {
       return this.props.config.template_pid
@@ -109,18 +109,18 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
 
   constructor(props) {
     super(props)
-    autorun(
-      // 一旦...
-      () => {
-        // 父组件要提交
-        const res = !!this.props.shouldSubmit
-        //console.log(this.props.shouldSubmit)
-        if (res) {
-          this.submit()
-        }
-        return res
-      }
-    )
+    // autorun(
+    //   // 一旦...
+    //   () => {
+    //     // 父组件要提交
+    //     const res = !!this.props.shouldSubmit
+    //     //console.log(this.props.shouldSubmit)
+    //     if (res) {
+    //       this.submit()
+    //     }
+    //     return res
+    //   }
+    // )
   }
 
 
@@ -169,12 +169,24 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
             if (Array.isArray(data.option) && data.value_type == '5') {
               data.option = data.option.join(',')
             }
+            // 如果是boolean类型的话 给opiton添加两个值
+            // 不过没什么用 用不上
+            if (data.value_type == '11') {
+              data.option = 'true,false'
+            }
+
+            await this.api.config.checkingField({
+              key: data.key,
+              value_type: data.value_type
+            });
           } catch (err) {
-            //console.log(err)
+            console.error(err)
+            this.toggleLoading()
+            return;
           }
           this.toggleLoading()
         }
-        onOk(data)
+        await onOk(data)
       }
     )
   }
@@ -185,7 +197,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
       this.valueType = value
     })
     this.props.form.setFieldsValue({
-      default: value === '4' ? [''] : undefined
+      default: value === '4' ? [''] : value === '11' ? false : undefined
     })
     this.props.setType(value, {
       key: this.props.form.getFieldValue('key')
@@ -369,6 +381,7 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
               }
               getPopupContainer={trigger => trigger.parentElement}
             >
+              {console.log(this.selectOptionList)}
               {
                 this.selectOptionList.map((c, i) => (
                   <Select.Option key={c.label + i} value={c.value}>
@@ -387,6 +400,56 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
       //     </div>
       //   )
       // }
+      case '9':
+        return <Col span={span} key='default'>
+          <FormItem {...layout}>
+            {getFieldDecorator('default', {
+              initialValue: config.default || 0
+            })(<InputNumber precision={0} formatter={v => v.toString()} />)}
+          </FormItem>
+        </Col>
+      case '10':
+        return <Col span={span} key='default'>
+          <FormItem {...layout}>
+            {getFieldDecorator('default', {
+              initialValue: config.default || 0
+            })(<InputNumber className='number-no-handle' formatter={v => v.toString()} />)}
+          </FormItem>
+        </Col>
+      case '11':
+        return <div className='redioGroup'>
+          <span key='RadioGroup' >
+            {
+              getFieldDecorator('default', {
+                initialValue: config.default || false
+              })(<RadioGroup>
+                {
+                  [true, false].map((c) => (
+                    <Radio key={c.toString()} value={c}>
+                      {c.toString()}
+                    </Radio>
+                  ))
+                }
+              </RadioGroup>)
+            }
+          </span>
+        </div>
+      //     return <div className='redioGroup' key="default">
+      //       <span>
+      //         {getFieldDecorator('default', {
+      //           initialValue: config.default || false
+      //         })(<Checkbox>
+      //           {getFieldDecorator(`unit`,
+      //             {
+      //               rules: [
+      //                 { required: true, message: "Required" }
+      //               ]
+      //             }
+      //           )(<Input autoComplete="off" />)
+      //           }
+      //         </Checkbox>)}
+      //       </span>
+      //     </div>
     }
   }
 
@@ -441,7 +504,10 @@ class AddConfigItem extends ComponentExt<IProps & FormComponentProps> {
           </Col>
           {this.getChild(config)}
           <Col span={3} offset={1}>
-            <Button type="primary" disabled={this.props.config.children && this.props.config.children.some(ele => ele.isEdit)} onClick={this.submit}>OK</Button>
+            <Button type="primary"
+              disabled={this.props.config.children && this.props.config.children.some(ele => ele.isEdit)}
+              loading={this.loading}
+              onClick={this.submit}>OK</Button>
           </Col>
         </Row>
         {

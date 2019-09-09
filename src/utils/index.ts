@@ -275,7 +275,7 @@ export function arrayToTree<T>(array: any[], id = 'id', pid = 'pid', children = 
 
 /**
  * 下划线转驼峰且首字母大些
- * @param str 
+ * @param str
  */
 
 export function camelCase(str: string): string {
@@ -350,7 +350,6 @@ export const testSize = (target: File, config, type: string = 'img') => {
                         (minW_H && maxW_H ? (P_width / P_height) <= maxW_H && (P_width / P_height) > minW_H : P_width / width === P_height / height)
                         : P_width === width && P_height === height
                 }).find(ele => !!ele)
-
                 is ? resolve() : reject();
             }
 
@@ -358,6 +357,9 @@ export const testSize = (target: File, config, type: string = 'img') => {
                 imageCopy.onload = callBack
             } else {
                 imageCopy.addEventListener('canplay', callBack)
+                imageCopy.addEventListener('error', () => {
+                    reject('The video encoding should be H264！')
+                })
             }
 
         } catch (error) {

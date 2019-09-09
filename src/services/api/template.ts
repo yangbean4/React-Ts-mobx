@@ -23,4 +23,7 @@ export default {
   templateDetailInUse(data): Promise<any> {
     return http.post(`${basePath}templateDetailInUse`, data, { useRes: true })
   },
+  getTemplateDetailIdName(data): Promise<any> {
+    return http.post(`${basePath}getTemplateDetailIdName`, data || {})
+  },
 }

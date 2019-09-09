@@ -50,11 +50,11 @@ export default {
     /**
      * 获取资源数量
      */
-    getDemoNum(data): Promise<any> {
-        return http.post(`${basePath}demoNum`, data || {})
+    getDemoNum(data, config = {}): Promise<any> {
+        return http.post(`${basePath}demoNum`, data || {}, config)
     },
 
-    getTaskendScence(data):Promise<any> {
+    getTaskendScence(data): Promise<any> {
         return http.post(`${basePath}sceneInfo`, data || {})
     }
 

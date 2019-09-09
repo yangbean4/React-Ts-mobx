@@ -157,3 +157,14 @@
     height: 100%;
   }
 }
+
+.icon {
+  :global(.ant-form-item-control) {
+    width: 80px;
+  }
+}
+.igeFirstFrame {
+  :global(.ant-form-item-control) {
+    width: 180px;
+  }
+}

@@ -65,6 +65,9 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     private loading: boolean = false
 
     @observable
+    private uploadLoading: boolean = false
+
+    @observable
     private platform: boolean = false
 
     @observable
@@ -104,6 +107,10 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     toggleLoading = () => {
         this.loading = !this.loading
+    }
+    @action
+    toggleUploadLoading = () => {
+        this.uploadLoading = !this.uploadLoading
     }
 
     @action
@@ -284,6 +291,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     removeFile = () => {
         runInAction('SET_URL', () => {
             this.logo = ''
+            this.uploadLoading = false
         })
         this.props.form.setFieldsValue({
             logo: ''
@@ -300,11 +308,13 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
             customRequest: (data) => {
                 const formData = new FormData()
                 formData.append('file', data.file)
+                this.toggleUploadLoading();
                 this.api.appGroup.uploadIcon(formData).then(res => {
                     const logo = res.data.url
                     this.props.form.setFieldsValue({
                         logo: logo
                     })
+                    this.toggleUploadLoading();
 
                     const fileRender = new FileReader()
                     fileRender.onload = (ev) => {
@@ -432,7 +442,8 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                 ]
                             })(
                                 <Upload {...props} disabled={(!!this.manageStore.logo) || (!this.isAdd && !!logo)}>
-                                    {this.logo || logo ? <img style={{ width: '100px' }} src={this.logo || logo} alt="avatar" /> : <AntIcon className={styles.workPlus} type='plus' />}
+                                    {this.logo || logo ? <img style={{ width: '100px' }} src={this.logo || logo} alt="avatar" />
+                                        : <AntIcon className={styles.workPlus} type={this.uploadLoading ? 'loading' : 'plus'} />}
                                 </Upload>
                             )}
                         </FormItem>

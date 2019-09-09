@@ -91,9 +91,10 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
     return !this.getValue('placement_id')
   }
 
-  submit = (data): void => {
+  submit = async (data): Promise<any> => {
     const { onSubmit, form, pidList } = this.props
-    return form.validateFields(
+
+    form.validateFields(
       async (err, values): Promise<any> => {
         if (this.isAdd && pidList.includes(values.placement_id)) {
           this.$message.error('Add failure!PID is already exist! ')

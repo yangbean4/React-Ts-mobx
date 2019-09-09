@@ -14,6 +14,8 @@ export interface conItem {
   pid_type?: number
   indexPath?: string
   typeIsOnly8?: boolean
+  // 是否只读
+  isReadOnly?: boolean
 }
 
 export interface conItemTreeItem extends conItem {

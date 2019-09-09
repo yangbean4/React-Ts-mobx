@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Input, Select, Radio, Button, message, Upload } from 'antd'
+import { Form, Input, Select, Radio, Button, message, Upload, Spin } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { statusOption, platformOption } from '@config/web'
 import { ComponentExt } from '@utils/reactExt'
@@ -75,6 +75,9 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
   private loading: boolean = false
 
   @observable
+  private uploadLoading: boolean = false
+
+  @observable
   private leadContentTarget: ILeadContentStore.ILeadContent = this.props.leadContent || {}
 
   private md5: string = this.leadContentTarget.content_md5
@@ -135,6 +138,11 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
   @action
   toggleLoading = () => {
     this.loading = !this.loading
+  }
+
+  @action
+  toggleUploadLoading = () => {
+    this.uploadLoading = !this.uploadLoading
   }
 
   Cancel = () => {
@@ -227,7 +235,11 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
   }
 
   getUploadprops = (fun: Function, key: string, type = '.png, .jpg, .jpeg, .gif', size?: number, cb?: Function, libao?: boolean) => {
-    const errorCb = (error) => { console.log(error); this.removeFile(key) };
+    const errorCb = (error) => {
+      console.log(error);
+      this.removeFile(key);
+      this.toggleUploadLoading();
+    };
     return {
       showUploadList: false,
       accept: type,
@@ -251,8 +263,9 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
         const file = data.file
         formData.append('file', file)
         formData.append('app_key', this.app_key)
-
+        this.toggleUploadLoading()
         fun(formData).then(res => {
+          this.toggleUploadLoading()
           const data = res.data
           this.props.form.setFieldsValue({
             [key]: data.url
@@ -435,15 +448,18 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                 }
               ]
             })(
-              !urlName ? (<Upload {...templateProps}>
-                {
-                  urlName || (
-                    <Button>
-                      <Icon type="iconshangchuan1" /> Upload Template
-                                    </Button>
-                  )
-                }
-              </Upload>) : (<div>
+              !urlName ? (<Spin spinning={this.uploadLoading}>
+                <Upload {...templateProps}>
+                  {
+                    urlName || (
+                      <Button>
+                        <Icon type="iconshangchuan1" /> Upload Template
+                    </Button>
+                    )
+                  }
+                </Upload>
+              </Spin>
+              ) : (<div>
                 <span style={{ marginRight: 10 }}>{urlName}</span>
                 <Icon type="iconguanbi" onClick={() => this.removeFile('content')} />
               </div>)

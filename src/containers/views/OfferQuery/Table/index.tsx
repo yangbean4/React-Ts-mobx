@@ -20,7 +20,7 @@ interface IStoreProps {
 }
 
 interface IProps extends IStoreProps {
-  scrollY: number
+  // scrollY: number
 }
 
 @inject(
@@ -57,7 +57,6 @@ class QueryTable extends ComponentExt<IProps> {
 
   render() {
     const {
-      scrollY,
       getOfferQueryLoading,
       offerList,
       handleTableChange,
@@ -74,7 +73,7 @@ class QueryTable extends ComponentExt<IProps> {
         locale={{ emptyText: 'No Data' }}
         loading={getOfferQueryLoading}
         dataSource={offerList}
-        scroll={{ y: scrollY, x: '140%' }}
+        scroll={{ x: 2200 }}
         pagination={{
           current: page,
           pageSize,
@@ -83,8 +82,8 @@ class QueryTable extends ComponentExt<IProps> {
         }}
         onChange={handleTableChange}
       >
-        <Table.Column<IOfferQueryStore.IQuery> key="id" title="Offer ID" dataIndex="id" width={200} />
-        <Table.Column<IOfferQueryStore.IQuery> key="app_key" title="App Key" dataIndex="app_key" width={200}
+        <Table.Column<IOfferQueryStore.IQuery> key="id" title="Offer ID" dataIndex="id" width={100} />
+        <Table.Column<IOfferQueryStore.IQuery> key="app_key" title="App Key" dataIndex="app_key" width={100}
           render={(_, record) => (
             <span>
               {
@@ -97,9 +96,9 @@ class QueryTable extends ComponentExt<IProps> {
           )}
         />
         <Table.Column<IOfferQueryStore.IQuery> key="app_id" title="App ID" dataIndex="app_id" width={300} />
-        <Table.Column<IOfferQueryStore.IQuery> key="platform" title="Platform" dataIndex="platform" width={200} />
-        <Table.Column<IOfferQueryStore.IQuery> key="sen_account" title="Sen Account" dataIndex="sen_account" width={230} />
-        <Table.Column<IOfferQueryStore.IQuery> key="campaign_id" title="Campaign ID" dataIndex="campaign_id" width={230}
+        <Table.Column<IOfferQueryStore.IQuery> key="platform" title="Platform" dataIndex="platform" width={100} />
+        <Table.Column<IOfferQueryStore.IQuery> key="sen_account" title="Sen Account" dataIndex="sen_account" width={150} />
+        <Table.Column<IOfferQueryStore.IQuery> key="campaign_id" title="Campaign ID" dataIndex="campaign_id" width={150}
           render={(_, record) => (
             <span>
               {
@@ -112,11 +111,11 @@ class QueryTable extends ComponentExt<IProps> {
           )}
         />
         <Table.Column<IOfferQueryStore.IQuery> key="campaign_name" title="Campaign Name" dataIndex="campaign_name" width={250} />
-        <Table.Column<IOfferQueryStore.IQuery> key="geo" title="GEO" dataIndex="geo" width={150} />
-        <Table.Column<IOfferQueryStore.IQuery> key="bid" title="Bid($)" dataIndex="bid" width={150} />
-        <Table.Column<IOfferQueryStore.IQuery> key="ad_type" title="Ad Type" dataIndex="ad_type" width={200} />
-        <Table.Column<IOfferQueryStore.IQuery> key="campaign_status" title="Campaign Status" dataIndex="campaign_status" width={250} />
-        <Table.Column<IOfferQueryStore.IQuery> key="creative_id" title="Creative ID" dataIndex="creative_id" width={200}
+        <Table.Column<IOfferQueryStore.IQuery> key="geo" title="GEO" dataIndex="geo" width={100} />
+        <Table.Column<IOfferQueryStore.IQuery> key="bid" title="Bid($)" dataIndex="bid" width={80} />
+        <Table.Column<IOfferQueryStore.IQuery> key="ad_type" title="Ad Type" dataIndex="ad_type" width={100} />
+        <Table.Column<IOfferQueryStore.IQuery> key="campaign_status" title="Campaign Status" dataIndex="campaign_status" width={150} />
+        <Table.Column<IOfferQueryStore.IQuery> key="creative_id" title="Creative ID" dataIndex="creative_id" width={100}
           render={(_, record) => (
             <span>
               {
@@ -131,8 +130,8 @@ class QueryTable extends ComponentExt<IProps> {
             </span>
           )}
         />
-        <Table.Column<IOfferQueryStore.IQuery> key="creative_type" title="Creative Type" dataIndex="creative_type" width={200} />
-        <Table.Column<IOfferQueryStore.IQuery> key="endcard_id" title="Endcard ID" dataIndex="endcard_id" width={200}
+        <Table.Column<IOfferQueryStore.IQuery> key="creative_type" title="Creative Type" dataIndex="creative_type" width={120} />
+        <Table.Column<IOfferQueryStore.IQuery> key="endcard_id" title="Endcard ID" dataIndex="endcard_id" width={100}
           render={(_, record) => (
             <span>
               {
@@ -147,7 +146,8 @@ class QueryTable extends ComponentExt<IProps> {
             </span>
           )}
         />
-        <Table.Column<IOfferQueryStore.IQuery> key="offer_status" fixed="right" title="Offer Status" dataIndex="offer_status" width={150} />
+        <Table.Column<IOfferQueryStore.IQuery> key="update_time" title="Update Time" dataIndex="update_time" width={170} />
+        <Table.Column<IOfferQueryStore.IQuery> key="offer_status" fixed="right" title="Offer Status" dataIndex="offer_status" width={130} />
       </Table>
     )
   }

@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
 import { Form, Input, Select, Radio, Button, message, InputNumber, DatePicker } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
-import { statusOption, platformOption, adTypeOption, bidTypeOption } from '../../web.config'
+import { statusOption, platformOption, adTypeOption, bidTypeOption, trackingTypeOption } from '../../web.config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import moment from 'moment'
@@ -101,7 +101,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     get needing() {
         // debugger
         const tt = (this.creatives || []).find(ele => ele.id === this.creativeId)
-        const is = !(tt && tt.creative_type === 1)
+        const is = !(tt && [1, 40, 41].includes(tt.creative_type))
         return is
     }
 
@@ -289,6 +289,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
             comment_group_id = '',
             ad_type = 1,
             tracking_url = '',
+            tracking_url_type = undefined,
             impression_url = '',
             creative_id = '',
             endcard_id = '',
@@ -570,6 +571,23 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             >
                                 {adTypeOption.map(c => (
                                     <Select.Option key={c.key} value={c.value}>
+                                        {c.key}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        )}
+                    </FormItem>
+                    <FormItem label="Tracking Type">
+                        {getFieldDecorator('tracking_url_type', {
+                            initialValue: tracking_url_type
+                        })(
+                            <Select
+                                showSearch
+                                getPopupContainer={trigger => trigger.parentElement}
+                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                            >
+                                {trackingTypeOption.map(c => (
+                                    <Select.Option {...c}>
                                         {c.key}
                                     </Select.Option>
                                 ))}

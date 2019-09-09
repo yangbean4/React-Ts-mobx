@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, } from 'mobx'
-import { Form, Input, Button, message, Modal, Upload, Radio } from 'antd'
+import { Form, Input, Button, message, Modal, Upload, Radio, Spin } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
@@ -52,6 +52,9 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
     private loading: boolean = false
 
     @observable
+    private uploadLoading: boolean = false
+
+    @observable
     private template: ITemplateStore.ITemplate = {}
 
     private removePropFile: boolean = false
@@ -85,6 +88,11 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     toggleLoading = (type?) => {
         this.loading = type !== undefined ? type : !this.loading
+    }
+
+    @action
+    toggleUploadLoading = () => {
+        this.uploadLoading = !this.uploadLoading
     }
 
     @action
@@ -188,12 +196,16 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                 this.setFileName('')
                 const formData = new FormData()
                 formData.append('file', data.file)
+                this.toggleUploadLoading()
                 this.props.upTemplate(formData).then(res => {
+                    this.toggleUploadLoading();
                     this.setTemplate(res.data)
                     this.setFileName(data.file.name)
                 }, () => {
                     this.setTemplate({})
+                    this.toggleUploadLoading();
                 }).catch(() => {
+                    this.toggleUploadLoading();
                     this.setTemplate({})
                 })
             }
@@ -251,11 +263,11 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                                             required: true, message: "Required"
                                         }
                                     ]
-                                })(<Upload {...props}>
+                                })(<Spin spinning={this.uploadLoading} style={{ width: 150 }}><Upload {...props}>
                                     <Button>
                                         <Icon type="iconshangchuan1" /> Upload Template
                                 </Button>
-                                </Upload>)}
+                                </Upload></Spin>)}
                             </FormItem> : (
                                     <React.Fragment>
                                         <FormItem {...formItemLayout} className={styles.textItem} label="Template">

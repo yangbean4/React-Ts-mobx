@@ -1,4 +1,4 @@
-import { observable, action, runInAction, computed } from 'mobx'
+import { observable, action, runInAction } from 'mobx'
 
 import { StoreExt } from '@utils/reactExt'
 import { routerStore } from './../'
@@ -34,7 +34,7 @@ export class AuthStore extends StoreExt {
     userInfo: IAuthStore.UserInfo = null
 
     @observable
-    captcha: string = `${process.env.BASEURL}//captcha/url`
+    captcha: string = `${process.env.BASEURL}captcha`
 
     @observable
     tmpSidebar: IAuthStore.Sidebar[] = []
