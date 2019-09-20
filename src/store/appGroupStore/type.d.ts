@@ -33,7 +33,8 @@ export interface IAppGroup {
     s2s_token?: string
     ad_type?: string
     offer_limit?: string
-    nations?: string[]
+    nations?: string[],
+    imp_cap?: number
 }
 
 export interface IAppGroupForList {
@@ -106,7 +107,7 @@ export interface Placement {
     frequency_num?: number
     frequency_time?: number
     offer_rate?: number
-    accept_cpm?: number // 新增
+    accept_ecpm?: number // 新增
     pid_type?: number
     min_offer_num?: number
     offer_num?: number
@@ -119,5 +120,9 @@ export interface Placement {
     // VC Reward add
     vc_id?: number
     reward_type?: number
-    reward_num?: number
+    reward_num?: number,
+    campaign_filter?: {
+        geo: string;
+        profit: string;
+    }[],
 }

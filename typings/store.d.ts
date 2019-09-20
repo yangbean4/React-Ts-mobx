@@ -27,5 +27,6 @@ declare interface IStore {
   sceneStore: ISceneStore.SceneStore
   categoryConfigStore: ICategoryConfigStore.categoryConfigStore
   whiteBlackListStore: IWhiteBlackListStore.WhiteBlackListStore
-  h5ExportStore: IH5ExportStore.H5ExportStore
+  h5ExportStore: IH5ExportStore.H5ExportStore,
+  manualEcpmStore: IManualEcpmStore.manualEcpmStore
 }

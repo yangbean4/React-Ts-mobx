@@ -309,7 +309,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
                         {
                             this.accountType === 'source' && <FormItem label="Account Type">
                                 {getFieldDecorator('account_type', {
-                                    initialValue: account_type,
+                                    initialValue: account_type && this.accountTypeOption.length ? this.accountTypeOption.find(v => v.type_name === account_type).id : undefined,
                                     rules: [
                                         {
                                             required: true, message: "Required"

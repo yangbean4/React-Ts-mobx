@@ -75,6 +75,15 @@ export class AppGroupStore extends StoreExt {
     }
 
     @action
+    getCountry = async () => {
+        if (this.optionListDb.Country.length) return;
+        const res = await this.api.appGroup.getCountry()
+        runInAction('SET', () => {
+            this.optionListDb.Country = res.data;
+        })
+    }
+
+    @action
     getVCList = async () => {
         const res = await this.api.appGroup.getVC({ id: this.appGroup.id })
         runInAction('SET', () => {

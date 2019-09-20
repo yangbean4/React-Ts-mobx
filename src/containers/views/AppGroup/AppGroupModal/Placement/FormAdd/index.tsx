@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Input, Select, Radio, Button, message, InputNumber, Col, Popover, Icon, Upload, Row } from 'antd'
+import { Form, Input, Select, Radio, Button, InputNumber, Col, Popover, Icon, Upload, Row } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import * as web from '@views/AppGroup/web.config'
 import { ComponentExt } from '@utils/reactExt'
@@ -11,11 +11,11 @@ import VCmodel from './VCmodel'
 import { InitColor } from './Appwall.config'
 const FormItem = Form.Item
 import InputColor from '@components/InputColor/index'
-
+let keys_id: number = 0;
 interface hasResult {
     result?: string
 }
-
+const { Option } = Select;
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
@@ -54,6 +54,7 @@ const noLabelLayout = {
 interface IStoreProps {
     optionListDb?: IAppGroupStore.OptionListDb
     getVCList?: () => Promise<any>
+    getCountry?: () => Promise<any>
     routerStore?: RouterStore
     appGroup?: IAppGroupStore.IAppGroup
 }
@@ -67,8 +68,8 @@ interface IProps extends IStoreProps {
 @inject(
     (store: IStore): IStoreProps => {
         const { appGroupStore, routerStore } = store
-        const { optionListDb, getVCList, appGroup } = appGroupStore
-        return { optionListDb, getVCList, routerStore, appGroup }
+        const { optionListDb, getVCList, appGroup, getCountry } = appGroupStore
+        return { optionListDb, getVCList, routerStore, appGroup, getCountry }
     }
 )
 
@@ -197,8 +198,17 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             async (err, values): Promise<any> => {
                 values = { ...values, ige_carrier_support: values.ige_carrier_support.join(',') }
                 if (!err) {
-                    this.toggleLoading()
                     try {
+                        values.campaign_filter = values.campaign_filter.filter(v => v.geo || v.profit)
+                        console.log(values.campaign_filter)
+                        for (let i in values.campaign_filter) {
+                            if ((values.campaign_filter[i].geo && values.campaign_filter[i].profit == '') || (values.campaign_filter[i].profit != '' && !values.campaign_filter[i].geo)) {
+                                this.$message.error('Please check the geo and profit options')
+                                return
+                            }
+                        }
+                        this.toggleLoading()
+                        debugger
                         if (this.isAdd) {
                             await this.api.appGroup.addPalcement({ ...values, dev_app_id: Id })
                         } else {
@@ -224,8 +234,12 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                     ...res.data,
                     ige_carrier_support: res.data.ige_carrier_support.split(',')
                 }
+
             })
+            keys_id = Number(res.data.campaign_filter.length)
         }
+
+        this.props.getCountry();
 
         // const pidRes = await this.api.appGroup.getPidType()
         // runInAction('set_List', () => {
@@ -266,6 +280,49 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
         this.props.form.setFieldsValue(data)
     }
 
+    // @action
+    // clearCampaignFilter = () => {
+    //     this.Palcement.campaign_filter = []
+    // }
+    removeCam = (k) => {
+        const { form } = this.props;
+        // can use data-binding to get
+        const keys = form.getFieldValue('keys');
+        // We need at least one passenger
+        const index = keys.findIndex(key => key === k);
+        if (keys.length === 1) {
+            // const nextKeys = [...keys]
+            // nextKeys.splice(index + 1, 0, ++keys_id)
+            // // debugger;
+            // form.setFieldsValue({
+            //     keys: nextKeys,
+            // });
+            form.setFieldsValue({
+                [`campaign_filter[${k}].geo`]: '',
+                [`campaign_filter[${k}].profit`]: '',
+                [`campaign_filter[${k}].id`]: ''
+            });
+            // this.Palcement.campaign_filter = []
+            return;
+        }
+        form.setFieldsValue({
+            keys: keys.filter(key => key !== k),
+        });
+
+    }
+
+    addCam = (k) => {
+        const { form } = this.props;
+        const keys = form.getFieldValue('keys');
+        const index = keys.findIndex(key => key === k);
+        const nextKeys = [...keys]
+        nextKeys.splice(index + 1, 0, ++keys_id)
+        // debugger;
+        form.setFieldsValue({
+            keys: nextKeys,
+        });
+    }
+
     componentWillMount() {
         if (this.props.Id === this.props.placementID && this.props.placementID === undefined) {
             this.props.routerStore.replace('/apps')
@@ -275,7 +332,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
 
     render() {
         const { form, optionListDb } = this.props
-        const { getFieldDecorator } = form
+        const { getFieldDecorator, getFieldValue } = form
         const {
             status = 1,
             placement_id = '',
@@ -285,7 +342,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             frequency_time,
             offer_rate,
             creative_type,
-            accept_cpm, // 新增
+            accept_ecpm, // 新增
             // pid_type = this.props.appGroup && this.props.appGroup.contains_native_s2s_pid_types === 1 ? 5 : undefined,
             pid_type = this.usePidtype,
             min_offer_num,
@@ -295,7 +352,12 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             reward_type,
             reward_num,
             style_id,
-            style_detail = {}
+            style_detail = {},
+            campaign_filter = [{
+                geo: '',
+                profit: '',
+                id: ''
+            }]
         } = this.Palcement
 
         const getProps = (key, andColor?) => ({
@@ -341,7 +403,82 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             )
         }
 
-        const vc_icon = this.imageTarget['vc_icon'] || style_detail['vc_icon']
+        const vc_icon = this.imageTarget['vc_icon'] || style_detail['vc_icon'];
+        console.log(campaign_filter && campaign_filter.length > 0 ? Object.keys(campaign_filter) : [0])
+        getFieldDecorator('keys', { initialValue: campaign_filter && campaign_filter.length > 0 ? Object.keys(campaign_filter) : [0] });
+        const keys = getFieldValue('keys');
+        const CampaignItems = keys.map((k) => (
+            <div key={k} className={`${styles.campaignFilter} ${styles.item}`} >
+                <div>
+                    <Form.Item {...formItemLayout} style={{ display: 'inline-block', marginTop: 10 }}>
+                        {getFieldDecorator(`campaign_filter[${k}].geo`, {
+                            initialValue: campaign_filter[k] ? campaign_filter[k].geo : '',
+                            validateTrigger: ['onBlur'],
+                            rules: [
+                                {
+                                    required: false,
+                                    whitespace: true,
+                                    message: "require",
+                                },
+                            ],
+                        })(<Select
+                            showSearch
+                            placeholder="" style={{ width: 100 }}
+                        >
+                            {this.props.optionListDb.Country.map(v => (
+                                <Option key={v.id} value={v.code2}>{v.code2}</Option>
+                            ))}
+                        </Select>)}
+                    </Form.Item>
+                </div>
+                <div>
+                    <Form.Item style={{ display: 'inline-block', marginTop: 10 }}>
+                        {getFieldDecorator(`campaign_filter[${k}].profit`, {
+                            initialValue: campaign_filter[k] ? campaign_filter[k].profit : '',
+                            // validateTrigger: ['onBlur'],
+                            rules: [
+                                {
+                                    required: false,
+                                    message: "require",
+                                },
+                                {
+                                    validator: (r, v, callback) => {
+                                        callback(v < -100 ? 'Profit Rate no less than -100%' : undefined)
+                                    }
+                                }
+                            ],
+                        })(<InputNumber placeholder="" autoComplete="off" min={-100} style={{ width: 170 }} />)}
+                        &nbsp;%
+                    </Form.Item>
+                </div>
+                <div style={{ display: 'none' }}>
+                    <Form.Item >
+                        {getFieldDecorator(`campaign_filter[${k}].id`, {
+                            initialValue: campaign_filter[k] ? campaign_filter[k].id : '',
+                            validateTrigger: ['onBlur'],
+                            rules: [
+                                {
+                                    required: false,
+                                    message: "require",
+                                },
+                            ],
+                        })(<Input type='number' placeholder="" autoComplete="off" />)}
+                    </Form.Item>
+                </div>
+                <div>
+                    <Icon style={{ margin: 5 }}
+                        className="dynamic-delete-button"
+                        type="plus-circle"
+                        onClick={() => this.addCam(k)}
+                    />
+                    {<Icon
+                        className="dynamic-add-button"
+                        type="minus-circle-o"
+                        onClick={() => this.removeCam(k)}
+                    />}
+                </div>
+            </div>
+        ))
 
         return (
             <div className='sb-form'>
@@ -493,8 +630,8 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
 
                     <FormItem label="Lowest eCPM">
-                        $&nbsp;{getFieldDecorator('accept_cpm', {
-                            initialValue: accept_cpm,
+                        $&nbsp;{getFieldDecorator('accept_ecpm', {
+                            initialValue: accept_ecpm,
                             rules: [
                                 {
                                     required: true, message: "Required"
@@ -508,7 +645,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={2} min={0} max={1000} />)}
+                        })(<InputNumber precision={0} min={0} max={1000} />)}
                     </FormItem>
 
                     <FormItem label="Offer Rate">
@@ -959,7 +1096,26 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                         )
                     }
 
-                    <FormItem className={styles.btnBox}>
+                    <Col span={4} className={styles.companyTag}>
+                        <div className={styles.tagWrapper}>
+                            <span>Campaign Filter</span>
+                        </div>
+                    </Col>
+                    <div className={styles.campaignFilterWrap}>
+                        <div className={styles.campaignFilter}>
+                            <div>GEO</div>
+                            <div>Profit Rate
+                                <Popover content={(<p>The minimum Profit Rate can be -100%</p>)}>
+                                    <Icon className={styles.workBtn} type="question-circle" />
+                                </Popover>
+                            </div>
+                            <div>Operate</div>
+                        </div>
+                        {CampaignItems}
+                    </div>
+
+
+                    <FormItem className={styles.btnBox} style={{ marginTop: 10 }}>
                         <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
                         <Button className={styles.btn2} onClick={() => this.Cancel()}>Cancel</Button>
                     </FormItem>

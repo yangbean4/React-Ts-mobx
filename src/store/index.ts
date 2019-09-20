@@ -59,3 +59,4 @@ export { default as categoryConfigStore } from './CategoryConfig'
 export { default as whiteBlackListStore } from './WhiteBlackList'
 
 export { default as h5ExportStore } from './h5exportStore'
+export { default as manualEcpmStore } from './manualEcpmStore'

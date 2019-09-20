@@ -351,7 +351,8 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
             dev_id = '',
             ad_type = 0,
             offer_limit = '',
-            nations = []
+            nations = [],
+            imp_cap = ''
         } = reData
         return (
             <React.Fragment>
@@ -768,6 +769,14 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                                 {
                                                     required: true, message: "Required",
                                                 },
+                                                {
+                                                    validator: (r, v, callback) => {
+                                                        if (v < 0) {
+                                                            callback('The preload number is a non-negative integer!')
+                                                        }
+                                                        callback()
+                                                    }
+                                                }
                                             ]
                                         })(<Input autoComplete="off" />)}
                                     </FormItem>
@@ -848,6 +857,27 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                         </Select.Option>
                                     ))}
                                 </Select>
+                            )}
+                        </FormItem>
+                        <FormItem label="Daily Cap">
+                            $&nbsp;
+                            {getFieldDecorator('imp_cap', {
+                                initialValue: imp_cap,
+                                rules: [
+                                    {
+                                        required: false, message: "Required",
+                                    },
+                                    {
+                                        validator: (r, v, callback) => {
+                                            if (v < 0) {
+                                                callback('The Daily Cap is a non-negative integer!')
+                                            }
+                                            callback()
+                                        }
+                                    }
+                                ]
+                            })(
+                                <InputNumber min={0} max={9999999999} precision={0}/>
                             )}
                         </FormItem>
                         <FormItem className={styles.btnBox}>

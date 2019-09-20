@@ -15,6 +15,10 @@ export const asynchronousComponents = {
   //------------------Apps Manage
   AppManages: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppMange')),
   AppManagesModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppMange/AppMangeModal')),
+  //------------------Manual eCPM
+  Manual: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/ManualEcpm')),
+  ManualAdd: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/ManualEcpm/ManualModel')),
+  ManualEdit: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/ManualEcpm/ManualModel')),
   //------------------Compaigns
   Campaigns: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns')),
   CampaignsAdd: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns/CampaignsModel/Add')),
@@ -438,28 +442,63 @@ export const routerAndMenu: IRouter[] = [
   {
     id: 85,
     pid: 8,
+    title: 'Campaigns',
+    isMenu: true,
+    hasBread: false,
+  },
+
+
+  {
+    id: 851,
+    pid: 85,
     isMenu: true,
     exact: true,
     title: 'Campaigns',
-    authName: 'Offers-Campaigns',
+    authName: 'Offers-Campaigns-Campaigns',
     component: 'Campaigns',
     path: '/campaigns'
   },
   {
-    id: 851,
-    pid: 85,
+    id: 8551,
+    pid: 851,
     isMenu: false,
     path: '/campaigns/add',
     title: 'Add Campaign ',
     component: 'CampaignsAdd',
   },
   {
-    id: 851,
-    pid: 85,
+    id: 8552,
+    pid: 851,
     isMenu: false,
     path: '/campaigns/edit/:id',
     title: 'Edit Campaign',
     component: 'CampaignsEdit',
+  },
+  {
+    id: 852,
+    pid: 85,
+    isMenu: true,
+    exact: true,
+    title: 'Manual eCPM',
+    authName: 'Offers-Campaigns-Manual eCPM',
+    component: 'Manual',
+    path: '/manual'
+  },
+  {
+    id: 8521,
+    pid: 852,
+    isMenu: false,
+    title: 'Add',
+    component: 'ManualAdd',
+    path: '/manual/add'
+  },
+  {
+    id: 8522,
+    pid: 852,
+    isMenu: false,
+    title: 'Edit',
+    component: 'ManualAdd',
+    path: '/manual/edit/:id'
   },
   // --------Company---------------
   {
@@ -855,13 +894,13 @@ export const routerAndMenu: IRouter[] = [
     exact: true,
     authName: 'Log'
   },
-  {
-    id: 4002,
-    path: '/log/:id',
-    title: '',
-    component: 'Logs',
-    isMenu: false
-  },
+  // {
+  //   id: 4002,
+  //   path: '/log/:id',
+  //   title: '',
+  //   component: 'Logs',
+  //   isMenu: false
+  // },
   {
     id: 41,
     pid: 4,
@@ -884,7 +923,7 @@ export const routerAndMenu: IRouter[] = [
     title: 'Apps Manage',
     path: '/log/appsManage',
     // authName: 'Apps-Apps Manage',
-    component: 'Logs'
+    component: 'Logs',
   },
   {
     id: 486,
@@ -972,15 +1011,36 @@ export const routerAndMenu: IRouter[] = [
     path: '/log/comment_group',
     component: 'Logs'
   },
+
   {
     id: 485,
     pid: 48,
     isMenu: true,
+    hasBread: false,
     title: 'Campaigns',
-    path: '/log/campaigns',
-    // authName: 'Offers-Campaigns',
+  },
+  {
+    id: 4851,
+    pid: 485,
+    isMenu: true,
+    title: 'Campaigns',
+    path: '/log/Campaigns',
+    // authName: 'Offers-Comments-Comment Templates',
     component: 'Logs'
   },
+  {
+    id: 4852,
+    pid: 485,
+    isMenu: true,
+    title: 'Manual eCMP',
+    path: '/log/sen_offer_cpm',
+    // authName: 'Offers-Comments-Comment Templates',
+    component: 'Logs'
+  },
+
+  // path: '/log/campaigns',
+  // authName: 'Offers-Campaigns',
+  // component: 'Logs'
   {
     id: 42,
     pid: 4,

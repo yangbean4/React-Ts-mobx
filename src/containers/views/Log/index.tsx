@@ -23,16 +23,16 @@ interface IStoreProps {
 
 class Template extends Component<IStoreProps> {
 
-    private unsubscribeFromStore: () => void
+    // private unsubscribeFromStore: () => void
     componentWillMount() {
         this.computedType(this.props.routerStore.location.pathname)
-        this.unsubscribeFromStore = this.props.routerStore.history.listen((location, action) => {
-            this.computedType(location.pathname)
-        })
+        // this.unsubscribeFromStore = this.props.routerStore.history.listen((location, action) => {
+        //     this.computedType(location.pathname)
+        // })
     }
-    componentWillUnmount() {
-        this.unsubscribeFromStore()
-    }
+    // componentWillUnmount() {
+    //     this.unsubscribeFromStore()
+    // }
 
     computedType = (pathname: string) => {
         const type = pathname.split('/log/').pop()

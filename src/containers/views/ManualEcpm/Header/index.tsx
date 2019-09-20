@@ -7,15 +7,16 @@ import PortalsBtn from '@components/portalsBtn'
 
 interface IStoreProps {
     routerStore?: RouterStore
-    setCampaingn?: (Campaingns: ICampaignStore.ICampaignGroup) => void
-    clearCampaingn?: (Campaingns: ICampaignStore.ICampaignGroup) => void
+    // setCampaingn?: (Campaingns: ICampaignStore.ICampaignGroup) => void
+    // clearCampaingn?: (Campaingns: ICampaignStore.ICampaignGroup) => void
 }
 
 @inject(
     (store: IStore): IStoreProps => {
-        const { routerStore, campaignStore } = store
+        const { routerStore, manualEcpmStore } = store
         return {
-            routerStore, setCampaingn: campaignStore.setCampaingn, clearCampaingn: campaignStore.clearCampaingn
+            routerStore,
+            //  clearCampaingn: manualEcpmStore.clearCampaingn
         }
     }
 )
@@ -23,8 +24,8 @@ interface IStoreProps {
 class Header extends ComponentExt<IStoreProps> {
 
     addCompany = () => {
-        this.props.clearCampaingn({})
-        this.props.routerStore.push('/campaigns/add')
+        // this.props.clearCampaingn({})
+        this.props.routerStore.push('/manual/add')
     }
 
     render() {
@@ -32,11 +33,11 @@ class Header extends ComponentExt<IStoreProps> {
             <div className='searchForm'>
                 <Search />
                 {
-                    this.$checkAuth('Offers-Campaigns-Campaigns-Add', (
-                        <PortalsBtn querySelector='#companyAddBtn'>
+                    this.$checkAuth('Offers-Campaigns-Manual eCPM-Add', (
+                        <PortalsBtn querySelector='#ManualAddBtn'>
                             <Button icon='plus' type="primary" onClick={this.addCompany}>
                                 Add
-                        </Button>
+                            </Button>
                         </PortalsBtn>
                     ))
                 }
