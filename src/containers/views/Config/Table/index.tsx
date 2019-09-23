@@ -98,7 +98,7 @@ class ConfigTable extends ComponentExt<IProps> {
 
     @action
     handelOk = (data) => {
-        const { id, copyTo, pkg_name, platform } = data;
+        const { id, copyTo, pkg_name, platform, newSdk } = data;
         const setTargetConfig = (data) => {
             this.setTargetConfig({
                 ...data,
@@ -117,7 +117,7 @@ class ConfigTable extends ComponentExt<IProps> {
                 this.hideRoleModalVisible()
                 break;
             case 'copy':
-                setTargetConfig({ ...this.targetConfig, config_version: copyTo, is_duplicate: 1, pkg_name })
+                setTargetConfig({ ...this.targetConfig, config_version: copyTo, is_duplicate: 1, pkg_name, sdk_version: newSdk })
                 this.goEdit(id, copyTo ? `?copyTo=${copyTo}` : undefined)
                 break;
             case 'edit':
@@ -147,12 +147,15 @@ class ConfigTable extends ComponentExt<IProps> {
 
     @action
     setTargetConfig(config, id?) {
-        const { pkg_name, platform, config_version, versionArr = [], is_duplicate = 0, bundle_id } = config
+        const { pkg_name, platform, config_version, versionArr = [], is_duplicate = 0, bundle_id, sdk_version } = config
         const ver = id === undefined ? undefined : versionArr.find(item => item.id === id).version
         const gg = {
             is_duplicate,
             pkg_name: platform === 'android' ? pkg_name : bundle_id,
-            platform, config_version: ver || config_version, config_deploy_id: id ? Number(id) : id
+            platform,
+            config_version: ver || config_version,
+            config_deploy_id: id ? Number(id) : id,
+            sdk_version
         }
         this.props.setTargetConfig(gg)
         localStorage.setItem('TargetConfig', JSON.stringify(gg))

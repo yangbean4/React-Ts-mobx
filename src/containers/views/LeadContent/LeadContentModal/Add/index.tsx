@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Input, Select, Radio, Button, message, Upload, Spin } from 'antd'
+import { Form, Input, Select, Radio, Button, Icon as AntIcon, message, Upload, Spin } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { statusOption, platformOption } from '@config/web'
 import { ComponentExt } from '@utils/reactExt'
+import UploadFile from '@components/UploadFile'
 import Icon from '@components/Icon'
 import * as styles from './index.scss'
 
@@ -89,7 +90,7 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
   private app_key: string = this.props.app_key || this.leadContentTarget.app_key || undefined
 
   @observable
-  private fileTarget: object = {}
+  private fileTarget: any = {}
 
   @computed
   get isAdd() {
@@ -290,7 +291,8 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
       name = '',
       language = '',
       status = 1,
-      content = ''
+      content = '',
+      lead_content_image = ''
     } = this.leadContentTarget
 
     const urlName = this.fileTarget['content'] !== undefined ? this.fileTarget['content'] : (content || '').split('/').pop();
@@ -463,6 +465,32 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                 <span style={{ marginRight: 10 }}>{urlName}</span>
                 <Icon type="iconguanbi" onClick={() => this.removeFile('content')} />
               </div>)
+            )
+            }
+          </FormItem>
+
+          <FormItem label="Lead Content Image">
+            {getFieldDecorator('lead_content_image', {
+              initialValue: lead_content_image,
+              rules: [
+                { required: true, message: 'Required' }
+              ]
+            })(
+              <UploadFile
+                className={styles.LeadImgBox}
+                api={this.api.creative.handleUploadImg}
+                preData={{ type: 13 }}
+                uploadBefore={(file) => {
+                  if (this.isAdd && !this.props.form.getFieldValue('app_key')) {
+                    message.warning('The selected app key is invalid.');
+                    return false;
+                  }
+                }}
+                handleFormData={(formData) => formData.append('app_key', this.isAdd ? this.props.form.getFieldValue('app_key') : app_key)}
+                wht={{ size: 2048 }}
+              >
+                <AntIcon className={styles.workPlus} type="plus" />
+              </UploadFile>
             )
             }
           </FormItem>

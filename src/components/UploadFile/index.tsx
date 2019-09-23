@@ -33,6 +33,8 @@ export interface UploadFileProps {
   api?: (data: any) => Promise<any>
   children?: React.ReactNode
   preData?: object
+  uploadBefore?: (data) => void
+  handleFormData?: (data) => void
   callBack?: (data) => void
   className?: string
   viewUrl?: string
@@ -203,6 +205,9 @@ class UploadFile extends React.Component<UploadFileProps> {
             return Promise.reject()
           })
         }
+        if (isHtml && isLt2M && this.props.uploadBefore) {
+          return this.props.uploadBefore(file);
+        }
         return isHtml && isLt2M
       },
       customRequest: (data) => {
@@ -214,6 +219,9 @@ class UploadFile extends React.Component<UploadFileProps> {
             const _value = value as string
             formData.append(key, _value)
           })
+        }
+        if (this.props.handleFormData) {
+          this.props.handleFormData(formData);
         }
         this.toggleLoading()
         fun(formData).then(res => {

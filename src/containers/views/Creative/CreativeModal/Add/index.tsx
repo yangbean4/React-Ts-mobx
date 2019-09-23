@@ -541,7 +541,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
       ige_landscape_offline_url = '',
       ige_portrait_video_cover_url = '',
       ige_landscape_video_cover_url = '',
-      ige_prefail = 0
+      ige_prefail = 0,
+      image = ''
     } = this.creativeTarget
     const getScale = (width: string | number, height?: number) => {
       if (width === 'landscape' || (width === 16 && height === 9)) {
@@ -576,63 +577,63 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
     const theVideoUrlPropsForIVEOnline = this.getUploadprops(this.api.creative.uploadZip, {
       size: 4 * 1024
     }, {
-        type: 9,
-        is_online: 1,
-        app_key: this.app_key
-      }, '.zip')
+      type: 9,
+      is_online: 1,
+      app_key: this.app_key
+    }, '.zip')
 
     const theVideoUrlPropsForVideoOrIge = this.getUploadprops(this.api.creative.uploadVideo, {
       ...getScale(this.videoType),
       time: 30,
       size: 4 * 1024
     }, {
-        type: this.useCreativeType === 2 ? 3 : 4,
-        video_type: this.videoType === 'portrait' ? 2 : 1,
-        app_key: this.app_key
-      }, 'video', (() => {
-        if (this.useCreativeType === 2) {
-          if (this.videoType === 'portrait') {
-            return 'common_portrait_creative_offline_url'
-          } else {
-            return 'common_landscape_creative_offline_url'
-          }
-        } else if (this.useCreativeType === 3) {
-          if (this.videoType === 'portrait') {
-            return 'common_portrait_creative_online_url'
-          } else {
-            return 'common_landscape_creative_online_url'
-          }
+      type: this.useCreativeType === 2 ? 3 : 4,
+      video_type: this.videoType === 'portrait' ? 2 : 1,
+      app_key: this.app_key
+    }, 'video', (() => {
+      if (this.useCreativeType === 2) {
+        if (this.videoType === 'portrait') {
+          return 'common_portrait_creative_offline_url'
+        } else {
+          return 'common_landscape_creative_offline_url'
         }
-      })())
+      } else if (this.useCreativeType === 3) {
+        if (this.videoType === 'portrait') {
+          return 'common_portrait_creative_online_url'
+        } else {
+          return 'common_landscape_creative_online_url'
+        }
+      }
+    })())
 
     const igeLeadVideoUrlProps = this.getUploadprops(this.api.creative.uploadVideo, {
       ...getScale(this.videoType),
       time: 8,
       size: 1 * 1024
     }, {
-        type: 5,
-        video_type: this.videoType === 'portrait' ? 2 : 1,
-        app_key: this.app_key
-      }, 'video', this.videoType === 'portrait' ? 'ige_leadvideo_portrait_offline_url' : 'ige_leadvideo_landscape_offline_url')
+      type: 5,
+      video_type: this.videoType === 'portrait' ? 2 : 1,
+      app_key: this.app_key
+    }, 'video', this.videoType === 'portrait' ? 'ige_leadvideo_portrait_offline_url' : 'ige_leadvideo_landscape_offline_url')
 
 
     const igeCarouselVideoUrlPropsPortrait = this.getUploadprops(this.api.creative.uploadVideo, {
       ...getScale(9, 16),
       size: 1500
     }, {
-        type: 6,
-        video_type: 2,
-        app_key: this.app_key
-      }, 'video', 'ige_portrait_offline_url')
+      type: 6,
+      video_type: 2,
+      app_key: this.app_key
+    }, 'video', 'ige_portrait_offline_url')
 
     const igeCarouselVideoUrlPropsLandscape = this.getUploadprops(this.api.creative.uploadVideo, {
       ...getScale(16, 9),
       size: 1500
     }, {
-        type: 7,
-        video_type: 1,
-        app_key: this.app_key
-      }, 'video', 'ige_landscape_offline_url')
+      type: 7,
+      video_type: 1,
+      app_key: this.app_key
+    }, 'video', 'ige_landscape_offline_url')
 
     const theVideoUrlPropsForPlayicon = this.getUploadprops(this.api.creative.uploadVideo, {
       width: 1,
@@ -640,10 +641,10 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
       isScale: true,
       size: 4 * 1024
     }, {
-        type: 8,
-        // video_type: this.videoType === 'portrait' ? 2 : 1,
-        app_key: this.app_key
-      }, 'video', 'playicon_creative_offline_url')
+      type: 8,
+      // video_type: this.videoType === 'portrait' ? 2 : 1,
+      app_key: this.app_key
+    }, 'video', 'playicon_creative_offline_url')
 
     const ige_firstframe_image = this.getUploadprops(this.api.creative.handleUploadImg, {
       WH_arr: [
@@ -652,9 +653,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
       ],
       size: 500
     }, {
-        type: 4,
-        app_key: this.app_key
-      })
+      type: 4,
+      app_key: this.app_key
+    })
 
 
     const creativeIconProps = this.getUploadprops(this.api.creative.handleUploadImg, {
@@ -662,18 +663,18 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
       height: 180,
       size: 100
     }, {
-        type: 2,
-        app_key: this.app_key
-      })
+      type: 2,
+      app_key: this.app_key
+    })
 
 
     const igePortraitCover = this.getUploadprops(this.api.creative.handleUploadImg, {
       ...getScale(9, 16),
       size: 200
     }, {
-        type: 3,
-        app_key: this.app_key
-      })
+      type: 3,
+      app_key: this.app_key
+    })
 
     const igeLandscapeCover = this.getUploadprops(this.api.creative.handleUploadImg, {
       // width: 16,// height: 9,
@@ -681,9 +682,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
       isScale: true,
       size: 200
     }, {
-        type: 3,
-        app_key: this.app_key
-      })
+      type: 3,
+      app_key: this.app_key
+    })
 
     const igeNormal = () => <React.Fragment>
       <FormItem label="IGE Video">
@@ -894,6 +895,31 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
         </Col>
       </Row>
     </React.Fragment>
+
+
+    const igeImage = () => <FormItem label={this.useCreativeType === 2 ? 'Video Image' : 'IVE Image'} className={styles.autoHeight}>
+      {getFieldDecorator('image', {
+        initialValue: image,
+        rules: [{ required: true, message: 'Required' }]
+      })(
+        <UploadFile
+          className={styles.iveImage}
+          api={this.api.creative.handleUploadImg}
+          preData={{ type: 13 }}
+          uploadBefore={(file) => {
+            if (this.isAdd && !this.props.form.getFieldValue('app_key')) {
+              message.warning('The selected app key is invalid.');
+              return false;
+            }
+          }}
+          handleFormData={(formData) => formData.append('app_key', this.isAdd ? this.props.form.getFieldValue('app_key') : app_key)}
+          wht={{ size: 2048 }}
+        >
+          <Icon className={styles.workPlus} type="plus" />
+        </UploadFile>
+      )
+      }
+    </FormItem>
 
     return (
       <React.Fragment>
@@ -1204,6 +1230,9 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
                   </React.Fragment>
                 }
+
+                {igeImage()}
+
                 <FormItem label="Minimum Playing Time">
                   {getFieldDecorator('playback_time', {
                     initialValue: playback_time,
@@ -1317,6 +1346,8 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                   )
                   }
                 </FormItem>
+
+                {igeImage()}
 
                 <FormItem label="Appwall Description">
                   <Input autoComplete="off" value={this.appwall_description} disabled={true} />

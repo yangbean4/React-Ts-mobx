@@ -132,6 +132,20 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
     this.props.form.resetFields()
     this.props.onCancel()
   }
+
+  configVersionChanged = (id) => {
+    let value;
+    if (this.props.type === 'delete') {
+      const arr = this.props.targetConfig.versionArr.filter(m => id.includes(m.id));
+      value = arr.map(m => m.sdk)
+    } else {
+      const v = this.props.targetConfig.versionArr.find(m => m.id === id);
+      if (v) value = v.sdk;
+    }
+    this.props.form.setFieldsValue({
+      sdk_version: value
+    })
+  }
   componentWillMount() {
     this.props.getAllConfig()
   }
@@ -225,6 +239,14 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
             }
           </FormItem>
 
+          <FormItem label="SDK Version">
+            {getFieldDecorator('sdk_version', {
+              rules: [{ required: true, message: "Required" }]
+            })(
+              <Input autoComplete="off" disabled={type !== 'add'} />
+            )}
+          </FormItem>
+
           <FormItem label="Config Version">
             {
               type !== 'add' ? getFieldDecorator('id', {
@@ -238,6 +260,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode={type === 'delete' ? 'multiple' : ''}
+                  onChange={this.configVersionChanged}
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
@@ -260,17 +283,31 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
             }
           </FormItem>
           {
-            type === 'copy' ? <FormItem label="New Config Version">
-              {getFieldDecorator('copyTo', {
-                rules: [
-                  {
-                    required: true, message: "Required",
-                  }
-                ]
-              })(
-                <Input autoComplete="off" />
-              )}
-            </FormItem> : null
+            type === 'copy' ?
+              <>
+                <FormItem label="New Config Version">
+                  {getFieldDecorator('copyTo', {
+                    rules: [
+                      {
+                        required: true, message: "Required",
+                      }
+                    ]
+                  })(
+                    <Input autoComplete="off" />
+                  )}
+                </FormItem>
+                <FormItem label="New SDK Version">
+                  {getFieldDecorator('newSdk', {
+                    rules: [
+                      {
+                        required: true, message: "Required",
+                      }
+                    ]
+                  })(
+                    <Input autoComplete="off" />
+                  )}
+                </FormItem>
+              </> : null
           }
         </Form>
       </Modal >

@@ -126,11 +126,13 @@ export class ConfigStore extends StoreExt {
             const fmtArr: IConfigStore.IConfig[] = res.data.map(item => {
                 const {
                     config_version, config_deploy_id, pkg_name, platform, totalConfig,
+                    sdk_version,
                     bundle_id
                 } = item
                 const verArr = (config_version || '').split(',')
                 const idArr = (config_deploy_id || '').split(',')
-                const versionArr = verArr.map((j, i) => ({ version: j, id: idArr[i] }))
+                const sdkArr = (sdk_version || '').split(',')
+                const versionArr = verArr.map((j, i) => ({ version: j, id: idArr[i], sdk: sdkArr[i] }))
                 return {
                     versionArr,
                     bundle_id,

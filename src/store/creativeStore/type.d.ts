@@ -52,7 +52,7 @@ export interface ICreative {
     playback_time?: number
     long_play_time?: string | number
     skip_to?: string
-
+    image?: string
     playicon_creative_offline_url?: string | number
 }
 

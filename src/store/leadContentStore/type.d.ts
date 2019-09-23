@@ -19,6 +19,7 @@ export interface ILeadContent {
     name?: string
     content?: string
     content_md5?: string
+    lead_content_image?: string
 }
 
 export interface ILeadContentForList {
