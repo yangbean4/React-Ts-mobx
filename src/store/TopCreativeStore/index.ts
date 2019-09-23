@@ -20,7 +20,7 @@ export class TopCreativeStore extends StoreExt {
      * @memberof TopCreativeStore
      */
     @observable
-    creativeList: ITopCreativeStore.ITopCreativeForList[] = []
+    topCreativeList: ITopCreativeStore.ITopCreativeForList[] = []
 
     /**
      * table page
@@ -93,12 +93,12 @@ export class TopCreativeStore extends StoreExt {
         try {
             const res = await this.api.topCreatives.getTopCreativeList({ page: this.page, pageSize: this.pageSize, ...this.filters })
             runInAction('SET_USER_LIST', () => {
-                this.creativeList = res.data
+                this.topCreativeList = res.data
                 this.total = res.total
             })
         } catch (err) {
             runInAction('SET_USER_LIST', () => {
-                this.creativeList = []
+                this.topCreativeList = []
                 this.total = 0
             })
         }

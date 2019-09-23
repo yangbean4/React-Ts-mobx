@@ -1,0 +1,123 @@
+@import "_base.scss";
+$border-mx: 1px solid rgba(223, 234, 238, 1);
+.main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  // padding: 20px;
+  // height: 510px;
+  // width: 1086px;
+  .left {
+    width: 480px;
+
+    .msg {
+      height: 38px;
+
+      .label {
+        float: left;
+        text-align: right;
+        width: 150px;
+        margin-right: 20px;
+        font-size: 14px;
+        font-family: Montserrat;
+        font-weight: 300;
+        color: rgba(62, 54, 100, 1);
+      }
+      .value {
+        float: left;
+        color: "#9A97AE";
+        font-size: 14px;
+        font-family: Montserrat;
+        font-weight: 300;
+        color: rgba(154, 151, 174, 1);
+      }
+    }
+    .table {
+      width: 480px;
+      height: 174px;
+      border: $border-mx;
+      .title {
+        height: 30px;
+        line-height: 30px;
+        text-indent: 1em;
+        border-bottom: $border-mx;
+      }
+      .list {
+        height: 144px;
+        .list1 {
+          margin-bottom: 30px;
+          padding-top: 18px;
+          height: 56px;
+        }
+        .card {
+          &:nth-child(1) {
+            border-left: none;
+          }
+          float: left;
+          width: 119px;
+          height: 38px;
+          border-left: $border-mx;
+          text-align: center;
+          .tt {
+            font-size: 12px;
+            font-family: Montserrat;
+            font-weight: 300;
+            color: rgba(62, 54, 100, 1);
+          }
+          .vv {
+            font-size: 22px;
+            font-family: Montserrat;
+            font-weight: 300;
+            color: $primary-color;
+          }
+        }
+      }
+    }
+    .bottom {
+      margin-top: 10px;
+    }
+  }
+  .right {
+    width: 448px;
+    height: 412px;
+    display: flex;
+    flex-direction: column;
+    .tab {
+      width: 100%;
+      height: 40px;
+      margin-bottom: 40px;
+    }
+    .busbox {
+      flex: 1;
+      // max-width: 448px;
+      margin: 0 auto;
+      width: 100%;
+      // height: 250px;
+      background: rgba(250, 251, 255, 1);
+      border: 1px solid rgba(228, 237, 240, 1);
+      border-radius: 4px 4px 0px 0px;
+    }
+    .btnBox {
+      height: 40px;
+      margin-top: 40px;
+      button {
+        float: right;
+        margin-left: 20px;
+      }
+    }
+  }
+}
+
+.frame {
+  border: 0;
+  outline: 0;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 600px;
+  width: 100%;
+  height: 100%;
+  // min-width: 360px;
+  // min-height: 500px;
+}

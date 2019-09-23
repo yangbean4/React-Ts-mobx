@@ -1,3 +1,4 @@
+
 import { TopCreativeStore as TopCreativeStoreModel } from './index'
 
 export as namespace ITopCreativeStore
@@ -19,15 +20,18 @@ export interface ITopCreativeForList {
     cvr?: string,
     ipm?: string,
     campaign_num?: number,
-    campaign?: {
-        campaign_id_name?: string,
-        impression?: number,
-        ctr?: string,
-        cvr?: string,
-        ipm?: string,
-    }[],
+    campaign?: ICampaignForList[],
     preview: IPreview
 }
+
+export interface ICampaignForList {
+    campaign_id_name?: string,
+    impression?: number,
+    ctr?: string,
+    cvr?: string,
+    ipm?: string,
+}
+
 
 // 弹窗显示数据
 export interface IPreview {

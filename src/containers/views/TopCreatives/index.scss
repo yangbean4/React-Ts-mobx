@@ -9,3 +9,9 @@
   flex: 1;
   overflow-y: hidden;
 }
+
+.expantTable {
+  :global(.ant-table-fixed-right) {
+    z-index: 2;
+  }
+}
