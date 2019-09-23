@@ -93,6 +93,9 @@ export const asynchronousComponents = {
   // H5 Export
   H5ExportList: loadComponent(() => import(/* webpackChunkName: "WhileBlackList" */ '@views/H5Export')),
   H5ExportModal: loadComponent(() => import(/* webpackChunkName: "WhiteBlackAdd" */ '@views/H5Export/H5ExportModal')),
+
+  // Top Creatives
+  TopCreatives: loadComponent(() => import(/* webpackChunkName: "WhileBlackList" */ '@views/TopCreatives')),
 }
 
 // 所有路由的key
@@ -789,7 +792,16 @@ export const routerAndMenu: IRouter[] = [
     isMenu: false
   },
   // ----------------------------------------------Creative Analysis
-
+  {
+    id: 12,
+    isMenu: true,
+    path: '/topCreatives',
+    title: 'Top Creatives',
+    component: 'TopCreatives',
+    icon: 'iconshouru',
+    isRoot: true,
+    authName: 'Top Creatives',
+  },
   // {
   //     id: 91,
   //     pid: 9,

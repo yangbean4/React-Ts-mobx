@@ -28,5 +28,6 @@ declare interface IStore {
   categoryConfigStore: ICategoryConfigStore.categoryConfigStore
   whiteBlackListStore: IWhiteBlackListStore.WhiteBlackListStore
   h5ExportStore: IH5ExportStore.H5ExportStore,
-  manualEcpmStore: IManualEcpmStore.manualEcpmStore
+  manualEcpmStore: IManualEcpmStore.manualEcpmStore,
+  topCreativeStore: ITopCreativeStore.topCreativeStore
 }
