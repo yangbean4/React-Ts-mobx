@@ -64,26 +64,30 @@ class TopCreativesTable extends ComponentExt<IProps> {
             this.hideCreativeModalVisible()
         })
     }
+    /**
+     * 自定义展开图标
+     */
+    CustomExpandIcon = (props) => {
+        return (
+            <Icon type={props.expanded ? 'up' : 'down'}
+                className={'campaign_id_name' in props.record ? 'ant-table-row-spaced' : '' + ' expand-icon'}
+                style={{ fontSize: '10px', color: '#9A97AE' }}
+                onClick={e => props.onExpand(props.record, e)} />
+        );
+    }
 
-    expandedRowRender = (record: ITopCreativeStore.ITopCreativeForList) => {
-        return <Table<ITopCreativeStore.ICampaignForList>
-            className={'center-table ' + styles.expantTable}
-            style={{ width: '100%' }}
-            // size="middle"
-            rowKey='app_key'
-            bordered={false}
-            locale={{ emptyText: 'No Data' }}
-            showHeader={false}
-            dataSource={record.campaign}
-            pagination={false}
-        >
-            <Table.Column<ITopCreativeStore.ICampaignForList> title="Campaign ID Name" dataIndex="campaign_id_name" />
-            <Table.Column<ITopCreativeStore.ICampaignForList> title="Impression" dataIndex="impression" fixed="right" width={100} />
-            <Table.Column<ITopCreativeStore.ICampaignForList> title="CTR" dataIndex="ctr" fixed="right" width={80} />
-            <Table.Column<ITopCreativeStore.ICampaignForList> title="CVR" dataIndex="cvr" fixed="right" width={80} />
-            <Table.Column<ITopCreativeStore.ICampaignForList> title="IPM" dataIndex="ipm" fixed="right" width={80} />
-            <Table.Column<ITopCreativeStore.ICampaignForList> key="action" title="Preview" fixed="right" width={100} />
-        </Table>
+    /**
+     * 重写表格渲染组件
+     */
+    cellComponent = (props) => {
+        const { children, ...restProps } = props
+        // 如果这个表格是 Campaign 则将里面的内容用新div包裹
+        if (props.className === styles.expantCell) {
+            return <td {...restProps}>
+                <div className='content'>{children}</div>
+            </td>
+        }
+        return <td {...restProps}>{children}</td>
     }
 
     componentDidMount() {
@@ -91,6 +95,11 @@ class TopCreativesTable extends ComponentExt<IProps> {
     }
 
     render() {
+        const tableComponent = {
+            body: {
+                cell: this.cellComponent
+            }
+        }
         const {
             scrollY,
             getTopCreativeLoading,
@@ -113,13 +122,15 @@ class TopCreativesTable extends ComponentExt<IProps> {
                     style={{ width: '100%' }}
                     bordered
                     // size="middle"
-                    rowKey={record => record.creative_id + record.endcard_id + record.app_id}
+                    rowKey={record => '' + 'campaign_id_name' in record ? record['campaign_id_name'] + record['impression'] : record.creative_id + record.endcard_id + record.app_id}
                     locale={{ emptyText: 'No Data' }}
                     loading={getTopCreativeLoading}
                     dataSource={topCreativeList}
-                    scroll={{ y: scrollY, x: 1680 }}
-                    expandedRowRender={this.expandedRowRender}
-                    // childrenColumnName="campaign"
+                    scroll={{ y: scrollY, x: 1755 }}
+                    expandIconAsCell={false}
+                    expandIconColumnIndex={9}
+                    childrenColumnName="campaign"
+                    expandIcon={this.CustomExpandIcon}
                     pagination={{
                         current: page,
                         pageSize,
@@ -127,22 +138,31 @@ class TopCreativesTable extends ComponentExt<IProps> {
                         ...PageConfig
                     }}
                     onChange={handleTableChange}
+                    components={tableComponent}
                 >
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> key="rank" title="Rank" render={(_, record, index) => index + 1} width={80} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> key="rank" title="Rank" render={(_, record, index) => 'campaign_id_name' in record ? '' : index + 1} width={80} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative Type" dataIndex="creative_type_name" width={130} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative ID" dataIndex="creative_id" width={100} />
 
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative" dataIndex="creative" width={100} render={(_, record) => record.creative == '--' ? '--' : <img src={record.creative} />} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative" dataIndex="creative" width={100} render={(_, record) => record.creative == '--' ? '--' : <img src={record.creative} width="100%" />} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Endcard ID" dataIndex="endcard_id" width={100} />
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Endcard" dataIndex="endcard" width={100} render={(_, record) => record.endcard == '--' ? '--' : <img src={record.endcard} />} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Endcard" dataIndex="endcard" width={100} render={(_, record) => record.endcard == '--' ? '--' : <img src={record.endcard} width="100%" />} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="App ID" dataIndex="app_id" width={250} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Platform" dataIndex="platform" width={100} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Data Duration" dataIndex="data_duration" width={200} />
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Campaign" dataIndex="campaign_num" width={100} />
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Impression" dataIndex="impression" fixed="right" width={100} />
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="CTR" dataIndex="ctr" fixed="right" width={80} />
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="CVR" dataIndex="cvr" fixed="right" width={80} />
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="IPM" dataIndex="ipm" fixed="right" width={80} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList>
+                        title="Campaign"
+                        dataIndex="campaign_num"
+                        width={100}
+                        className={styles.expantCell}
+                        render={(_, record) => <span className="text">
+                            {'campaign_id_name' in record ? record['campaign_id_name'] : record.campaign_num}
+                        </span>}
+                    />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Impression" dataIndex="impression" fixed="right" width={130} sorter={true} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="CTR" dataIndex="ctr" fixed="right" width={95} sorter={true} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="CVR" dataIndex="cvr" fixed="right" width={95} sorter={true} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="IPM" dataIndex="ipm" fixed="right" width={95} sorter={true} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList>
                         key="action"
                         title="Preview"

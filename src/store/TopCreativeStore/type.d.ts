@@ -63,28 +63,22 @@ export interface IPreview {
 }
 
 export interface OptionListDb {
-    appIds?: {
-        ios?: string[]
-        android?: string[]
-    },
-    language?: string[],
-    CreativeType?: ({
-        id?: string | number
-        creative_name: string
-    })[],
-    LeadContents?: {
-        [propName: string]: ({
-            name?: string
-            id?: number
-        })[]
-    }
+    Endcard?: {
+        [key: string]: string
+    }[],
+    Creative?: {
+        [key: string]: string
+    }[]
 }
 
 export interface SearchParams {
+    platform?: string[],
+    endcard_id?: string[],
+    creative_id?: string[],
+    creative_type?: string[],
+    data_start?: string,
     app_id?: string,
-    task_name?: string,
-    geo?: (number | string)[],
-    status?: string[],
-    pkg_name?: string[],
-    date?: string
+    ipm?: number,
+    order_by?: string,
+    sort?: string
 }

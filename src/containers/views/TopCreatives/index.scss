@@ -8,10 +8,30 @@
 .tableBox {
   flex: 1;
   overflow-y: hidden;
+  :global(.ant-table-row-level-1) {
+    background-color: #ecedf4;
+  }
 }
 
 .expantTable {
   :global(.ant-table-fixed-right) {
     z-index: 2;
+    right: 0;
+  }
+}
+
+.expantCell {
+  :global(.content) {
+    display: flex;
+    align-items: center;
+
+    :global(.text) {
+      order: 1;
+      margin-right: 5px;
+    }
+
+    :global(.expand-icon) {
+      order: 2;
+    }
   }
 }

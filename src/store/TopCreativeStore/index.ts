@@ -2,6 +2,7 @@ import { observable, action, runInAction } from 'mobx'
 import { PaginationConfig } from 'antd/lib/pagination'
 
 import { StoreExt } from '@utils/reactExt'
+import { SorterResult } from 'antd/lib/table'
 
 
 export class TopCreativeStore extends StoreExt {
@@ -52,16 +53,14 @@ export class TopCreativeStore extends StoreExt {
 
     @observable
     optionListDb: ITopCreativeStore.OptionListDb = {
-        appIds: { ios: [], android: [] },
-        language: [],
-        CreativeType: [],
-        LeadContents: {}
+        Endcard: [],
+        Creative: [],
     }
 
     @action
     getOptionListDb = async () => {
         const keys = Object.keys(this.optionListDb)
-        const promiseAll = keys.map(key => this.api.creative[`get${key}`]())
+        const promiseAll = keys.map(key => this.api.topCreatives[`get${key}`]())
         Promise.all(promiseAll).then(data => {
             const target = {}
             keys.forEach((key, index) => {
@@ -70,14 +69,6 @@ export class TopCreativeStore extends StoreExt {
             runInAction('SET', () => {
                 this.optionListDb = target
             })
-        })
-    }
-
-    @action
-    getContentList = async () => {
-        const res = await this.api.creative.getLeadContents()
-        runInAction('SET', () => {
-            this.optionListDb.LeadContents = res.data
         })
     }
 
@@ -126,13 +117,34 @@ export class TopCreativeStore extends StoreExt {
         this.changepage(1)
     }
 
-    handleTableChange = (pagination: PaginationConfig) => {
+    @action
+    setFilter = (data: ITopCreativeStore.SearchParams) => {
+        console.log(data)
+        this.filters = data
+    }
+
+    handleTableChange = (pagination: PaginationConfig, filters, sorter: SorterResult<ITopCreativeStore.ITopCreativeForList>) => {
+        console.log(filters);
+        console.log(sorter);
+
         const { current, pageSize } = pagination
         if (current !== this.page) {
             this.changepage(current)
         }
         if (pageSize !== this.pageSize) {
             this.changePageSize(pageSize)
+        }
+
+        if (sorter.field) {
+            return this.changeFilter({
+                order_by: sorter.field,
+                sort: sorter.order === 'descend' ? 'desc' : 'asc'
+            })
+        } else {
+            return this.changeFilter({
+                order_by: undefined,
+                sort: undefined
+            })
         }
     }
 }

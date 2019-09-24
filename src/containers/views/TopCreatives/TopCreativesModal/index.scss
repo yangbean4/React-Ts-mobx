@@ -90,7 +90,8 @@ $border-mx: 1px solid rgba(223, 234, 238, 1);
       margin-bottom: 40px;
     }
     .busbox {
-      flex: 1;
+      // flex: 1;
+      height: 260px;
       // max-width: 448px;
       margin: 0 auto;
       width: 100%;

@@ -354,7 +354,7 @@ class TopCreativesModal extends React.Component<IProp> {
           </div>
           <div className={style.right}>
             <div className={style.tab}>
-              <Radio.Group onChange={this.typeChange} defaultValue="a">
+              <Radio.Group onChange={this.typeChange} defaultValue="0">
                 {
                   (this.tabList || []).map(ele => {
                     return (<Radio.Button key={ele.key + ele.name} value={ele.key}>{ele.name}</Radio.Button>)
