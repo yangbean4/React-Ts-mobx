@@ -2,8 +2,9 @@ import React, { ReactNode } from 'react'
 import { Modal, Radio, message, Button } from 'antd'
 import { observer } from 'mobx-react'
 import * as style from './index.scss'
-import { computed, action, runInAction, observable } from 'mobx'
+import { computed, action, runInAction, observable, autorun } from 'mobx'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import MyIcon from '@components/Icon'
 
 interface showType {
   name: string
@@ -64,6 +65,8 @@ interface IProp {
 @observer
 class TopCreativesModal extends React.Component<IProp> {
 
+  private IReactionDisposer: () => void
+
 
   @observable
   private tabType: string = '0'
@@ -78,6 +81,18 @@ class TopCreativesModal extends React.Component<IProp> {
   // get btnGroup(): btn[] {
 
   // }
+
+  constructor(props) {
+    super(props)
+    this.IReactionDisposer = autorun(() => {
+      if (this.props.visible) {
+        runInAction('INIT', () => {
+          this.tabType = '0'
+        })
+      }
+      return this.props.visible
+    })
+  }
 
   formatNumber = (num) => {
     return `${num}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -229,6 +244,10 @@ class TopCreativesModal extends React.Component<IProp> {
   }
 
 
+  componentWillUnmount() {
+    this.IReactionDisposer()
+  }
+
   @action
   typeChange = (e) => {
     const val = e.target.value
@@ -360,7 +379,7 @@ class TopCreativesModal extends React.Component<IProp> {
           </div>
           <div className={style.right}>
             <div className={style.tab}>
-              <Radio.Group onChange={this.typeChange} defaultValue="0">
+              <Radio.Group onChange={this.typeChange} value={this.tabType}>
                 {
                   (this.tabList || []).map(ele => {
                     return (<Radio.Button key={ele.key + ele.name} value={ele.key}>{ele.name}</Radio.Button>)
@@ -370,7 +389,7 @@ class TopCreativesModal extends React.Component<IProp> {
             </div>
             <div className={style.busbox}>
               {
-                main.srcType === 'iframe' ? <iframe className={style.frame} src={main.src} /> : main.srcType === 'video' ? <video width="100%" height="100%" style={{ width: '100%' }} controls autoPlay src={main.src} /> : <img alt="example" style={{ maxHeight: '600px', display: 'block', margin: '0 auto', maxWidth: '100%' }} src={main.src} />
+                !main.src ? <MyIcon type='iconpicture2' className={style.busIcon} /> : main.srcType === 'iframe' ? <iframe className={style.frame} src={main.src} /> :  main.srcType === 'video' ?  <video width="100%" height="100%" style={{ width: '100%' }} controls autoPlay src={main.src} /> : <img alt="example" style={{ maxHeight: '100%', display: 'block', margin: '0 auto', maxWidth: '100%' }} src={main.src} />
               }
             </div>
             <div className={style.btnBox}>

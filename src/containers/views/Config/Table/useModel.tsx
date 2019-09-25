@@ -98,6 +98,8 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
           return val.indexOf('v') == -1 ? 'v' + val : val
         }
         per.config_version = js_vs(per.config_version || '')
+        per.sdk_version = js_vs(per.sdk_version || '')
+        per.newSdk = js_vs(per.newSdk || '')
         per.copyTo = js_vs(per.copyTo || '')
         per.pkg_name = this.props.type === 'add' ? this.usePkgnameData[per.pkg_name] : this.usePlatform === 'android' ? targetConfig.pkg_name : targetConfig.bundle_id
         const cb = () => {

@@ -2,6 +2,7 @@
 // Please do not change this file!
 export const bottom: string;
 export const btnBox: string;
+export const busIcon: string;
 export const busbox: string;
 export const card: string;
 export const frame: string;

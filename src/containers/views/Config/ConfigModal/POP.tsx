@@ -253,7 +253,7 @@ class POP extends ComponentExt<IProps & FormComponentProps> {
           </Col>
         </Row>
         <Button type="primary" className='submitBtn' loading={this.loading} onClick={this.submit}>Submit</Button>
-        <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
+        <Button className='cancelBtn' onClick={this.lastStep} loading={this.loading}>Last Step</Button>
       </div>
     )
   }

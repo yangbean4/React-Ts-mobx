@@ -297,7 +297,7 @@ class PID extends ComponentExt<IProps> {
 
                         <PidTable loading={this.tableLoading} data={this.tableData} onEdit={this.editPid} onDelete={this.deletePid} />
                         <Button type="primary" className='submitBtn' loading={this.loading} onClick={this.submit}>Submit</Button>
-                        <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
+                        <Button className='cancelBtn' onClick={this.lastStep} loading={this.loading}>Last Step</Button>
                     </div> : <div className="formBox">
                             <FormPid
                                 data={this.GJB}

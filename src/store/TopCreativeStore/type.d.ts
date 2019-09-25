@@ -6,6 +6,7 @@ export as namespace ITopCreativeStore
 export interface TopCreativeStore extends TopCreativeStoreModel { }
 
 export interface ITopCreativeForList {
+    rank?: number,
     ids?: string,
     creative_type?: string,
     creative_type_name?: string,

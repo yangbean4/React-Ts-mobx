@@ -812,7 +812,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
           {
             // type有值说明不是Pid中的
             this.showWork && BasicType ? <Button className="cancelBtn" onClick={this.toggleWork}>Cancel</Button>
-              : BasicType === "basic1" ? null : <Button className='cancelBtn' onClick={this.lastStep}>Last Step</Button>
+              : BasicType === "basic1" ? null : <Button className='cancelBtn' onClick={this.lastStep} loading={this.loading}>Last Step</Button>
           }
         </Form>
         <Button className="workBtn" type="primary" onClick={this.toggleWork}>{this.showWork ? 'Cancel' : 'Edit Filed'}</Button>

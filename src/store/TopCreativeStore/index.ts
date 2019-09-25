@@ -113,7 +113,7 @@ export class TopCreativeStore extends StoreExt {
 
     @action
     changeFilter = (data: ITopCreativeStore.SearchParams) => {
-        this.filters = data
+        this.filters = { ...this.filters, ...data };
         this.changepage(1)
     }
 

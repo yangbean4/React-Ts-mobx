@@ -130,11 +130,11 @@ class TopCreativesTable extends ComponentExt<IProps> {
                     style={{ width: '100%' }}
                     bordered
                     // size="middle"
-                    rowKey={record => 'campaign_id_name' in record ? '' + record['campaign_id_name'] + record['ipm'] : '' + record.creative_id + record.endcard_id + record.ids}
+                    rowKey={(record) => ('campaign_id_name' in record) ? JSON.stringify(record) : `${record.rank}`}
                     locale={{ emptyText: 'No Data' }}
                     loading={getTopCreativeLoading}
                     dataSource={topCreativeList}
-                    scroll={{ y: scrollY, x: 1771 }}
+                    scroll={{ y: scrollY, x: 1800 }}
                     expandIconAsCell={false}
                     expandIconColumnIndex={9}
                     childrenColumnName="campaign"
@@ -155,7 +155,7 @@ class TopCreativesTable extends ComponentExt<IProps> {
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative" dataIndex="creative" width={108} render={(_, record) => !record.creative || record.creative == '--' ? '--' : <img src={record.creative} width="72" height="40" />} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Endcard ID" dataIndex="endcard_id" width={100} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Endcard" dataIndex="endcard" width={108} render={(_, record) => !record.endcard || record.endcard == '--' ? '--' : <img src={record.endcard} width="72" height="40" />} />
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="App ID" dataIndex="app_id" width={250} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="App ID" dataIndex="app_id" width={280} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Platform" dataIndex="platform" width={100} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Data Duration" dataIndex="data_duration" width={200} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList>

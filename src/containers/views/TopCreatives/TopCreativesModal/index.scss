@@ -21,7 +21,7 @@ $border-mx: 1px solid rgba(223, 234, 238, 1);
         width: 150px;
         margin-right: 20px;
         font-size: 14px;
-        font-family: Montserrat;
+        // font-family: Montserrat;
         font-weight: 300;
         color: rgba(62, 54, 100, 1);
       }
@@ -29,7 +29,7 @@ $border-mx: 1px solid rgba(223, 234, 238, 1);
         float: left;
         color: "#9A97AE";
         font-size: 14px;
-        font-family: Montserrat;
+        // font-family: Montserrat;
         font-weight: 300;
         color: rgba(154, 151, 174, 1);
       }
@@ -62,13 +62,13 @@ $border-mx: 1px solid rgba(223, 234, 238, 1);
           text-align: center;
           .tt {
             font-size: 12px;
-            font-family: Montserrat;
+            // font-family: Montserrat;
             font-weight: 300;
             color: rgba(62, 54, 100, 1);
           }
           .vv {
             font-size: 22px;
-            font-family: Montserrat;
+            // font-family: Montserrat;
             font-weight: 300;
             color: $primary-color;
           }
@@ -92,6 +92,7 @@ $border-mx: 1px solid rgba(223, 234, 238, 1);
     .busbox {
       // flex: 1;
       height: 260px;
+      position: relative;
       // max-width: 448px;
       margin: 0 auto;
       width: 100%;
@@ -99,6 +100,16 @@ $border-mx: 1px solid rgba(223, 234, 238, 1);
       background: rgba(250, 251, 255, 1);
       border: 1px solid rgba(228, 237, 240, 1);
       border-radius: 4px 4px 0px 0px;
+      .busIcon{
+        width:50px;
+        height:40px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -20px 0 0 -20px;
+        color: #dadce8;
+        font-size: 40px;
+      }
     }
     .btnBox {
       height: 40px;
