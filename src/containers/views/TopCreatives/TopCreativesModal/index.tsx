@@ -358,7 +358,7 @@ class TopCreativesModal extends React.Component<IProp> {
                 </div>
               </div>
               {
-                (preview.creative_type || '').toUpperCase() !== 'IVE' && <div className={style.msg}>
+                (preview.creative_type_name || '').toUpperCase() !== 'IVE' && <div className={style.msg}>
                   <div className={style.label}>
                     Endcard
                 </div>
@@ -389,15 +389,15 @@ class TopCreativesModal extends React.Component<IProp> {
             </div>
             <div className={style.busbox}>
               {
-                !main.src ? <MyIcon type='iconpicture2' className={style.busIcon} /> : main.srcType === 'iframe' ? <iframe className={style.frame} src={main.src} /> :  main.srcType === 'video' ?  <video width="100%" height="100%" style={{ width: '100%' }} controls autoPlay src={main.src} /> : <img alt="example" style={{ maxHeight: '100%', display: 'block', margin: '0 auto', maxWidth: '100%' }} src={main.src} />
+                !main.src ? <MyIcon type="iconpicture2" className={style.busIcon} /> : main.srcType === 'iframe' ? <iframe className={style.frame} src={main.src} /> : main.srcType === 'video' ? <video width="100%" height="100%" style={{ width: '100%' }} controls autoPlay src={main.src} /> : <img alt="example" style={{ maxHeight: '100%', display: 'block', margin: '0 auto', maxWidth: '100%' }} src={main.src} />
               }
             </div>
             <div className={style.btnBox}>
               {
                 btnGroup.map(ele => {
                   return ele.btnType === 'copy' ?
-                    <CopyToClipboard onCopy={this.onCopy} text={ele.src}><Button type="primary">{ele.name}</Button></CopyToClipboard>
-                    : <Button type="primary" onClick={() => this.viewFile(ele.src)} >{ele.name}</Button>
+                    <CopyToClipboard onCopy={this.onCopy} text={ele.src}><Button disabled={!ele.src} type="primary">{ele.name}</Button></CopyToClipboard>
+                    : <Button type="primary" disabled={!ele.src} onClick={() => this.viewFile(ele.src)} >{ele.name}</Button>
                 })
               }
             </div>

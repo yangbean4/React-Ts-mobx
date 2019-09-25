@@ -148,7 +148,7 @@ class TopCreativesTable extends ComponentExt<IProps> {
                     onChange={handleTableChange}
                     components={tableComponent}
                 >
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> key="rank" title="Rank" render={(_, record, index) => 'campaign_id_name' in record ? '' : index + 1} width={80} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> dataIndex="rank" title="Rank" width={80} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative Type" dataIndex="creative_type_name" width={130} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative ID" dataIndex="creative_id" width={100} />
 
