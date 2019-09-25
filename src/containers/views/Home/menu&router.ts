@@ -798,7 +798,7 @@ export const routerAndMenu: IRouter[] = [
     path: '/topCreatives',
     title: 'Top Creatives',
     component: 'TopCreatives',
-    icon: 'iconshouru',
+    icon: 'iconbaobiao',
     isRoot: true,
     authName: 'Top Creatives',
   },

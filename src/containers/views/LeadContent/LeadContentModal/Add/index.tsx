@@ -480,13 +480,7 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                 className={styles.LeadImgBox}
                 api={this.api.creative.handleUploadImg}
                 preData={{ type: 13 }}
-                uploadBefore={(file) => {
-                  if (this.isAdd && !this.props.form.getFieldValue('app_key')) {
-                    message.warning('The selected app key is invalid.');
-                    return false;
-                  }
-                }}
-                handleFormData={(formData) => formData.append('app_key', this.isAdd ? this.props.form.getFieldValue('app_key') : app_key)}
+                handleFormData={(formData) => formData.append('app_key', this.app_key)}
                 wht={{ size: 2048 }}
               >
                 <AntIcon className={styles.workPlus} type="plus" />

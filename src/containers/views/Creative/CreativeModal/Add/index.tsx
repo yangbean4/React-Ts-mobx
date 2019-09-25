@@ -688,13 +688,17 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
     const igeNormal = () => <React.Fragment>
       <FormItem label="IGE Video">
+        {console.log(this.getInitialValue('common_landscape_creative_online_url'), this.getInitialValue('common_portrait_creative_online_url'))}
+
         {getFieldDecorator('video_type',
           {
             initialValue: video_type
           })(
             <Select
               showSearch
-              disabled={!this.isAdd && (skip_to !== 'gp' || this.getInitialValue('common_portrait_creative_online_url') || this.getInitialValue('common_landscape_creative_online_url'))}
+              disabled={
+                !this.isAdd
+                && ((this.useCreativeType === 4 && skip_to !== 'gp') || this.getInitialValue('common_portrait_creative_online_url') || this.getInitialValue('common_landscape_creative_online_url'))}
               getPopupContainer={trigger => trigger.parentElement}
               onChange={(val) => this.setVideoType(val)}
               filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
@@ -906,13 +910,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
           className={styles.iveImage}
           api={this.api.creative.handleUploadImg}
           preData={{ type: 13 }}
-          uploadBefore={(file) => {
-            if (this.isAdd && !this.props.form.getFieldValue('app_key')) {
-              message.warning('The selected app key is invalid.');
-              return false;
-            }
-          }}
-          handleFormData={(formData) => formData.append('app_key', this.isAdd ? this.props.form.getFieldValue('app_key') : app_key)}
+          handleFormData={(formData) => formData.append('app_key', this.app_key)}
           wht={{ size: 2048 }}
         >
           <Icon className={styles.workPlus} type="plus" />

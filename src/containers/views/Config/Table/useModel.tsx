@@ -167,7 +167,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
         ]}
       >
 
-        <Form {...layout} >
+        <Form {...layout} className={styles.autoHeight}>
 
           <FormItem label="Platform">
             {
@@ -285,8 +285,8 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
           {
             type === 'copy' ?
               <>
-                <FormItem label="New Config Version">
-                  {getFieldDecorator('copyTo', {
+                <FormItem label="New SDK Version">
+                  {getFieldDecorator('newSdk', {
                     rules: [
                       {
                         required: true, message: "Required",
@@ -296,8 +296,8 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
                     <Input autoComplete="off" />
                   )}
                 </FormItem>
-                <FormItem label="New SDK Version">
-                  {getFieldDecorator('newSdk', {
+                <FormItem label="New Config Version">
+                  {getFieldDecorator('copyTo', {
                     rules: [
                       {
                         required: true, message: "Required",

@@ -124,15 +124,13 @@ export class TopCreativeStore extends StoreExt {
     }
 
     handleTableChange = (pagination: PaginationConfig, filters, sorter: SorterResult<ITopCreativeStore.ITopCreativeForList>) => {
-        console.log(filters);
-        console.log(sorter);
-
+        console.log(sorter)
         const { current, pageSize } = pagination
         if (current !== this.page) {
-            this.changepage(current)
+            return this.changepage(current)
         }
         if (pageSize !== this.pageSize) {
-            this.changePageSize(pageSize)
+            return this.changePageSize(pageSize)
         }
 
         if (sorter.field) {

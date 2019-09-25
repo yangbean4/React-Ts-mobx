@@ -27,11 +27,11 @@
 
     :global(.text) {
       order: 1;
-      margin-right: 5px;
     }
 
     :global(.expand-icon) {
       order: 2;
+      margin-left: 5px;
     }
   }
 }

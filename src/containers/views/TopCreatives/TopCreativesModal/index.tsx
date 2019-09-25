@@ -79,6 +79,10 @@ class TopCreativesModal extends React.Component<IProp> {
 
   // }
 
+  formatNumber = (num) => {
+    return `${num}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
   @computed
   get computedRight(): rightGroup {
     const creative_type = (this.props.data.preview || {}).creative_type
@@ -87,15 +91,17 @@ class TopCreativesModal extends React.Component<IProp> {
     const { template_url = '', content = '', lead_content_image } = preview;
     const getEndcard = (): rightGroup => {
       const tempArr = (template_url || '').split('/')
-      const number = tempArr[tempArr.length - 1].split('.')[0]
-      const isBus = '005 / 006 / 007 / 008'.includes(number);
+      const nameArr = tempArr[tempArr.length - 1].split('.')
+      const number = nameArr[0]
+      const isZip = nameArr[1] === 'zip'
+      const isBus = '005 / 006 / 007 / 008'.includes(number)
       return {
         main: {
           srcType: 'image',
           src: preview.endcard_image_url
         },
         btnGroup: [
-          isBus ? {
+          !isBus ? {
             name: 'Download Creative',
             src: preview.template_url,
             btnType: 'lead'
@@ -130,7 +136,7 @@ class TopCreativesModal extends React.Component<IProp> {
       // VIDEO
       case '2':
         switch (this.tabType) {
-          case '1': {
+          case '0': {
             return {
               main: {
                 srcType: 'video',
@@ -145,7 +151,7 @@ class TopCreativesModal extends React.Component<IProp> {
               ]
             }
           }
-          case '2': {
+          case '1': {
             return getEndcard()
           }
         }
@@ -280,37 +286,37 @@ class TopCreativesModal extends React.Component<IProp> {
                 <div className={style.list1}>
                   <div className={style.card}>
                     <div className={style.tt}>Impression</div>
-                    <div className={style.vv}>{preview.impression}</div>
+                    <div className={style.vv}>{this.formatNumber(preview.impression)}</div>
                   </div>
                   <div className={style.card}>
                     <div className={style.tt}>Play</div>
-                    <div className={style.vv}>{preview.play}</div>
+                    <div className={style.vv}>{this.formatNumber(preview.play)}</div>
                   </div>
                   <div className={style.card}>
                     <div className={style.tt}>Click</div>
-                    <div className={style.vv}>{preview.click}</div>
+                    <div className={style.vv}>{this.formatNumber(preview.click)}</div>
                   </div>
                   <div className={style.card}>
                     <div className={style.tt}>Install</div>
-                    <div className={style.vv}>{preview.install}</div>
+                    <div className={style.vv}>{this.formatNumber(preview.install)}</div>
                   </div>
                 </div>
                 <div>
                   <div className={style.card}>
                     <div className={style.tt}>Play Rate</div>
-                    <div className={style.vv}>{preview.play_rate}</div>
+                    <div className={style.vv}>{this.formatNumber(preview.play_rate)}%</div>
                   </div>
                   <div className={style.card}>
                     <div className={style.tt}>CTR</div>
-                    <div className={style.vv}>{preview.ctr}</div>
+                    <div className={style.vv}>{this.formatNumber(preview.ctr)}%</div>
                   </div>
                   <div className={style.card}>
                     <div className={style.tt}>CVR</div>
-                    <div className={style.vv}>{preview.cvr}</div>
+                    <div className={style.vv}>{this.formatNumber(preview.cvr)}%</div>
                   </div>
                   <div className={style.card}>
                     <div className={style.tt}>IPM</div>
-                    <div className={style.vv}>{preview.ipm}</div>
+                    <div className={style.vv}>{this.formatNumber(preview.ipm)}%</div>
                   </div>
                 </div>
               </div>
@@ -321,7 +327,7 @@ class TopCreativesModal extends React.Component<IProp> {
                   Creative Type
                 </div>
                 <div className={style.value}>
-                  {preview.creative_type}
+                  {preview.creative_type_name}
                 </div>
               </div>
               <div className={style.msg}>

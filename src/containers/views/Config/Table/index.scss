@@ -12,3 +12,8 @@
   position: absolute;
   line-height: 40px;
 }
+.autoHeight {
+  :global(.ant-form-item-control) {
+    height: auto;
+  }
+}

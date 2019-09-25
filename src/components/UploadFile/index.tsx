@@ -185,7 +185,7 @@ class UploadFile extends React.Component<UploadFileProps> {
         }
         const isLt2M = !size || file.size / 1024 < size;
         if (!isLt2M) {
-          const msg = size >= 1000 ? `${size / 1000} M` : `${size}kb`
+          const msg = size >= 1000 ? `${size / 1024} M` : `${size}kb`
           message.error(`Failure，The file size cannot exceed ${msg}!`);
           return false
         }

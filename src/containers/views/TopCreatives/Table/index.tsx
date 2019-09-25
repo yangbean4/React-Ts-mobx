@@ -68,9 +68,12 @@ class TopCreativesTable extends ComponentExt<IProps> {
      * 自定义展开图标
      */
     CustomExpandIcon = (props) => {
+        if ('campaign_id_name' in props.record) {
+            return null;
+        }
         return (
             <Icon type={props.expanded ? 'up' : 'down'}
-                className={'campaign_id_name' in props.record ? 'ant-table-row-spaced' : '' + ' expand-icon'}
+                className='expand-icon'
                 style={{ fontSize: '10px', color: '#9A97AE' }}
                 onClick={e => props.onExpand(props.record, e)} />
         );
@@ -89,6 +92,11 @@ class TopCreativesTable extends ComponentExt<IProps> {
         }
         return <td {...restProps}>{children}</td>
     }
+
+    formatNumber = (num) => {
+        return `${num}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
 
     componentDidMount() {
         this.props.getTopCreative()
@@ -122,11 +130,11 @@ class TopCreativesTable extends ComponentExt<IProps> {
                     style={{ width: '100%' }}
                     bordered
                     // size="middle"
-                    rowKey={record => '' + 'campaign_id_name' in record ? record['campaign_id_name'] + record['impression'] : record.creative_id + record.endcard_id + record.app_id}
+                    rowKey={record => 'campaign_id_name' in record ? '' + record['campaign_id_name'] + record['ipm'] : '' + record.creative_id + record.endcard_id + record.ids}
                     locale={{ emptyText: 'No Data' }}
                     loading={getTopCreativeLoading}
                     dataSource={topCreativeList}
-                    scroll={{ y: scrollY, x: 1755 }}
+                    scroll={{ y: scrollY, x: 1771 }}
                     expandIconAsCell={false}
                     expandIconColumnIndex={9}
                     childrenColumnName="campaign"
@@ -144,9 +152,9 @@ class TopCreativesTable extends ComponentExt<IProps> {
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative Type" dataIndex="creative_type_name" width={130} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative ID" dataIndex="creative_id" width={100} />
 
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative" dataIndex="creative" width={100} render={(_, record) => record.creative == '--' ? '--' : <img src={record.creative} width="100%" />} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative" dataIndex="creative" width={108} render={(_, record) => !record.creative || record.creative == '--' ? '--' : <img src={record.creative} width="72" height="40" />} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Endcard ID" dataIndex="endcard_id" width={100} />
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Endcard" dataIndex="endcard" width={100} render={(_, record) => record.endcard == '--' ? '--' : <img src={record.endcard} width="100%" />} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Endcard" dataIndex="endcard" width={108} render={(_, record) => !record.endcard || record.endcard == '--' ? '--' : <img src={record.endcard} width="72" height="40" />} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="App ID" dataIndex="app_id" width={250} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Platform" dataIndex="platform" width={100} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Data Duration" dataIndex="data_duration" width={200} />
@@ -159,10 +167,10 @@ class TopCreativesTable extends ComponentExt<IProps> {
                             {'campaign_id_name' in record ? record['campaign_id_name'] : record.campaign_num}
                         </span>}
                     />
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Impression" dataIndex="impression" fixed="right" width={130} sorter={true} />
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="CTR" dataIndex="ctr" fixed="right" width={95} sorter={true} />
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="CVR" dataIndex="cvr" fixed="right" width={95} sorter={true} />
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="IPM" dataIndex="ipm" fixed="right" width={95} sorter={true} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Impression" dataIndex="impression" fixed="right" width={130} sorter={true} render={(_, record) => this.formatNumber(record.impression)} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="CTR" dataIndex="ctr" fixed="right" width={95} sorter={true} render={(_, record) => this.formatNumber(record.ctr) + '%'} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="CVR" dataIndex="cvr" fixed="right" width={95} sorter={true} render={(_, record) => this.formatNumber(record.cvr) + '%'} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="IPM" dataIndex="ipm" fixed="right" width={95} sorter={true} render={(_, record) => this.formatNumber(record.ipm) + '%'} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList>
                         key="action"
                         title="Preview"
@@ -170,12 +178,10 @@ class TopCreativesTable extends ComponentExt<IProps> {
                         fixed="right"
                         render={(_, record) => (
                             <span>
-                                {
-                                    this.$checkAuth('Offers-Creatives-Creatives-Edit', [
-                                        (<a key='form' href="javascript:;" onClick={() => this.modifyCreative(record)}>
-                                            <Icon type="form" />
-                                        </a>)
-                                    ])
+                                {'campaign_id_name' in record ||
+                                    (<a key='form' href="javascript:;" onClick={() => this.modifyCreative(record)}>
+                                        <Icon type="eye" />
+                                    </a>)
                                 }
                             </span>
                         )}

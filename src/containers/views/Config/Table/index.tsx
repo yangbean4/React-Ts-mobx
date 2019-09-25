@@ -121,7 +121,7 @@ class ConfigTable extends ComponentExt<IProps> {
                 this.goEdit(id, copyTo ? `?copyTo=${copyTo}` : undefined)
                 break;
             case 'edit':
-                this.setTargetConfig(this.targetConfig, id)
+                this.setTargetConfig({ ...this.targetConfig, sdk_version: data.sdk_version }, id)
                 this.goEdit(id)
                 break;
             case 'add':
@@ -147,15 +147,17 @@ class ConfigTable extends ComponentExt<IProps> {
 
     @action
     setTargetConfig(config, id?) {
+        console.log(config)
         const { pkg_name, platform, config_version, versionArr = [], is_duplicate = 0, bundle_id, sdk_version } = config
         const ver = id === undefined ? undefined : versionArr.find(item => item.id === id).version
+        const sdk_ver = id === undefined ? undefined : versionArr.find(item => item.id === id).sdk
         const gg = {
             is_duplicate,
             pkg_name: platform === 'android' ? pkg_name : bundle_id,
             platform,
             config_version: ver || config_version,
             config_deploy_id: id ? Number(id) : id,
-            sdk_version
+            sdk_version: sdk_ver || sdk_version
         }
         this.props.setTargetConfig(gg)
         localStorage.setItem('TargetConfig', JSON.stringify(gg))
