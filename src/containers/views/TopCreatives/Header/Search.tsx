@@ -176,7 +176,7 @@ class TopCreativeSearch extends ComponentExt<IStoreProps & FormComponentProps> {
               {getFieldDecorator('data_start', {
                 initialValue: filters.data_start
               })(
-                <RangePicker />
+                <RangePicker placeholder={['', '']} />
               )}
             </FormItem>
           </Col>

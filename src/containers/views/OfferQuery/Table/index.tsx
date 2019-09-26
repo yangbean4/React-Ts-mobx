@@ -102,7 +102,7 @@ class QueryTable extends ComponentExt<IProps> {
           render={(_, record) => (
             <span>
               {
-                this.$checkAuth('Offers-Campaigns-Edit') ?
+                this.$checkAuth('Offers-Campaigns-Campaigns-Edit') ?
                   (<a key='form' href="javascript:;" onClick={() => { this.routerGo(`/campaigns/edit/${_}`) }}>
                     {_}
                   </a>) : _

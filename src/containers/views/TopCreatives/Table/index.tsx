@@ -152,20 +152,44 @@ class TopCreativesTable extends ComponentExt<IProps> {
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative Type" dataIndex="creative_type_name" width={130} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative ID" dataIndex="creative_id" width={100} />
 
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative" dataIndex="creative" width={108} render={(_, record) => !record.creative || record.creative == '--' ? '--' : <img src={record.creative} width="72" height="40" />} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Creative" dataIndex="creative" width={108} render={(_, record) => {
+                        if ('campaign_id_name' in record) return null;
+                        return !record.creative || record.creative == '--' ? '--' : <a href={record.creative} target="_blank"><img src={record.creative} width="72" height="40" /></a>
+                    }} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Endcard ID" dataIndex="endcard_id" width={100} />
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Endcard" dataIndex="endcard" width={108} render={(_, record) => !record.endcard || record.endcard == '--' ? '--' : <img src={record.endcard} width="72" height="40" />} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Endcard" dataIndex="endcard" width={108} render={(_, record) => {
+                        if ('campaign_id_name' in record) return null;
+                        return !record.endcard || record.endcard == '--' ? '--' : <a href={record.endcard} target="_blank"><img src={record.endcard} width="72" height="40" /></a>
+                    }} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="App ID" dataIndex="app_id" width={280} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Platform" dataIndex="platform" width={100} />
-                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Data Duration" dataIndex="data_duration" width={200} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Data Duration" dataIndex="data_duration" width={200} render={(_, record) => {
+                        if ('campaign_id_name' in record) {
+                            return {
+                                children: record['campaign_id_name'],
+                                props: {
+                                    colSpan: 2,
+                                    style: { textAlign: 'right' }
+                                }
+                            }
+                        }
+                        return record.data_duration
+                    }} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList>
                         title="Campaign"
                         dataIndex="campaign_num"
                         width={100}
                         className={styles.expantCell}
-                        render={(_, record) => <span className="text">
-                            {'campaign_id_name' in record ? record['campaign_id_name'] : record.campaign_num}
-                        </span>}
+                        render={(_, record) => {
+                            if ('campaign_id_name' in record) {
+                                return {
+                                    props: {
+                                        colSpan: 0
+                                    }
+                                }
+                            }
+                            return <span className="text">{record.campaign_num}</span>
+                        }}
                     />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Impression" dataIndex="impression" fixed="right" width={130} sorter={true} render={(_, record) => this.formatNumber(record.impression)} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="CTR" dataIndex="ctr" fixed="right" width={95} sorter={true} render={(_, record) => this.formatNumber(record.ctr) + '%'} />

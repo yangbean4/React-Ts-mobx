@@ -95,6 +95,7 @@ class ConfigModel extends ComponentExt<IProps & FormComponentProps> {
       async (err, values): Promise<any> => {
         let per = values;
         let js_vs = (val) => {
+          typeof val === 'string' && (val = val.toLocaleLowerCase());
           return val.indexOf('v') == -1 ? 'v' + val : val
         }
         per.config_version = js_vs(per.config_version || '')

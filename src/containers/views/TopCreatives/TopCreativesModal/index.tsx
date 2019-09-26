@@ -6,6 +6,10 @@ import { computed, action, runInAction, observable, autorun } from 'mobx'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import MyIcon from '@components/Icon'
 
+const getOrigin = (url) => {
+  return /^https?:\/\/[\w-.]+(:\d+)?/i.exec(url)[0]
+}
+
 interface showType {
   name: string
   key: string
@@ -98,6 +102,7 @@ class TopCreativesModal extends React.Component<IProp> {
     return `${num}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
+
   @computed
   get computedRight(): rightGroup {
     const creative_type = (this.props.data.preview || {}).creative_type
@@ -131,6 +136,7 @@ class TopCreativesModal extends React.Component<IProp> {
     switch (creative_type || '1') {
       //IVE
       case '1':
+        // this.initIve()
         return {
           main: {
             srcType: 'iframe',
@@ -138,13 +144,13 @@ class TopCreativesModal extends React.Component<IProp> {
           },
           btnGroup: [
             {
-              name: 'Copy Online Creative Url',
-              src: preview.online_url,
-              btnType: 'copy'
-            }, {
               name: 'Download Offline Creative',
               src: preview.offline_url,
               btnType: 'lead'
+            }, {
+              name: 'Copy Online Creative Url',
+              src: preview.online_url,
+              btnType: 'copy'
             }
           ]
         }
@@ -245,8 +251,31 @@ class TopCreativesModal extends React.Component<IProp> {
 
 
   componentWillUnmount() {
+    window.removeEventListener('message', this.handelMSG)
     this.IReactionDisposer()
   }
+  componentDidMount() {
+    window.addEventListener('message', this.handelMSG, false)
+  }
+
+  handelMSG = (msg) => {
+    const msgData = msg.data || {}
+    const {
+      type
+    } = msgData;
+    if (type === 'onInit') {
+      const iframe = window.document.getElementById('ive') as HTMLIFrameElement
+      if (iframe && iframe.contentWindow) {
+        try {
+          iframe.contentWindow.postMessage({ type: 'ready' }, getOrigin(iframe.src))
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    }
+  }
+
+
 
   @action
   typeChange = (e) => {
@@ -273,7 +302,7 @@ class TopCreativesModal extends React.Component<IProp> {
         title="Creative"
         destroyOnClose
         onCancel={onCancel}
-        width={1086}
+        width={1040}
         footer={null}
         visible={this.props.visible}
       >
@@ -389,15 +418,15 @@ class TopCreativesModal extends React.Component<IProp> {
             </div>
             <div className={style.busbox}>
               {
-                !main.src ? <MyIcon type="iconpicture2" className={style.busIcon} /> : main.srcType === 'iframe' ? <iframe className={style.frame} src={main.src} /> : main.srcType === 'video' ? <video width="100%" height="100%" style={{ width: '100%' }} controls autoPlay src={main.src} /> : <img alt="example" style={{ maxHeight: '100%', display: 'block', margin: '0 auto', maxWidth: '100%' }} src={main.src} />
+                !main.src ? <MyIcon type="iconpicture2" className={style.busIcon} /> : main.srcType === 'iframe' ? <iframe id='ive' className={style.frame} src={main.src} /> : main.srcType === 'video' ? <video width="100%" height="100%" style={{ width: '100%' }} controls autoPlay src={main.src} /> : <img alt="example" style={{ maxHeight: '100%', display: 'block', margin: '0 auto', maxWidth: '100%' }} src={main.src} />
               }
             </div>
             <div className={style.btnBox}>
               {
                 btnGroup.map(ele => {
                   return ele.btnType === 'copy' ?
-                    <CopyToClipboard onCopy={this.onCopy} text={ele.src}><Button disabled={!ele.src} type="primary">{ele.name}</Button></CopyToClipboard>
-                    : <Button type="primary" disabled={!ele.src} onClick={() => this.viewFile(ele.src)} >{ele.name}</Button>
+                    <CopyToClipboard key={ele.name} onCopy={this.onCopy} text={ele.src}><Button disabled={!ele.src} type="primary">{ele.name}</Button></CopyToClipboard>
+                    : <Button key={ele.name} type="primary" disabled={!ele.src} onClick={() => this.viewFile(ele.src)} >{ele.name}</Button>
                 })
               }
             </div>

@@ -13,22 +13,22 @@ $border-mx: 1px solid rgba(223, 234, 238, 1);
     width: 480px;
 
     .msg {
-      height: 38px;
+      height: 30px;
 
       .label {
         float: left;
         text-align: right;
         width: 150px;
         margin-right: 20px;
-        font-size: 14px;
+        // font-size: 14px;
         // font-family: Montserrat;
-        font-weight: 300;
+        // font-weight: 300;
         color: rgba(62, 54, 100, 1);
       }
       .value {
         float: left;
         color: "#9A97AE";
-        font-size: 14px;
+        // font-size: 14px;
         // font-family: Montserrat;
         font-weight: 300;
         color: rgba(154, 151, 174, 1);
@@ -38,6 +38,7 @@ $border-mx: 1px solid rgba(223, 234, 238, 1);
       width: 480px;
       height: 174px;
       border: $border-mx;
+      margin-bottom: 20px;
       .title {
         height: 30px;
         line-height: 30px;
@@ -47,7 +48,7 @@ $border-mx: 1px solid rgba(223, 234, 238, 1);
       .list {
         height: 144px;
         .list1 {
-          margin-bottom: 30px;
+          margin-bottom: 20px;
           padding-top: 18px;
           height: 56px;
         }
@@ -67,7 +68,7 @@ $border-mx: 1px solid rgba(223, 234, 238, 1);
             color: rgba(62, 54, 100, 1);
           }
           .vv {
-            font-size: 22px;
+            font-size: 18px;
             // font-family: Montserrat;
             font-weight: 300;
             color: $primary-color;
@@ -81,13 +82,13 @@ $border-mx: 1px solid rgba(223, 234, 238, 1);
   }
   .right {
     width: 448px;
-    height: 412px;
+    height: 375px;
     display: flex;
     flex-direction: column;
     .tab {
       width: 100%;
       height: 40px;
-      margin-bottom: 40px;
+      margin-bottom: 20px;
     }
     .busbox {
       // flex: 1;
@@ -100,9 +101,9 @@ $border-mx: 1px solid rgba(223, 234, 238, 1);
       background: rgba(250, 251, 255, 1);
       border: 1px solid rgba(228, 237, 240, 1);
       border-radius: 4px 4px 0px 0px;
-      .busIcon{
-        width:50px;
-        height:40px;
+      .busIcon {
+        width: 50px;
+        height: 40px;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -113,7 +114,7 @@ $border-mx: 1px solid rgba(223, 234, 238, 1);
     }
     .btnBox {
       height: 40px;
-      margin-top: 40px;
+      margin-top: 20px;
       button {
         float: right;
         margin-left: 20px;
