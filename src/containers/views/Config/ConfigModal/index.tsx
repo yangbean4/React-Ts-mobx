@@ -285,14 +285,6 @@ class ConfigModal extends ComponentExt<IStoreProps> {
                             SDK Version
                     </div>
                         <div className={style.value}>
-                            {targetConfig.sdk_version}
-                        </div>
-                    </div>
-                    <div className={style.row}>
-                        <div className={style.title}>
-                            Config Version
-                    </div>
-                        <div className={style.value}>
                             {targetConfig.config_version}
                         </div>
                     </div>

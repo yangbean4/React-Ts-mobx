@@ -1,0 +1,60 @@
+@import "_base.scss";
+.wp {
+    position: relative;
+}
+.content {
+    padding: 20px;
+    padding-bottom: 0;
+    background-color: $background-color-white;
+    box-shadow: $box-shadow-base;
+    border-radius: $border-radius-lg;
+    overflow: hidden;
+    max-height: 300px;
+    transition: max-height ease .5s;
+    :global(.ant-col) {
+        width: unset;
+    }
+    :global(.ant-col-offset-1) {
+        margin-left: 20px;
+        margin-bottom: 24px;
+    }
+
+    :global(.ant-form-item-control) {
+        width: 240px;
+    }
+
+    :global(.ant-form-item-label) {
+        text-align: left;
+        margin-left: 20px;
+    }
+
+    :global(label) {
+        margin: 0 10px 0 0;
+        &::after {
+            display: none;
+        }
+    }
+}
+.more {
+    position: absolute;
+    width: 30px;
+    height: 12px;
+    left: 50%;
+    margin-left: -15px;
+    background-color: #fff;
+    bottom: -11px;
+    cursor: pointer;
+
+    &:after {
+        content: '';
+        display: block;
+        background: url('../../assets/images/header-more.png') no-repeat center center;
+        width: 30px;
+        height: 12px;
+        transition: transform ease .3s;
+    }
+    &.hide:after {
+        transform: rotate(180deg);
+    }
+}
+

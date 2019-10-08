@@ -21,7 +21,7 @@ interface IStoreProps {
 }
 
 interface IProps extends IStoreProps {
-    // scrollY: number
+    scrollY: number
 }
 
 @inject(

@@ -59,7 +59,9 @@ export class WhiteBlackListStore extends StoreExt {
   @observable
   optionListDb: IWhiteBlackListStore.OptionListDb = {
     PkgnameData: [],
-    Category: []
+    Category: [],
+    AppidCampaign: [],
+    PkgNamePlacement: []
   }
 
   @action
@@ -67,6 +69,42 @@ export class WhiteBlackListStore extends StoreExt {
     const res = await this.api.whiteBlack.getCategory()
     runInAction('SET', () => {
       this.optionListDb.Category = res.data;
+    })
+  }
+
+  @action
+  getAppidCampaign = async () => {
+    const res = await this.api.whiteBlack.getAppidCampaign();
+    const data = res.data.map(item => {
+      item.campaign = item.campaign.map(v => ({ ...v, platform: item.platform }));
+      return item;
+    })
+    console.log(data)
+    runInAction('SET', () => {
+      this.optionListDb.AppidCampaign = data;
+    })
+  }
+
+  @action
+  getPkgNamePlacement = async () => {
+    const [all, disableList] = await Promise.all([
+      this.api.whiteBlack.getPkgNamePlacement(),
+      this.api.whiteBlack.getDisablePkgName()
+    ])
+    const map = {};
+    Object.values(disableList.data).forEach((k: number) => {
+      map[k] = true
+    })
+    // const res = await this.api.whiteBlack.getPkgNamePlacement();
+
+    const data = all.data.map(item => {
+      item.placement = item.placement.map(v => ({ ...v, platform: item.platform }));
+      item.disabled = map[item.id] || false
+      return item;
+    })
+
+    runInAction('SET', () => {
+      this.optionListDb.PkgNamePlacement = data;
     })
   }
 

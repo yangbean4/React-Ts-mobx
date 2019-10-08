@@ -9,6 +9,12 @@ export interface Iitem {
     pkg_name?: string
     category_whitelist?: number[]
     app_id_blacklist?: string[]
+    limited?: number
+    placement_campaign?: {
+        placement_id: string
+        type: number
+        campaign_id: number[]
+    }[]
 }
 
 export interface IitemForList {
@@ -30,4 +36,6 @@ export interface SearchParams {
 export interface OptionListDb {
     PkgnameData?: any[],
     Category?: any[],
+    AppidCampaign?: any[],
+    PkgNamePlacement?: any[]
 }

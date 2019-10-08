@@ -39,6 +39,9 @@ export interface UploadFileProps {
   className?: string
   viewUrl?: string
   hasView?: boolean
+  showFileSize?: boolean
+  fileSize?: number
+  showUnzippedFileSize?: boolean
 }
 
 @observer
@@ -66,12 +69,28 @@ class UploadFile extends React.Component<UploadFileProps> {
   private previewUrl: string
 
   @observable
+  private fileSize: number = 0;
+
+  @observable
   private btnVisible: boolean = false
 
   @computed
   get useUrl() {
     // this.props.value ? this.previewUrl || this.props.value : ''
     return this.props.value
+  }
+
+  @computed
+  get showFileSize() {
+    return this.props.showFileSize;
+  }
+
+  @computed
+  get getFileSize() {
+    let fileSize = this.fileSize || this.props.fileSize;
+    if (fileSize > 1048576) return Math.round(fileSize / 1048576) + 'Mb';
+    else return Math.round(fileSize / 1024) + 'kb';
+
   }
 
   @computed
@@ -231,6 +250,7 @@ class UploadFile extends React.Component<UploadFileProps> {
           if (isZip) {
             runInAction('SET_URL', () => {
               this.previewUrl = file.name
+              this.showFileSize && (this.fileSize = Rdata.file_size);
             })
           } else {
             const fileRender = new FileReader()
@@ -282,23 +302,25 @@ class UploadFile extends React.Component<UploadFileProps> {
         <div className="ant-upload-text">Upload</div>
       </div>
     );
-
     return (
       <React.Fragment>
         <Spin spinning={this.loading}>
-          <Upload
-            {...props}
-          >
+          <Upload {...props} >
             {this.useUrl ? (
               isZip ? (
-                <div className={styles.fileBox} onClick={this.stop}>
-                  <span className={styles.fileName} title={this.useUrl}>{this.useUrl}</span>
-                  <MyIcon className={styles.fileIcon} type="iconguanbi" onClick={this.delClick} />
+                <>
+                  <div className={styles.fileBox} onClick={this.stop}>
+                    <span className={styles.fileName} title={this.useUrl}>{this.useUrl}</span>
+                    <MyIcon className={styles.fileIcon} type="iconguanbi" onClick={this.delClick} />
+                    {
+                      (this.props.viewUrl || this.props.hasView) && <Icon className={styles.fileIcon} type="eye" onClick={this.viewFile} />
+                    }
+                    <CopyToClipboard onCopy={this.onCopy} text={this.useUrl}><Icon className={styles.fileIcon} type="copy" /></CopyToClipboard>
+                  </div>
                   {
-                    (this.props.viewUrl || this.props.hasView) && <Icon className={styles.fileIcon} type="eye" onClick={this.viewFile} />
+                    this.showFileSize && <span style={{ color: '#aaa' }}>{this.getFileSize} {this.props.showUnzippedFileSize && '(Unzipped file size)'}</span>
                   }
-                  <CopyToClipboard onCopy={this.onCopy} text={this.useUrl}><Icon className={styles.fileIcon} type="copy" /></CopyToClipboard>
-                </div>
+                </>
               ) : (<div className={styles.box} onClick={this.stop} onMouseLeave={this.hideBtn}>
                 <div className={styles.layer}>
                   <Button onClick={this.showLine ? this.showOnline : this.eyeClick} style={{ marginRight: 12 }} type="primary" shape="circle" icon="eye" />

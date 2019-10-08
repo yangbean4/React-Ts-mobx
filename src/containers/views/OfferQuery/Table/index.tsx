@@ -20,7 +20,7 @@ interface IStoreProps {
 }
 
 interface IProps extends IStoreProps {
-  // scrollY: number
+  scrollY: number
 }
 
 @inject(
@@ -62,7 +62,8 @@ class QueryTable extends ComponentExt<IProps> {
       handleTableChange,
       page,
       pageSize,
-      total
+      total,
+      scrollY
     } = this.props
     return (
       <Table<IOfferQueryStore.IQuery>
@@ -73,7 +74,7 @@ class QueryTable extends ComponentExt<IProps> {
         locale={{ emptyText: 'No Data' }}
         loading={getOfferQueryLoading}
         dataSource={offerList}
-        scroll={{ x: 2200 }}
+        scroll={{ y: scrollY, x: 2200 }}
         pagination={{
           current: page,
           pageSize,

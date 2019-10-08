@@ -17,6 +17,20 @@ export default {
   },
 
   /**
+  * 获取app_id和campaign关系
+  */
+  getAppidCampaign(): Promise<any> {
+    return http.post(`${basePath}appIdCampaign`)
+  },
+
+  /**
+   * 获取pkg_name和placement关系
+   */
+  getPkgNamePlacement(): Promise<any> {
+    return http.post(`${basePath}pkgNamePlacement`)
+  },
+
+  /**
    * 添加White/Black配置信息
    */
   create(data): Promise<any> {

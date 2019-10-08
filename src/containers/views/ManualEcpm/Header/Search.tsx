@@ -111,6 +111,7 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
               })(<Select
                 showSearch
                 mode="multiple"
+                maxTagCount={2}
                 getPopupContainer={trigger => trigger.parentElement}
                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
               >
@@ -144,6 +145,7 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   showSearch
                   mode='multiple'
+                  maxTagCount={1}
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >

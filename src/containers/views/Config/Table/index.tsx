@@ -98,7 +98,7 @@ class ConfigTable extends ComponentExt<IProps> {
 
     @action
     handelOk = (data) => {
-        const { id, copyTo, pkg_name, platform, newSdk } = data;
+        const { id, copyTo, pkg_name, platform } = data;
         const setTargetConfig = (data) => {
             this.setTargetConfig({
                 ...data,
@@ -117,11 +117,11 @@ class ConfigTable extends ComponentExt<IProps> {
                 this.hideRoleModalVisible()
                 break;
             case 'copy':
-                setTargetConfig({ ...this.targetConfig, config_version: copyTo, is_duplicate: 1, pkg_name, sdk_version: newSdk })
+                setTargetConfig({ ...this.targetConfig, config_version: copyTo, is_duplicate: 1, pkg_name })
                 this.goEdit(id, copyTo ? `?copyTo=${copyTo}` : undefined)
                 break;
             case 'edit':
-                this.setTargetConfig({ ...this.targetConfig, sdk_version: data.sdk_version }, id)
+                this.setTargetConfig({ ...this.targetConfig }, id)
                 this.goEdit(id)
                 break;
             case 'add':
@@ -148,16 +148,14 @@ class ConfigTable extends ComponentExt<IProps> {
     @action
     setTargetConfig(config, id?) {
         console.log(config)
-        const { pkg_name, platform, config_version, versionArr = [], is_duplicate = 0, bundle_id, sdk_version } = config
+        const { pkg_name, platform, config_version, versionArr = [], is_duplicate = 0, bundle_id } = config
         const ver = id === undefined ? undefined : versionArr.find(item => item.id === id).version
-        const sdk_ver = id === undefined ? undefined : versionArr.find(item => item.id === id).sdk
         const gg = {
             is_duplicate,
             pkg_name: platform === 'android' ? pkg_name : bundle_id,
             platform,
             config_version: ver || config_version,
             config_deploy_id: id ? Number(id) : id,
-            sdk_version: sdk_ver || sdk_version
         }
         this.props.setTargetConfig(gg)
         localStorage.setItem('TargetConfig', JSON.stringify(gg))
@@ -251,7 +249,7 @@ class ConfigTable extends ComponentExt<IProps> {
                     <Table.Column<IConfigStore.IConfig> key="platform" title="Platform" dataIndex="platform" width={200} />
                     <Table.Column<IConfigStore.IConfig>
                         key="totalConfig"
-                        title="Config Version Number"
+                        title="SDK Version Number"
                         width={200}
                         dataIndex="totalConfig"
                         render={(_, record) => (

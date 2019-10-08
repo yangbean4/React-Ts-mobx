@@ -1,0 +1,33 @@
+@import "_base.scss";
+.dynamic {
+  width: 30px;
+  height: 30px;
+  background: rgba(237, 240, 255, 1);
+  border-radius: 2px;
+  font-size: 14px;
+  color: $primary-color;
+}
+.group {
+  // display: flex;
+  // align-items: center;
+  height: max-content;
+  .item {
+    height: max-content;
+    width: 500px;
+    margin-right: 20px;
+    border: 1px solid rgba(228, 237, 240, 1);
+    border-radius: 2px;
+  }
+  .btngroup {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+}
+:global {
+  .inlineOption {
+    .ant-select-selection__choice {
+      width: 80%;
+    }
+  }
+}

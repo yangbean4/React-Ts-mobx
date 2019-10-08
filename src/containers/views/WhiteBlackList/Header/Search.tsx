@@ -91,6 +91,7 @@ class Search extends ComponentExt<IStoreProps & FormComponentProps> {
                                     allowClear
                                     mode='multiple'
                                     showSearch
+                                    maxTagCount={1}
                                     getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >

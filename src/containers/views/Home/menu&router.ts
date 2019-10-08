@@ -91,11 +91,15 @@ export const asynchronousComponents = {
   WhiteBlackList: loadComponent(() => import(/* webpackChunkName: "WhileBlackList" */ '@views/WhiteBlackList')),
   WhiteBlackModal: loadComponent(() => import(/* webpackChunkName: "WhiteBlackAdd" */ '@views/WhiteBlackList/WhiteBlackModal')),
   // H5 Export
-  H5ExportList: loadComponent(() => import(/* webpackChunkName: "WhileBlackList" */ '@views/H5Export')),
-  H5ExportModal: loadComponent(() => import(/* webpackChunkName: "WhiteBlackAdd" */ '@views/H5Export/H5ExportModal')),
+  H5ExportList: loadComponent(() => import(/* webpackChunkName: "H5Exportlist" */ '@views/H5Export')),
+  H5ExportModal: loadComponent(() => import(/* webpackChunkName: "H5ExportAdd" */ '@views/H5Export/H5ExportModal')),
 
   // Top Creatives
-  TopCreatives: loadComponent(() => import(/* webpackChunkName: "WhileBlackList" */ '@views/TopCreatives')),
+  TopCreatives: loadComponent(() => import(/* webpackChunkName: "TopCreativeskList" */ '@views/TopCreatives')),
+
+  // Creative Frequency
+  CreativeFrequency: loadComponent(() => import(/* webpackChunkName: "CreativeFrequencyList" */ '@views/CreativeFrequency')),
+  CreativeFrequencyModal: loadComponent(() => import(/* webpackChunkName: "CreativeFrequencyAdd" */ '@views/CreativeFrequency/CreativeFrequencyModal')),
 }
 
 // 所有路由的key
@@ -212,6 +216,32 @@ export const routerAndMenu: IRouter[] = [
     path: '/whiteBlackList/edit/:id',
     title: 'Edit White/Black',
     component: 'WhiteBlackModal',
+  },
+  {
+    id: 54,
+    pid: 5,
+    isMenu: true,
+    exact: true,
+    path: '/creativeFrequency',
+    title: 'Creative Frequency',
+    component: 'CreativeFrequency',
+    authName: 'Apps-Creative Frequency'
+  },
+  {
+    id: 541,
+    pid: 54,
+    isMenu: false,
+    path: '/creativeFrequency/add',
+    title: 'Add Creative Frequency',
+    component: 'CreativeFrequencyModal',
+  },
+  {
+    id: 542,
+    pid: 54,
+    isMenu: false,
+    path: '/creativeFrequency/edit/:id',
+    title: 'Edit Creative Frequency',
+    component: 'CreativeFrequencyModal',
   },
   // --------Offer-----------
   {
