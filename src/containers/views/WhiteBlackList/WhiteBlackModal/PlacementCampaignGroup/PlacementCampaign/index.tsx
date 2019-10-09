@@ -10,6 +10,20 @@ interface IProps {
   value: PlacementCampaign
   onChange?: (data: PlacementCampaign) => void
 }
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 5 },
+    lg: { span: 10 },
+    xl: { span: 8 }
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 19 },
+    lg: { span: 14 },
+    xl: { span: 12 }
+  }
+}
 
 const typeList = [
   {
@@ -38,9 +52,16 @@ class PlacementCampaignGroup extends React.Component<IProps> {
         const {
           campaign_id,
         } = this.props.value
-        this.onChange({
-          campaign_id: campaign_id.filter(id => _campaignL.find(cam => cam.campaign_id === id))
-        })
+        const hasFilter = campaign_id.filter(id => !!_campaignL.find(cam => cam.campaign_id === id))
+        const isRender = hasFilter.length !== campaign_id.length
+        if (isRender) {
+          this.onChange({
+            campaign_id: hasFilter
+          })
+        }
+        console.log(222)
+
+        return isRender
       }
     )
   }
@@ -54,10 +75,16 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
 
   onChange = (data) => {
-    this.props.onChange({
+    const val = {
       ...this.props.value,
       ...data
-    })
+    }
+
+    // 避免出现不必要的更新,避免出现死循环
+    if (JSON.stringify(this.props.value) !== JSON.stringify(val)) {
+      this.props.onChange(val)
+    }
+
   }
   setType = (val) => {
     this.onChange({ placement_id: val })
@@ -73,7 +100,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
     const { placement_id, type, campaign_id } = value
     return (
       <div>
-        <Form.Item label='Placement'>
+        <Form.Item {...formItemLayout} label='Placement'>
           <Select
             showSearch
             getPopupContainer={trigger => trigger.parentElement}
@@ -88,10 +115,10 @@ class PlacementCampaignGroup extends React.Component<IProps> {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item label="White/Black Type">
-          <Radio.Group options={typeList} value={type} />
+        <Form.Item {...formItemLayout} label="White/Black Type">
+          <Radio.Group options={typeList} onChange={e => this.onChange({ type: e.target.value })} value={type} />
         </Form.Item>
-        <Form.Item label='Campaign'>
+        <Form.Item {...formItemLayout} label='Campaign'>
           <Select
             className='inlineOption'
             showSearch

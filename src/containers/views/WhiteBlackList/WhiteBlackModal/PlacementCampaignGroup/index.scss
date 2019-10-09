@@ -6,6 +6,7 @@
   border-radius: 2px;
   font-size: 14px;
   color: $primary-color;
+  line-height: 30px;
 }
 .group {
   // display: flex;
@@ -16,11 +17,14 @@
     width: 500px;
     margin-right: 20px;
     border: 1px solid rgba(228, 237, 240, 1);
+    padding-top: 20px;
     border-radius: 2px;
+    float: left;
   }
   .btngroup {
     height: 100%;
     display: flex;
+    float: left;
     align-items: center;
   }
 }

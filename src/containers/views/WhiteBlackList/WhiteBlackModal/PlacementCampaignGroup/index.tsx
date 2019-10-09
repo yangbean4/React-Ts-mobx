@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { computed } from 'mobx'
+import { computed, when, autorun } from 'mobx'
 import PlacementCampaignItem from './PlacementCampaign'
 import { Placement, Campaign, PlacementCampaign } from './type'
 import MyIcon from '@components/Icon'
@@ -22,10 +22,42 @@ class PlacementCampaignGroup extends React.Component<IProps> {
     type: 0,
     campaign_id: []
   }
+  private IReactionDisposer: () => void
+  constructor(props) {
+    super(props)
+    when(
+      // 一旦...
+      () => {
+        return !this.props.value.length
+      },
+      // ... 然后
+      () => this.setDefault()
+    )
+    this.IReactionDisposer = autorun(
+      () => {
+        const { placementList, value } = this.props
+        const _hasValue = this.hasSelect.filter(id => !!placementList.find(ele => ele.placement_id === id))
+        const isRender = _hasValue.length !== this.hasSelect.length
+        if (isRender) {
+          const _val = value.filter(ele => _hasValue.includes(ele.placement_id))
+          this.props.onChange(_val)
+        }
+        console.log(111)
+        return isRender
+      }
+    )
+  }
+
 
   @computed
   get hasSelect() {
     return this.props.value.map(ele => ele.placement_id)
+  }
+
+  setDefault = () => {
+    this.props.onChange([
+      { ...copy(this.defaultItem) }
+    ])
   }
 
   addList = (index: number): void => {
@@ -47,12 +79,17 @@ class PlacementCampaignGroup extends React.Component<IProps> {
     }
   }
 
-  onChange = (item, index) => {
+  itemChange = (item, index) => {
     const arr = copy(this.props.value)
     arr[index] = item
     this.props.onChange(arr)
   }
 
+
+
+  componentDidMount() {
+    this.IReactionDisposer()
+  }
 
   render() {
     const { value, placementList, campaignList } = this.props
@@ -60,13 +97,13 @@ class PlacementCampaignGroup extends React.Component<IProps> {
       <div>
         {
           value.map((item, index) => {
-            return <div key={item.placement_id} className={styles.group}>
+            return <div key={item.placement_id + index} className={styles.group}>
               <div className={styles.item}>
                 <PlacementCampaignItem
                   placementList={placementList.filter(ele => item.placement_id === ele.placement_id || this.hasSelect.includes(ele.placement_id))}
                   campaignList={campaignList}
                   value={item}
-                  onChange={(data) => this.onChange(data, index)}
+                  onChange={(data) => this.itemChange(data, index)}
                 />
               </div>
               <div className={styles.btngroup}>
