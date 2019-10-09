@@ -11,6 +11,7 @@
 .group {
   // display: flex;
   // align-items: center;
+  @include clearfix;
   height: max-content;
   .item {
     height: max-content;
@@ -18,6 +19,7 @@
     margin-right: 20px;
     border: 1px solid rgba(228, 237, 240, 1);
     padding-top: 20px;
+    margin-bottom: 20px;
     border-radius: 2px;
     float: left;
   }

@@ -9,6 +9,7 @@ interface IProps {
   campaignList: Campaign[]
   value: PlacementCampaign
   onChange?: (data: PlacementCampaign) => void
+  hasSelect: string[]
 }
 const formItemLayout = {
   labelCol: {
@@ -96,7 +97,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
 
   render() {
-    const { value, placementList } = this.props
+    const { value, placementList, hasSelect } = this.props
     const { placement_id, type, campaign_id } = value
     return (
       <div>
@@ -109,7 +110,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
             filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
           >
             {(placementList || []).map(c => (
-              <Select.Option value={c.placement_id} key={c.placement_id}>
+              <Select.Option disabled={hasSelect.includes(c.placement_id) && c.placement_id !== placement_id} value={c.placement_id} key={c.placement_id}>
                 {c.placement_name}
               </Select.Option>
             ))}
@@ -122,14 +123,14 @@ class PlacementCampaignGroup extends React.Component<IProps> {
           <Select
             className='inlineOption'
             showSearch
-            mode="tags"
+            mode="multiple"
             getPopupContainer={trigger => trigger.parentElement}
-            value={campaign_id}
-            onChange={(val) => this.onChange({ campaign_id: val })}
+            value={campaign_id.map(ele => ele.toString())}
+            onChange={(val) => this.onChange({ campaign_id: val.map(ele => Number(ele)) })}
             filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
           >
-            {(this.campaignL || []).map(c => (
-              <Select.Option value={c.campaign_id} key={c.campaign_id}>
+            {(this.campaignL || []).map((c, index) => (
+              <Select.Option value={c.campaign_id.toString()} key={c.campaign_id.toString() + index}>
                 {c.campaign_name}
               </Select.Option>
             ))}

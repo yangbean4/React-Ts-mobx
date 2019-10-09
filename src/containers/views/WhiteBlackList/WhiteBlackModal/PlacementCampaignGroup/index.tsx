@@ -100,7 +100,8 @@ class PlacementCampaignGroup extends React.Component<IProps> {
             return <div key={item.placement_id + index} className={styles.group}>
               <div className={styles.item}>
                 <PlacementCampaignItem
-                  placementList={placementList.filter(ele => item.placement_id === ele.placement_id || this.hasSelect.includes(ele.placement_id))}
+                  hasSelect={this.hasSelect}
+                  placementList={placementList}
                   campaignList={campaignList}
                   value={item}
                   onChange={(data) => this.itemChange(data, index)}
