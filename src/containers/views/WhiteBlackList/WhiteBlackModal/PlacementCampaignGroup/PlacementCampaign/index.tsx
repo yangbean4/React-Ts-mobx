@@ -9,6 +9,7 @@ interface IProps {
   campaignList: Campaign[]
   value: PlacementCampaign
   onChange?: (data: PlacementCampaign) => void
+  disabled?: boolean
   hasSelect: string[]
 }
 const formItemLayout = {
@@ -49,19 +50,17 @@ class PlacementCampaignGroup extends React.Component<IProps> {
     this.IReactionDisposer = autorun(
       () => {
         // const { placementList, value } = this.props
-        const _campaignL = this._campaignL
+        const _campaignL = this.campaignL
         const {
           campaign_id,
         } = this.props.value
-        const hasFilter = campaign_id.filter(id => !!_campaignL.find(cam => cam.campaign_id === id))
+        const hasFilter = campaign_id.filter(id => !!_campaignL.find(cam => cam.campaign_id == id))
         const isRender = hasFilter.length !== campaign_id.length
         if (isRender) {
           this.onChange({
             campaign_id: hasFilter
           })
         }
-        console.log(222)
-
         return isRender
       }
     )
@@ -97,7 +96,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
 
   render() {
-    const { value, placementList, hasSelect } = this.props
+    const { value, placementList, disabled, hasSelect } = this.props
     const { placement_id, type, campaign_id } = value
     return (
       <div>
@@ -107,6 +106,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
             getPopupContainer={trigger => trigger.parentElement}
             value={placement_id}
             onChange={this.setType}
+            disabled={disabled}
             filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
           >
             {(placementList || []).map(c => (
@@ -117,12 +117,13 @@ class PlacementCampaignGroup extends React.Component<IProps> {
           </Select>
         </Form.Item>
         <Form.Item {...formItemLayout} label="White/Black Type">
-          <Radio.Group options={typeList} onChange={e => this.onChange({ type: e.target.value })} value={type} />
+          <Radio.Group disabled={disabled} options={typeList} onChange={e => this.onChange({ type: e.target.value })} value={type} />
         </Form.Item>
         <Form.Item {...formItemLayout} label='Campaign'>
           <Select
             className='inlineOption'
             showSearch
+            disabled={disabled}
             mode="multiple"
             getPopupContainer={trigger => trigger.parentElement}
             value={campaign_id.map(ele => ele.toString())}

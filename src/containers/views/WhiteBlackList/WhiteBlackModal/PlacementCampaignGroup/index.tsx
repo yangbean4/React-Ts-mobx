@@ -11,6 +11,7 @@ interface IProps {
   campaignList: Campaign[]
   value?: PlacementCampaign[]
   onChange?: (data: PlacementCampaign[]) => void
+  disabled?: boolean
 }
 
 const copy = obj => JSON.parse(JSON.stringify(obj))
@@ -25,13 +26,13 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   private IReactionDisposer: () => void
   constructor(props) {
     super(props)
-    when(
+    autorun(
       // 一旦...
       () => {
-        return !this.props.value.length
-      },
-      // ... 然后
-      () => this.setDefault()
+        if (!this.props.value.length) {
+          this.setDefault()
+        }
+      }
     )
     this.IReactionDisposer = autorun(
       () => {
@@ -42,7 +43,6 @@ class PlacementCampaignGroup extends React.Component<IProps> {
           const _val = value.filter(ele => _hasValue.includes(ele.placement_id))
           this.props.onChange(_val)
         }
-        console.log(111)
         return isRender
       }
     )
@@ -61,6 +61,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
 
   addList = (index: number): void => {
+    if (this.props.disabled) return;
     if (this.hasSelect.length === this.props.placementList.length) {
       return
     }
@@ -70,6 +71,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
 
   removeList = (index: number): void => {
+    if (this.props.disabled) return;
     const arr = copy(this.props.value)
     if (arr.length === 0) {
       return
@@ -92,7 +94,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
 
   render() {
-    const { value, placementList, campaignList } = this.props
+    const { value, placementList, campaignList, disabled } = this.props
     return (
       <div>
         {
@@ -104,6 +106,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
                   placementList={placementList}
                   campaignList={campaignList}
                   value={item}
+                  disabled={disabled}
                   onChange={(data) => this.itemChange(data, index)}
                 />
               </div>

@@ -31,6 +31,20 @@ export default {
   },
 
   /**
+   * 获取placement列表
+   */
+  getPlacements(): Promise<any> {
+    return http.post(`${basePath}placements`)
+  },
+
+  /**
+   * 获取campaigns列表
+   */
+  getCampaigns(): Promise<any> {
+    return http.post(`api/campaigns/campaigns`)
+  },
+
+  /**
    * 添加White/Black配置信息
    */
   create(data): Promise<any> {

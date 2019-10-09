@@ -24,6 +24,8 @@ interface IStoreProps {
     changeFilter?: (params: IWhiteBlackListStore.SearchParams) => void
     filters?: IWhiteBlackListStore.SearchParams
     getCategory?: () => void
+    getPlacements?: () => void
+    getCampaigns: () => void
     optionListDb?: IWhiteBlackListStore.OptionListDb
 }
 
@@ -31,8 +33,8 @@ interface IStoreProps {
 
 @inject(
     (store: IStore): IStoreProps => {
-        const { changeFilter, filters, getCategory, optionListDb } = store.whiteBlackListStore
-        return { changeFilter, filters, getCategory, optionListDb }
+        const { changeFilter, filters, getCategory, optionListDb, getCampaigns, getPlacements } = store.whiteBlackListStore
+        return { changeFilter, filters, getCategory, optionListDb, getCampaigns, getPlacements }
     }
 )
 @observer
@@ -69,6 +71,8 @@ class Search extends ComponentExt<IStoreProps & FormComponentProps> {
 
     componentDidMount() {
         this.props.getCategory();
+        this.props.getCampaigns();
+        this.props.getPlacements();
     }
 
     render() {
@@ -109,6 +113,66 @@ class Search extends ComponentExt<IStoreProps & FormComponentProps> {
                             {getFieldDecorator('app_id', {
                                 initialValue: filters.app_id
                             })(<Input autoComplete="off" />)}
+                        </FormItem>
+                    </Col>
+
+                    <Col span={span}>
+                        <FormItem label="Placement" className='minInput'>
+                            {getFieldDecorator('placement_id')(
+                                <Select
+                                    allowClear
+                                    mode='multiple'
+                                    showSearch
+                                    maxTagCount={1}
+                                    getPopupContainer={trigger => trigger.parentElement}
+                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    {optionListDb.placements.map(c => (
+                                        <Select.Option key={c.placement_id} value={c.placement_id}>
+                                            {c.placement_name}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            )}
+                        </FormItem>
+                    </Col>
+
+                    <Col span={span}>
+                        <FormItem label="White/Black Type" className='minInput'>
+                            {getFieldDecorator('type')(
+                                <Select
+                                    allowClear
+                                    mode='multiple'
+                                    showSearch
+                                    maxTagCount={1}
+                                    getPopupContainer={trigger => trigger.parentElement}
+                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    <Select.Option key={0} value={0}>Whitelist</Select.Option>
+                                    <Select.Option key={1} value={1}>Blacklist</Select.Option>
+                                </Select>
+                            )}
+                        </FormItem>
+                    </Col>
+
+                    <Col span={span}>
+                        <FormItem label="Campaign" className='minInput'>
+                            {getFieldDecorator('campaign_id')(
+                                <Select
+                                    allowClear
+                                    mode='multiple'
+                                    showSearch
+                                    maxTagCount={1}
+                                    getPopupContainer={trigger => trigger.parentElement}
+                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    {optionListDb.campaigns.map(c => (
+                                        <Select.Option key={c.id} value={c.id}>
+                                            {c.name}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            )}
                         </FormItem>
                     </Col>
 

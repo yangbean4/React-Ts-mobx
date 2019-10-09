@@ -12,6 +12,9 @@
   .btnBox {
       margin-left: 12%;
   }
+  :global(.ant-form-item) {
+    width: 500px;
+  }
 }
 
 .optionText {
