@@ -11,6 +11,8 @@ interface IProps {
   onChange?: (data: PlacementCampaign) => void
   disabled?: boolean
   hasSelect: string[]
+  index: number
+  getFieldDecorator<T extends Object = {}>(id: keyof T, options?: Object): (node: React.ReactNode) => React.ReactNode
 }
 const formItemLayout = {
   labelCol: {
@@ -67,7 +69,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
   @computed
   get campaignL() {
-    return this._campaignL.length ? this._campaignL : this.props.campaignList
+    return this._campaignL.length ? this._campaignL : this.props.campaignList || []
   }
 
   componentDidMount() {
@@ -88,7 +90,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
   setType = (val) => {
     this.onChange({ placement_id: val })
-    const placement = this.props.placementList.find(ele => ele.placement_id === val)
+    const placement = this.props.placementList.find(ele => ele.placement_id === val) || { platform: '' }
     const _campaignL = this.props.campaignList.filter(ele => ele.platform === placement.platform)
     runInAction('set', () => {
       this._campaignL = _campaignL
@@ -96,46 +98,59 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
 
   render() {
-    const { value, placementList, disabled, hasSelect } = this.props
+    const { value, placementList = [], disabled, hasSelect, getFieldDecorator, index } = this.props
     const { placement_id, type, campaign_id } = value
     return (
       <div>
         <Form.Item {...formItemLayout} label='Placement'>
-          <Select
-            showSearch
-            getPopupContainer={trigger => trigger.parentElement}
-            value={placement_id}
-            onChange={this.setType}
-            disabled={disabled}
-            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-          >
-            {(placementList || []).map(c => (
-              <Select.Option disabled={hasSelect.includes(c.placement_id) && c.placement_id !== placement_id} value={c.placement_id} key={c.placement_id}>
-                {c.placement_name}
-              </Select.Option>
-            ))}
-          </Select>
+          {
+            getFieldDecorator(`__[${index}].placement_id`, {
+              rules: [{ required: !!campaign_id.length, message: "Required" }],
+            })(
+              <Select
+                allowClear
+                showSearch
+                getPopupContainer={trigger => trigger.parentElement}
+                // value={placement_id}
+                onChange={this.setType}
+                disabled={disabled}
+                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              >
+                {(placementList || []).map(c => (
+                  <Select.Option disabled={hasSelect.includes(c.placement_id) && c.placement_id !== placement_id} value={c.placement_id} key={c.placement_id}>
+                    {c.placement_name}
+                  </Select.Option>
+                ))}
+              </Select>
+            )
+          }
+
         </Form.Item>
         <Form.Item {...formItemLayout} label="White/Black Type">
           <Radio.Group disabled={disabled} options={typeList} onChange={e => this.onChange({ type: e.target.value })} value={type} />
         </Form.Item>
         <Form.Item {...formItemLayout} label='Campaign'>
-          <Select
-            className='inlineOption'
-            showSearch
-            disabled={disabled}
-            mode="multiple"
-            getPopupContainer={trigger => trigger.parentElement}
-            value={campaign_id.map(ele => ele.toString())}
-            onChange={(val) => this.onChange({ campaign_id: val.map(ele => Number(ele)) })}
-            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-          >
-            {(this.campaignL || []).map((c, index) => (
-              <Select.Option value={c.campaign_id.toString()} key={c.campaign_id.toString() + index}>
-                {c.campaign_name}
-              </Select.Option>
-            ))}
-          </Select>
+          {
+            getFieldDecorator(`__[${index}].campaign_id`, {
+              rules: [{ required: !!placement_id, message: "Required" }],
+            })(
+              <Select
+                className='inlineOption'
+                showSearch
+                disabled={disabled}
+                mode="multiple"
+                getPopupContainer={trigger => trigger.parentElement}
+                // value={campaign_id.map(ele => ele.toString())}
+                onChange={(val) => this.onChange({ campaign_id: val.map(ele => Number(ele)) })}
+                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              >
+                {(this.campaignL).map((c, index) => (
+                  <Select.Option value={c.campaign_id.toString()} key={c.campaign_id.toString() + index}>
+                    {c.campaign_name}
+                  </Select.Option>
+                ))}
+              </Select>
+            )}
         </Form.Item>
       </div>
     )

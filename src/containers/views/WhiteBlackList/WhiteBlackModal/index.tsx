@@ -506,8 +506,18 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
               initialValue: item.placement_campaign || [],
             })(<PlacementCampaignGroup
               disabled={this.disabledAll}
+              getFieldDecorator={getFieldDecorator}
               campaignList={this.campaignList}
               placementList={this.placementList} />)}
+            {/* {
+              this.loaded && <PlacementCampaignGroup
+                disabled={this.disabledAll}
+                initialValue={item.placement_campaign}
+                getFieldDecorator={getFieldDecorator}
+                campaignList={this.campaignList}
+                placementList={this.placementList} />
+            } */}
+
           </FormItem>
           <FormItem className={styles.btnBox}>
             <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
