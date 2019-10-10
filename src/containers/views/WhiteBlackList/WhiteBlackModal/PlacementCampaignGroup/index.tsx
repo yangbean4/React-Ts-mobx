@@ -102,14 +102,14 @@ class PlacementCampaignGroup extends React.Component<IProps> {
       <div>
         {
           value.map((item, index) => {
-            return <div key={index} className={styles.group}>
+            return <div key={item.placement_id + index} className={styles.group}>
               <div className={styles.item}>
                 <PlacementCampaignItem
                   hasSelect={this.hasSelect}
                   placementList={placementList}
                   campaignList={campaignList}
                   value={item}
-                  index={index}
+                  index={Math.random()}
                   form={this.props.form}
                   disabled={disabled}
                   onChange={(data) => this.itemChange(data, index)}

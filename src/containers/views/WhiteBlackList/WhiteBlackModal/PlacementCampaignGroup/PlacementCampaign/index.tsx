@@ -146,7 +146,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
           {
             getFieldDecorator(`__[${index}].campaign_id`, {
               rules: [{ required: !!placement_id, message: "Required" }],
-              initialValue: campaign_id
+              initialValue: campaign_id.map(ele => ele.toString())
             })(
               <Select
                 className='inlineOption'

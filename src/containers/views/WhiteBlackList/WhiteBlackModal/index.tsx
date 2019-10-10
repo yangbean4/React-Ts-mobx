@@ -362,6 +362,7 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
             && (values.limited === 0 || values.category_whitelist.length === 0)) {
             return message.error('Failure! Category Whitelist, App ID Blacklist and Placement-Campaign cannot be empty at the same time.')
           }
+          delete values.__
           this.toggleLoading()
           try {
             // if (Array.isArray(values.pkg_name))
