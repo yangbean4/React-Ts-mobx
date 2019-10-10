@@ -4,5 +4,10 @@
         width: 160px !important;
     }
   }
-  
+}
+
+.maxOption {
+  :global(.ant-select-selection__choice) {
+    max-width: 140px;
+  }
 }

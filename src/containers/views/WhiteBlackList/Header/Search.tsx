@@ -127,19 +127,20 @@ class Search extends ComponentExt<IStoreProps & FormComponentProps> {
                     </Col>
 
                     <Col span={span}>
-                        <FormItem label="Placement" className='minInput'>
+                        <FormItem label="Placement">
                             {getFieldDecorator('placement_id')(
                                 <Select
                                     allowClear
                                     mode='multiple'
                                     showSearch
                                     maxTagCount={1}
+                                    className={styles.maxOption}
                                     getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                     {optionListDb.placements.map(c => (
                                         <Select.Option key={c.placement_id} value={c.placement_id}>
-                                            {c.placement_name}
+                                            {`${c.placement_name}_${c.placement_id}`}
                                         </Select.Option>
                                     ))}
                                 </Select>
@@ -166,19 +167,20 @@ class Search extends ComponentExt<IStoreProps & FormComponentProps> {
                     </Col>
 
                     <Col span={span}>
-                        <FormItem label="Campaign" className='minInput'>
+                        <FormItem label="Campaign">
                             {getFieldDecorator('campaign_id')(
                                 <Select
                                     allowClear
                                     mode='multiple'
                                     showSearch
                                     maxTagCount={1}
+                                    className={styles.maxOption}
                                     getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                     {optionListDb.campaigns.map(c => (
                                         <Select.Option key={c.id} value={c.id}>
-                                            {c.name}
+                                            {`${c.name}_${c.id}`}
                                         </Select.Option>
                                     ))}
                                 </Select>

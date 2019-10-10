@@ -412,116 +412,119 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
     return (
       <div className='sb-form'>
         <Form className={styles.taskModal} >
-          <FormItem style={{ textAlign: 'center', color: '#777' }}>
-            <Icon type="exclamation-circle" style={{ fontSize: '1.6em', verticalAlign: 'text-bottom', color: '#1890ff', marginRight: '0.5em' }} />
-            There is data linkage effect between Category,App ID,Campaign.
+          <div className={styles.card}>
+            <FormItem style={{ textAlign: 'center', color: '#777' }}>
+              <Icon type="exclamation-circle" style={{ fontSize: '1.6em', verticalAlign: 'text-bottom', color: '#1890ff', marginRight: '0.5em' }} />
+              There is data linkage effect between Category,App ID,Campaign.
           </FormItem>
-          <FormItem {...formItemLayout} label="Pkgname">
-            {getFieldDecorator('pkg_name', {
-              initialValue: item.pkg_name,
-              rules: [{ required: true, message: "Required" }],
-            })(this.isEdit ? (
-              <Input disabled></Input>
-            ) : (
-                <Select
-                  allowClear
-                  showSearch
-                  getPopupContainer={trigger => trigger.parentElement}
-                  onChange={this.pkgNameChanged}
-                  filterOption={(input, option) => option.props.children.props.title.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                >
-                  {optionListDb.PkgNamePlacement.map(c => {
-                    return <Select.Option key={c.id} value={c.id} disabled={c.disabled}>
-                      <AutoTooltip title={`${c.id}_${c.pkg_name}`}></AutoTooltip>
-                    </Select.Option>
-                  })}
-                </Select>
-              )
-            )}
-          </FormItem>
-          <Row style={{ width: 500 }}>
-            <Col {...formItemLayout.labelCol} className="ant-form-item-label">
-              <label className="ant-form-item-required">Category Whitelist</label>
-            </Col>
-            <Col {...formItemLayout.wrapperCol} {...{ lg: 15, xl: 14 }} >
-              <FormItem>
-                {getFieldDecorator('limited', {
-                  initialValue: item.limited || this.currentLimited
-                })(<Radio.Group onChange={this.limitedChanged} disabled={this.disabledAll}>
-                  <Radio value={0}>Unlimited</Radio>
-                  <Radio value={1}>Limited</Radio>
-                </Radio.Group>)}
-              </FormItem>
-              <FormItem>
-                {getFieldDecorator('category_whitelist', {
-                  initialValue: item.category_whitelist || [],
-                  rules: [{ required: !(this.disabledAll || this.currentLimited === 0), message: "Select at least one Category Whitelist when Limited." }]
-                  // rules: [{
-                  // validator: (rule, value, cb) => {
-                  //   // 编辑模式下不效验
-                  //   // limit等于Unlimited时也不效验
-                  //   if (this.currentLimited === 0 || this.isEdit) return cb();
-                  //   const appid = this.props.form.getFieldValue('app_id_blacklist');
-                  //   if (value.length === 0 && !appid) {
-                  //     return cb('Failure! Category Whitelist and App ID Blacklist cannot be empty at the same time.')
-                  //   }
-                  //   if (!appid) {
-                  //     this.props.form.validateFields(['app_id_blacklist']);
-                  //   }
-                  //   cb();
-                  // }
-                  // }]
-                })(<Checkbox.Group className={styles.categoryList}
-                  disabled={this.disabledAll || this.currentLimited === 0}
-                  onChange={this.categoryChanged}
-                  options={optionListDb.Category.map(c => {
-                    return {
-                      label: c.name,
-                      value: c.id
-                    }
-                  })} />)}
-              </FormItem>
-            </Col>
-          </Row>
-          <FormItem  {...formItemLayout} wrapperCol={{ ...formItemLayout.wrapperCol, lg: 8 }} label="App ID Blacklist" className={styles.showExtra}>
-            {getFieldDecorator('app_id_blacklist', {
-              initialValue: item.app_id_blacklist || [],
-              // rules: [{
-              // validator: (rule, value, cb) => {
-              //   // 编辑时 category 和 appid 可以同时为空
-              //   if (this.isEdit === false) {
-              //     const category = this.props.form.getFieldValue('category_whitelist');
-              //     if (!value && category.length === 0) {
-              //       return cb('Failure! Category Whitelist and App ID Blacklist cannot be empty at the same time.')
-              //     }
-              //     if (category.length === 0) {
-              //       this.props.form.validateFields(['category_whitelist']);
-              //     }
-              //   }
-              //   cb();
-              // }
-              // }]
-            })(<Select
-              mode="multiple"
-              className='inlineOption'
-              onChange={this.appidChanged}
-              disabled={this.disabledAll}>
-              {this.appids.map(c => {
-                return <Select.Option key={c.app_id} value={c.app_id} style={c.app_id_status === 'suspend' && { color: '#999' }}>
-                  {c.app_id}
-                </Select.Option>
-              })}
-            </Select>)}
-          </FormItem>
-          <FormItem style={{ width: 'max-content' }}>
-            {this.loaded && getFieldDecorator('placement_campaign', {
-              initialValue: item.placement_campaign || [],
-            })(<PlacementCampaignGroup
-              disabled={this.disabledAll}
-              form={form}
-              campaignList={this.campaignList}
-              placementList={this.placementList} />)}
-            {/* {
+            <FormItem {...formItemLayout} label="Pkgname">
+              {getFieldDecorator('pkg_name', {
+                initialValue: item.pkg_name,
+                rules: [{ required: true, message: "Required" }],
+              })(this.isEdit ? (
+                <Input disabled></Input>
+              ) : (
+                  <Select
+                    allowClear
+                    showSearch
+                    getPopupContainer={trigger => trigger.parentElement}
+                    onChange={this.pkgNameChanged}
+                    filterOption={(input, option) => option.props.children.props.title.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  >
+                    {optionListDb.PkgNamePlacement.map(c => {
+                      return <Select.Option key={c.id} value={c.id} disabled={c.disabled}>
+                        <AutoTooltip title={`${c.id}_${c.pkg_name}`}></AutoTooltip>
+                      </Select.Option>
+                    })}
+                  </Select>
+                )
+              )}
+            </FormItem>
+            <Row style={{ width: 500 }}>
+              <Col {...formItemLayout.labelCol} className="ant-form-item-label">
+                <label className="ant-form-item-required">Category Whitelist</label>
+              </Col>
+              <Col {...formItemLayout.wrapperCol} {...{ lg: 15, xl: 14 }} >
+                <FormItem>
+                  {getFieldDecorator('limited', {
+                    initialValue: item.limited || this.currentLimited
+                  })(<Radio.Group onChange={this.limitedChanged} disabled={this.disabledAll}>
+                    <Radio value={0}>Unlimited</Radio>
+                    <Radio value={1}>Limited</Radio>
+                  </Radio.Group>)}
+                </FormItem>
+                <FormItem>
+                  {getFieldDecorator('category_whitelist', {
+                    initialValue: item.category_whitelist || [],
+                    rules: [{ required: !(this.disabledAll || this.currentLimited === 0), message: "Select at least one Category Whitelist when Limited." }]
+                    // rules: [{
+                    // validator: (rule, value, cb) => {
+                    //   // 编辑模式下不效验
+                    //   // limit等于Unlimited时也不效验
+                    //   if (this.currentLimited === 0 || this.isEdit) return cb();
+                    //   const appid = this.props.form.getFieldValue('app_id_blacklist');
+                    //   if (value.length === 0 && !appid) {
+                    //     return cb('Failure! Category Whitelist and App ID Blacklist cannot be empty at the same time.')
+                    //   }
+                    //   if (!appid) {
+                    //     this.props.form.validateFields(['app_id_blacklist']);
+                    //   }
+                    //   cb();
+                    // }
+                    // }]
+                  })(<Checkbox.Group className={styles.categoryList}
+                    disabled={this.disabledAll || this.currentLimited === 0}
+                    onChange={this.categoryChanged}
+                    options={optionListDb.Category.map(c => {
+                      return {
+                        label: c.name,
+                        value: c.id
+                      }
+                    })} />)}
+                </FormItem>
+              </Col>
+            </Row>
+            <FormItem  {...formItemLayout} wrapperCol={{ ...formItemLayout.wrapperCol, lg: 8 }} label="App ID Blacklist" className={styles.showExtra}>
+              {getFieldDecorator('app_id_blacklist', {
+                initialValue: item.app_id_blacklist || [],
+                // rules: [{
+                // validator: (rule, value, cb) => {
+                //   // 编辑时 category 和 appid 可以同时为空
+                //   if (this.isEdit === false) {
+                //     const category = this.props.form.getFieldValue('category_whitelist');
+                //     if (!value && category.length === 0) {
+                //       return cb('Failure! Category Whitelist and App ID Blacklist cannot be empty at the same time.')
+                //     }
+                //     if (category.length === 0) {
+                //       this.props.form.validateFields(['category_whitelist']);
+                //     }
+                //   }
+                //   cb();
+                // }
+                // }]
+              })(<Select
+                mode="multiple"
+                className='inlineOption'
+                onChange={this.appidChanged}
+                disabled={this.disabledAll}>
+                {this.appids.map(c => {
+                  return <Select.Option key={c.app_id} value={c.app_id} style={c.app_id_status === 'suspend' && { color: '#999' }}>
+                    {c.app_id}
+                  </Select.Option>
+                })}
+              </Select>)}
+            </FormItem>
+          </div>
+          <div className={styles.card}>
+            <FormItem style={{ width: 'max-content' }}>
+              {this.loaded && getFieldDecorator('placement_campaign', {
+                initialValue: item.placement_campaign || [],
+              })(<PlacementCampaignGroup
+                disabled={this.disabledAll}
+                form={form}
+                campaignList={this.campaignList}
+                placementList={this.placementList} />)}
+              {/* {
               this.loaded && <PlacementCampaignGroup
                 disabled={this.disabledAll}
                 initialValue={item.placement_campaign}
@@ -530,10 +533,11 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
                 placementList={this.placementList} />
             } */}
 
-          </FormItem>
-          <FormItem className={styles.btnBox}>
-            <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
-          </FormItem>
+            </FormItem>
+            <FormItem className={styles.btnBox}>
+              <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
+            </FormItem>
+          </div>
         </Form>
       </div >
     )

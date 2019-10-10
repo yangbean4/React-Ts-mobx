@@ -7,10 +7,20 @@
   font-size: 14px;
   color: $primary-color;
   line-height: 30px;
+  padding: 0;
+  border: none;
+  &:hover,
+  &:focus,
+  &:active{
+    background-color: rgb(215, 221, 248);
+  }
+  &:nth-child(2) {
+    margin-left: 10px;
+  }
 }
 .group {
-  // display: flex;
-  // align-items: center;
+  display: flex;
+  align-items: center;
   @include clearfix;
   height: max-content;
   .item {

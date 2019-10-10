@@ -131,7 +131,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
               >
                 {(placementList || []).map(c => (
                   <Select.Option disabled={hasSelect.includes(c.placement_id) && c.placement_id !== placement_id} value={c.placement_id} key={c.placement_id}>
-                    {c.placement_name}
+                    {`${c.placement_name}-${c.placement_id}`}
                   </Select.Option>
                 ))}
               </Select>

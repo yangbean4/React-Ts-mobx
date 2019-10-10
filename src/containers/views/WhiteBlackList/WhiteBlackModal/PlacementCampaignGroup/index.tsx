@@ -4,6 +4,7 @@ import { computed, when, autorun } from 'mobx'
 import PlacementCampaignItem from './PlacementCampaign'
 import { Placement, Campaign, PlacementCampaign } from './type'
 import MyIcon from '@components/Icon'
+import { Icon, Button } from 'antd';
 import * as styles from './index.scss'
 
 interface IProps {
@@ -57,6 +58,11 @@ class PlacementCampaignGroup extends React.Component<IProps> {
     return this.props.value.map(ele => ele.placement_id)
   }
 
+  @computed
+  get noPlus() {
+    return this.hasSelect.length === this.props.placementList.length
+  }
+
   setDefault = () => {
     this.props.onChange([
       { ...copy(this.defaultItem) }
@@ -64,7 +70,6 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
 
   addList = (index: number): void => {
-    if (this.props.disabled) return;
     if (this.hasSelect.length === this.props.placementList.length) {
       return
     }
@@ -116,20 +121,10 @@ class PlacementCampaignGroup extends React.Component<IProps> {
                 />
               </div>
               <div className={styles.btngroup}>
-                <div>
-                  <MyIcon
-                    className={styles.dynamic}
-                    type="icontianjia"
-                    onClick={() => this.addList(index)}
-                  />
-                </div>
+                <Button disabled={this.noPlus || disabled} icon="plus" className={styles.dynamic} onClick={() => this.addList(index)} />
                 {value.length > 1 ?
-                  <div>
-                    <MyIcon
-                      className={styles.dynamic}
-                      type="iconjianshao"
-                      onClick={() => this.removeList(index)} />
-                  </div> : null
+                  <Button disabled={disabled} icon="minus" className={styles.dynamic} onClick={() => this.removeList(index)} />
+                  : null
                 }
               </div>
             </div>
