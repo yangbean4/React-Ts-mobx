@@ -17,13 +17,18 @@ interface IProps {
 }
 
 const copy = obj => JSON.parse(JSON.stringify(obj))
-
+const getKey = () => Math.random().toString()
+const NODE_KEY = '_key_'
 @observer
 class PlacementCampaignGroup extends React.Component<IProps> {
-  private defaultItem = {
-    placement_id: '',
-    type: 0,
-    campaign_id: []
+  @computed
+  get defaultItem() {
+    return {
+      placement_id: '',
+      type: 0,
+      campaign_id: [],
+      [NODE_KEY]: getKey()
+    }
   }
   private IReactionDisposer: () => void
   constructor(props) {
@@ -32,8 +37,17 @@ class PlacementCampaignGroup extends React.Component<IProps> {
       // 一旦...
       () => {
         // debugger
-        if (!this.props.value.length) {
+        const value = this.props.value
+        if (!value.length) {
           this.setDefault()
+        } else if (!!value.find(ele => !(NODE_KEY in ele))) {
+          const arr = copy(this.props.value).map(ele => {
+            return {
+              [NODE_KEY]: getKey(),
+              ...ele,
+            }
+          })
+          this.props.onChange(arr)
         }
       }
     )
@@ -107,14 +121,14 @@ class PlacementCampaignGroup extends React.Component<IProps> {
       <div>
         {
           value.map((item, index) => {
-            return <div key={item.placement_id + index} className={styles.group}>
+            return <div key={item[NODE_KEY]} className={styles.group}>
               <div className={styles.item}>
                 <PlacementCampaignItem
                   hasSelect={this.hasSelect}
                   placementList={placementList}
                   campaignList={campaignList}
                   value={item}
-                  index={Math.random()}
+                  index={item[NODE_KEY]}
                   form={this.props.form}
                   disabled={disabled}
                   onChange={(data) => this.itemChange(data, index)}
