@@ -159,7 +159,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
               >
                 {(this.campaignL).map((c, index) => (
-                  <Select.Option value={c.campaign_id.toString()} key={c.campaign_id.toString() + index}>
+                  <Select.Option value={c.campaign_id.toString()} key={c.campaign_id.toString() + index} style={c.campaign_status === 'suspend' && { color: '#999' }}>
                     {c.campaign_name}
                   </Select.Option>
                 ))}

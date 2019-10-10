@@ -15,7 +15,8 @@ export interface Iitem {
         placement_id: string
         type: number
         campaign_id: number[]
-    }[]
+    }[],
+    placement?: any[]
 }
 
 export interface IitemForList {

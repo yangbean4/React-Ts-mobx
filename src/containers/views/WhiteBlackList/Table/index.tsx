@@ -57,6 +57,7 @@ class WhiteBlackTable extends ComponentExt<IProps> {
   @action
   hideTableModal = () => {
     this.modalVisible = !this.modalVisible;
+
   }
 
   @action
@@ -67,14 +68,8 @@ class WhiteBlackTable extends ComponentExt<IProps> {
   @action
   showModal = (data) => {
     console.dir(data);
-    runInAction('SET_', () => {
+    runInAction('SET_data', () => {
       this.tableModalData = data.placement_campaign;
-      // let arr = [{
-      //   campaign_id_name: "100409-video_000258",
-      //   placement_name_id: "com.zepra.tbrick_appwall-1662684189370000_1769833153873063",
-      //   type: "Whitelist"
-      // },]
-      // this.tableModalData = arr;
       this.pkgName = data.pkg_name;
     })
 

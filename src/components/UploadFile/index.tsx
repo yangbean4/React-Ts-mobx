@@ -88,7 +88,7 @@ class UploadFile extends React.Component<UploadFileProps> {
   @computed
   get getFileSize() {
     let fileSize = this.fileSize || this.props.fileSize;
-    if (fileSize > 1048576) return Math.round(fileSize / 1048576) + 'Mb';
+    if (fileSize > 1048576) return (fileSize / 1048576).toFixed(2) + 'Mb';
     else return Math.round(fileSize / 1024) + 'kb';
 
   }

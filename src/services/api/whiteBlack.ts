@@ -19,8 +19,8 @@ export default {
   /**
   * 获取app_id和campaign关系
   */
-  getAppidCampaign(): Promise<any> {
-    return http.post(`${basePath}appIdCampaign`)
+  getAppidCampaign(data): Promise<any> {
+    return http.post(`${basePath}appIdCampaign`, data)
   },
 
   /**

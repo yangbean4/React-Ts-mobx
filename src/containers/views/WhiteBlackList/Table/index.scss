@@ -1,9 +1,13 @@
 .wrap{
     display: flex;
+    line-height: 50px;
     .left{
+        font-size: 14px;
+        text-align: right;
         flex:2;
     }
     .right{
+        margin-left: 20px;
         flex: 9;
     }
 }

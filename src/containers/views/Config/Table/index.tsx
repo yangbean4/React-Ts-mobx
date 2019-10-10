@@ -204,7 +204,7 @@ class ConfigTable extends ComponentExt<IProps> {
                 >
                     {
                         this.delParom.nameArr.length === (this.targetConfig.versionArr || []).length ?
-                            <p> Sure to delete all of the config version for the pkgname?</p>
+                            <p> Sure to delete all of the sdk version for the pkgname?</p>
                             : <p> Sure to delete {this.delParom.nameArr.join(',')}?</p>
                     }
 

@@ -62,7 +62,7 @@ class Search extends ComponentExt<IStoreProps & FormComponentProps> {
       async (err, values): Promise<any> => {
         if (!err) {
           this.toggleLoading();
-          if (values.creative && values.creative.length === 0) {
+          if (values.creative && (values.creative.length === 0 || values.creative.includes(0))) {
             delete values.creative;
           }
           try {
@@ -88,7 +88,7 @@ class Search extends ComponentExt<IStoreProps & FormComponentProps> {
             </FormItem>
           </Col>
           <Col span={span}>
-            <FormItem label="PID Type" className='minInput'>
+            <FormItem label="PID Type">
               {getFieldDecorator('pid_type', {
                 initialValue: filters.pid_type
               })(
@@ -97,6 +97,7 @@ class Search extends ComponentExt<IStoreProps & FormComponentProps> {
                   showSearch
                   mode='multiple'
                   maxTagCount={1}
+                  style={{ width: 210 }}
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
@@ -122,6 +123,7 @@ class Search extends ComponentExt<IStoreProps & FormComponentProps> {
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
+                  <Select.Option key='null' value={0}>All</Select.Option>
                   {optionListDb.creatives.map(c => (
                     <Select.Option key={c.id} value={c.id}>
                       {`${c.id}-${c.name}`}

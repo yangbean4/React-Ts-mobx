@@ -91,8 +91,8 @@ export class WhiteBlackListStore extends StoreExt {
   }
 
   @action
-  getAppidCampaign = async () => {
-    const res = await this.api.whiteBlack.getAppidCampaign();
+  getAppidCampaign = async (formData) => {
+    const res = await this.api.whiteBlack.getAppidCampaign(formData);
     let data = res.data.map(item => {
       item.campaign = item.campaign.map(v => ({ ...v, platform: item.platform }));
       return item;

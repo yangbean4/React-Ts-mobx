@@ -34,12 +34,16 @@ class TableModal extends ComponentExt<IProps> {
                 width={800}
 
             >
-                <div className={style.wrap}>
-                    <div className={style.left}>
+                <div>
+                    {/* <div className={style.left}>
                         <p>Pkg Name</p>
-                    </div>
+                    </div> */}
                     <div className={style.right}>
-                        <p>{this.props.pkgname}</p>
+                        <div className={style.wrap}>
+                            <div className={style.left}>Pkg Name </div>
+                            <div className={style.right}>{this.props.pkgname}</div>
+                        </div>
+                        
                         <Table<IWhiteBlackListStore.TableModalList>
                             className="center-table"
                             bordered
@@ -55,7 +59,7 @@ class TableModal extends ComponentExt<IProps> {
                                 title="Placement"
                                 dataIndex="placement_name_id"
                                 width="33%"
-                                render={(_, record) => record.placement_name_id ? record.campaign_id_name : '--'}
+                                render={(_, record) => record.placement_name_id ? record.placement_name_id : '--'}
                             />
                             <Table.Column<IWhiteBlackListStore.TableModalList>
                                 key="type"

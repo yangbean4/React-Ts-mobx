@@ -104,10 +104,10 @@ class CreativeFrequencyTable extends ComponentExt<IProps> {
           }}
           onChange={handleTableChange}
         >
-          <Table.Column<ICreativeFrequencyStore.IitemForList> title="Pkg Name" dataIndex="pkg_name" width={200} />
-          <Table.Column<ICreativeFrequencyStore.IitemForList> title="PID Type" dataIndex="pid_type" width={150} render={(_) => (pidTypes.find(v => v.value === _) || {}).key} />
-          <Table.Column<ICreativeFrequencyStore.IitemForList> title="Creative" key="creative" width={220} render={(_, record) => record.creative_name ? `${record.creative_id}-${record.creative_name}` : 'All'} />
-          <Table.Column<ICreativeFrequencyStore.IitemForList> title="Frequency" key="frequency" width={180} render={(_, record) => `${record.limit_time}time(s) / ${record.limit_num}day(s)`} />
+          <Table.Column<ICreativeFrequencyStore.IitemForList> title="Pkg Name" dataIndex="pkg_name" width={120} />
+          <Table.Column<ICreativeFrequencyStore.IitemForList> title="PID Type" dataIndex="pid_type" width={100} render={(_) => (pidTypes.find(v => v.value === _) || {}).key} />
+          <Table.Column<ICreativeFrequencyStore.IitemForList> title="Creative" key="creative" width={100} render={(_, record) => record.creative_name ? `${record.creative_id}-${record.creative_name}` : 'All'} />
+          <Table.Column<ICreativeFrequencyStore.IitemForList> title="Frequency" key="frequency" width={180} render={(_, record) => `${record.limit_num}time(s) / ${record.limit_time}day(s)`} />
           <Table.Column<ICreativeFrequencyStore.IitemForList> title="Update Time" dataIndex="update_time" width={200} />
           <Table.Column<ICreativeFrequencyStore.IitemForList>
             key="action"

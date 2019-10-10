@@ -111,7 +111,7 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <Select
               allowClear
               showSearch
-              getPopupContainer={trigger => trigger.parentElement}
+              // getPopupContainer={trigger => trigger.parentElement}
               filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
             >
               {userCategory.map(c => (

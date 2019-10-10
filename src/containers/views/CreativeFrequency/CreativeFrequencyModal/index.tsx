@@ -82,6 +82,7 @@ class CreativeFrequencyModal extends ComponentExt<IProps & FormComponentProps> {
     this.hasDecimal = e.target.value.indexOf('.') > -1 || (+e.target.value) < 0
   }
 
+  @action
   setNumber = (e) => {
     const res = this.props.form.getFieldsValue(['limit_num', 'limit_time']);
     let o = {
@@ -92,6 +93,7 @@ class CreativeFrequencyModal extends ComponentExt<IProps & FormComponentProps> {
     res.limit_time && (o.limit_time = (+res.limit_time).toFixed());
 
     this.props.form.setFieldsValue(o)
+    this.hasDecimal = false
   }
 
   @action
@@ -233,8 +235,8 @@ class CreativeFrequencyModal extends ComponentExt<IProps & FormComponentProps> {
             </Col>
             <Col {...formItemLayout.wrapperCol} className={styles.frequency + ' ant-form-inline'}>
               <FormItem>
-                {getFieldDecorator('limit_time', {
-                  initialValue: item.limit_time,
+                {getFieldDecorator('limit_num', {
+                  initialValue: item.limit_num,
                   rules: [{ required: true, message: "Required" }]
                 })(
                   <Input onChange={this.checkDecimal} onBlur={this.setNumber} />
@@ -242,8 +244,8 @@ class CreativeFrequencyModal extends ComponentExt<IProps & FormComponentProps> {
               </FormItem>
               <span> time(s) /　</span>
               <FormItem>
-                {getFieldDecorator('limit_num', {
-                  initialValue: item.limit_num,
+                {getFieldDecorator('limit_time', {
+                  initialValue: item.limit_time,
                   rules: [{ required: true, message: "Required" }]
                 })(
                   <Input onChange={this.checkDecimal} onBlur={this.setNumber} />

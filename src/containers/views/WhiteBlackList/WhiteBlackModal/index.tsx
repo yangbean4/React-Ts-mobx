@@ -71,7 +71,7 @@ interface IProps {
   update?: (data: IWhiteBlackListStore.Iitem) => Promise<any>
   getPkgname?: () => void
   getCategory?: () => void
-  getAppidCampaign?: () => void
+  getAppidCampaign?: (formData) => void
   getPkgNamePlacement?: () => void
   clearItem?: () => void
   getItem?: (data: any) => void
@@ -137,7 +137,12 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
       this.currentAppid = item.app_id_blacklist;
       this.currentCategory = item.category_whitelist;
       this.currentLimited = item.limited;
-      this.pkgNameChanged(id);
+      this.disabledAll = false;
+      // this.pkgNameChanged(id);
+      const appids = this.props.optionListDb.AppidCampaign.filter(v => v.platform == item.platform);
+      this.selectPlatformAppids = this.appids = appids;
+      this.placementList = item.placement;
+      this.campaignList = [].concat(...this.appids.map(v => v.campaign));
     })
   }
 
@@ -210,6 +215,11 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
       this.currentCategory = value;
       this.appids = appids;
       this.campaignList = campaignList;
+      console.log({
+        campaignList: this.campaignList.length,
+        placementList: this.placementList.length,
+        appids: this.appids.length,
+      })
     }
     // 如果是添加则不处理
     if (isAdd) {
@@ -304,7 +314,6 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
 
   @action
   pkgNameChanged = (value: number) => {
-    console.log(value)
     if (!value) {
       this.props.form.setFieldsValue({
         app_id_blacklist: [],
@@ -335,9 +344,7 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
     const appids = (this.selectPlatformAppids || this.props.optionListDb.AppidCampaign);
     return limited === 0
       ? appids
-      : appids.filter(item =>
-        item.campaign.filter(v => category.includes(+v.category_id)).length
-      );
+      : appids.filter(v => category.includes(+v.category_id));
   }
 
   submit = (e?: React.FormEvent<any>): void => {
@@ -377,12 +384,16 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
   }
 
   async componentDidMount() {
-    await Promise.all([
+    const id = (this.props.match.params as any).id;
+    let parr = [
       this.props.getCategory(),
-      this.props.getAppidCampaign(),
-      this.props.getPkgNamePlacement()
-    ])
-    if ((this.props.match.params as any).id) {
+      this.props.getAppidCampaign({ is_edit: !!id })
+    ]
+    !id && parr.push(this.props.getPkgNamePlacement());
+
+    await Promise.all(parr);
+
+    if (id) {
       await this.getItem(+(this.props.match.params as any).id)
     }
     runInAction(() => {
@@ -495,7 +506,7 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
               onChange={this.appidChanged}
               disabled={this.disabledAll}>
               {this.appids.map(c => {
-                return <Select.Option key={c.app_id} value={c.app_id}>
+                return <Select.Option key={c.app_id} value={c.app_id} style={c.app_id_status === 'suspend' && { color: '#999' }}>
                   {c.app_id}
                 </Select.Option>
               })}

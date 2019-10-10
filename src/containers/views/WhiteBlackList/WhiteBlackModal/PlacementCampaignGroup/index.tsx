@@ -30,6 +30,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
     autorun(
       // 一旦...
       () => {
+        // debugger
         if (!this.props.value.length) {
           this.setDefault()
         }
@@ -37,6 +38,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
     )
     this.IReactionDisposer = autorun(
       () => {
+        // debugger
         const { placementList, value } = this.props
         const _hasValue = this.hasSelect.filter(id => !!placementList.find(ele => ele.placement_id === id))
         const isRender = _hasValue.length !== this.hasSelect.length
@@ -100,7 +102,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
       <div>
         {
           value.map((item, index) => {
-            return <div key={item.placement_id + index} className={styles.group}>
+            return <div key={index} className={styles.group}>
               <div className={styles.item}>
                 <PlacementCampaignItem
                   hasSelect={this.hasSelect}

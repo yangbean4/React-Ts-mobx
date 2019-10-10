@@ -1,5 +1,5 @@
 /*
- * @Description: 
+ * @Description:
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-10-08 12:00:35
  * @LastEditors:  bean^ <bean_4@163.com>
@@ -13,7 +13,8 @@ export interface Placement {
 export interface Campaign {
   platform: 'ios' | 'android'
   campaign_id: string | number
-  campaign_name: string
+  campaign_name: string,
+  campaign_status: 'published' | 'suspend'
 }
 export interface PlacementCampaign {
   placement_id: string
