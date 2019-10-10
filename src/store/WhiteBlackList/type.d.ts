@@ -25,6 +25,7 @@ export interface IitemForList {
     category_id?: string
     category?: string
     update_time?: string
+    placement_campaign?: string[]
 }
 
 export interface SearchParams {
@@ -44,4 +45,11 @@ export interface OptionListDb {
     PkgNamePlacement?: any[],
     campaigns?: any[],
     placements?: any[]
+}
+
+export interface TableModalList {
+    campaign_id_name: string
+    type: string
+    placement_name_id: string
+
 }

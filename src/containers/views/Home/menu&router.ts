@@ -1158,6 +1158,16 @@ export const routerAndMenu: IRouter[] = [
     // authName: 'Apps-Virtual Currency'
   },
   {
+    id: 414,
+    pid: 41,
+    isMenu: true,
+    path: '/log/creativefrequency',
+    title: 'Creative Frequency',
+    component: 'Logs',
+    exact: true,
+    // authName: 'Apps-Virtual Currency'
+  },
+  {
     id: 421,
     pid: 42,
     isMenu: true,

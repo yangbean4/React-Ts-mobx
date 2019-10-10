@@ -27,6 +27,7 @@ interface IStoreProps {
     getPlacements?: () => void
     getCampaigns: () => void
     optionListDb?: IWhiteBlackListStore.OptionListDb
+    routerStore?: RouterStore
 }
 
 
@@ -34,7 +35,8 @@ interface IStoreProps {
 @inject(
     (store: IStore): IStoreProps => {
         const { changeFilter, filters, getCategory, optionListDb, getCampaigns, getPlacements } = store.whiteBlackListStore
-        return { changeFilter, filters, getCategory, optionListDb, getCampaigns, getPlacements }
+        const routerStore = store.routerStore
+        return { routerStore, changeFilter, filters, getCategory, optionListDb, getCampaigns, getPlacements }
     }
 )
 @observer
@@ -73,6 +75,14 @@ class Search extends ComponentExt<IStoreProps & FormComponentProps> {
         this.props.getCategory();
         this.props.getCampaigns();
         this.props.getPlacements();
+        const campaign_id = window.localStorage.getItem('WBLcampaign');
+        if (campaign_id) {
+            this.props.form.setFieldsValue({
+                campaign_id: [+campaign_id]
+            })
+            setImmediate(this.submit);
+            window.localStorage.removeItem('WBLcampaign');
+        }
     }
 
     render() {

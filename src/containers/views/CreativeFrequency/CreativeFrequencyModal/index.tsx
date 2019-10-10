@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action } from 'mobx'
-import { Form, Select, Button, message, Row, Col, InputNumber } from 'antd'
+import { Form, Select, Button, message, Row, Col, Input } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
@@ -77,8 +77,21 @@ class CreativeFrequencyModal extends ComponentExt<IProps & FormComponentProps> {
   }
 
   @action
-  checkDecimal = (v: string | number) => {
-    this.hasDecimal = `${v}`.indexOf('.') > -1
+  checkDecimal = (e: any) => {
+    e.persist()
+    this.hasDecimal = e.target.value.indexOf('.') > -1 || (+e.target.value) < 0
+  }
+
+  setNumber = (e) => {
+    const res = this.props.form.getFieldsValue(['limit_num', 'limit_time']);
+    let o = {
+      limit_num: '',
+      limit_time: ''
+    };
+    res.limit_num && (o.limit_num = (+res.limit_num).toFixed());
+    res.limit_time && (o.limit_time = (+res.limit_time).toFixed());
+
+    this.props.form.setFieldsValue(o)
   }
 
   @action
@@ -224,7 +237,7 @@ class CreativeFrequencyModal extends ComponentExt<IProps & FormComponentProps> {
                   initialValue: item.limit_time,
                   rules: [{ required: true, message: "Required" }]
                 })(
-                  <InputNumber max={99999} precision={0} onChange={this.checkDecimal} />
+                  <Input onChange={this.checkDecimal} onBlur={this.setNumber} />
                 )}
               </FormItem>
               <span> time(s) /　</span>
@@ -233,7 +246,7 @@ class CreativeFrequencyModal extends ComponentExt<IProps & FormComponentProps> {
                   initialValue: item.limit_num,
                   rules: [{ required: true, message: "Required" }]
                 })(
-                  <InputNumber max={99999} precision={0} onChange={this.checkDecimal} />
+                  <Input onChange={this.checkDecimal} onBlur={this.setNumber} />
                 )}
               </FormItem>
               <span> day(s)</span>
