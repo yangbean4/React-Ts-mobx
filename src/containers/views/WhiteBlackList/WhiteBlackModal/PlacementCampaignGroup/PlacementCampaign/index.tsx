@@ -12,7 +12,7 @@ interface IProps {
   disabled?: boolean
   hasSelect: string[]
   index: number
-  getFieldDecorator<T extends Object = {}>(id: keyof T, options?: Object): (node: React.ReactNode) => React.ReactNode
+  form: any
 }
 const formItemLayout = {
   labelCol: {
@@ -51,16 +51,25 @@ class PlacementCampaignGroup extends React.Component<IProps> {
     super(props)
     this.IReactionDisposer = autorun(
       () => {
+        // REVIEW: campaignL
         // const { placementList, value } = this.props
         const _campaignL = this.campaignL
+        // debugger
+        const {
+          index,
+          value
+        } = this.props
         const {
           campaign_id,
-        } = this.props.value
+        } = value
         const hasFilter = campaign_id.filter(id => !!_campaignL.find(cam => cam.campaign_id == id))
         const isRender = hasFilter.length !== campaign_id.length
         if (isRender) {
           this.onChange({
             campaign_id: hasFilter
+          })
+          this.props.form.setFieldsValue({// 重新赋值
+            [`__[${index}].campaign_id`]: hasFilter
           })
         }
         return isRender
@@ -92,13 +101,16 @@ class PlacementCampaignGroup extends React.Component<IProps> {
     this.onChange({ placement_id: val })
     const placement = this.props.placementList.find(ele => ele.placement_id === val) || { platform: '' }
     const _campaignL = this.props.campaignList.filter(ele => ele.platform === placement.platform)
+    // const { campaign_id } = this.props.value
+    // const _campaign_id = campaign_id.filter(ele=>)
     runInAction('set', () => {
       this._campaignL = _campaignL
     })
   }
 
   render() {
-    const { value, placementList = [], disabled, hasSelect, getFieldDecorator, index } = this.props
+    const { value, placementList = [], disabled, hasSelect, form, index } = this.props
+    const { getFieldDecorator } = form
     const { placement_id, type, campaign_id } = value
     return (
       <div>
@@ -106,6 +118,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
           {
             getFieldDecorator(`__[${index}].placement_id`, {
               rules: [{ required: !!campaign_id.length, message: "Required" }],
+              initialValue: placement_id
             })(
               <Select
                 allowClear
@@ -133,6 +146,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
           {
             getFieldDecorator(`__[${index}].campaign_id`, {
               rules: [{ required: !!placement_id, message: "Required" }],
+              initialValue: campaign_id
             })(
               <Select
                 className='inlineOption'
@@ -141,7 +155,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
                 mode="multiple"
                 getPopupContainer={trigger => trigger.parentElement}
                 // value={campaign_id.map(ele => ele.toString())}
-                onChange={(val) => this.onChange({ campaign_id: val.map(ele => Number(ele)) })}
+                onChange={(val: string[]) => this.onChange({ campaign_id: val.map(ele => Number(ele)) })}
                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
               >
                 {(this.campaignL).map((c, index) => (

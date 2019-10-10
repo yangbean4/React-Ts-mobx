@@ -12,7 +12,7 @@ interface IProps {
   value?: PlacementCampaign[]
   onChange?: (data: PlacementCampaign[]) => void
   disabled?: boolean
-  getFieldDecorator<T extends Object = {}>(id: keyof T, options?: Object): (node: React.ReactNode) => React.ReactNode
+  form: any
 }
 
 const copy = obj => JSON.parse(JSON.stringify(obj))
@@ -108,7 +108,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
                   campaignList={campaignList}
                   value={item}
                   index={index}
-                  getFieldDecorator={this.props.getFieldDecorator}
+                  form={this.props.form}
                   disabled={disabled}
                   onChange={(data) => this.itemChange(data, index)}
                 />

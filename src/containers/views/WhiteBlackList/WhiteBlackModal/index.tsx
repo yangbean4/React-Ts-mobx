@@ -506,7 +506,7 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
               initialValue: item.placement_campaign || [],
             })(<PlacementCampaignGroup
               disabled={this.disabledAll}
-              getFieldDecorator={getFieldDecorator}
+              form={form}
               campaignList={this.campaignList}
               placementList={this.placementList} />)}
             {/* {
