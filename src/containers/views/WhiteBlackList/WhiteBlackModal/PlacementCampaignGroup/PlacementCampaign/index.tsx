@@ -2,7 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import { Placement, Campaign, PlacementCampaign } from '../type'
 import { Select, Radio, Form } from 'antd'
-import { computed, runInAction, observable, autorun } from 'mobx'
+import { computed, runInAction, observable, autorun, _allowStateChangesInsideComputed } from 'mobx'
 
 interface IProps {
   placementList: Placement[]
@@ -47,30 +47,28 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   @observable
   private _campaignL = [] as Campaign[]
 
+  @observable
+  private _value: PlacementCampaign
+
   constructor(props) {
     super(props)
-    this.IReactionDisposer = autorun(
+    //     this.IReactionDisposer =
+    autorun(
       () => {
-        // REVIEW: campaignL
-        // const { placementList, value } = this.props
-        const _campaignL = this.campaignL
-        // debugger
         const {
           index,
           value
         } = this.props
-        const {
-          campaign_id,
-        } = value
-        const hasFilter = campaign_id.filter(id => !!_campaignL.find(cam => cam.campaign_id == id))
-        const isRender = hasFilter.length !== campaign_id.length
+        const isRender = JSON.stringify(this._value) !== JSON.stringify(value)
         if (isRender) {
-          this.onChange({
-            campaign_id: hasFilter
-          })
-          this.props.form.setFieldsValue({// 重新赋值
-            [`__[${index}].campaign_id`]: hasFilter
-          })
+          this._value = value
+          if (!!this._value) {
+            this.props.form.setFieldsValue({// 重新赋值
+              __: {
+                [index]: value
+              }
+            })
+          }
         }
         return isRender
       }
@@ -82,7 +80,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
 
   componentDidMount() {
-    this.IReactionDisposer()
+    // this.IReactionDisposer()
   }
 
   onChange = (data) => {
@@ -94,6 +92,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
     // 避免出现不必要的更新,避免出现死循环
     if (JSON.stringify(this.props.value) !== JSON.stringify(val)) {
       this.props.onChange(val)
+      this._value = val
     }
 
   }
@@ -101,8 +100,6 @@ class PlacementCampaignGroup extends React.Component<IProps> {
     this.onChange({ placement_id: val })
     const placement = this.props.placementList.find(ele => ele.placement_id === val) || { platform: '' }
     const _campaignL = this.props.campaignList.filter(ele => ele.platform === placement.platform)
-    // const { campaign_id } = this.props.value
-    // const _campaign_id = campaign_id.filter(ele=>)
     runInAction('set', () => {
       this._campaignL = _campaignL
     })
@@ -111,7 +108,8 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   render() {
     const { value, placementList = [], disabled, hasSelect, form, index } = this.props
     const { getFieldDecorator } = form
-    const { placement_id, type, campaign_id } = value
+    const { placement_id, type, campaign_id = [] } = value
+    console.log(campaign_id, 'qwee')
     return (
       <div>
         <Form.Item {...formItemLayout} label='Placement'>
