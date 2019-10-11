@@ -77,22 +77,27 @@ class CreativeFrequencyModal extends ComponentExt<IProps & FormComponentProps> {
   }
 
   @action
-  checkDecimal = (e: any) => {
+  checkDecimal = (el, e: any) => {
+    if (!e.target.value) return;
     e.persist()
-    this.hasDecimal = e.target.value.indexOf('.') > -1 || (+e.target.value) < 0
+    this.hasDecimal = e.target.value.indexOf('.') > -1 || (+e.target.value) <= 0
+    if (!this.props.form.getFieldValue(el)) {
+      this.props.form.resetFields([el])
+    }
+    // setImmediate(() => {
+    //   this.props.form.resetFields
+    //   // this.props.form.validateFields([el]);
+    // })
   }
 
   @action
-  setNumber = (e) => {
-    const res = this.props.form.getFieldsValue(['limit_num', 'limit_time']);
-    let o = {
-      limit_num: '',
-      limit_time: ''
-    };
-    res.limit_num && (o.limit_num = (+res.limit_num).toFixed());
-    res.limit_time && (o.limit_time = (+res.limit_time).toFixed());
-
-    this.props.form.setFieldsValue(o)
+  setNumber = (el, e) => {
+    let res = this.props.form.getFieldValue(el);
+    if (res === undefined) return;
+    res = +res;
+    this.props.form.setFieldsValue({
+      [el]: res <= 0 ? '' : res.toFixed()
+    })
     this.hasDecimal = false
   }
 
@@ -239,7 +244,7 @@ class CreativeFrequencyModal extends ComponentExt<IProps & FormComponentProps> {
                   initialValue: item.limit_num,
                   rules: [{ required: true, message: "Required" }]
                 })(
-                  <Input onChange={this.checkDecimal} onBlur={this.setNumber} />
+                  <Input onChange={e => this.checkDecimal('limit_time', e)} onBlur={e => this.setNumber('limit_num', e)} />
                 )}
               </FormItem>
               <span> time(s) /　</span>
@@ -248,7 +253,7 @@ class CreativeFrequencyModal extends ComponentExt<IProps & FormComponentProps> {
                   initialValue: item.limit_time,
                   rules: [{ required: true, message: "Required" }]
                 })(
-                  <Input onChange={this.checkDecimal} onBlur={this.setNumber} />
+                  <Input onChange={e => this.checkDecimal('limit_num', e)} onBlur={e => this.setNumber('limit_time', e)} />
                 )}
               </FormItem>
               <span> day(s)</span>

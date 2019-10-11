@@ -80,8 +80,10 @@ class Search extends ComponentExt<IStoreProps & FormComponentProps> {
             this.props.form.setFieldsValue({
                 campaign_id: [+campaign_id]
             })
-            setImmediate(this.submit);
-            window.localStorage.removeItem('WBLcampaign');
+            setImmediate(() => {
+                this.submit();
+                window.localStorage.removeItem('WBLcampaign');
+            });
         }
     }
 

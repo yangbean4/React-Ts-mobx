@@ -3,7 +3,7 @@
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-09-09 18:02:04
  * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-09-24 10:44:41
+ * @LastEditTime: 2019-10-11 12:04:39
  */
 module.exports = {
     '/index.php': {
@@ -15,3 +15,6 @@ module.exports = {
         }
     }
 };
+if ([]) {
+    console.log(1)
+}

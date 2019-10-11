@@ -140,9 +140,10 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
       this.disabledAll = false;
       // this.pkgNameChanged(id);
       const appids = this.props.optionListDb.AppidCampaign.filter(v => v.platform == item.platform);
-      this.selectPlatformAppids = this.appids = appids;
+      this.selectPlatformAppids = appids;
+      this.appids = this.getAppids(item.limited, item.category_whitelist)
       this.placementList = item.placement;
-      this.campaignList = [].concat(...this.appids.map(v => v.campaign));
+      this.campaignList = [].concat(...this.appids.filter(v => !item.app_id_blacklist.includes(v.app_id)).map(v => v.campaign));
     })
   }
 
@@ -160,6 +161,9 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
     }
     // 切换到 Unlimited
     if (e.target.value === 0 || (selectObj.app_id_blacklist.length === 0 && campaign_ids.length === 0)) {
+      setImmediate(() => {
+        this.props.form.validateFields(['category_whitelist']);
+      })
       return successFn()
     };
 
@@ -209,17 +213,17 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
     const actionId = isAdd ? [] : this.currentCategory.filter(v => !value.includes(v))[0]
 
     const appids = this.getAppids(1, value);
-    const campaignList = [].concat(...appids.map(v => v.campaign));
+    const campaignList = [].concat(...appids.filter(v => !this.currentAppid.includes(v.app_id)).map(v => v.campaign));
 
     const successFn = () => {
       this.currentCategory = value;
       this.appids = appids;
       this.campaignList = campaignList;
-      console.log({
-        campaignList: this.campaignList.length,
-        placementList: this.placementList.length,
-        appids: this.appids.length,
-      })
+      // console.log({
+      //   campaignList: this.campaignList.length,
+      //   placementList: this.placementList.length,
+      //   appids: this.appids.length,
+      // })
     }
     // 如果是添加则不处理
     if (isAdd) {
@@ -230,13 +234,12 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
     const campaign_ids = [].concat(...selectObj.placement_campaign.map(v => v.campaign_id));
 
     const toDeleteAppids = selectObj.app_id_blacklist.length === 0 ? []
-      : this.appids.filter(v => selectObj.app_id_blacklist.includes(v.app_id)).filter(v => v.campaign.find(m => m.category_id == actionId)).map(v => v.app_id);
+      : this.appids.filter(v => selectObj.app_id_blacklist.includes(v.app_id)).filter(v => v.category_id == actionId).map(v => v.app_id);
 
     const toDeleteCampaign = campaign_ids.length === 0 ? []
       : campaign_ids.filter(v => !campaignList.find(m => m.campaign_id == v));
 
     const categoryName = this.props.optionListDb.Category.find(v => v.id === actionId).name;
-
 
     const msg = toDeleteAppids.length > 0 && toDeleteCampaign.length > 0 ? `Confirm to deselect ${categoryName} in Category Whitelist and also delete ${toDeleteAppids.join(', ')} in App ID Blacklist and ${toDeleteCampaign.join(', ')} in Campaign(Placement)?`
       : toDeleteAppids.length > 0 ? `Confirm to deselect ${categoryName} in Category Whitelist and also delete ${toDeleteAppids.join(', ')} in App ID Blacklist?`
@@ -244,7 +247,7 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
           : false;
 
     if (msg === false) return successFn();
-
+    // console.log(toDeleteCampaign)
     Modal.confirm({
       title: msg,
       okText: 'Yes',
@@ -255,14 +258,17 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
         this.props.form.setFieldsValue({ category_whitelist: this.currentCategory })
       },
       onOk: () => {
-        this.props.form.setFieldsValue({
-          app_id_blacklist: selectObj.app_id_blacklist.filter(v => !toDeleteAppids.includes(v)),
-          placement_campaign: selectObj.placement_campaign.map(v => {
-            v.campaign_id = v.campaign_id.filter(m => !toDeleteCampaign.includes(+m));
-            return v;
+
+        runInAction(() => {
+          successFn();
+          this.props.form.setFieldsValue({
+            app_id_blacklist: selectObj.app_id_blacklist.filter(v => !toDeleteAppids.includes(v)),
+            placement_campaign: selectObj.placement_campaign.map(v => {
+              v.campaign_id = v.campaign_id.filter(m => !toDeleteCampaign.includes(m));
+              return v;
+            })
           })
         })
-        runInAction(successFn)
       }
     })
   }

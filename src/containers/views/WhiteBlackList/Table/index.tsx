@@ -50,14 +50,13 @@ class WhiteBlackTable extends ComponentExt<IProps> {
 
   componentDidMount() {
     // 读取列表
-    this.props.getList()
+    if (!window.localStorage.getItem('WBLcampaign')) this.props.getList()
   }
 
 
   @action
   hideTableModal = () => {
     this.modalVisible = !this.modalVisible;
-
   }
 
   @action
@@ -67,7 +66,6 @@ class WhiteBlackTable extends ComponentExt<IProps> {
 
   @action
   showModal = (data) => {
-    console.dir(data);
     runInAction('SET_data', () => {
       this.tableModalData = data.placement_campaign;
       this.pkgName = data.pkg_name;
