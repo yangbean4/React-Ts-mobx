@@ -47,33 +47,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   @observable
   private _campaignL = [] as Campaign[]
 
-  @observable
-  private _value: PlacementCampaign
 
-  constructor(props) {
-    super(props)
-    //     this.IReactionDisposer =
-    autorun(
-      () => {
-        const {
-          index,
-          value
-        } = this.props
-        const isRender = JSON.stringify(this._value) !== JSON.stringify(value)
-        if (isRender) {
-          this._value = value
-          if (!!this._value) {
-            this.props.form.setFieldsValue({// 重新赋值
-              __: {
-                [index]: value
-              }
-            })
-          }
-        }
-        return isRender
-      }
-    )
-  }
   @computed
   get campaignL() {
     return this._campaignL.length ? this._campaignL : this.props.campaignList || []
@@ -92,7 +66,6 @@ class PlacementCampaignGroup extends React.Component<IProps> {
     // 避免出现不必要的更新,避免出现死循环
     if (JSON.stringify(this.props.value) !== JSON.stringify(val)) {
       this.props.onChange(val)
-      this._value = val
     }
 
   }
@@ -109,12 +82,11 @@ class PlacementCampaignGroup extends React.Component<IProps> {
     const { value, placementList = [], disabled, hasSelect, form, index } = this.props
     const { getFieldDecorator } = form
     const { placement_id, type, campaign_id = [] } = value
-    console.log(campaign_id, 'qwee')
     return (
       <div>
         <Form.Item {...formItemLayout} label='Placement'>
           {
-            getFieldDecorator(`__[${index}].placement_id`, {
+            getFieldDecorator(`placement_campaign[${index}].placement_id`, {
               rules: [{ required: !!campaign_id.length, message: "Required" }],
               initialValue: placement_id
             })(
@@ -138,11 +110,16 @@ class PlacementCampaignGroup extends React.Component<IProps> {
 
         </Form.Item>
         <Form.Item {...formItemLayout} label="White/Black Type">
-          <Radio.Group disabled={disabled} options={typeList} onChange={e => this.onChange({ type: e.target.value })} value={type} />
+          {
+            getFieldDecorator(`placement_campaign[${index}].type`, {
+              initialValue: type
+            })(<Radio.Group disabled={disabled} options={typeList} onChange={e => this.onChange({ type: e.target.value })} />)
+          }
+
         </Form.Item>
         <Form.Item {...formItemLayout} label='Campaign'>
           {
-            getFieldDecorator(`__[${index}].campaign_id`, {
+            getFieldDecorator(`placement_campaign[${index}].campaign_id`, {
               rules: [{ required: !!placement_id, message: "Required" }],
               initialValue: campaign_id.map(ele => ele.toString())
             })(

@@ -211,6 +211,7 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
     const isAdd = this.currentCategory.length < value.length;
     // 操作的category
     const actionId = isAdd ? [] : this.currentCategory.filter(v => !value.includes(v))[0]
+    // debugger
 
     const appids = this.getAppids(1, value);
     const campaignList = [].concat(...appids.filter(v => !this.currentAppid.includes(v.app_id)).map(v => v.campaign));
@@ -219,17 +220,11 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
       this.currentCategory = value;
       this.appids = appids;
       this.campaignList = campaignList;
-      // console.log({
-      //   campaignList: this.campaignList.length,
-      //   placementList: this.placementList.length,
-      //   appids: this.appids.length,
-      // })
     }
     // 如果是添加则不处理
     if (isAdd) {
       return successFn();
     }
-
     const selectObj = this.props.form.getFieldsValue(['app_id_blacklist', 'placement_campaign']);
     const campaign_ids = [].concat(...selectObj.placement_campaign.map(v => v.campaign_id));
 
@@ -261,8 +256,10 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
 
         runInAction(() => {
           successFn();
+          // debugger
+          this.currentAppid = selectObj.app_id_blacklist.filter(v => !toDeleteAppids.includes(v));
           this.props.form.setFieldsValue({
-            app_id_blacklist: selectObj.app_id_blacklist.filter(v => !toDeleteAppids.includes(v)),
+            app_id_blacklist: this.currentAppid,
             placement_campaign: selectObj.placement_campaign.map(v => {
               v.campaign_id = v.campaign_id.filter(m => !toDeleteCampaign.includes(m));
               return v;
@@ -526,22 +523,13 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
           </div>
           <div className={styles.card}>
             <FormItem style={{ width: 'max-content' }}>
-              {this.loaded && getFieldDecorator('placement_campaign', {
+              {this.loaded && getFieldDecorator('__', {
                 initialValue: item.placement_campaign || [],
               })(<PlacementCampaignGroup
                 disabled={this.disabledAll}
                 form={form}
                 campaignList={this.campaignList}
                 placementList={this.placementList} />)}
-              {/* {
-              this.loaded && <PlacementCampaignGroup
-                disabled={this.disabledAll}
-                initialValue={item.placement_campaign}
-                getFieldDecorator={getFieldDecorator}
-                campaignList={this.campaignList}
-                placementList={this.placementList} />
-            } */}
-
             </FormItem>
             <FormItem className={styles.btnBox}>
               <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
