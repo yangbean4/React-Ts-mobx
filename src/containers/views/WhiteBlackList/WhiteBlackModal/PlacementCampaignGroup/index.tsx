@@ -121,7 +121,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
       <div>
         {
           [...value].map((item, index) => {
-            return <div key={item[NODE_KEY] + index} className={styles.group}>
+            return <div key={item[NODE_KEY] + index.toString()} className={styles.group}>
               <div className={styles.item}>
                 <PlacementCampaignItem
                   hasSelect={this.hasSelect}

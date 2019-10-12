@@ -356,8 +356,9 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
     }
     const { routerStore, create, form, update } = this.props
     form.validateFields(
-      async (err, values): Promise<any> => {
+      async (err, _values): Promise<any> => {
         if (!err) {
+          const values = JSON.parse(JSON.stringify(_values))
           values.placement_campaign = values.placement_campaign.filter(v => v.placement_id);
 
           if (this.isEdit === false && values.app_id_blacklist.length === 0
@@ -365,14 +366,26 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
             && (values.limited === 0 || values.category_whitelist.length === 0)) {
             return message.error('Failure! Category Whitelist, App ID Blacklist and Placement-Campaign cannot be empty at the same time.')
           }
-          delete values.__
+
+          let hasError = false;
           values.placement_campaign.forEach(ele => {
-            delete ele._key_
+            hasError = hasError || (~~!!ele.placement_id + ~~!!ele.campaign_id.length) === 1
           })
+          if (hasError) {
+            return
+            // message.error('errorerrorerrorerror')
+          }
+
+
+
           this.toggleLoading()
           try {
             // if (Array.isArray(values.pkg_name))
             //   values.pkg_name = values.pkg_name.join(',')
+
+            values.placement_campaign.forEach(ele => {
+              delete ele._key_
+            })
             let data = { message: '' }
             if (this.isEdit) {
               data = await update({ ...values, dev_id: this.props.item.dev_id })
@@ -523,7 +536,7 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
           </div>
           <div className={styles.card}>
             <FormItem style={{ width: 'max-content' }}>
-              {this.loaded && getFieldDecorator('__', {
+              {this.loaded && getFieldDecorator('placement_campaign', {
                 initialValue: item.placement_campaign || [],
               })(<PlacementCampaignGroup
                 disabled={this.disabledAll}
