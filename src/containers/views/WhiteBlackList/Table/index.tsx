@@ -158,9 +158,10 @@ class WhiteBlackTable extends ComponentExt<IProps> {
               dataIndex="placement_campaign"
               width="20%"
               render={(_, record) => (
-                <button className={styles.linkBtn} onClick={() => this.showModal(record)}>
-                  <Icon type="eye" />
-                </button>
+                _.length ?
+                  <button className={styles.linkBtn} onClick={() => this.showModal(record)}>
+                    <Icon type="eye" />
+                  </button> : '--'
               )}
             />
             <Table.Column<IWhiteBlackListStore.IitemForList>
@@ -168,9 +169,11 @@ class WhiteBlackTable extends ComponentExt<IProps> {
               title="Operate"
               width="8%"
               render={(_, record) => (
-                <button className={styles.linkBtn} key='edit' onClick={() => this.props.routerStore.push(`whiteBlackList/edit/${record.id}`)}>
-                  <Icon type="form" />
-                </button>
+                this.$checkAuth('Apps-White/Black list-Edit',
+                  <button className={styles.linkBtn} key='edit' onClick={() => this.props.routerStore.push(`whiteBlackList/edit/${record.id}`)}>
+                    <Icon type="form" />
+                  </button>
+                )
               )}
             />
           </Table>

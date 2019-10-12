@@ -8,6 +8,7 @@ import * as styles from './index.scss'
 import { match } from 'react-router';
 import { RadioChangeEvent } from 'antd/lib/radio'
 import PlacementCampaignGroup from './PlacementCampaignGroup'
+import PortalsBtn from '@components/portalsBtn'
 
 const FormItem = Form.Item
 
@@ -125,6 +126,10 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
   @observable
   private loaded = false;
 
+  private cookieAppid: string[] = [];
+
+  private cookiePlacementCampaign = [];
+
   @action
   toggleLoading = () => {
     this.loading = !this.loading
@@ -159,7 +164,7 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
   limitedChanged = (e: RadioChangeEvent) => {
     this.currentLimited = e.target.value
     // 设置为limited时需要检查appid blacklist已选项中是否包含已经取消的选项
-    const appids = this.getAppids(e.target.value, this.currentCategory);
+    const appids = this.getAppids(e.target.value, []);
     const selectObj = this.props.form.getFieldsValue(['category_whitelist', 'app_id_blacklist', 'placement_campaign']);
     const campaign_ids = [].concat(...selectObj.placement_campaign.map(v => v.campaign_id));
 
@@ -170,8 +175,11 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
     // 切换到 Unlimited
     if (e.target.value === 0 || (selectObj.app_id_blacklist.length === 0 && campaign_ids.length === 0)) {
       setImmediate(() => {
-        this.props.form.validateFields(['category_whitelist']);
+        this.props.form.setFieldsValue({
+          category_whitelist: []
+        });
       })
+      this.currentCategory = [];
       return successFn()
     };
 
@@ -183,6 +191,8 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
       cancelText: 'No',
       centered: true,
       onOk: () => {
+        this.cookieAppid = selectObj.app_id_blacklist;
+        this.cookiePlacementCampaign = JSON.parse(JSON.stringify(selectObj.placement_campaign));
         runInAction(() => {
           successFn();
           const placement_campaign = selectObj.category_whitelist.length === 0
@@ -229,11 +239,46 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
       this.appids = appids;
       this.campaignList = campaignList;
     }
+    const selectObj = this.props.form.getFieldsValue(['app_id_blacklist', 'placement_campaign']);
+
     // 如果是添加则不处理
     if (isAdd) {
-      return successFn();
+      successFn()
+      // 如果添加的时候原来的appids或者campaign中选中了这次添加category相关的内容，则再次选中；
+      if (this.cookieAppid.length) {
+        let tempAppids = this.cookieAppid.filter(v => appids.find(m => m.app_id == v));
+        if (tempAppids.length) {
+          this.props.form.setFieldsValue({
+            app_id_blacklist: Array.from(new Set([...selectObj.app_id_blacklist, ...tempAppids]))
+          })
+          this.cookieAppid = this.cookieAppid.filter(v => !tempAppids.includes(v));
+        }
+      }
+
+      if (this.cookiePlacementCampaign.length) {
+        let tempCampaign = [].concat(...this.cookiePlacementCampaign.map(v => v.campaign_id)).filter(v => campaignList.find(m => m.campaign_id == v));
+        if (tempCampaign.length) {
+          let o = {};
+          this.cookiePlacementCampaign.forEach(item => {
+            let t = tempCampaign.filter(v => item.campaign_id.includes(v));
+            if (t) {
+              o[item._key_] = t
+            }
+          })
+          this.props.form.setFieldsValue({
+            placement_campaign: selectObj.placement_campaign.map(v => {
+              o[v._key_] && (v.campaign_id = Array.from(new Set([...v.campaign_id, ...o[v._key_]])))
+              return v;
+            })
+          })
+          this.cookiePlacementCampaign = this.cookiePlacementCampaign.map(item => {
+            item.campaign_id = item.campaign_id.filter(v => !tempCampaign.includes(v))
+            return item;
+          })
+        }
+      }
+      return;
     }
-    const selectObj = this.props.form.getFieldsValue(['app_id_blacklist', 'placement_campaign']);
     const campaign_ids = [].concat(...selectObj.placement_campaign.map(v => v.campaign_id));
 
     const toDeleteAppids = selectObj.app_id_blacklist.length === 0 ? []
@@ -325,23 +370,17 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
 
   @action
   pkgNameChanged = (value: number) => {
-    if (!value) {
-      this.props.form.setFieldsValue({
-        app_id_blacklist: [],
-        placement_campaign: []
-      })
-      return this.disabledAll = true;
-    }
+    this.props.form.setFieldsValue({
+      app_id_blacklist: [],
+      placement_campaign: []
+    })
+    if (!value) return this.disabledAll = true;
+
     this.disabledAll = false;
     const selectPkgname = this.props.optionListDb.PkgNamePlacement.find(v => value == v.id);
     if (!selectPkgname) return;
     const appids = this.props.optionListDb.AppidCampaign.filter(item => item.platform == selectPkgname.platform);
-    if (this.selectPlatformAppids.length > 0 && this.selectPlatformAppids[0].platform !== selectPkgname.platform) {
-      this.props.form.setFieldsValue({
-        app_id_blacklist: [],
-        placement_campaign: []
-      })
-    }
+
     this.selectPlatformAppids = this.appids = appids;
 
     this.placementList = selectPkgname.placement;
@@ -367,7 +406,7 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
       async (err, _values): Promise<any> => {
         if (!err) {
           const values = JSON.parse(JSON.stringify(_values))
-          values.placement_campaign = values.placement_campaign.filter(v => v.placement_id);
+          // values.placement_campaign = values.placement_campaign.filter(v => v.placement_id);
 
           if (this.isEdit === false && values.app_id_blacklist.length === 0
             && values.placement_campaign.length === 0
@@ -379,8 +418,12 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
           values.placement_campaign.forEach(ele => {
             hasError = hasError || (~~!!ele.placement_id + ~~!!ele.campaign_id.length) === 1
           })
+          debugger
           if (hasError) {
             this.childTestChange(true)
+            setImmediate(() => {
+              this.childTestChange(false)
+            })
             return
             // message.error('errorerrorerrorerror')
           }
@@ -439,12 +482,14 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
     const { getFieldDecorator } = form
     return (
       <div className='sb-form'>
+        <PortalsBtn querySelector='#IWillUseHelp'>
+          <div style={{ textAlign: 'center', color: '#777', height: 30, lineHeight: '30px' }}>
+            <Icon type="exclamation-circle" style={{ fontSize: '1.2em', verticalAlign: 'text-bottom', color: '#1890ff', marginRight: '0.5em' }} />
+            There is data linkage effect between Category,App ID,Campaign.
+         </div>
+        </PortalsBtn>
         <Form className={styles.taskModal} >
           <div className={styles.card}>
-            <FormItem style={{ textAlign: 'center', color: '#777' }}>
-              <Icon type="exclamation-circle" style={{ fontSize: '1.6em', verticalAlign: 'text-bottom', color: '#1890ff', marginRight: '0.5em' }} />
-              There is data linkage effect between Category,App ID,Campaign.
-          </FormItem>
             <FormItem {...formItemLayout} label="Pkgname">
               {getFieldDecorator('pkg_name', {
                 initialValue: item.pkg_name,
@@ -558,6 +603,7 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
             </FormItem>
             <FormItem className={styles.btnBox}>
               <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
+              <Button style={{ marginLeft: 20 }} onClick={() => this.props.routerStore.push('/whiteBlackList')}>Cancel</Button>
             </FormItem>
           </div>
         </Form>

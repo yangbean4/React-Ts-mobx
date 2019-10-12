@@ -50,6 +50,12 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   private hasError = ''
 
   @observable
+  private errorTarget = {
+    campaign_id: false,
+    placement_id: false
+  }
+
+  @observable
   private _campaignL = [] as Campaign[]
 
 
@@ -61,17 +67,39 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   constructor(props) {
     super(props)
     autorun(() => {
+      // debugger
+      const {
+        test,
+        value
+      } = this.props
       const {
         placement_id, campaign_id
-      } = this.props.value
+      } = value
       const hasError = Number(!!placement_id) + Number(!!campaign_id.length)
-      let errorType = ''
-      if (hasError === 1) {
-        errorType = !!placement_id ? 'campaign_id' : 'placement_id'
+      let errorTarget;
+      if (test) {
+        errorTarget = hasError === 1 ? {
+          campaign_id: !campaign_id.length,
+          placement_id: !placement_id
+        } : {
+            campaign_id: false,
+            placement_id: false
+          }
+      } else {
+        const error = this.errorTarget
+        errorTarget = {
+          campaign_id: error.campaign_id && !campaign_id.length,
+          placement_id: error.placement_id && !placement_id
+        }
       }
-      runInAction('set', () => {
-        this.hasError = errorType
-      })
+
+      const noRender = Object.keys(errorTarget).every(key => errorTarget[key] === this.errorTarget[key])
+      if (!noRender) {
+        runInAction('sw', () => {
+          this.errorTarget = errorTarget
+        })
+      }
+
     })
   }
 
@@ -100,10 +128,9 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
 
   render() {
-    const { value, placementList = [], disabled, hasSelect, form, index, test } = this.props
-    const { getFieldDecorator } = form
+    const { value, placementList = [], disabled, hasSelect, form, } = this.props
     const { placement_id, type, campaign_id = [] } = value
-    const getMsg = (type: string): { help?: string, validateStatus?: 'error' } => test && type === this.hasError ? {
+    const getMsg = (type: string): { help?: string, validateStatus?: 'error' } => this.errorTarget[type] ? {
       help: 'Required',
       validateStatus: 'error'
     } : {}
@@ -163,7 +190,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
           >
             {(this.campaignL).map((c, index) => (
               <Select.Option value={c.campaign_id.toString()} key={c.campaign_id.toString() + index} style={c.campaign_status === 'suspend' && { color: '#999' }}>
-                {c.campaign_name}
+                {`${c.campaign_id}-${c.campaign_name}`}
               </Select.Option>
             ))}
           </Select>

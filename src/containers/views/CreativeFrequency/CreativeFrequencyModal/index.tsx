@@ -263,6 +263,7 @@ class CreativeFrequencyModal extends ComponentExt<IProps & FormComponentProps> {
 
           <FormItem className={styles.btnBox}>
             <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
+            <Button style={{ marginLeft: 20 }} onClick={() => this.props.routerStore.push('/creativeFrequency')}>Cancel</Button>
           </FormItem>
         </Form>
       </div >

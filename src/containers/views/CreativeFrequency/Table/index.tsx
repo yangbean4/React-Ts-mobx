@@ -115,12 +115,18 @@ class CreativeFrequencyTable extends ComponentExt<IProps> {
             width={100}
             render={(_, record) => (
               <>
-                <a key='modify' href="javascript:;" onClick={() => this.modify(record)}>
-                  <Icon type="form" />
-                </a>
-                <a style={{ marginLeft: 10 }} key='delete' href="javascript:;" onClick={() => this.delete(record)}>
-                  <Icon type="delete" />
-                </a>
+                {this.$checkAuth('Apps-Creative Frequency-Edit',
+                  <a key='modify' href="javascript:;" onClick={() => this.modify(record)}>
+                    <Icon type="form" />
+                  </a>
+                )
+                }
+                {this.$checkAuth('Apps-Creative Frequency-Delete',
+                  <a style={{ marginLeft: 10 }} key='delete' href="javascript:;" onClick={() => this.delete(record)}>
+                    <Icon type="delete" />
+                  </a>
+                )
+                }
               </>
             )}
           />

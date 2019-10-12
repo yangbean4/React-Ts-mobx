@@ -10,7 +10,7 @@ interface IProps {
 @observer
 class ShowMore extends React.Component<IProps> {
     @observable
-    private isShowMore: boolean = false
+    private isShowMore: boolean = true
 
     @action
     toggle = () => {
