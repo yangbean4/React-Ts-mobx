@@ -13,6 +13,7 @@ interface IProps {
   value?: PlacementCampaign[]
   onChange?: (data: PlacementCampaign[]) => void
   disabled?: boolean
+  childTest: boolean
   form: any
 }
 
@@ -116,7 +117,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
 
   render() {
-    const { value, placementList, campaignList, disabled } = this.props
+    const { value, placementList, campaignList, disabled, childTest } = this.props
     return (
       <div>
         {
@@ -128,6 +129,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
                   placementList={placementList}
                   campaignList={campaignList}
                   value={item}
+                  test={childTest}
                   index={index}
                   form={this.props.form}
                   disabled={disabled}

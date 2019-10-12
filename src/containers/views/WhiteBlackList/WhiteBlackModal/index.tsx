@@ -93,6 +93,9 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
   private loading: boolean = false
 
   @observable
+  private childTest: boolean = false
+
+  @observable
   private isEdit: boolean = false
 
   @observable
@@ -125,6 +128,11 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
   @action
   toggleLoading = () => {
     this.loading = !this.loading
+  }
+
+  @action
+  childTestChange = (type) => {
+    this.childTest = type === undefined ? !this.childTest : type
   }
 
   @action
@@ -372,6 +380,7 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
             hasError = hasError || (~~!!ele.placement_id + ~~!!ele.campaign_id.length) === 1
           })
           if (hasError) {
+            this.childTestChange(true)
             return
             // message.error('errorerrorerrorerror')
           }
@@ -448,7 +457,8 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
                     showSearch
                     getPopupContainer={trigger => trigger.parentElement}
                     onChange={this.pkgNameChanged}
-                    filterOption={(input, option) => option.props.children.props.title.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    // filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    filterOption={(input, option) => (option.props.children as any).props.title.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                   >
                     {optionListDb.PkgNamePlacement.map(c => {
                       return <Select.Option key={c.id} value={c.id} disabled={c.disabled}>
@@ -541,6 +551,8 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
               })(<PlacementCampaignGroup
                 disabled={this.disabledAll}
                 form={form}
+                childTest={this.childTest}
+                // onChange={() => this.childTestChange(false)}
                 campaignList={this.campaignList}
                 placementList={this.placementList} />)}
             </FormItem>

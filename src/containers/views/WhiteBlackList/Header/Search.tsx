@@ -142,7 +142,7 @@ class Search extends ComponentExt<IStoreProps & FormComponentProps> {
                                 >
                                     {optionListDb.placements.map(c => (
                                         <Select.Option key={c.placement_id} value={c.placement_id}>
-                                            {`${c.placement_name}_${c.placement_id}`}
+                                            {`${c.placement_name}-${c.placement_id}`}
                                         </Select.Option>
                                     ))}
                                 </Select>
@@ -182,7 +182,7 @@ class Search extends ComponentExt<IStoreProps & FormComponentProps> {
                                 >
                                     {optionListDb.campaigns.map(c => (
                                         <Select.Option key={c.id} value={c.id}>
-                                            {`${c.name}_${c.id}`}
+                                            {`${c.id}-${c.name}`}
                                         </Select.Option>
                                     ))}
                                 </Select>

@@ -13,6 +13,7 @@ interface IProps {
   hasSelect: string[]
   index: number
   form: any
+  test: boolean
 }
 const formItemLayout = {
   labelCol: {
@@ -99,10 +100,10 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
 
   render() {
-    const { value, placementList = [], disabled, hasSelect, form, index } = this.props
+    const { value, placementList = [], disabled, hasSelect, form, index, test } = this.props
     const { getFieldDecorator } = form
     const { placement_id, type, campaign_id = [] } = value
-    const getMsg = (type: string): { help?: string, validateStatus?: 'error' } => type === this.hasError ? {
+    const getMsg = (type: string): { help?: string, validateStatus?: 'error' } => test && type === this.hasError ? {
       help: 'Required',
       validateStatus: 'error'
     } : {}
