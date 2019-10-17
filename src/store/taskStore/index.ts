@@ -84,8 +84,6 @@ export class TaskStore extends StoreExt {
     @action
     getOptionListDb = async () => {
         const keys = Object.keys(this.optionListDb).filter(k => k !== 'PkgnameData');
-        // console.log(keys)
-
         const promiseAll = keys.map(key => 'Country' === key
             ? this.api.appGroup[`get${key}`]()
             : this.api.task[`get${key}`]())
@@ -96,7 +94,6 @@ export class TaskStore extends StoreExt {
             keys.forEach((key, index) => {
                 target[key] = data[index].data
             })
-            // debugger
             runInAction('SET', () => {
                 this.optionListDb = target
             })

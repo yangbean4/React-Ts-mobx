@@ -9,7 +9,6 @@ export interface AxiosRequestConfig extends _AxiosRequestConfig {
     startTime?: Date
 }
 
-
 interface httpOption {
     baseUrl?: string
     onUploadProgress?: (progressEvent: any) => void

@@ -2,10 +2,10 @@ import * as React from 'react'
 import { Table, Icon } from 'antd'
 import { PaginationConfig } from 'antd/lib/pagination'
 import { inject, observer } from 'mobx-react'
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, autorun, runInAction } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
-import { statusOption } from '../web.config'
+import { statusOption, accountTypeOption } from '../web.config'
 import { camelCase } from '@utils/index'
 
 interface IStoreProps {

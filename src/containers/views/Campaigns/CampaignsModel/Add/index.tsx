@@ -12,7 +12,7 @@ const FormItem = Form.Item
 
 const DateFormat = 'YYYY-MM-DD'
 const Now = moment().format(DateFormat)
-// const IVE = 'IVE'
+const IVE = 'IVE'
 
 const formItemLayout = {
     labelCol: {
@@ -39,7 +39,6 @@ const miniLayout = {
 interface IStoreProps {
     modifyCampaingn?: (campaign: ICampaignStore.ICampaignGroup) => Promise<any>
     createCampaingn?: (campaign: ICampaignStore.ICampaignGroup) => Promise<any>
-    getBudgetGroup?: () => void
     optionListDb?: ICampaignStore.OptionListDb
     getTargetCode?: () => Promise<any>
     getCommentsGroupId?: () => Promise<any>
@@ -56,8 +55,8 @@ interface IProps extends IStoreProps {
 @inject(
     (store: IStore): IProps => {
         const { campaignStore, routerStore } = store
-        const { createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId,getBudgetGroup } = campaignStore
-        return { routerStore, createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId,getBudgetGroup }
+        const { createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId } = campaignStore
+        return { routerStore, createCampaingn, modifyCampaingn, optionListDb, getTargetCode, getCommentsGroupId }
     }
 )
 
@@ -113,11 +112,6 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     @computed
     get appIdKey() {
         return this._appIdKey || this.CampaignGroup.app_key
-    }
-
-    @computed
-    get budgetGroupList () {
-        return this.props.optionListDb.BudgetGroup.filter(v => v.sen_app_key == this.appIdKey)
     }
 
     @computed
@@ -195,7 +189,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         if (e) {
             e.preventDefault()
         }
-        const { routerStore, createCampaingn, form, modifyCampaingn } = this.props
+        const { routerStore, createCampaingn, form, modifyCampaingn, type } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
@@ -259,7 +253,6 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     componentWillMount() {
         this.props.getTargetCode()
         this.props.getCommentsGroupId()
-        this.props.getBudgetGroup()
         this.init()
         const {
             routerStore
@@ -302,7 +295,6 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
             endcard_id = '',
             default_cpm = '0.01',
             kpi = '',
-            budget_group = undefined
         } = reData || {}
         if (target_code && reData) {
             target_codeValue = target_code.split(',').map(ele => {
@@ -337,7 +329,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 ]
                             })(
-                                <Radio.Group disabled={status == 'pending'}>
+                                <Radio.Group>
                                     {statusOption.map(c => (
                                         <Radio key={c.key} value={c.value}>
                                             {c.key}
@@ -482,17 +474,17 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={2} formatter={this.limitDecimals} />)}
+                        })(<InputNumber precision={2} formatter={this.limitDecimals} parser={this.limitDecimals} />)}
                     </FormItem>
 
                     <FormItem label="Total Budget">
-                        <span style={{ marginRight: 5 }}>$</span>
+                        <span style={{ marginRight: "5px" }}>$</span>
                         {getFieldDecorator('total_budget', {
                             initialValue: total_budget,
                             rules: [
-                                // {
-                                //     required: this.accountType !== 2, message: "Required"
-                                // },
+                                {
+                                    required: this.accountType !== 2, message: "Required"
+                                },
                                 {
                                     validator: (r, v, callback) => {
                                         if (v <= 0 && v != undefined) {
@@ -502,7 +494,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={2} formatter={this.limitDecimals} />)}
+                        })(<InputNumber precision={2} formatter={this.limitDecimals} parser={this.limitDecimals} />)}
                     </FormItem>
 
                     <FormItem label="Daily Budget">
@@ -519,28 +511,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={2} formatter={this.limitDecimals} />)}
-                    </FormItem>
-
-                    <FormItem label="Budget Group">
-                        {getFieldDecorator('budget_group', {
-                            initialValue: budget_group
-                        })(
-                            <Select
-                                disabled={ !!id || !this.appIdKey }
-                                allowClear
-                                showSearch
-                                maxTagCount={1}
-                                getPopupContainer={trigger => trigger.parentElement}
-                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                            >
-                                {this.budgetGroupList.map(c => (
-                                    <Select.Option key={c.sen_group_id} value={c.sen_group_id}>
-                                        {`${c.group_name}(${c.daily_budget})`}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        )}
+                        })(<InputNumber precision={2} formatter={this.limitDecimals} parser={this.limitDecimals} />)}
                     </FormItem>
 
                     <FormItem label="Start Time">

@@ -9,9 +9,13 @@ import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import InputColor from '@components/InputColor/index'
 import UploadFile from '@components/UploadFile'
+import MyIcon from '@components/Icon'
 
-import { typeOf, testSize } from '@utils/index';
 const FormItem = Form.Item
+const width = 1920
+const height = 1080
+
+
 
 const formItemLayout = {
     labelCol: {
@@ -48,10 +52,6 @@ const miniLayout = {
     }
 }
 
-interface hasResult {
-    result?: string
-}
-
 interface IStoreProps {
     modifyEndcard?: (endcard: IEndcardStore.IEndcard) => Promise<any>
     createEndcard?: (endcard: IEndcardStore.IEndcard) => Promise<any>
@@ -68,6 +68,7 @@ interface IProps extends IStoreProps {
     onCancel?: () => void
     onOk?: (id: number) => void
     type?: string
+    isCopy?: boolean
 }
 @inject(
     (store: IStore): IProps => {
@@ -80,6 +81,11 @@ interface IProps extends IStoreProps {
 class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private loading: boolean = false
+
+    @observable
+    private hasView: boolean = true
+    @observable
+    private noCopy: boolean = false
 
     @observable
     private imageTarget: object = {}
@@ -103,17 +109,12 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get useAppWall() {
-        return [this.AppWall, this.endcardTarget.template_id, this.props.optionListDb.template[0] && this.props.optionListDb.template[0].id].find(ele => ele !== undefined)
-    }
-
-    @computed
-    get isHeng() {
-        return (this.props.optionListDb.template.find(ele => ele.id === this.useAppWall) || {}).template_type === 1
+        return [this.AppWall, this.endcardTarget.template_id].find(ele => ele !== undefined)
     }
 
     @computed
     get isAdd() {
-        return !this.props.endcardId
+        return !this.props.endcardId && !this.props.isCopy
     }
 
     @computed
@@ -198,7 +199,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                         values.endcard_image_url = this.gjbUrl || this.endcardTarget.endcard_image_url
                         delete values.endcard_image_url_web_show
 
-                        if (this.isAdd) {
+                        if (!this.props.endcardId) {
                             if (app_key) {
                                 values = {
                                     app_key,
@@ -267,74 +268,22 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     getDetail = async () => {
         const res = await this.api.endcard.getEndcardInfo({ id: this.props.endcardId })
         runInAction('SET_APPGroup', () => {
-            this.endcardTarget = { ...res.data }
+            this.endcardTarget = {
+                ...res.data,
+                ...this.props.isCopy ? {
+                    endcard_name: res.data.endcard_name + '(1)',
+                    status: 1,
+                    id: undefined,
+                    endcard_image_url_web_show: ''
+                } : {}
+            }
         })
     }
 
-
-    getUploadprops = (fun: Function, key: string, width: number,
-        height: number, size: number, preData?,
-        cb?: Function, type = ".png, .jpg, .jpeg") => {
-
-        const errorCb = (error) => { console.log(error); this.removeFile(key) };
-        return {
-            showUploadList: false,
-            accept: ".png, .jpg, .jpeg",
-            name: 'file',
-            // listType: "picture",
-            className: "avatar-uploader",
-            onRemove: this.removeFile,
-            beforeUpload: (file) => {
-                const houz = file.name.split('.').pop()
-                const isHtml = type.includes(houz)
-                if (!isHtml) {
-                    message.error(`Upload failed! The file must be in ${type} format.`);
-                }
-                const isLt2M = file.size / 1024 < size;
-                if (!isLt2M) {
-                    const msg = size >= 1000 ? `${size / 1000} M` : `${size}kb`
-                    message.error(`Failure，The file size cannot exceed ${msg}!`);
-                }
-                if (isHtml && isLt2M) {
-                    return testSize(file, { width, height }).catch((err) => {
-                        console.log(err)
-                        message.error(`Please upload Image at ${width}*${height}px`);
-                        return Promise.reject()
-                    })
-                } else {
-                    return isHtml && isLt2M;
-                }
-            },
-            customRequest: (data) => {
-                const formData = new FormData()
-                const file = data.file
-                formData.append('file', file)
-                if (preData && typeOf(preData) === 'object') {
-                    Object.entries(preData).forEach(([key, value]) => {
-                        const _value = value as string
-                        formData.append(key, _value)
-                    })
-                }
-                fun(formData).then(res => {
-                    const data = res.data
-                    this.props.form.setFieldsValue({
-                        [key]: data.url
-                    })
-                    const fileRender = new FileReader()
-                    fileRender.onload = (ev) => {
-                        const target = ev.target as hasResult
-                        runInAction('SET_URL', () => {
-                            this.imageTarget[key] = target.result
-                        })
-                        cb && cb({
-                            data,
-                            localUrl: target.result
-                        })
-                    }
-                    fileRender.readAsDataURL(file)
-                }, errorCb).catch(errorCb)
-            }
-        }
+    @action
+    fileChange = () => {
+        this.hasView = false
+        this.noCopy = true
     }
 
     componentWillMount() {
@@ -347,11 +296,13 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     render() {
         const { form, optionListDb } = this.props
         const { getFieldDecorator } = form
-        const { width, height } = this.isHeng ? {
-            width: 1920, height: 1080
-        } : {
-                height: 1920, width: 1080
-            }
+        const UploadEndcard = {
+            fileType: '.zip',
+            api: this.api.util.uploadTemplate,
+            // hasView: this.hasView,
+            // noCopy: this.noCopy,
+            callBack: this.fileChange
+        }
 
         const {
             platform = 'android',
@@ -362,6 +313,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
             language = '',
             template_id = this.useAppWall,
             endcard_image_url_web_show = '',
+            template_url = '',
             cta = 'Download',
             cta_text_col = '#FFFFFF',
             cta_bkgd = '#0087ff',
@@ -515,7 +467,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                         })(<Input autoComplete="off" disabled={true} />)}
                     </FormItem>
 
-                    <FormItem {...bigLayout} className={styles.hasImg + ` ${styles.autoHeight}`} label='Endcard Template'>
+                    {/* <FormItem {...bigLayout} className={styles.hasImg + ` ${styles.autoHeight}`} label='Endcard Template'>
                         {getFieldDecorator('template_id', {
                             initialValue: template_id,
                             rules: [
@@ -537,18 +489,33 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                                 ))}
                             </Radio.Group>
                         )}
+                    </FormItem> */}
+                    <FormItem label="Endcard">
+                        {getFieldDecorator('template_url', {
+                            initialValue: template_url,
+                            rules: [
+                                {
+                                    required: true, message: "Please upload the IVE online resources!"
+                                }
+                            ]
+                        })(
+                            <UploadFile {...UploadEndcard} hasView={this.hasView} noCopy={this.noCopy}>
+                                <Button>
+                                    <MyIcon type="iconshangchuan1" /> Upload Endcard
+                                                    </Button>
+                            </UploadFile>
+                        )}
                     </FormItem>
 
-
                     <FormItem label="Cover Image" className={styles.autoHeight + ` ${styles.UploadBox}`}>
-                        <div className={styles.title}>
+                        {/* <div className={styles.title}>
                             <div className="left">
                                 {this.isHeng ? 'Landscape' : 'Portrait'}
                             </div>
                             <div className="right">
                                 {this.isHeng ? '1920*1080px' : '1080*1920px'}
                             </div>
-                        </div>
+                        </div> */}
                         {getFieldDecorator('endcard_image_url_web_show', {
                             initialValue: endcard_image,
                             rules: [
@@ -558,9 +525,15 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(
                             <UploadFile
-                                className={this.isHeng ? `${styles.sunjiao} ${styles.heng}` : `${styles.sunjiao} ${styles.shu}`}
+                                className={styles.sunjiao}
                                 api={this.api.util.uploadCoverImage}
-                                wht={{ width: width, height: height, size: 200 }}
+                                wht={{
+                                    size: 200, WH_arr: [{
+                                        width: width, height: height,
+                                    }, {
+                                        height: width, width: height,
+                                    }]
+                                }}
                                 callBack={this.setUrl}
                                 preData={{
                                     platform: this.platform,
@@ -621,7 +594,6 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                             </React.Fragment>
                         )
                     }
-
                     {
                         (this.useAppWall !== '005' && this.useAppWall !== '006') && <FormItem label="Button Image" className={styles.btnUploadGroup} >
                             {getFieldDecorator('cta_pic', {

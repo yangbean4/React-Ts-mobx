@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author:  bean^ <bean_4@163.com>
+ * @Date: 2019-07-31 21:04:44
+ * @LastEditors:  bean^ <bean_4@163.com>
+ * @LastEditTime: 2019-07-31 21:04:44
+ */
 import { EndcardStore as EndcardStoreModel } from './index'
 
 export as namespace IEndcardStore
@@ -24,6 +31,7 @@ export interface IEndcard {
     ige_recoverlist_endcard?: number
     id?: number
     endcard_image_url_web_show?: string
+    template_url?: string
 }
 
 export interface IEndcardForList {
@@ -57,6 +65,6 @@ export interface OptionListDb {
         id?: string | number
         template_url?: string
         template_image?: string
-        template_type?:number
+        template_type?: number
     })[],
 }

@@ -1,3 +1,11 @@
+/*
+ * @Description: 
+ * @Author:  bean^ <bean_4@163.com>
+ * @Date: 2019-10-17 14:26:29
+ * @LastEditors:  bean^ <bean_4@163.com>
+ * @LastEditTime: 2019-10-17 14:36:05
+ */
+
 import Loadable from 'react-loadable'
 
 import PageLoading from '@components/PageLoading'
@@ -19,11 +27,6 @@ export const asynchronousComponents = {
   Manual: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/ManualEcpm')),
   ManualAdd: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/ManualEcpm/ManualModel')),
   ManualEdit: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/ManualEcpm/ManualModel')),
-  //------------------Budget Group
-  Budget: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/BudgetGroup')),
-  BudgetAdd: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/BudgetGroup/BudgetGroupModel')),
-  BudgetEdit: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/BudgetGroup/BudgetGroupModel')),
-
   //------------------Compaigns
   Campaigns: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns')),
   CampaignsAdd: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns/CampaignsModel/Add')),
@@ -71,7 +74,7 @@ export const asynchronousComponents = {
   Endcard: loadComponent(() => import(/* webpackChunkName: "Endcard" */ '@views/Endcard')),
   EndcardAdd: loadComponent(() => import(/* webpackChunkName: "EndcardAdd" */ '@views/Endcard/EndcardModal/Add')),
   EndcardEdit: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/Endcard/EndcardModal/Edit')),
-  endcardTemplate: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/EndcardTemplate')),
+  // endcardTemplate: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/EndcardTemplate')),
 
   Creative: loadComponent(() => import(/* webpackChunkName: "Creative" */ '@views/Creative')),
   CreativeAdd: loadComponent(() => import(/* webpackChunkName: "CreativeAdd" */ '@views/Creative/CreativeModal/Add')),
@@ -372,16 +375,16 @@ export const routerAndMenu: IRouter[] = [
     component: 'LeadContentEdit',
   },
   // ------------------Endcard
-  {
-    id: 83,
-    pid: 8,
-    isMenu: true,
-    exact: true,
-    title: 'Endcard',
-  },
+  // {
+  //   id: 83,
+  //   pid: 8,
+  //   isMenu: true,
+  //   exact: true,
+  //   title: 'Endcard',
+  // },
   {
     id: 831,
-    pid: 83,
+    pid: 8,
     isMenu: true,
     exact: true,
     title: 'Endcard',
@@ -390,16 +393,16 @@ export const routerAndMenu: IRouter[] = [
     path: '/endcard'
   },
 
-  {
-    id: 832,
-    pid: 83,
-    isMenu: true,
-    exact: true,
-    title: 'Endcard Template',
-    authName: 'Offers-Endcards-Endcard Template',
-    component: 'endcardTemplate',
-    path: '/endcardTemplate'
-  },
+  // {
+  //   id: 832,
+  //   pid: 83,
+  //   isMenu: true,
+  //   exact: true,
+  //   title: 'Endcard Template',
+  //   authName: 'Offers-Endcards-Endcard Template',
+  //   component: 'endcardTemplate',
+  //   path: '/endcardTemplate'
+  // },
   {
     id: 8312,
     pid: 831,
@@ -537,32 +540,6 @@ export const routerAndMenu: IRouter[] = [
     title: 'Edit',
     component: 'ManualAdd',
     path: '/manual/edit/:id'
-  },
-  {
-    id: 858,
-    pid: 85,
-    isMenu: true,
-    exact: true,
-    title: 'Budget Group',
-    authName: 'Offers-Campaigns-Budget Group',
-    component: 'Budget',
-    path: '/budget'
-  },
-  {
-    id: 8581,
-    pid: 858,
-    isMenu: false,
-    title: 'Add',
-    component: 'BudgetAdd',
-    path: '/budget/add'
-  },
-  {
-    id: 8582,
-    pid: 858,
-    isMenu: false,
-    title: 'Edit',
-    component: 'BudgetAdd',
-    path: '/budget/edit/:id'
   },
   // --------Company---------------
   {
@@ -1110,15 +1087,7 @@ export const routerAndMenu: IRouter[] = [
     // authName: 'Offers-Comments-Comment Templates',
     component: 'Logs'
   },
-  {
-    id: 4853,
-    pid: 485,
-    isMenu: true,
-    title: 'Budget Group',
-    path: '/log/budget_group',
-    // authName: 'Offers-Comments-Comment Templates',
-    component: 'Logs'
-  },
+
   // path: '/log/campaigns',
   // authName: 'Offers-Campaigns',
   // component: 'Logs'

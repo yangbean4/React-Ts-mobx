@@ -42,6 +42,7 @@ export interface UploadFileProps {
   showFileSize?: boolean
   fileSize?: number
   showUnzippedFileSize?: boolean
+  noCopy?: boolean
 }
 
 @observer
@@ -159,7 +160,6 @@ class UploadFile extends React.Component<UploadFileProps> {
   @action
   hideBtn = (e: React.MouseEvent) => {
     // e.stopPropagation()
-    console.log(111)
     this.btnVisible = false;
   }
 
@@ -252,6 +252,9 @@ class UploadFile extends React.Component<UploadFileProps> {
               this.previewUrl = file.name
               this.showFileSize && (this.fileSize = Rdata.file_size);
             })
+            cb && cb({
+              data: Rdata,
+            })
           } else {
             const fileRender = new FileReader()
             fileRender.onload = (ev) => {
@@ -315,7 +318,9 @@ class UploadFile extends React.Component<UploadFileProps> {
                     {
                       (this.props.viewUrl || this.props.hasView) && <Icon className={styles.fileIcon} type="eye" onClick={this.viewFile} />
                     }
-                    <CopyToClipboard onCopy={this.onCopy} text={this.useUrl}><Icon className={styles.fileIcon} type="copy" /></CopyToClipboard>
+                    {
+                      this.props.noCopy !== true && <CopyToClipboard onCopy={this.onCopy} text={this.useUrl}><Icon className={styles.fileIcon} type="copy" /></CopyToClipboard>
+                    }
                   </div>
                   {
                     this.showFileSize && <span style={{ color: '#aaa' }}>{this.getFileSize} {this.props.showUnzippedFileSize && '(Unzipped file size)'}</span>
