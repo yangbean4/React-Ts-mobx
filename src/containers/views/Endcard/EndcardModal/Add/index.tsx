@@ -199,7 +199,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                         values.endcard_image_url = this.gjbUrl || this.endcardTarget.endcard_image_url
                         delete values.endcard_image_url_web_show
 
-                        if (!this.props.endcardId) {
+                        if (!this.props.endcardId || this.props.isCopy) {
                             if (app_key) {
                                 values = {
                                     app_key,
@@ -274,7 +274,8 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                     endcard_name: res.data.endcard_name + '(1)',
                     status: 1,
                     id: undefined,
-                    endcard_image_url_web_show: ''
+                    endcard_image_url_web_show: '',
+                    template_url: ""
                 } : {}
             }
         })
@@ -296,13 +297,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
     render() {
         const { form, optionListDb } = this.props
         const { getFieldDecorator } = form
-        const UploadEndcard = {
-            fileType: '.zip',
-            api: this.api.util.uploadTemplate,
-            // hasView: this.hasView,
-            // noCopy: this.noCopy,
-            callBack: this.fileChange
-        }
+
 
         const {
             platform = 'android',
@@ -322,17 +317,29 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
             is_automatic_jump = 0,
             ige_recoverlist_endcard = 1,
             status = 1,
+            size = ''
         } = this.endcardTarget
+
+        const UploadEndcard = {
+            fileType: '.zip',
+            api: this.api.util.uploadTemplate,
+            hasView: this.hasView,
+            noCopy: this.noCopy,
+            showFileSize: true,
+            neDel: [5, 6, 7, 8, 9].includes(Number(template_id)),
+            callBack: this.fileChange,
+            fileSize: parseFloat(size) * 1024
+        }
 
         const endcard_image = this.imageTarget['endcard_image_url_web_show'] || this.endcardTarget.endcard_image_url_web_show
         const ctaPic = this.imageTarget['cta_pic'] || cta_pic
 
         return (
-            <div className='sb-form'>
+            <div className='sb-form' >
                 <Form {...this.props.type ? miniLayout : formItemLayout} className={styles.endcardModal} >
                     {
 
-                        !this.isAdd && <FormItem label="ID">
+                        this.props.endcardId && !this.props.isCopy && <FormItem label="ID">
                             {this.props.endcardId}
                         </FormItem>
                     }
@@ -490,16 +497,20 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                             </Radio.Group>
                         )}
                     </FormItem> */}
+                    {template_id && <FormItem label="Template id">
+                        {template_id}
+                    </FormItem>
+                    }
                     <FormItem label="Endcard">
                         {getFieldDecorator('template_url', {
                             initialValue: template_url,
                             rules: [
                                 {
-                                    required: true, message: "Please upload the IVE online resources!"
+                                    required: true, message: "Required"
                                 }
                             ]
                         })(
-                            <UploadFile {...UploadEndcard} hasView={this.hasView} noCopy={this.noCopy}>
+                            <UploadFile {...UploadEndcard} >
                                 <Button>
                                     <MyIcon type="iconshangchuan1" /> Upload Endcard
                                                     </Button>

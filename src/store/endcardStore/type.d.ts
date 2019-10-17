@@ -3,7 +3,7 @@
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-07-31 21:04:44
  * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-07-31 21:04:44
+ * @LastEditTime: 2019-10-17 16:50:54
  */
 import { EndcardStore as EndcardStoreModel } from './index'
 
@@ -32,6 +32,7 @@ export interface IEndcard {
     id?: number
     endcard_image_url_web_show?: string
     template_url?: string
+    size?: string
 }
 
 export interface IEndcardForList {

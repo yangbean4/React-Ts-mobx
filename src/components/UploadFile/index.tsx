@@ -43,6 +43,7 @@ export interface UploadFileProps {
   fileSize?: number
   showUnzippedFileSize?: boolean
   noCopy?: boolean
+  neDel?: boolean
 }
 
 @observer
@@ -314,7 +315,9 @@ class UploadFile extends React.Component<UploadFileProps> {
                 <>
                   <div className={styles.fileBox} onClick={this.stop}>
                     <span className={styles.fileName} title={this.useUrl}>{this.useUrl}</span>
-                    <MyIcon className={styles.fileIcon} type="iconguanbi" onClick={this.delClick} />
+                    {
+                      this.props.neDel !== true && <MyIcon className={styles.fileIcon} type="iconguanbi" onClick={this.delClick} />
+                    }
                     {
                       (this.props.viewUrl || this.props.hasView) && <Icon className={styles.fileIcon} type="eye" onClick={this.viewFile} />
                     }
