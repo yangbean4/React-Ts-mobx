@@ -379,10 +379,11 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
     this.disabledAll = false;
     const selectPkgname = this.props.optionListDb.PkgNamePlacement.find(v => value == v.id);
     if (!selectPkgname) return;
+
     const appids = this.props.optionListDb.AppidCampaign.filter(item => item.platform == selectPkgname.platform);
 
-    this.selectPlatformAppids = this.appids = appids;
-
+    this.selectPlatformAppids = appids;
+    this.appids = this.getAppids(this.currentLimited, this.currentCategory);
     this.placementList = selectPkgname.placement;
     this.campaignList = [].concat(...this.appids.map(v => v.campaign));
   }

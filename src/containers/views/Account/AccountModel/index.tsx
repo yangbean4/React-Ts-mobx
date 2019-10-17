@@ -184,7 +184,7 @@ class AccountModal extends ComponentExt<IProps & FormComponentProps> {
         if (e) {
             e.preventDefault()
         }
-        const { routerStore, account, createAccount, modifyAccount, form } = this.props
+        const { account, createAccount, modifyAccount, form } = this.props
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {

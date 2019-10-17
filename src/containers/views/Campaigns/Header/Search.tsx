@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
-import { observable, action, runInAction, autorun } from 'mobx'
+import { observable, action, runInAction } from 'mobx'
 import { Form, Input, Row, Col, Button, Select } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { ComponentExt } from '@utils/reactExt'
@@ -18,23 +18,21 @@ const layout = {
   }
 }
 
-
 interface IStoreProps {
   changeFilter?: (params: ICampaignStore.SearchParams) => void
   filters?: ICampaignStore.SearchParams
   routerStore?: RouterStore
   getTargetCode?: () => Promise<any>
-  setCampaignType?: (str: string) => void
+  setCampaignType?: (str: string) => void,
+  getBudgetGroup?: () => void
   optionListDb?: ICampaignStore.OptionListDb
 }
-
-
 
 @inject(
   (store: IStore): IStoreProps => {
     const { routerStore, campaignStore } = store
-    const { changeFilter, filters, setCampaignType, getTargetCode, optionListDb } = campaignStore
-    return { changeFilter, filters, routerStore, setCampaignType, getTargetCode, optionListDb }
+    const { changeFilter, filters, setCampaignType, getTargetCode, optionListDb, getBudgetGroup } = campaignStore
+    return { changeFilter, filters, routerStore, setCampaignType, getTargetCode, optionListDb, getBudgetGroup }
   }
 )
 @observer
@@ -43,11 +41,7 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   private loading: boolean = false
 
   @observable
-  private companyType: string = ''
-
-
-  @observable
-  private Account: ({ name?: string, id?: number })[] = []
+  private Account: Array<{ name?: string, id?: number }> = []
 
   @action
   toggleLoading = () => {
@@ -58,12 +52,13 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   getSourceAccount = async () => {
     const res = await this.api.appGroup.getAccountSource()
     runInAction('SET_SOURCE', () => {
-      this.Account = res.data;
+      this.Account = res.data
     })
   }
   componentWillMount() {
     this.getSourceAccount()
     this.props.getTargetCode()
+    this.props.getBudgetGroup()
   }
 
   submit = (e?: React.FormEvent<any>): void => {
@@ -83,7 +78,6 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
       }
     )
   }
-
 
   render() {
     const { form, filters, optionListDb } = this.props
@@ -106,7 +100,7 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   allowClear
                   showSearch
-                  mode='multiple'
+                  mode="multiple"
                   // getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
@@ -152,7 +146,7 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
               })(
                 <Select
                   showSearch
-                  mode='multiple'
+                  mode="multiple"
                   // getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
@@ -171,7 +165,7 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 initialValue: filters.account,
               })(<Select
                 showSearch
-                mode='multiple'
+                mode="multiple"
                 maxTagCount={1}
                 // getPopupContainer={trigger => trigger.parentElement}
                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
@@ -192,7 +186,7 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   allowClear
                   showSearch
-                  mode='multiple'
+                  mode="multiple"
                   // getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
@@ -213,7 +207,7 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   allowClear
                   showSearch
-                  mode='multiple'
+                  mode="multiple"
                   maxTagCount={1}
                   // getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
@@ -227,11 +221,33 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
               )}
             </FormItem>
           </Col>
+          <Col span={span}>
+            <FormItem label="Budget Group">
+              {getFieldDecorator('budget_group', {
+                initialValue: filters.budget_group
+              })(
+                  <Select
+                      allowClear
+                      showSearch
+                      mode="multiple"
+                      maxTagCount={1}
+                      // getPopupContainer={trigger => trigger.parentElement}
+                      filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  >
+                    {optionListDb.BudgetGroup.map(c => (
+                        <Select.Option key={c.sen_group_id} value={c.sen_group_id}>
+                          {c.group_name}
+                        </Select.Option>
+                    ))}
+                  </Select>
+              )}
+            </FormItem>
+          </Col>
           <Col span={3} offset={1}>
             <Button type="primary" icon="search" onClick={this.submit} htmlType="submit">Search</Button>
           </Col>
           <Col span={3} offset={1}>
-            <span id='companyAddBtn'></span>
+            <span id="companyAddBtn"></span>
           </Col>
         </Row>
       </Form>

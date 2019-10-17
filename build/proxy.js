@@ -7,7 +7,7 @@
  */
 module.exports = {
     '/index.php': {
-        target: 'http://san-manage.test.com',
+        target: 'http://san-manage.test2.com',
         // target: 'http://sen-oc-manage.io',
         changeOrigin: true,
         pathRewrite: {

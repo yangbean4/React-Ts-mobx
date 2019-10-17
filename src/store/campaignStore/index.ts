@@ -58,13 +58,22 @@ export class CampaignStore extends StoreExt {
     optionListDb: ICampaignStore.OptionListDb = {
         TargetCode: [],
         CommentID: [],
+        BudgetGroup: []
     }
 
     @action
     getTargetCode = async () => {
         const res = await this.api.appGroup.getCountry()
         runInAction('SET', () => {
-            this.optionListDb.TargetCode = res.data;
+            this.optionListDb.TargetCode = res.data
+        })
+    }
+
+    @action
+    getBudgetGroup = async () => {
+        const res = await this.api.campaigns.getBudgetGroup()
+        runInAction('SET', () => {
+            this.optionListDb.BudgetGroup = res.data
         })
     }
 
@@ -72,7 +81,7 @@ export class CampaignStore extends StoreExt {
     getCommentID = async () => {
         const res = await this.api.comment.getCommentGroupId()
         runInAction('SET', () => {
-            this.optionListDb.CommentID = res.data;
+            this.optionListDb.CommentID = res.data
         })
     }
 
@@ -111,7 +120,7 @@ export class CampaignStore extends StoreExt {
         this.getCampaignsLoading = true
         try {
             let data = {
-                page: this.page, pageSize: this.pageSize, ...this.filters,
+                page: this.page, pageSize: this.pageSize, ...this.filters
             }
             const res = await this.api.campaigns.getCampaigns(data)
             runInAction('SET_CAMPAIGN_LIST', () => {

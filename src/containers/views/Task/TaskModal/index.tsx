@@ -244,6 +244,8 @@ class TaskModal extends ComponentExt<IProps & FormComponentProps> {
     render() {
         const { task, form, optionListDb } = this.props
         const { getFieldDecorator } = form
+
+        console.log(Object.keys(optionListDb.IgePkgname), optionListDb.IgePkgname)
         // debugger
         return (
             <div className='sb-form'>

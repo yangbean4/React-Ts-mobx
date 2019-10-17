@@ -66,7 +66,7 @@
             "allow-single-concat"
         ],
         "quotemark": [
-            true,
+            false,
             "single",
             "jsx-double"
         ], //引号的使用规则
@@ -97,6 +97,7 @@
         // tslint-react
         "jsx-no-lambda": false,
         "jsx-no-multiline-js": false,
+        "jsx-self-close": false,
         "jsx-curly-spacing": [
             true,
             {

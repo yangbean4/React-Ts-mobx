@@ -19,5 +19,8 @@ export default {
   },
   editBeforeCampaigns(data): Promise<any> {
     return http.post(`${basePath}campaignsDetail`, data || {})
+  },
+  getBudgetGroup(): Promise<any> {
+    return http.post(`api/budgetGroup/appRelatedGroup`)
   }
 }

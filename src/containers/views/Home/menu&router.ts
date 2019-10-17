@@ -19,6 +19,11 @@ export const asynchronousComponents = {
   Manual: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/ManualEcpm')),
   ManualAdd: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/ManualEcpm/ManualModel')),
   ManualEdit: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/ManualEcpm/ManualModel')),
+  //------------------Budget Group
+  Budget: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/BudgetGroup')),
+  BudgetAdd: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/BudgetGroup/BudgetGroupModel')),
+  BudgetEdit: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/BudgetGroup/BudgetGroupModel')),
+
   //------------------Compaigns
   Campaigns: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns')),
   CampaignsAdd: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Campaigns/CampaignsModel/Add')),
@@ -532,6 +537,32 @@ export const routerAndMenu: IRouter[] = [
     title: 'Edit',
     component: 'ManualAdd',
     path: '/manual/edit/:id'
+  },
+  {
+    id: 858,
+    pid: 85,
+    isMenu: true,
+    exact: true,
+    title: 'Budget Group',
+    authName: 'Offers-Campaigns-Budget Group',
+    component: 'Budget',
+    path: '/budget'
+  },
+  {
+    id: 8581,
+    pid: 858,
+    isMenu: false,
+    title: 'Add',
+    component: 'BudgetAdd',
+    path: '/budget/add'
+  },
+  {
+    id: 8582,
+    pid: 858,
+    isMenu: false,
+    title: 'Edit',
+    component: 'BudgetAdd',
+    path: '/budget/edit/:id'
   },
   // --------Company---------------
   {
@@ -1079,7 +1110,15 @@ export const routerAndMenu: IRouter[] = [
     // authName: 'Offers-Comments-Comment Templates',
     component: 'Logs'
   },
-
+  {
+    id: 4853,
+    pid: 485,
+    isMenu: true,
+    title: 'Budget Group',
+    path: '/log/budget_group',
+    // authName: 'Offers-Comments-Comment Templates',
+    component: 'Logs'
+  },
   // path: '/log/campaigns',
   // authName: 'Offers-Campaigns',
   // component: 'Logs'
