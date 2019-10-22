@@ -31,4 +31,5 @@ declare interface IStore {
   manualEcpmStore: IManualEcpmStore.manualEcpmStore,
   topCreativeStore: ITopCreativeStore.topCreativeStore
   creativeFrequencyStore: ICreativeFrequencyStore.CreativeFrequencyStore
+  iosWhiteListStore: IIosWhiteListStore.IosWhiteListStore
 }

@@ -1,5 +1,5 @@
 /*
- * @Description: 
+ * @Description:
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-10-17 14:26:29
  * @LastEditors:  bean^ <bean_4@163.com>
@@ -108,6 +108,10 @@ export const asynchronousComponents = {
   // Creative Frequency
   CreativeFrequency: loadComponent(() => import(/* webpackChunkName: "CreativeFrequencyList" */ '@views/CreativeFrequency')),
   CreativeFrequencyModal: loadComponent(() => import(/* webpackChunkName: "CreativeFrequencyAdd" */ '@views/CreativeFrequency/CreativeFrequencyModal')),
+
+  // IOS Whitelist
+  IosWhiteList: loadComponent(() => import(/* webpackChunkName: "IosWhitelist" */ '@views/IosWhiteList')),
+  IosWhiteListEdit: loadComponent(() => import(/* webpackChunkName: "IosWhitelistEdit" */ '@views/IosWhiteList/IosWhiteListModal/Edit')),
 }
 
 // 所有路由的key
@@ -719,6 +723,23 @@ export const routerAndMenu: IRouter[] = [
     title: '',
     component: 'Template',
     isMenu: false
+  },
+  {
+    pid: 1,
+    id: 13,
+    title: 'IOS Whitelist',
+    path: '/iosWhitelist',
+    component: 'IosWhiteList',
+    exact: true,
+    isMenu: true,
+    authName: 'Config Manage-IOS Whitelist'
+  },
+  {
+    pid: 13,
+    id: 131,
+    title: 'IOS Whitelist',
+    path: '/iosWhitelist/edit/:bundle_id',
+    component: 'IosWhiteListEdit',
   },
   //----------------Revenue Import
   {

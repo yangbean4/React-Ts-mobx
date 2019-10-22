@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Input, Select, Radio, Button, message, Icon, Upload } from 'antd'
+import { Form, Input, Select, Radio, Button, message, Icon } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { statusOption, platformOption } from '@config/web'
 import { Jump, IGE } from '../../config'
@@ -319,14 +319,14 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
             status = 1,
             size = ''
         } = this.endcardTarget
-
+        const noDel = [5, 6, 7, 8, 9].includes(Number(template_id))
         const UploadEndcard = {
             fileType: '.zip',
             api: this.api.util.uploadTemplate,
             hasView: this.hasView,
             noCopy: this.noCopy,
             showFileSize: true,
-            neDel: [5, 6, 7, 8, 9].includes(Number(template_id)),
+            noDel: noDel,
             callBack: this.fileChange,
             fileSize: parseFloat(size) * 1024
         }

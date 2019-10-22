@@ -66,7 +66,7 @@ class CampaignsTable extends ComponentExt<IProps> {
         //         type
         //     }
         // })
-        this.props.routerStore.replace(`/campaigns/edit/${campaign.id}`)
+        this.props.routerStore.push(`/campaigns/edit/${campaign.id}`)
     }
     // 去请求数据
     componentDidMount() {

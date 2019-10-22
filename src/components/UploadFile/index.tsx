@@ -33,7 +33,7 @@ export interface UploadFileProps {
   api?: (data: any) => Promise<any>
   children?: React.ReactNode
   preData?: object
-  uploadBefore?: (data) => void
+  uploadBefore?: (data) => Promise<any>
   handleFormData?: (data) => void
   callBack?: (data) => void
   className?: string
@@ -43,7 +43,7 @@ export interface UploadFileProps {
   fileSize?: number
   showUnzippedFileSize?: boolean
   noCopy?: boolean
-  neDel?: boolean
+  noDel?: boolean
 }
 
 @observer
@@ -200,7 +200,7 @@ class UploadFile extends React.Component<UploadFileProps> {
         const size = isVideo ? 0 : whs.size;
 
         if (!isHtml || (isVideo && file.type.substring(0, 5) !== 'video')) {
-          message.error(`Upload failed! The file must be in ${type} format.`);
+          message.error(`Upload failed! The file must be in ${type.indexOf('.') === 0 ? type.substring(1) : type} format.`);
           return false
         }
         const isLt2M = !size || file.size / 1024 < size;
@@ -297,7 +297,7 @@ class UploadFile extends React.Component<UploadFileProps> {
       (<video style={{ width: '100%' }} src={this.useUrl} />)
       : (<div className={styles.imgBox} style={{ backgroundImage: 'url(' + this.useUrl + ')' }} />)
 
-    const isZip = fileType === '.zip'
+    const isZip = fileType === '.zip' || fileType === '.json'
     const isVideo = fileType === 'video' ? true : false
 
     const uploadButton = (
@@ -316,7 +316,7 @@ class UploadFile extends React.Component<UploadFileProps> {
                   <div className={styles.fileBox} onClick={this.stop}>
                     <span className={styles.fileName} title={this.useUrl}>{this.useUrl}</span>
                     {
-                      this.props.neDel !== true && <MyIcon className={styles.fileIcon} type="iconguanbi" onClick={this.delClick} />
+                      this.props.noDel !== true && <MyIcon className={styles.fileIcon} type="iconguanbi" onClick={this.delClick} />
                     }
                     {
                       (this.props.viewUrl || this.props.hasView) && <Icon className={styles.fileIcon} type="eye" onClick={this.viewFile} />
@@ -326,7 +326,7 @@ class UploadFile extends React.Component<UploadFileProps> {
                     }
                   </div>
                   {
-                    this.showFileSize && <span style={{ color: '#aaa' }}>{this.getFileSize} {this.props.showUnzippedFileSize && '(Unzipped file size)'}</span>
+                    this.showFileSize && <span onClick={this.stop} style={{ color: '#aaa' }}>{this.getFileSize} {this.props.showUnzippedFileSize && '(Unzipped file size)'}</span>
                   }
                 </>
               ) : (<div className={styles.box} onClick={this.stop} onMouseLeave={this.hideBtn}>
