@@ -57,7 +57,7 @@ class CommentTable extends ComponentExt<IProps> {
     @action
     modifyComment = (comment: ICommentStore.IComment) => {
         this.props.setComment(comment)
-        this.props.routerStore.replace(`/comments/groups/edit/${comment.id}`)
+        this.props.routerStore.push(`/comments/groups/edit/${comment.id}`)
     }
     @action
     hoverToast = () => {

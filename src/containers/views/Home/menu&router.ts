@@ -1104,7 +1104,7 @@ export const routerAndMenu: IRouter[] = [
     pid: 485,
     isMenu: true,
     title: 'Manual eCMP',
-    path: '/log/sen_offer_cpm',
+    path: '/log/data_offer_ecpm_raise',
     // authName: 'Offers-Comments-Comment Templates',
     component: 'Logs'
   },

@@ -73,6 +73,10 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
   componentDidMount() {
     this.IReactionDisposer()
   }
+  componentWillUnmount() {
+    const { changeFilter, form } = this.props
+    changeFilter({});
+  }
   submit = (e?: React.FormEvent<any>, n?: number): void => {
     if (e) {
       e.preventDefault()
@@ -84,7 +88,7 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
           this.toggleLoading()
           try {
             n ?
-              changeFilter({ ...values, export: 1 },1) ://导出功能多加一个参数1
+              changeFilter({ ...values, export: 1 }, 1) ://导出功能多加一个参数1
               changeFilter(values)
           } catch (err) { }
           this.toggleLoading()
@@ -174,7 +178,7 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
             <Button type="primary" icon="search" onClick={this.submit} htmlType="submit">Search</Button>
           </Col>
           <Col span={3} offset={1}>
-            <Button type="primary" onClick={(e) => this.submit(e, 1)}>export
+            <Button type="primary" onClick={(e) => this.submit(e, 1)}>Export
             </Button>
           </Col>
           <Col span={3} offset={1}>

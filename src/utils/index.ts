@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author:  bean^ <bean_4@163.com>
+ * @Date: 2019-09-09 16:09:40
+ * @LastEditors:  bean^ <bean_4@163.com>
+ * @LastEditTime: 2019-10-22 17:11:02
+ */
 
 export function dateFormat(date, format) {
     if (!format || typeof format !== 'string') {

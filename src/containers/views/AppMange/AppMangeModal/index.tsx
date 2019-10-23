@@ -209,6 +209,10 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
         })
     }
 
+    goBack = () => {
+        this.props.history.goBack();
+    }
+
     submit = (e?: React.FormEvent<any>): void => {
         if (e) {
             e.preventDefault()
@@ -621,6 +625,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
 
                         <FormItem className={this.props.type ? styles.vcMdoal : styles.btnBox} >
                             <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
+                            <Button onClick={this.goBack} style={{ marginLeft: 10 }}>Cancel</Button>
                         </FormItem>
                     </Form>
 

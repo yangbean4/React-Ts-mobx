@@ -48,6 +48,12 @@ class whiteListModal extends ComponentExt<IProps & FormComponentProps> {
   @observable
   private showPtUrl: boolean = true;
 
+  @observable
+  private ptName: string = '';
+
+  @observable
+  private isUploaded: boolean = false;
+
   @action
   toggleLoading = () => {
     this.loading = !this.loading
@@ -64,6 +70,11 @@ class whiteListModal extends ComponentExt<IProps & FormComponentProps> {
     this.showPtUrl = !!value;
   }
 
+  uploadCallback = ({ data }) => {
+    this.ptName = data.name;
+    this.isUploaded = true;
+  }
+
   onOk = (e?: React.FormEvent<any>): void => {
     if (e) {
       e.preventDefault()
@@ -72,14 +83,18 @@ class whiteListModal extends ComponentExt<IProps & FormComponentProps> {
     form.validateFields(
       async (err, values): Promise<any> => {
         if (!err) {
-          console.log(values);
           this.toggleLoading()
           try {
             let data = { message: '' }
             values.platform = 'ios'
             if (this.isEdit) {
+              if (this.isUploaded === false) {
+                this.toggleLoading();
+                return this.props.onOk();
+              }
               data = await this.api.ioswhitelist.edit({
                 pt_url: values.pt_url,
+                pt_name: this.ptName,
                 id: this.props.item.id
               })
             } else {
@@ -87,6 +102,7 @@ class whiteListModal extends ComponentExt<IProps & FormComponentProps> {
               if (values.version.toLocaleLowerCase()[0] !== 'v') {
                 values.version = 'v' + values.version
               }
+              values.pt_name = this.ptName;
               data = await this.api.ioswhitelist.create(values)
             }
             message.success(data.message)
@@ -108,7 +124,7 @@ class whiteListModal extends ComponentExt<IProps & FormComponentProps> {
     const { item, form, optionListDb } = this.props
     const { getFieldDecorator } = form
     return (
-      <Modal title={`Add iOS Whitelist`}
+      <Modal title={`${this.isEdit ? 'Edit' : 'Add'} iOS Whitelist`}
         onOk={this.onOk}
         destroyOnClose={true}
         onCancel={this.props.onCancel}
@@ -149,8 +165,10 @@ class whiteListModal extends ComponentExt<IProps & FormComponentProps> {
                 initialValue: this.isEdit ? item.pt_name : item.pt_url,
                 rules: [{ required: true, message: "Required" }]
               })(<UploadFile fileType='.json'
+                showPreviewUrl={true}
                 api={this.api.util.uploadIosWhite}
                 onChange={this.uploadChanged}
+                callBack={this.uploadCallback}
                 noCopy={true}>
                 <Button>
                   <MyIcon type="iconshangchuan1" /> Upload </Button>

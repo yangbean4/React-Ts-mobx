@@ -606,7 +606,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                         )
                     }
                     {
-                        (this.useAppWall !== '005' && this.useAppWall !== '006') && <FormItem label="Button Image" className={styles.btnUploadGroup} >
+                        (this.useAppWall === '007' || this.useAppWall === '008') && <FormItem label="Button Image" className={styles.btnUploadGroup} >
                             {getFieldDecorator('cta_pic', {
                                 initialValue: ctaPic,
                             })(

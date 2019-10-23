@@ -781,7 +781,7 @@ class Basic extends ComponentExt<IProps & FormComponentProps> {
                         required: true, message: "Required"
                       }, {
                         validator(rules, value, cb) {
-                          if (item.value_type === '4' && Array.isArray(value) && value.filter(v => v).length === 0) {
+                          if (item.value_type === '4' && Array.isArray(value) && value.filter(v => v != null).length === 0) {
                             return cb('Required')
                           }
                           cb();

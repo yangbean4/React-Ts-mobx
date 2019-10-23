@@ -162,7 +162,7 @@ class PID extends ComponentExt<IStoreProps> {
     ] as IGlobalStore.menu[]
     if (!value) {
       arr.push({
-        title: this.GJB.id ? `Edit ${this.GJB.endcard_name}` : 'Add'
+        title: this.GJB.id ? `${this.isCopy ? 'Copy' : 'Edit'} ${this.GJB.endcard_name}` : 'Add'
       })
     }
     this.props.setBreadcrumbArr(arr)

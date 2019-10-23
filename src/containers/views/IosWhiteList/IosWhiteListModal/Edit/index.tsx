@@ -77,8 +77,12 @@ class PID extends ComponentExt<IStoreProps> {
     this.toggleModal();
   }
 
-  delWhite = (item: IIosWhiteListStore.IItem) => {
+  delWhite = async (item: IIosWhiteListStore.IItem) => {
     let id = item.id;
+
+    let res = await this.api.ioswhitelist.del({ id, check: 1 });
+    if (res.errorcode !== 0) return message.error(res.message);
+
     Modal.confirm({
       title: 'Confirm to delete it?',
       content: '',
@@ -87,7 +91,7 @@ class PID extends ComponentExt<IStoreProps> {
       cancelText: 'No',
       centered: true,
       onOk: () => {
-        this.api.ioswhitelist.del({ id }).then(res => {
+        this.api.ioswhitelist.del({ id, check: 0 }).then(res => {
           if (res.errorcode !== 0) {
             return message.error(res.message)
           }

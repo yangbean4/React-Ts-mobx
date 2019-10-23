@@ -179,6 +179,10 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
     this.props.clearComment()
   }
 
+  goBack = () => {
+    this.props.history.goBack();
+  }
+
   submit = (e?: React.FormEvent<any>): void => {
     if (e) {
       e.preventDefault()
@@ -337,6 +341,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
           </FormItem>
           <FormItem className={this.props.type ? styles.modalBtn : styles.btnBox} >
             <Button className={this.props.type ? styles.btn : ''} type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
+            <Button onClick={this.goBack} style={{ marginLeft: 10 }}>Cancel</Button>
           </FormItem>
         </Form>
       </div>

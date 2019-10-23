@@ -267,6 +267,10 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         }
     }
 
+    goBack = () => {
+        this.props.history.goBack();
+    }
+
     render() {
 
         const reData = this.CampaignGroup
@@ -694,6 +698,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
 
                     <FormItem className={this.props.type ? styles.vcMdoal : styles.btnBox} >
                         <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
+                        <Button onClick={this.goBack} style={{ marginLeft: 10 }}>Cancel</Button>
                     </FormItem>
                 </Form>
 

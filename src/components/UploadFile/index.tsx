@@ -44,6 +44,8 @@ export interface UploadFileProps {
   showUnzippedFileSize?: boolean
   noCopy?: boolean
   noDel?: boolean
+  /// 上传后显示PreviewUrl字段
+  showPreviewUrl?: boolean
 }
 
 @observer
@@ -79,7 +81,7 @@ class UploadFile extends React.Component<UploadFileProps> {
   @computed
   get useUrl() {
     // this.props.value ? this.previewUrl || this.props.value : ''
-    return this.props.value
+    return this.props.showPreviewUrl ? this.previewUrl || this.props.value : this.props.value
   }
 
   @computed
@@ -183,7 +185,8 @@ class UploadFile extends React.Component<UploadFileProps> {
       this.toggleLoading()
     };
     const isVideo = type === 'video'
-    const isZip = type === '.zip'
+    // json文件当成zip处理
+    const isZip = type === '.zip' || type === '.json'
     const fileName = isVideo ? 'Video' : 'Image'
 
     return {
