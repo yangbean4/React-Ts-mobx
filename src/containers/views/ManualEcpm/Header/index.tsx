@@ -4,7 +4,7 @@ import { Button } from 'antd'
 import Search from './Search'
 import { ComponentExt } from '@utils/reactExt'
 import PortalsBtn from '@components/portalsBtn'
-import ShowMore from '@components/ShowMore'
+
 interface IStoreProps {
     routerStore?: RouterStore
     // setCampaingn?: (Campaingns: ICampaignStore.ICampaignGroup) => void
@@ -30,7 +30,7 @@ class Header extends ComponentExt<IStoreProps> {
 
     render() {
         return (
-            <ShowMore>
+            <div className='searchForm'>
                 <Search />
                 {
                     this.$checkAuth('Offers-Campaigns-Manual eCPM-Add', (
@@ -41,7 +41,7 @@ class Header extends ComponentExt<IStoreProps> {
                         </PortalsBtn>
                     ))
                 }
-            </ShowMore>
+            </div>
         )
     }
 }

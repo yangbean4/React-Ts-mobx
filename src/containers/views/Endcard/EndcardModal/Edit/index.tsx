@@ -67,7 +67,7 @@ class VcTable extends ComponentExt<TableProps> {
           )}
           width={200} />
 
-        {/* <Table.Column<IEndcardStore.IEndcard> key="template_id" title="Endcard Template" dataIndex="template_id" width={200} /> */}
+        <Table.Column<IEndcardStore.IEndcard> key="template_id" title="Endcard Template" dataIndex="template_id" width={200} />
         <Table.Column<IEndcardStore.IEndcard>
           key="status"
           title="Status"
@@ -123,9 +123,6 @@ interface IStoreProps {
 
 @observer
 class PID extends ComponentExt<IStoreProps> {
-
-  @observable
-  private isCopy: boolean = false
 
   @observable
   private app_key: string
@@ -227,20 +224,13 @@ class PID extends ComponentExt<IStoreProps> {
     const data = editItem === undefined ? this.targetEndcard : editItem
     runInAction('set_GJB', () => {
       this.GJB = data
-      this.isCopy = false
     })
     this.toggleIsTable()
   }
 
   onCopy = async (index: number) => {
-    const data = this.thisDataList[index]
-    runInAction('set_GJB', () => {
-      this.GJB = data
-      this.isCopy = true
-    })
-    this.toggleIsTable()
-    // await this.api.endcard.copyEndcard({ id: this.thisDataList[index].id })
-    // this.initDetail()
+    await this.api.endcard.copyEndcard({ id: this.thisDataList[index].id })
+    this.initDetail()
   }
   lastStep = () => {
     this.props.routerStore.push('/endcard');
@@ -295,7 +285,6 @@ class PID extends ComponentExt<IStoreProps> {
                   onOk={this.onOK}
                   endcardId={this.GJB.id}
                   app_key={this.app_key}
-                  isCopy={this.isCopy}
                   platform={this.targetEndcard.platform}
                   endcard={this.GJB} />
               </div>

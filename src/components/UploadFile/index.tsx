@@ -33,17 +33,12 @@ export interface UploadFileProps {
   api?: (data: any) => Promise<any>
   children?: React.ReactNode
   preData?: object
-  uploadBefore?: (data) => Promise<any>
+  uploadBefore?: (data) => void
   handleFormData?: (data) => void
   callBack?: (data) => void
   className?: string
   viewUrl?: string
   hasView?: boolean
-  showFileSize?: boolean
-  fileSize?: number
-  showUnzippedFileSize?: boolean
-  noCopy?: boolean
-  noDel?: boolean
 }
 
 @observer
@@ -71,28 +66,12 @@ class UploadFile extends React.Component<UploadFileProps> {
   private previewUrl: string
 
   @observable
-  private fileSize: number = 0;
-
-  @observable
   private btnVisible: boolean = false
 
   @computed
   get useUrl() {
     // this.props.value ? this.previewUrl || this.props.value : ''
     return this.props.value
-  }
-
-  @computed
-  get showFileSize() {
-    return this.props.showFileSize;
-  }
-
-  @computed
-  get getFileSize() {
-    let fileSize = this.fileSize || this.props.fileSize;
-    if (fileSize > 1048576) return (fileSize / 1048576).toFixed(2) + 'Mb';
-    else return Math.round(fileSize / 1024) + 'kb';
-
   }
 
   @computed
@@ -161,6 +140,7 @@ class UploadFile extends React.Component<UploadFileProps> {
   @action
   hideBtn = (e: React.MouseEvent) => {
     // e.stopPropagation()
+    console.log(111)
     this.btnVisible = false;
   }
 
@@ -200,7 +180,7 @@ class UploadFile extends React.Component<UploadFileProps> {
         const size = isVideo ? 0 : whs.size;
 
         if (!isHtml || (isVideo && file.type.substring(0, 5) !== 'video')) {
-          message.error(`Upload failed! The file must be in ${type.indexOf('.') === 0 ? type.substring(1) : type} format.`);
+          message.error(`Upload failed! The file must be in ${type} format.`);
           return false
         }
         const isLt2M = !size || file.size / 1024 < size;
@@ -251,10 +231,6 @@ class UploadFile extends React.Component<UploadFileProps> {
           if (isZip) {
             runInAction('SET_URL', () => {
               this.previewUrl = file.name
-              this.showFileSize && (this.fileSize = Rdata.file_size);
-            })
-            cb && cb({
-              data: Rdata,
             })
           } else {
             const fileRender = new FileReader()
@@ -297,7 +273,7 @@ class UploadFile extends React.Component<UploadFileProps> {
       (<video style={{ width: '100%' }} src={this.useUrl} />)
       : (<div className={styles.imgBox} style={{ backgroundImage: 'url(' + this.useUrl + ')' }} />)
 
-    const isZip = fileType === '.zip' || fileType === '.json'
+    const isZip = fileType === '.zip'
     const isVideo = fileType === 'video' ? true : false
 
     const uploadButton = (
@@ -306,29 +282,23 @@ class UploadFile extends React.Component<UploadFileProps> {
         <div className="ant-upload-text">Upload</div>
       </div>
     );
+
     return (
       <React.Fragment>
         <Spin spinning={this.loading}>
-          <Upload {...props} >
+          <Upload
+            {...props}
+          >
             {this.useUrl ? (
               isZip ? (
-                <>
-                  <div className={styles.fileBox} onClick={this.stop}>
-                    <span className={styles.fileName} title={this.useUrl}>{this.useUrl}</span>
-                    {
-                      this.props.noDel !== true && <MyIcon className={styles.fileIcon} type="iconguanbi" onClick={this.delClick} />
-                    }
-                    {
-                      (this.props.viewUrl || this.props.hasView) && <Icon className={styles.fileIcon} type="eye" onClick={this.viewFile} />
-                    }
-                    {
-                      this.props.noCopy !== true && <CopyToClipboard onCopy={this.onCopy} text={this.useUrl}><Icon className={styles.fileIcon} type="copy" /></CopyToClipboard>
-                    }
-                  </div>
+                <div className={styles.fileBox} onClick={this.stop}>
+                  <span className={styles.fileName} title={this.useUrl}>{this.useUrl}</span>
+                  <MyIcon className={styles.fileIcon} type="iconguanbi" onClick={this.delClick} />
                   {
-                    this.showFileSize && <span onClick={this.stop} style={{ color: '#aaa' }}>{this.getFileSize} {this.props.showUnzippedFileSize && '(Unzipped file size)'}</span>
+                    (this.props.viewUrl || this.props.hasView) && <Icon className={styles.fileIcon} type="eye" onClick={this.viewFile} />
                   }
-                </>
+                  <CopyToClipboard onCopy={this.onCopy} text={this.useUrl}><Icon className={styles.fileIcon} type="copy" /></CopyToClipboard>
+                </div>
               ) : (<div className={styles.box} onClick={this.stop} onMouseLeave={this.hideBtn}>
                 <div className={styles.layer}>
                   <Button onClick={this.showLine ? this.showOnline : this.eyeClick} style={{ marginRight: 12 }} type="primary" shape="circle" icon="eye" />

@@ -29,7 +29,7 @@ class Header extends ComponentExt<IStoreProps> {
             <div className='searchForm'>
                 <Search />
                 {
-                    this.$checkAuth('Apps-White/Black list-Add', (
+                    this.$checkAuth('Creative Analysis-Task List-Add', (
                         <PortalsBtn querySelector='#whiteBlackAddBtn'>
                             <Button icon='plus' type="primary" onClick={this.addWhiteBlack}>
                                 Add

@@ -63,7 +63,3 @@ export { default as h5ExportStore } from './h5exportStore'
 export { default as manualEcpmStore } from './manualEcpmStore'
 
 export { default as topCreativeStore } from './TopCreativeStore'
-
-export { default as creativeFrequencyStore } from './creativeFrequencyStore'
-
-export { default as iosWhiteListStore} from './iosWhiteListStore'

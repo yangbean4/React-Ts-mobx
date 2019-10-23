@@ -1156,7 +1156,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                           }
                         ]
                       })(
-                        <UploadFile {...theVideoUrlPropsForIVEOnline} hasView showFileSize showUnzippedFileSize fileSize={this.getInitialValue('common_online_file')}>
+                        <UploadFile {...theVideoUrlPropsForIVEOnline} hasView>
                           <Button>
                             <MyIcon type="iconshangchuan1" /> Upload Online
                                                     </Button>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1174,7 +1174,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                             }
                           ]
                         })(
-                          <UploadFile {...theVideoUrlPropsForIVEOffline} hasView showFileSize fileSize={this.getInitialValue('common_filesize')}>
+                          <UploadFile {...theVideoUrlPropsForIVEOffline} hasView>
                             <Button>
                               <MyIcon type="iconshangchuan1" /> Upload Offline
                                                         </Button>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1197,7 +1197,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                           ]
                         })(
 
-                          <UploadFile {...theVideoUrlPropsForIVEOnline} hasView showFileSize showUnzippedFileSize fileSize={this.getInitialValue('common_online_file')}>
+                          <UploadFile {...theVideoUrlPropsForIVEOnline} hasView>
                             <Button>
                               <MyIcon type="iconshangchuan1" /> Upload Online
                                                             </Button>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1216,7 +1216,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                             }
                           ]
                         })(
-                          <UploadFile {...theVideoUrlPropsForIVEOffline} hasView showFileSize fileSize={this.getInitialValue('common_filesize')}>
+                          <UploadFile {...theVideoUrlPropsForIVEOffline} hasView>
                             <Button>
                               <MyIcon type="iconshangchuan1" /> Upload Offline
                                                                 </Button>&nbsp;&nbsp;&nbsp;&nbsp;

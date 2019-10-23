@@ -179,10 +179,7 @@ class ConfigModal extends ComponentExt<IStoreProps> {
                 editData = { basic1, basic2, pid, pop }
             }
 
-            const Detail = await this.api.config.allTemplateDetail({
-                platform: (this.useTargetConfig).platform || 'android',
-                pkg_name: this.useTargetConfig.pkg_name
-            })
+            const Detail = await this.api.config.allTemplateDetail({ platform: (this.useTargetConfig).platform || 'android' })
             runInAction('Change_', () => {
                 this.isAdd = !!this.props.routerStore.location.pathname.includes('add');
                 this.editData = editData
@@ -286,6 +283,14 @@ class ConfigModal extends ComponentExt<IStoreProps> {
                     <div className={style.row}>
                         <div className={style.title}>
                             SDK Version
+                    </div>
+                        <div className={style.value}>
+                            {targetConfig.sdk_version}
+                        </div>
+                    </div>
+                    <div className={style.row}>
+                        <div className={style.title}>
+                            Config Version
                     </div>
                         <div className={style.value}>
                             {targetConfig.config_version}

@@ -30,6 +30,4 @@ declare interface IStore {
   h5ExportStore: IH5ExportStore.H5ExportStore,
   manualEcpmStore: IManualEcpmStore.manualEcpmStore,
   topCreativeStore: ITopCreativeStore.topCreativeStore
-  creativeFrequencyStore: ICreativeFrequencyStore.CreativeFrequencyStore
-  iosWhiteListStore: IIosWhiteListStore.IosWhiteListStore
 }

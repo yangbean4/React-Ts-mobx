@@ -111,7 +111,7 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode="multiple"
-                  // getPopupContainer={trigger => trigger.parentElement}
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {platformOption.map(c => (
@@ -131,9 +131,8 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   allowClear
                   showSearch
-                  maxTagCount={2}
                   mode="multiple"
-                  // getPopupContainer={trigger => trigger.parentElement}
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {creativeOption.map(c => (
@@ -153,9 +152,8 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   allowClear
                   showSearch
-                  maxTagCount={2}
                   mode="multiple"
-                  // getPopupContainer={trigger => trigger.parentElement}
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {optionListDb.geo && optionListDb.geo.map((c) => (
@@ -183,8 +181,7 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode="multiple"
-                  maxTagCount={1}
-                  // getPopupContainer={trigger => trigger.parentElement}
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {optionListDb.account_id && optionListDb.account_id.map((c) => (
@@ -205,7 +202,7 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode="multiple"
-                  // getPopupContainer={trigger => trigger.parentElement}
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {adTypeOption.map((c) => (
@@ -226,7 +223,7 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode="multiple"
-                  // getPopupContainer={trigger => trigger.parentElement}
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {statusCampaignOption.map((c) => (
@@ -247,7 +244,7 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode="multiple"
-                  // getPopupContainer={trigger => trigger.parentElement}
+                  getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {statusOfferOption.map((c) => (

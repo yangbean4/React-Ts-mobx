@@ -5,7 +5,6 @@ import Search from './Search'
 import { ComponentExt } from '@utils/reactExt'
 import PortalsBtn from '@components/portalsBtn'
 import { action, observable } from 'mobx'
-import ShowMore from '@components/ShowMore';
 
 interface IStoreProps {
   routerStore?: RouterStore
@@ -29,20 +28,18 @@ class Header extends ComponentExt<IStoreProps> {
   }
   render() {
     return (
-      <ShowMore>
-        {/* <div className="searchForm" style={{ paddingBottom: '20px' }}> */}
+      <div className="searchForm" style={{ paddingBottom: '20px' }}>
         <Search />
         {/* {
-            this.$checkAuth('', (
-              <PortalsBtn querySelector="#currencyAddBtn">
-                <Button type="primary" onClick={this.exprotExel}>
-                  Export
-                </Button>
-              </PortalsBtn>
-            ))
-          } */}
-        {/* </div> */}
-      </ShowMore>
+          this.$checkAuth('', (
+            <PortalsBtn querySelector="#currencyAddBtn">
+              <Button type="primary" onClick={this.exprotExel}>
+                Export
+              </Button>
+            </PortalsBtn>
+          ))
+        } */}
+      </div>
     )
   }
 }

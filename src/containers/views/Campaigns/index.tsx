@@ -3,7 +3,7 @@ import * as styles from './index.scss'
 
 import Header from './Header'
 import CampaignsTable from './Table'
-import AutoSizer from '@components/AutoSizer'
+// import AutoSizer from '@components/AutoSizer'
 
 
 interface IProps {
@@ -15,7 +15,8 @@ class Campaigns extends React.Component<IProps> {
         return (
             <div className={styles.container}>
                 <Header />
-                <AutoSizer className={styles.tableBox}>{({ height }) => <CampaignsTable scrollY={height - 160} />}</AutoSizer>
+                <CampaignsTable />
+                {/* <AutoSizer className={styles.tableBox}>{({ height }) => <CampaignsTable scrollY={height - 160} />}</AutoSizer> */}
             </div>
         )
     }

@@ -3,7 +3,7 @@
   .SceneList {
     .imgList {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap:wrap;
       max-width: 900px;
       :global(.ant-spin-nested-loading) {
         height: max-content;

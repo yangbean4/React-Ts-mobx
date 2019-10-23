@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import ShowMore from '@components/ShowMore'
 
 import Search from './Search'
 
@@ -10,9 +9,9 @@ class Header extends React.Component {
 
     render() {
         return (
-            <ShowMore>
+            <div className='searchForm'>
                 <Search />
-            </ShowMore>
+            </div>
         )
     }
 }

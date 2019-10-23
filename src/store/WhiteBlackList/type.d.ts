@@ -9,14 +9,6 @@ export interface Iitem {
     pkg_name?: string
     category_whitelist?: number[]
     app_id_blacklist?: string[]
-    limited?: number
-    platform?: string
-    placement_campaign?: {
-        placement_id: string
-        type: number
-        campaign_id: number[]
-    }[],
-    placement?: any[]
 }
 
 export interface IitemForList {
@@ -26,31 +18,16 @@ export interface IitemForList {
     category_id?: string
     category?: string
     update_time?: string
-    placement_campaign?: string[]
 }
 
 export interface SearchParams {
     app_id?: string[],
     pkg_name?: string[],
-    Category?: string[],
-    placement_id?: string[],
-    type?: number[],
-    campaign_id?: number[]
+    Category?: string[]
 }
 
 
 export interface OptionListDb {
     PkgnameData?: any[],
     Category?: any[],
-    AppidCampaign?: any[],
-    PkgNamePlacement?: any[],
-    campaigns?: any[],
-    placements?: any[]
-}
-
-export interface TableModalList {
-    campaign_id_name: string
-    type: string
-    placement_name_id: string
-
 }

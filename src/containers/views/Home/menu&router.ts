@@ -1,11 +1,3 @@
-/*
- * @Description:
- * @Author:  bean^ <bean_4@163.com>
- * @Date: 2019-10-17 14:26:29
- * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-10-17 14:36:05
- */
-
 import Loadable from 'react-loadable'
 
 import PageLoading from '@components/PageLoading'
@@ -74,7 +66,7 @@ export const asynchronousComponents = {
   Endcard: loadComponent(() => import(/* webpackChunkName: "Endcard" */ '@views/Endcard')),
   EndcardAdd: loadComponent(() => import(/* webpackChunkName: "EndcardAdd" */ '@views/Endcard/EndcardModal/Add')),
   EndcardEdit: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/Endcard/EndcardModal/Edit')),
-  // endcardTemplate: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/EndcardTemplate')),
+  endcardTemplate: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/EndcardTemplate')),
 
   Creative: loadComponent(() => import(/* webpackChunkName: "Creative" */ '@views/Creative')),
   CreativeAdd: loadComponent(() => import(/* webpackChunkName: "CreativeAdd" */ '@views/Creative/CreativeModal/Add')),
@@ -99,19 +91,11 @@ export const asynchronousComponents = {
   WhiteBlackList: loadComponent(() => import(/* webpackChunkName: "WhileBlackList" */ '@views/WhiteBlackList')),
   WhiteBlackModal: loadComponent(() => import(/* webpackChunkName: "WhiteBlackAdd" */ '@views/WhiteBlackList/WhiteBlackModal')),
   // H5 Export
-  H5ExportList: loadComponent(() => import(/* webpackChunkName: "H5Exportlist" */ '@views/H5Export')),
-  H5ExportModal: loadComponent(() => import(/* webpackChunkName: "H5ExportAdd" */ '@views/H5Export/H5ExportModal')),
+  H5ExportList: loadComponent(() => import(/* webpackChunkName: "WhileBlackList" */ '@views/H5Export')),
+  H5ExportModal: loadComponent(() => import(/* webpackChunkName: "WhiteBlackAdd" */ '@views/H5Export/H5ExportModal')),
 
   // Top Creatives
-  TopCreatives: loadComponent(() => import(/* webpackChunkName: "TopCreativeskList" */ '@views/TopCreatives')),
-
-  // Creative Frequency
-  CreativeFrequency: loadComponent(() => import(/* webpackChunkName: "CreativeFrequencyList" */ '@views/CreativeFrequency')),
-  CreativeFrequencyModal: loadComponent(() => import(/* webpackChunkName: "CreativeFrequencyAdd" */ '@views/CreativeFrequency/CreativeFrequencyModal')),
-
-  // IOS Whitelist
-  IosWhiteList: loadComponent(() => import(/* webpackChunkName: "IosWhitelist" */ '@views/IosWhiteList')),
-  IosWhiteListEdit: loadComponent(() => import(/* webpackChunkName: "IosWhitelistEdit" */ '@views/IosWhiteList/IosWhiteListModal/Edit')),
+  TopCreatives: loadComponent(() => import(/* webpackChunkName: "WhileBlackList" */ '@views/TopCreatives')),
 }
 
 // 所有路由的key
@@ -228,32 +212,6 @@ export const routerAndMenu: IRouter[] = [
     path: '/whiteBlackList/edit/:id',
     title: 'Edit White/Black',
     component: 'WhiteBlackModal',
-  },
-  {
-    id: 54,
-    pid: 5,
-    isMenu: true,
-    exact: true,
-    path: '/creativeFrequency',
-    title: 'Creative Frequency',
-    component: 'CreativeFrequency',
-    authName: 'Apps-Creative Frequency'
-  },
-  {
-    id: 541,
-    pid: 54,
-    isMenu: false,
-    path: '/creativeFrequency/add',
-    title: 'Add Creative Frequency',
-    component: 'CreativeFrequencyModal',
-  },
-  {
-    id: 542,
-    pid: 54,
-    isMenu: false,
-    path: '/creativeFrequency/edit/:id',
-    title: 'Edit Creative Frequency',
-    component: 'CreativeFrequencyModal',
   },
   // --------Offer-----------
   {
@@ -379,16 +337,16 @@ export const routerAndMenu: IRouter[] = [
     component: 'LeadContentEdit',
   },
   // ------------------Endcard
-  // {
-  //   id: 83,
-  //   pid: 8,
-  //   isMenu: true,
-  //   exact: true,
-  //   title: 'Endcard',
-  // },
+  {
+    id: 83,
+    pid: 8,
+    isMenu: true,
+    exact: true,
+    title: 'Endcard',
+  },
   {
     id: 831,
-    pid: 8,
+    pid: 83,
     isMenu: true,
     exact: true,
     title: 'Endcard',
@@ -397,16 +355,16 @@ export const routerAndMenu: IRouter[] = [
     path: '/endcard'
   },
 
-  // {
-  //   id: 832,
-  //   pid: 83,
-  //   isMenu: true,
-  //   exact: true,
-  //   title: 'Endcard Template',
-  //   authName: 'Offers-Endcards-Endcard Template',
-  //   component: 'endcardTemplate',
-  //   path: '/endcardTemplate'
-  // },
+  {
+    id: 832,
+    pid: 83,
+    isMenu: true,
+    exact: true,
+    title: 'Endcard Template',
+    authName: 'Offers-Endcards-Endcard Template',
+    component: 'endcardTemplate',
+    path: '/endcardTemplate'
+  },
   {
     id: 8312,
     pid: 831,
@@ -723,23 +681,6 @@ export const routerAndMenu: IRouter[] = [
     title: '',
     component: 'Template',
     isMenu: false
-  },
-  {
-    pid: 1,
-    id: 13,
-    title: 'IOS Whitelist',
-    path: '/iosWhitelist',
-    component: 'IosWhiteList',
-    exact: true,
-    isMenu: true,
-    authName: 'Config Manage-IOS Whitelist'
-  },
-  {
-    pid: 13,
-    id: 131,
-    title: 'IOS Whitelist',
-    path: '/iosWhitelist/edit/:bundle_id',
-    component: 'IosWhiteListEdit',
   },
   //----------------Revenue Import
   {
@@ -1182,16 +1123,6 @@ export const routerAndMenu: IRouter[] = [
     isMenu: true,
     path: '/log/white_black',
     title: 'White/Black List',
-    component: 'Logs',
-    exact: true,
-    // authName: 'Apps-Virtual Currency'
-  },
-  {
-    id: 414,
-    pid: 41,
-    isMenu: true,
-    path: '/log/creativefrequency',
-    title: 'Creative Frequency',
     component: 'Logs',
     exact: true,
     // authName: 'Apps-Virtual Currency'

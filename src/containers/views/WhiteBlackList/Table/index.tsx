@@ -4,9 +4,9 @@ import { PaginationConfig } from 'antd/lib/pagination'
 import { inject, observer } from 'mobx-react'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
+
 import * as styles from '../index.scss'
-import { action, observable, runInAction } from 'mobx';
-import TableModal from './tableModal'
+
 interface IStoreProps {
   getListLoading?: boolean
   list?: IWhiteBlackListStore.IitemForList[]
@@ -40,40 +40,10 @@ interface IProps extends IStoreProps {
 @observer
 class WhiteBlackTable extends ComponentExt<IProps> {
 
-  @observable
-  private modalVisible: boolean = false
-
-  @observable
-  private tableModalData: any[] = [];
-  @observable
-  private pkgName: string
 
   componentDidMount() {
     // 读取列表
-    if (!window.localStorage.getItem('WBLcampaign')) this.props.getList()
-  }
-
-
-  @action
-  hideTableModal = () => {
-    this.modalVisible = !this.modalVisible;
-  }
-
-  @action
-  changeTableModal = (data) => {
-    this.tableModalData = data;
-  }
-
-  @action
-  showModal = (data) => {
-    runInAction('SET_data', () => {
-      this.tableModalData = data.placement_campaign;
-      this.pkgName = data.pkg_name;
-    })
-
-    setImmediate(() => {
-      this.hideTableModal()
-    })
+    this.props.getList()
   }
 
   render() {
@@ -87,98 +57,81 @@ class WhiteBlackTable extends ComponentExt<IProps> {
       total
     } = this.props
     return (
-      <React.Fragment>
-        <div>
-          <TableModal visible={this.modalVisible} onCancel={this.hideTableModal} tableData={this.tableModalData} pkgname={this.pkgName} />
-          <Table<IWhiteBlackListStore.IitemForList>
-            className="center-table"
-            bordered
-            rowKey="id"
-            locale={{ emptyText: 'No Data' }}
-            loading={getListLoading}
-            dataSource={list}
-            scroll={{ y: scrollY }}
-            pagination={{
-              current: page,
-              pageSize,
-              total,
-              ...PageConfig
-            }}
-            onChange={handleTableChange}
-          >
-            <Table.Column<IWhiteBlackListStore.IitemForList>
-              key="pkg_name"
-              title="Pkg Name"
-              dataIndex="pkg_name"
-              width="25%"
-              render={(_, record) => record.pkg_name ? record.pkg_name : '--'}
-            />
-            <Table.Column<IWhiteBlackListStore.IitemForList>
-              key="category"
-              title="Category  Whitelist"
-              dataIndex="category"
-              width="20%"
-              render={(_, record) =>
-                record.category ?
-                  record.category.length > 70 ? (
-                    <Popover placement="top" content={(
-                      <div style={{ maxWidth: '200px', whiteSpace: 'normal', wordBreak: 'break-all' }}>{record.category}</div>
-                    )}>
-                      {record.category.substring(0, 70)}...
-                  </Popover>
-                  ) : record.category
-                  : '--'
-              }
-            />
-            <Table.Column<IWhiteBlackListStore.IitemForList>
-              key="app_id"
-              title="App ID Blacklist"
-              dataIndex="app_id"
-              width="20%"
-              render={(_, record) => {
-                if (!record.app_id) return '--';
-
-                let appids = record.app_id.split(',')
-                return appids.length > 1 ? (
-                  <Popover placement="left" content={(
-                    <div className={styles.popoverContent}>
-                      {appids.map((c) => (
-                        <div>{c}</div>
-                      ))}
-                    </div>
+      <div>
+        <Table<IWhiteBlackListStore.IitemForList>
+          className="center-table"
+          bordered
+          rowKey="id"
+          locale={{ emptyText: 'No Data' }}
+          loading={getListLoading}
+          dataSource={list}
+          scroll={{ y: scrollY }}
+          pagination={{
+            current: page,
+            pageSize,
+            total,
+            ...PageConfig
+          }}
+          onChange={handleTableChange}
+        >
+          <Table.Column<IWhiteBlackListStore.IitemForList>
+            key="pkg_name"
+            title="Pkg Name"
+            dataIndex="pkg_name"
+            width="25%"
+            render={(_, record) => record.pkg_name ? record.pkg_name : '--'}
+          />
+          <Table.Column<IWhiteBlackListStore.IitemForList>
+            key="category"
+            title="Category  Whitelist"
+            dataIndex="category"
+            width="40%"
+            render={(_, record) =>
+              record.category ?
+                record.category.length > 70 ? (
+                  <Popover placement="top" content={(
+                    <div style={{ maxWidth: '200px', whiteSpace: 'normal', wordBreak: 'break-all' }}>{record.category}</div>
                   )}>
-                    {appids[0]},...
+                    {record.category.substring(0, 70)}...
+                  </Popover>
+                ) : record.category
+                : '--'
+            }
+          />
+          <Table.Column<IWhiteBlackListStore.IitemForList>
+            key="app_id"
+            title="App ID Blacklist"
+            dataIndex="app_id"
+            width="28%"
+            render={(_, record) => {
+              if (!record.app_id) return '--';
+
+              let appids = record.app_id.split(',')
+              return appids.length > 1 ? (
+                <Popover placement="left" content={(
+                  <div className={styles.popoverContent}>
+                    {appids.map((c) => (
+                      <div>{c}</div>
+                    ))}
+                  </div>
+                )}>
+                  {appids[0]},...
                 </Popover>
-                ) : appids[0]
-              }}
-            />
-            <Table.Column<IWhiteBlackListStore.IitemForList>
-              key="placement_campaign"
-              title="Placement-Campaign"
-              dataIndex="placement_campaign"
-              width="20%"
-              render={(_, record) => (
-                _.length ?
-                  <button className={styles.linkBtn} onClick={() => this.showModal(record)}>
-                    <Icon type="eye" />
-                  </button> : '--'
-              )}
-            />
-            <Table.Column<IWhiteBlackListStore.IitemForList>
-              key="action"
-              title="Operate"
-              width="8%"
-              render={(_, record) => (
-                this.$checkAuth('Apps-White/Black list-Edit',
-                  <button className={styles.linkBtn} key='edit' onClick={() => this.props.routerStore.push(`whiteBlackList/edit/${record.id}`)}>
-                    <Icon type="form" />
-                  </button>
-                )
-              )}
-            />
-          </Table>
-        </div>
-      </React.Fragment>
+              ) : appids[0]
+            }}
+          />
+          <Table.Column<IWhiteBlackListStore.IitemForList>
+            key="action"
+            title="Operate"
+            width="8%"
+            render={(_, record) => (
+              <button className={styles.linkBtn} key='edit' onClick={() => this.props.routerStore.push(`whiteBlackList/edit/${record.id}`)}>
+                <Icon type="form" />
+              </button>
+            )}
+          />
+        </Table>
+      </div>
     )
   }
 }
