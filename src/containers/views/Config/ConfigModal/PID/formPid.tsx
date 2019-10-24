@@ -93,23 +93,17 @@ class FormPid extends ComponentExt<IProps & FormComponentProps> {
 
   submit = async (data): Promise<any> => {
     const { onSubmit, form, pidList } = this.props
-
-    form.validateFields(
-      async (err, values): Promise<any> => {
-        if (this.isAdd && pidList.includes(values.placement_id)) {
-          this.$message.error('Add failure!PID is already exist! ')
-          return
-        }
-        if (!err) {
-          this.toggleLoading()
-          try {
-            const pre = Object.entries(values).map(([key, value]) => ({ [key]: value })).concat(data)
-            await onSubmit(pre)
-          } catch (err) { }
-          this.toggleLoading()
-        }
+    try {
+      const values = (await form.validateFields()) as any;
+      if (this.isAdd && pidList.includes(values.placement_id)) {
+        this.$message.error('Add failure!PID is already exist! ')
+        return
       }
-    )
+      const pre = Object.entries(values).map(([key, value]) => ({ [key]: value })).concat(data)
+      await onSubmit(pre)
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   @action

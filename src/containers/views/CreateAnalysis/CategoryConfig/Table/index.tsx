@@ -42,7 +42,7 @@ interface IProps extends IStoreProps {
 class CategoryTable extends ComponentExt<IProps> {
 
     modifyUser(obj) {
-        this.props.routerStore.replace(`/category/edit/${obj.category_id}`)
+        this.props.routerStore.push(`/category/edit/${obj.category_id}`)
     }
 
     componentDidMount() {

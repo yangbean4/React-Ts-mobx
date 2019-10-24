@@ -6,6 +6,7 @@ import Search from './Search'
 import { ComponentExt } from '@utils/reactExt'
 import PortalsBtn from '@components/portalsBtn'
 import Export from './Export'
+import ShowMore from '@components/ShowMore'
 
 interface IStoreProps {
   routerStore?: RouterStore
@@ -37,7 +38,7 @@ class Header extends ComponentExt<IStoreProps> {
 
   render() {
     return (
-      <div className='searchForm'>
+      <ShowMore>
         <Search />
         {
           this.$checkAuth('Creative Analysis-Task List-Add', (
@@ -65,7 +66,7 @@ class Header extends ComponentExt<IStoreProps> {
         >
           <Export onSubmit={this.toggleExportModal} />
         </Modal>
-      </div>
+      </ShowMore>
     )
   }
 }

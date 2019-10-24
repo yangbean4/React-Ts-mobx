@@ -84,6 +84,8 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
     componentWillUnmount() {
         this.props.clearCompany()
     }
+
+    
    
     submit = (e?: React.FormEvent<any>): void => {
         if (e) {
@@ -124,6 +126,10 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                 }
             }
         )
+    }
+
+    goBack = () => {
+        this.props.history.goBack();
     }
 
     render() {
@@ -195,6 +201,7 @@ class CompanyModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
                     <FormItem className={this.props.type? styles.modalBtn :styles.btnBox} >
                         <Button className={this.props.type? styles.btn : ''} type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
+                        <Button onClick={this.goBack} style={{ marginLeft: 10 }}>Cancel</Button>
                     </FormItem>
                 </Form>
 

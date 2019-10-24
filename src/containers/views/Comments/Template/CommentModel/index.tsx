@@ -297,6 +297,10 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
         current.innerHTML = this.props.comment ? this.props.comment.com_talk : ''
     }
 
+    goBack = () => {
+        this.props.history.goBack();
+    }
+
     render() {
         const uploadConfig = {
             showUploadList: false,
@@ -437,6 +441,7 @@ class CommentModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
                     <FormItem className={this.props.type ? styles.modalBtn : styles.btnBox} >
                         <Button className={this.props.type ? styles.btn : ''} type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
+                        <Button onClick={this.goBack} style={{ marginLeft: 10 }}>Cancel</Button>
                     </FormItem>
                 </Form>
 

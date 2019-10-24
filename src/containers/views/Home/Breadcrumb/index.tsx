@@ -114,13 +114,14 @@ class Bread extends React.Component<IStoreProps> {
   render() {
     return (
       <div className={styles.myBread}>
-        <Breadcrumb separator=">">
+        <Breadcrumb separator=">" style={{display:'inline-block',marginRight:20}}>
           {
             this.getPathArray.map((ele, index, arr) => (
               <Breadcrumb.Item onClick={() => this.goto(ele, index, arr)} key={ele.id || ele.title}>{ele.title}</Breadcrumb.Item>
             ))
           }
         </Breadcrumb>
+        <span id='IWillUseHelp' style={{display:'inline-block'}}></span>
       </div>
 
     )

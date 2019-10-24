@@ -5,7 +5,6 @@ export as namespace IConfigStore
 export interface ConfigStore extends ConfigStoreModel { }
 
 interface version {
-  sdk: number | string;
   id?: number | string
   version?: number | string
 }
@@ -27,7 +26,6 @@ export interface IConfigTarget {
   pid?: object | array
   pkg_name?: string
   config_version?: string
-  sdk_version?: string
   platform?: string
 }
 

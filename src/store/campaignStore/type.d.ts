@@ -26,6 +26,8 @@ export interface ICampaignGroup {
     endcard_id?: number
     default_cpm?: number
     kpi?: string
+    tracking_url_type?: any
+    budget_group?: number
 }
 
 export interface IAppInfo {
@@ -42,7 +44,8 @@ export interface SearchParams {
     account?: string[],
     status?: string[],
     platform?: string[],
-    tracking_url_type?: string[]
+    tracking_url_type?: string[],
+    budget_group?: string[]
 }
 
 export interface ICampainginForList {
@@ -60,4 +63,5 @@ export interface OptionListDb {
     AdType?: any[],
     Creative?: any[],
     Endcard?: any[],
+    BudgetGroup?: any[]
 }

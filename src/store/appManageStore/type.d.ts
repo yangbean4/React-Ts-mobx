@@ -39,6 +39,8 @@ export interface SearchParams {
     app_id?: string,
     platform?: string[],
     status?: (number | string)[]
+    category_id?:number[]
+    export?:number
 }
 
 

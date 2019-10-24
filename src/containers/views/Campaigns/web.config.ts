@@ -56,11 +56,15 @@ export const trackingTypeOption = [
     value: 20
   },
   {
-    key: 'Pull Live Deeplink',
+    key: 'Pull Live Postback',
     value: 21
   },
   {
     key: 'Click Injection',
     value: 30
+  },
+  {
+    key: 'Pull live Retention',
+    value: 41
   }
 ]

@@ -2,8 +2,8 @@
 import http from '@services/http'
 const basePath = '/api/appsManage/'
 export default {
-  getAppsManage(data): Promise<any> {
-    return http.post(`${basePath}detail`, data || {})
+  getAppsManage(data, config = {}): Promise<any> {
+    return http.post(`${basePath}detail`, data || {}, config)
   },
 
   createAppsManage(data): Promise<any> {

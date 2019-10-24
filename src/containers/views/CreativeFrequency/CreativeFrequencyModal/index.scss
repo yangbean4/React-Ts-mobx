@@ -1,0 +1,53 @@
+.taskModal {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  :global(.ant-form-item-control) {
+      height: auto;
+      line-height: 30px;
+  }
+  :global(.ant-checkbox-group-item) {
+    width: 120px;
+  }
+  .btnBox {
+      margin-left: 12%;
+  }
+}
+
+.optionText {
+  padding-right: 32px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.categoryList {
+  :global(.ant-checkbox-group-item) {
+    margin-bottom: 5px;
+  }
+}
+
+.showExtra {
+  :global(.has-error .ant-form-extra) {
+    display: none;
+  }
+}
+
+.frequency {
+  // margin-bottom: 24px;
+  height: 55px;
+  :global(.ant-form-item) {
+    margin-right: 0;
+    vertical-align: super;
+  }
+  :global(.ant-input) {
+    width: 60px;
+    :global(.ant-input-number-handler-wrap) {
+      display: none;
+    }
+  }
+  :global(.ant-form-explain) {
+    color: #f5222d;
+    margin-top: 2px;
+  }
+}

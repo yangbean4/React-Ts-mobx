@@ -84,6 +84,7 @@ class CategorySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                                     mode="multiple"
                                     allowClear
                                     showSearch
+                                    maxTagCount={1}
                                     // style={{'zIndex':99}}
                                     getPopupContainer={trigger => trigger.parentElement}
                                     // getPopupContainer={() => document.getElementById('app')}

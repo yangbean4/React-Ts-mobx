@@ -82,7 +82,7 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
 
 
   render() {
-    const { form, filter, AppIdCampaigns, country, pidList, } = this.props
+    const { form, filter, country, pidList, } = this.props
     const { getFieldDecorator } = form
     return (
       <Form {...layout} >
@@ -111,7 +111,8 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
               })(<Select
                 showSearch
                 mode="multiple"
-                getPopupContainer={trigger => trigger.parentElement}
+                maxTagCount={2}
+                // getPopupContainer={trigger => trigger.parentElement}
                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
               >
                 {country.map(c => (
@@ -144,7 +145,8 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   showSearch
                   mode='multiple'
-                  getPopupContainer={trigger => trigger.parentElement}
+                  maxTagCount={1}
+                  // getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {pidList.map(c => (

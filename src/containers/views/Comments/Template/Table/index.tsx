@@ -55,7 +55,7 @@ class CommentTable extends ComponentExt<IProps> {
     modifyComment = (comment: ICommentStore.IComment) => {
         this.props.setComment(comment)
         this.resetBread(comment)
-        this.props.routerStore.replace(`/comments/template/edit/${comment.id}`)
+        this.props.routerStore.push(`/comments/template/edit/${comment.id}`)
     }
 
     @action

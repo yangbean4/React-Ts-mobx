@@ -29,5 +29,8 @@ declare interface IStore {
   whiteBlackListStore: IWhiteBlackListStore.WhiteBlackListStore
   h5ExportStore: IH5ExportStore.H5ExportStore,
   manualEcpmStore: IManualEcpmStore.manualEcpmStore,
+  budgetStore: IBudgetGroupStore.budgetStore
   topCreativeStore: ITopCreativeStore.topCreativeStore
+  creativeFrequencyStore: ICreativeFrequencyStore.CreativeFrequencyStore
+  iosWhiteListStore: IIosWhiteListStore.IosWhiteListStore
 }

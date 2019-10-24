@@ -59,7 +59,11 @@ export class WhiteBlackListStore extends StoreExt {
   @observable
   optionListDb: IWhiteBlackListStore.OptionListDb = {
     PkgnameData: [],
-    Category: []
+    Category: [],
+    AppidCampaign: [],
+    PkgNamePlacement: [],
+    campaigns: [],
+    placements: []
   }
 
   @action
@@ -67,6 +71,60 @@ export class WhiteBlackListStore extends StoreExt {
     const res = await this.api.whiteBlack.getCategory()
     runInAction('SET', () => {
       this.optionListDb.Category = res.data;
+    })
+  }
+
+  @action
+  getCampaigns = async () => {
+    const res = await this.api.whiteBlack.getCampaigns()
+    runInAction('SET', () => {
+      this.optionListDb.campaigns = res.data;
+    })
+  }
+
+  @action
+  getPlacements = async () => {
+    const res = await this.api.whiteBlack.getPlacements()
+    runInAction('SET', () => {
+      this.optionListDb.placements = res.data;
+    })
+  }
+
+  @action
+  getAppidCampaign = async (formData) => {
+    const res = await this.api.whiteBlack.getAppidCampaign(formData);
+    let data = res.data.map(item => {
+      item.campaign = item.campaign.map(v => ({ ...v, platform: item.platform }));
+      return item;
+    })
+    if (this.item.app_id_blacklist && this.item.app_id_blacklist.length > 0) {
+      data = this._addOptions(this.item.app_id_blacklist, data, this.item.platform)
+    }
+    runInAction('SET', () => {
+      this.optionListDb.AppidCampaign = data;
+    })
+  }
+
+  @action
+  getPkgNamePlacement = async () => {
+    const [all, disableList] = await Promise.all([
+      this.api.whiteBlack.getPkgNamePlacement(),
+      this.api.whiteBlack.getDisablePkgName()
+    ])
+    const map = {};
+    Object.values(disableList.data).forEach((k: number) => {
+      map[k] = true
+    })
+    // const res = await this.api.whiteBlack.getPkgNamePlacement();
+
+    const data = all.data.map(item => {
+      item.placement = item.placement.map(v => ({ ...v, platform: item.platform }));
+      item.disabled = map[item.id] || false
+      return item;
+    })
+
+    runInAction('SET', () => {
+      this.optionListDb.PkgNamePlacement = data;
     })
   }
 
@@ -138,12 +196,33 @@ export class WhiteBlackListStore extends StoreExt {
   getItem = async (item: IWhiteBlackListStore.Iitem) => {
     try {
       const res = await this.api.whiteBlack.get(item);
+      let AppidCampaign = []
+      if (this.optionListDb.AppidCampaign.length > 0) {
+        AppidCampaign = this._addOptions(res.data.app_id_blacklist, this.optionListDb.AppidCampaign, res.data.platform)
+      }
       runInAction('GET_ITEM', () => {
         this.item = res.data
+        if (AppidCampaign.length > 0) {
+          this.optionListDb.AppidCampaign = AppidCampaign;
+        }
       })
     } catch (e) {
       console.error(e)
     }
+  }
+
+  // 添加不存在的待选项
+  // 旧数据中有 Status=Disable 的 App ID， 也需要回显
+  _addOptions = (app_id_blacklist, AppidCampaign, platform) => {
+    const appids = app_id_blacklist.filter(v => !AppidCampaign.find(m => m.app_id == v));
+    if (appids.length) {
+      return AppidCampaign.concat(appids.map(v => ({
+        app_id: v,
+        campaign: [],
+        platform: platform
+      })))
+    }
+    return AppidCampaign;
   }
 
   @action

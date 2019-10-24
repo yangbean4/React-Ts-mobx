@@ -111,7 +111,8 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   mode='multiple'
                   showSearch
-                  getPopupContainer={trigger => trigger.parentElement}
+                  maxTagCount={1}
+                  // getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {optionListDb.Country.map(c => (
@@ -132,7 +133,8 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode='multiple'
-                  getPopupContainer={trigger => trigger.parentElement}
+                  maxTagCount={1}
+                  // getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {statusKeys.map(c => (
@@ -151,7 +153,8 @@ class TaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   mode='multiple'
                   showSearch
-                  getPopupContainer={trigger => trigger.parentElement}
+                  maxTagCount={0}
+                  // getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {optionListDb.PkgnameData.map(c => (

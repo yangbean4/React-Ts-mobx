@@ -21,7 +21,7 @@ interface IStoreProps {
 }
 
 interface IProps extends IStoreProps {
-    // scrollY: number
+    scrollY: number
 }
 
 @inject(
@@ -66,7 +66,7 @@ class CampaignsTable extends ComponentExt<IProps> {
         //         type
         //     }
         // })
-        this.props.routerStore.replace(`/campaigns/edit/${campaign.id}`)
+        this.props.routerStore.push(`/campaigns/edit/${campaign.id}`)
     }
     // 去请求数据
     componentDidMount() {
@@ -77,6 +77,11 @@ class CampaignsTable extends ComponentExt<IProps> {
             })
         }
         this.props.setCampaignType(companyType)
+    }
+
+    goWhiteBlackList = (id) => {
+        window.localStorage.setItem('WBLcampaign', id);
+        window.open(`#/whiteBlackList`, 'whiteBlackList');
     }
 
     render() {
@@ -98,7 +103,7 @@ class CampaignsTable extends ComponentExt<IProps> {
                     rowKey="id"
                     loading={getCampaignsLoading}
                     dataSource={campaigns}
-                    scroll={{ y: scrollY, x: 2030 }}
+                    scroll={{ y: scrollY, x: 2180 }}
                     pagination={{
                         current: page,
                         pageSize,
@@ -119,7 +124,7 @@ class CampaignsTable extends ComponentExt<IProps> {
                         key="tracking_url_type"
                         title="Tracking Type"
                         dataIndex="tracking_type"
-                        width={120}
+                        width={130}
                         render={(_, record) => (trackingTypeOption.find(v => v.value === record.tracking_url_type) || { key: '--' }).key}
                     />
 
@@ -131,6 +136,19 @@ class CampaignsTable extends ComponentExt<IProps> {
                             statusOption.find(item => item.value === _) === undefined ? {} : statusOption.find(item => item.value === _).key
                         )}
                         width={110} />
+
+                    <Table.Column<ICampaignStore.ICampainginForList> key="last_pending_time" title="Last Pending Time(UTC+0)" dataIndex="last_pending_time"
+
+                        width={220}
+                        render={_ =>
+                            !_ ? '--' : _
+                        }
+                    />
+                    <Table.Column<ICampaignStore.ICampainginForList> key="wb_list" title="In White/Black" dataIndex="wb_list"
+                        render={(_, record) => (
+                            _ === 0 ? 'No' : <a onClick={() => this.goWhiteBlackList(record.id)}>Yes</a>
+                        )}
+                        width={150} />
 
                     <Table.Column<ICampaignStore.ICampainginForList>
                         key="action"

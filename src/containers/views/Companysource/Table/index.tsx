@@ -48,7 +48,7 @@ class AdsourceTable extends ComponentExt<IProps> {
     @action
     modifyCompany = (user: IUserStore.IUser) => {
         this.props.setCompany(user)
-        this.props.routerStore.replace(`/companysource/edit/${user.id}`)
+        this.props.routerStore.push(`/companysource/edit/${user.id}`)
     }
 
     componentDidMount() {

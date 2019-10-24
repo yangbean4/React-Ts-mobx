@@ -235,6 +235,9 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
             keys: nextKeys,
         });
     }
+    goBack = () => {
+        this.props.history.goBack();
+    }
 
     render() {
         const { form, categoryIdList, addCategory, showCategoryParams, category_id, routerStore } = this.props
@@ -349,6 +352,7 @@ class CategoryModal extends ComponentExt<IProps & FormComponentProps> {
 
                     <FormItem className={styles.btnBox}>
                         <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
+                        <Button onClick={this.goBack} style={{ marginLeft: 10 }}>Cancel</Button>
                     </FormItem>
                 </Form>
             </div>

@@ -50,7 +50,7 @@ class CompanyTable extends ComponentExt<IProps> {
     @action
     modifyCompany = (company: ICompanyStore.ICompany) => {
         this.props.setCompany(company)
-        this.props.routerStore.replace(`/companysite/edit/${company.id}`)
+        this.props.routerStore.push(`/companysite/edit/${company.id}`)
     }
     // 去请求数据
     componentDidMount() {

@@ -18,5 +18,10 @@ export const value_typeOption = [
     key: ' Reward s2s',
     value: 4,
     phpKey: "RewardS2s"
+  },
+  {
+    key: ' Interstitial',
+    value: 6,
+    phpKey: "Interstitial"
   }
 ]

@@ -4,7 +4,7 @@ import { Button } from 'antd'
 import Search from './Search'
 import { ComponentExt } from '@utils/reactExt'
 import PortalsBtn from '@components/portalsBtn'
-
+import ShowMore from '@components/ShowMore'
 interface IStoreProps {
     routerStore?: RouterStore
     setCampaingn?: (Campaingns: ICampaignStore.ICampaignGroup) => void
@@ -29,7 +29,7 @@ class Header extends ComponentExt<IStoreProps> {
 
     render() {
         return (
-            <div className='searchForm'>
+            <ShowMore>
                 <Search />
                 {
                     this.$checkAuth('Offers-Campaigns-Campaigns-Add', (
@@ -40,7 +40,7 @@ class Header extends ComponentExt<IStoreProps> {
                         </PortalsBtn>
                     ))
                 }
-            </div>
+            </ShowMore>
         )
     }
 }
