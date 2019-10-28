@@ -10,6 +10,15 @@
     // }
   }
 
+  :global(.ant-form-item-control) {
+    height: auto;
+  }
+  :global(.help) {
+    color: #999;
+  }
+  :global(.has-error .help) {
+    display: none;
+  }
   .btnBox {
     margin-left: 12%;
   }

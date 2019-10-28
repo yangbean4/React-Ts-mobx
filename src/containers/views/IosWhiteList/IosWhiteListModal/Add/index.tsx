@@ -55,6 +55,13 @@ class whiteListModal extends ComponentExt<IProps & FormComponentProps> {
   private isUploaded: boolean = false;
 
   @action
+  componentWillReceiveProps() {
+    if (this.props.visible === false) {
+      this.isUploaded = false;
+    }
+  }
+
+  @action
   toggleLoading = () => {
     this.loading = !this.loading
   }
@@ -70,6 +77,7 @@ class whiteListModal extends ComponentExt<IProps & FormComponentProps> {
     this.showPtUrl = !!value;
   }
 
+  @action
   uploadCallback = ({ data }) => {
     this.ptName = data.name;
     this.isUploaded = true;
@@ -175,7 +183,7 @@ class whiteListModal extends ComponentExt<IProps & FormComponentProps> {
               </UploadFile>)}
             </FormItem>
             {
-              this.isEdit && this.showPtUrl && <FormItem {...formItemLayout} label="Pt Url">
+              this.isEdit && this.showPtUrl && !this.isUploaded && <FormItem {...formItemLayout} label="Pt Url">
                 {item.pt_url}
               </FormItem>
             }

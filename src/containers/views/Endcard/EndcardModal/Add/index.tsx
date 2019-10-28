@@ -497,10 +497,6 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                             </Radio.Group>
                         )}
                     </FormItem> */}
-                    {template_id && <FormItem label="Template id">
-                        {template_id}
-                    </FormItem>
-                    }
                     <FormItem label="Endcard">
                         {getFieldDecorator('template_url', {
                             initialValue: template_url,
@@ -516,6 +512,10 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                                                     </Button>
                             </UploadFile>
                         )}
+                        {!this.props.isCopy
+                            && template_id
+                            && <div className="help">Template ID: {template_id}</div>}
+
                     </FormItem>
 
                     <FormItem label="Cover Image" className={styles.autoHeight + ` ${styles.UploadBox}`}>
@@ -671,7 +671,7 @@ class EndcardModal extends ComponentExt<IProps & FormComponentProps> {
                     </FormItem>
                 </Form>
 
-            </div>
+            </div >
         )
     }
 }

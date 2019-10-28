@@ -768,7 +768,7 @@ export const routerAndMenu: IRouter[] = [
   {
     pid: 13,
     id: 131,
-    title: 'IOS Whitelist',
+    title: 'Edit IOS Whitelist',
     path: '/iosWhitelist/edit/:bundle_id',
     component: 'IosWhiteListEdit',
   },
@@ -1078,15 +1078,15 @@ export const routerAndMenu: IRouter[] = [
     // authName: 'Offers-Endcard',
     component: 'Logs'
   },
-  {
-    id: 4832,
-    pid: 483,
-    isMenu: true,
-    title: 'Endcard Template',
-    path: '/log/endcard_template',
-    // authName: 'Offers-Endcards-Endcard Template',
-    component: 'Logs'
-  },
+  // {
+  //   id: 4832,
+  //   pid: 483,
+  //   isMenu: true,
+  //   title: 'Endcard Template',
+  //   path: '/log/endcard_template',
+  //   // authName: 'Offers-Endcards-Endcard Template',
+  //   component: 'Logs'
+  // },
 
   {
     id: 484,
@@ -1290,6 +1290,14 @@ export const routerAndMenu: IRouter[] = [
     hasBread: false,
     component: 'Logs',
     // authName: 'Config Manage-Template Manage'
+  },
+  {
+    id: 443,
+    pid: 44,
+    isMenu: true,
+    path: '/log/ios_whiteList',
+    title: 'IOS WhiteList',
+    component: 'Logs',
   },
   {
     id: 451,

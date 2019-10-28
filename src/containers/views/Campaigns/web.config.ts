@@ -6,6 +6,10 @@ export const statusOption = [
   {
     key: 'Suspend',
     value: 'suspend'
+  },
+  {
+    key: 'Pending',
+    value: 'pending'
   }
 ]
 
@@ -64,7 +68,7 @@ export const trackingTypeOption = [
     value: 30
   },
   {
-    key: 'Pull live Retention',
+    key: 'Pull Live Retention',
     value: 41
   }
 ]

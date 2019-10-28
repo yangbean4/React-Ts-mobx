@@ -91,7 +91,7 @@ class CreativeTable extends ComponentExt<IProps> {
                     render={(_, record) => _ ?
                         this.$checkAuth('Config Manage-IOS Whitelist-Edit', [
                             <a key="form" href="javascript:;" onClick={() => this.modifyItem(record)}>{_}</a>
-                        ])
+                        ]) || _
                         : _}
                 />
                 <Table.Column<IIosWhiteListStore.IitemForList>

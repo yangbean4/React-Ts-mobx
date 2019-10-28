@@ -55,7 +55,8 @@ class SiderMenu extends ComponentExt<IStoreProps> {
                     id: (templateId * 1000) + index,
                     component: "Template",
                     title: item.primary_name,
-                    path: `/template/${encodeURI(item.id)}`
+                    path: `/template/${encodeURI(item.id)}`,
+                    authName: 'Config Manage-Template Manage'
                 }
             })
             const addLog: IMenu[] = tmp.map((item, index) => {
@@ -64,7 +65,8 @@ class SiderMenu extends ComponentExt<IStoreProps> {
                     id: (logId * 1000) + index,
                     component: "Logs",
                     title: item.primary_name,
-                    path: `/log/${(item.primary_name)}`
+                    path: `/log/${(item.primary_name)}`,
+                    authName: 'Config Manage-Template Manage'
                 }
             })
             return pop.concat(addTmp, addLog)
