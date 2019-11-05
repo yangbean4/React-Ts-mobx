@@ -82,7 +82,7 @@ class ChartSearch extends React.Component<IStoreProps & FormComponentProps>{
           this.toggleLoading()
           try {
             if (values.date) {
-              values.date = values.date.map(val => val.format('YYYY-MM-DD')).join(' - ')
+              values.date = values.date.map(val => val.format(dateFormat)).join(' - ')
             }
             await changeFilter(values)
           } catch (err) { }
@@ -100,7 +100,7 @@ class ChartSearch extends React.Component<IStoreProps & FormComponentProps>{
     const { form, filters, optionListDb, modelType } = this.props;
     const { getFieldDecorator } = form;
     return (
-      <Form {...layout}>
+      <Form {...layout} colon={false}>
         <Row>
           <Col span={span}>
             <FormItem label="Date">

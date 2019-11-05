@@ -3,7 +3,7 @@
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-11-01 15:04:00
  * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-11-05 10:21:33
+ * @LastEditTime: 2019-11-05 12:20:12
  */
 
 import { ChartStore as ChartStoreModel } from './index'
@@ -36,12 +36,22 @@ export interface DataItem extends SearchGroup {
   campaign_id: string
   campaign_name: string
   country: string
+  strategy_id: string
   pkg_name: string
   pid: string
   placement_name: string
   pid_type_name: string
   cpm: string
   update_time: string
+  strategy_name: string
+  bundle_id: string
+  fill_rate: number
+  ipm: number
+  ctr: number
+  cvr: number
+  title: string
+  source_account_name: string
+  lowest_ecpm: string
 }
 
 export interface ChartItem {

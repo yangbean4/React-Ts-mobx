@@ -3,7 +3,7 @@
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-11-01 15:03:45
  * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-11-05 10:20:30
+ * @LastEditTime: 2019-11-05 11:52:08
  */
 import { observable, action, runInAction } from 'mobx'
 import { StoreExt } from '@utils/reactExt'
@@ -13,25 +13,25 @@ type getFun = (da: IChartStore.DataItem) => string
 
 const target = {
   '1': {
-    x: '',
-    y: '',
+    x: 'fill_rate',
+    y: 'ipm',
     count: 'impression',
-    legend: 'strategy',
-    label: (ele => ele.pid + ele.strategy) as getFun
+    legend: 'strategy_name',
+    label: (ele => `${ele.pid}-${ele.strategy_id}`) as getFun
   },
   '2': {
-    x: '',
-    y: '',
+    x: 'cvr',
+    y: 'ctr',
     count: 'impression',
-    legend: 'app_key',
-    label: (ele => `${ele.creative_id}_${ele.pid}`) as getFun
+    legend: 'app_id',
+    label: (ele => `${ele.creative_id}-${ele.pid}`) as getFun
   },
 }
 
 const formatData = (data: IChartStore.DataItem[], type: IChartStore.modeltype): IChartStore.ChartItem[] => data.map(ele => {
   const tag = {}
   Object.entries(target[type]).forEach(([key, val]) => {
-    tag[key] = typeOf(val) === 'sstring' ? ele[val as string] : typeOf(val) === 'function' ? (val as getFun)(ele) : ''
+    tag[key] = typeOf(val) === 'string' ? ele[val as string] : typeOf(val) === 'function' ? (val as getFun)(ele) : ''
   })
   return ({
     ...(tag as IChartStore.ChartItem),
@@ -99,14 +99,17 @@ export class ChartStore extends StoreExt {
   getData = async () => {
     this.loading = true
     try {
-      const res = await this.api.chart.getData({ ...this.filters, type: this.modelType })
-      this.detailData[this.modelType] = []
-
       runInAction('SET_COMMENT_LIST', () => {
-        this.detailData[this.modelType] = formatData(res.data, this.modelType)
+        this.detailData[this.modelType] = []
+      })
+      const res = await this.api.chart.getData({ ...this.filters, type: this.modelType })
+      const _data = formatData(res.data, this.modelType)
+      runInAction('SET_COMMENT_LIST', () => {
+        this.detailData[this.modelType] = _data
         this.loading = false
       })
     } catch (err) {
+      console.log(err)
       runInAction('SET_COMMENT_LIST', () => {
         this.loading = false
       })
