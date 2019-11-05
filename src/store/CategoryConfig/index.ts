@@ -1,13 +1,14 @@
+/*
+ * @Description: 
+ * @Author:  bean^ <bean_4@163.com>
+ * @Date: 2019-08-01 18:13:29
+ * @LastEditors:  bean^ <bean_4@163.com>
+ * @LastEditTime: 2019-11-04 11:51:12
+ */
 import { observable, action, runInAction, observe } from 'mobx'
 import { PaginationConfig } from 'antd/lib/pagination'
 import { StoreExt } from '@utils/reactExt'
-import { number } from 'prop-types';
-import { getEnabledCategories } from 'trace_events';
-import { async } from 'q';
-import { value } from '@views/Creative/CreativeModal/Edit/index.scss';
 import { message } from 'antd';
-import { asCreateObservableOptions } from 'mobx/lib/internal';
-import { getMaxListeners } from 'cluster';
 import { routerStore } from './../'
 export class CategoryConfigStore extends StoreExt {
     /**
@@ -66,7 +67,7 @@ export class CategoryConfigStore extends StoreExt {
 
     @observable
     categoryIdList: ICategoryConfigStore.categoryIdList[] = [
-        
+
     ];
     /**
     * 加载Category时的loading
@@ -150,7 +151,7 @@ export class CategoryConfigStore extends StoreExt {
                 const code = datas[i].scene_code;
                 isdelete_number.push('0');
                 arrNumber.push(i);
-                scene_code.push((code == 0 || code) ? code.toString() :'')
+                scene_code.push((code == 0 || code) ? code.toString() : '')
                 scene_name.push(datas[i].scene_name);
                 screne_id.push(datas[i].id);
             }
@@ -186,14 +187,14 @@ export class CategoryConfigStore extends StoreExt {
         try {
             if (flag == 0) {
                 const res = await this.api.categoryConfig.addCategory(this.addCategory);
-                if(res.errorcode == 0){
+                if (res.errorcode == 0) {
                     message.success(res.message);
                     routerStore.push('/category')
                 }
             } else {
                 const res = await this.api.categoryConfig.editCategory(this.addCategory);
                 console.log(res);
-                if(res.errorcode == 0){
+                if (res.errorcode == 0) {
                     message.success(res.message)
                 }
             }

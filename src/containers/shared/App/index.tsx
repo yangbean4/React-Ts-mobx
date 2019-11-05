@@ -17,6 +17,11 @@ const Login = Loadable({
     loading: PageLoading
 })
 
+const chart = Loadable({
+    loader: () => import(/* webpackChunkName: "chart" */ '@views/Chart'),
+    loading: PageLoading
+})
+
 const AppWrapper = props => <div className={styles.appWrapper}>{props.children}</div>
 
 class AppRouter extends React.Component<{}> {
@@ -26,6 +31,7 @@ class AppRouter extends React.Component<{}> {
                 <Router>
                     <Switch>
                         <Route exact path="/login" component={Login} />
+                        <Route exact path="/chart" component={chart} />
                         <PrivateRoute path="/" component={Home} />
                         <Route component={Error} />
                     </Switch>

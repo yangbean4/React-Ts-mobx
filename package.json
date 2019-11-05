@@ -27,6 +27,7 @@
     "antd": "3.16.1",
     "axios": "^0.18.0",
     "bourbon": "^5.1.0",
+    "echarts": "^4.4.0",
     "mobx": "^5.9.0",
     "mobx-react": "^5.4.3",
     "mobx-react-router": "^4.0.5",

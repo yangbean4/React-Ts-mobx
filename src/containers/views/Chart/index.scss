@@ -1,0 +1,21 @@
+.box {
+  height: 600px;
+  width: 1200px;
+  .Search {
+    width: 100%;
+  }
+  .Chart {
+    width: 100%;
+  }
+}
+.page {
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+}
+.RadioBox {
+  margin: 40px auto;
+  display: block;
+  text-align: center;
+}

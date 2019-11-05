@@ -1,3 +1,10 @@
+/*
+ * @Description:
+ * @Author:  bean^ <bean_4@163.com>
+ * @Date: 2019-10-24 09:57:29
+ * @LastEditors:  bean^ <bean_4@163.com>
+ * @LastEditTime: 2019-11-04 11:33:05
+ */
 import { RouterStore } from 'mobx-react-router'
 
 export const routerStore = new RouterStore()
@@ -65,6 +72,9 @@ export { default as manualEcpmStore } from './manualEcpmStore'
 export { default as topCreativeStore } from './TopCreativeStore'
 
 export { default as budgetStore } from './BudgetGroup'
+
 export { default as creativeFrequencyStore } from './creativeFrequencyStore'
 
 export { default as iosWhiteListStore } from './iosWhiteListStore'
+
+export { default as chartStore } from './ChartStore'
