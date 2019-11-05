@@ -24,9 +24,10 @@ interface IStoreProps {
 @observer
 class ChartPage extends React.Component<IStoreProps>{
 
-  componentDidMount() {
-    this.props.changeType(this.props.modelType)
-  }
+  // componentDidMount() {
+  //   this.props.changeType(this.props.modelType)
+  // }
+
   handleModeChange = (e) => {
     const mode = e.target.value
     this.props.changeType(mode)

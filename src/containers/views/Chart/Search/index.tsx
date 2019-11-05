@@ -94,6 +94,7 @@ class ChartSearch extends React.Component<IStoreProps & FormComponentProps>{
 
   componentDidMount() {
     this.props.getOptionListDb();
+    this.submit();
   }
 
   render() {

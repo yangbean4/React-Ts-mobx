@@ -117,6 +117,9 @@ export const asynchronousComponents = {
   // IOS Whitelist
   IosWhiteList: loadComponent(() => import(/* webpackChunkName: "IosWhitelist" */ '@views/IosWhiteList')),
   IosWhiteListEdit: loadComponent(() => import(/* webpackChunkName: "IosWhitelistEdit" */ '@views/IosWhiteList/IosWhiteListModal/Edit')),
+
+  // Bubble Chart
+  BubbleChart: loadComponent(() => import(/* webpackChunkName: "IosWhitelistEdit" */ '@views/Chart/bubbleChart')),
 }
 
 // 所有路由的key
@@ -891,6 +894,17 @@ export const routerAndMenu: IRouter[] = [
     icon: 'iconpaihangbang',
     isRoot: true,
     authName: 'Top Creatives',
+  },
+  // Bubble Chart
+  {
+    id: 14,
+    isMenu: true,
+    path: '/BubbleChart',
+    title: 'Bubble Chart',
+    component: 'BubbleChart',
+    icon: 'iconbaobiao',
+    isRoot: true,
+    // authName: 'Bubble Chart',
   },
   // {
   //     id: 91,

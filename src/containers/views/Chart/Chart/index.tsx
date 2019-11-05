@@ -92,8 +92,8 @@ class Chart extends React.Component<IDataProps> {
         scale: true
       },
     }
-    // console.log(JSON.stringify(option))
-    myChart.setOption(option)
+    console.log(JSON.stringify(option))
+    myChart.setOption(option, true)
   }
 
   componentDidMount() {
