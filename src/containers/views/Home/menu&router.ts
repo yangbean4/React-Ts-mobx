@@ -3,7 +3,7 @@
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-10-17 14:26:29
  * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-10-17 14:36:05
+ * @LastEditTime: 2019-11-29 14:46:47
  */
 
 import Loadable from 'react-loadable'
@@ -20,14 +20,14 @@ export const asynchronousComponents = {
   OfferQuery: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/OfferQuery')),
 
   Revenue: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/Revenue')),
-  //------------------Apps Manage
+  // ------------------Apps Manage
   AppManages: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppMange')),
   AppManagesModel: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/AppMange/AppMangeModal')),
-  //------------------Manual eCPM
+  //  ------------------ Manual eCPM
   Manual: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/ManualEcpm')),
   ManualAdd: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/ManualEcpm/ManualModel')),
   ManualEdit: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/ManualEcpm/ManualModel')),
-  //------------------Budget Group
+  // ------------------Budget Group
   Budget: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/BudgetGroup')),
   BudgetAdd: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/BudgetGroup/BudgetGroupModel')),
   BudgetEdit: loadComponent(() => import(/* webpackChunkName: "CompanySite" */ '@views/BudgetGroup/BudgetGroupModel')),

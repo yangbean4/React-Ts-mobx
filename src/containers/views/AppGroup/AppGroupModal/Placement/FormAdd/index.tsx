@@ -15,7 +15,7 @@ let keys_id: number = 0;
 interface hasResult {
     result?: string
 }
-const { Option } = Select;
+const { Option } = Select
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },

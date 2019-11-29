@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author:  bean^ <bean_4@163.com>
+ * @Date: 2019-07-31 21:04:44
+ * @LastEditors:  bean^ <bean_4@163.com>
+ * @LastEditTime: 2019-11-29 14:54:16
+ */
 import { CurrencyStore as CurrencyStoreModel } from './index'
 
 export as namespace ICurrencyStore
@@ -15,6 +22,7 @@ export interface ICurrency {
     vc_desc?: string
     vc_secret_key?: string
     status?: number
+    reward_type?: number
     id?: string
 }
 

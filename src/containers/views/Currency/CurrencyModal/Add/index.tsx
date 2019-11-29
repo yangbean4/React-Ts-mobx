@@ -58,6 +58,8 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private platform: boolean = false
 
+    @observable
+    private rewardType: number = 1
 
     @observable
     private pkgnameData: any[] = []
@@ -80,6 +82,14 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     toggleLoading = () => {
         this.loading = !this.loading
+    }
+
+    @action
+    rewardTypeChange = (e) => {
+        const value = e.target.value
+        runInAction('set_STore', () => {
+            this.rewardType = value
+        })
     }
 
     Cancel = () => {
@@ -185,6 +195,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
             vc_desc = '',
             vc_secret_key = '',
             status = 1,
+            reward_type = this.rewardType,
         } = currency || {}
         return (
             <div className='sb-form'>
@@ -277,6 +288,29 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                             initialValue: vc_desc,
                         })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
                     </FormItem>
+                    <FormItem label="Reward Type">
+                        {getFieldDecorator('reward_type', {
+                            initialValue: reward_type,
+                            rules: [
+                                {
+                                    required: true, message: 'Required'
+                                }
+                            ]
+                        })(
+                            <Radio.Group
+                                disabled={this.props.currency.id !== undefined}
+                                onChange={this.rewardTypeChange}
+                            >
+                                {/* {web.rewardOption.map(c => (
+                                                <Radio key={c.key} value={c.value}>
+                                                    {c.key}
+                                                </Radio>
+                                            ))} */}
+                                <Radio value={1}>Dynamic Reward</Radio>
+                                <Radio value={2}>Fix Reward</Radio>
+                            </Radio.Group>
+                        )}
+                    </FormItem>
 
                     <FormItem label="VC Exchange Rate">
                         {getFieldDecorator('vc_exchange_rate', {
@@ -284,7 +318,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                             // validateTrigger: 'blur',
                             rules: [
                                 {
-                                    required: false, message: "Required",
+                                    required: this.rewardType === 1, message: "Required",
                                 },
                                 {
                                     validator: (r, v, callback) => {
@@ -297,6 +331,24 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(<InputNumber precision={0} min={0} max={100000} />)}
                         <span>=1$</span>
+                    </FormItem>
+                    <FormItem label="Number Of Reward">
+                        {getFieldDecorator('number_of_reward', {
+                            // initialValue: number_of_reward,
+                            rules: [
+                                {
+                                    required: this.rewardType === 2, message: "Required",
+                                },
+                                {
+                                    validator: (r, v, callback) => {
+                                        if (v < 0) {
+                                            callback('The Number Of Reward requires a non-negative!')
+                                        }
+                                        callback()
+                                    }
+                                }
+                            ]
+                        })(<InputNumber min={0} max={100000} />)}
                     </FormItem>
 
                     <FormItem label="VC Callback Url"  >
