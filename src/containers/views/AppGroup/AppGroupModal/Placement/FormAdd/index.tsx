@@ -1008,7 +1008,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                     }
 
                     {
-                        this.usePidtype !== 3 && (
+                        [3, 6].includes(this.usePidtype) == false && (
                             <React.Fragment>
                                 <Col span={4} className={styles.companyTag}>
                                     <div className={styles.tagWrapper}>
@@ -1021,7 +1021,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                             initialValue: vc_id,
                                             rules: [
                                                 {
-                                                    required: true, message: "Required"
+                                                    required: this.usePidtype === 2, message: "Required"
                                                 }
                                             ]
                                         })(
@@ -1052,7 +1052,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                         initialValue: reward_type,
                                         rules: [
                                             {
-                                                required: true, message: "Required"
+                                                required: this.usePidtype === 2, message: "Required"
                                             }
                                         ]
                                     })(
@@ -1075,9 +1075,6 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                             {getFieldDecorator('reward_num', {
                                                 initialValue: reward_num,
                                                 rules: [
-                                                    {
-                                                        required: true, message: "Required"
-                                                    },
                                                     {
                                                         validator: (r, v, callback) => {
                                                             if (v <= 0) {

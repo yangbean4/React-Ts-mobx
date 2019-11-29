@@ -15,19 +15,31 @@ export interface ChartStore extends ChartStoreModel { }
 export interface SearchGroup {
   pkg_name?: string
   platform?: string
-  pid?: string
+  pid?: string[]
   strategy?: string
   app_key?: string
   creative_id?: string
   impression?: string
-  date?: string
+  date?: any[] | string
+}
+
+export interface pkgName {
+  id: string,
+  pkg_name: string,
+  bundle_id: string,
+  platform: 'android' | 'ios'
 }
 
 export interface OptionListDb {
   strategyList?: ({ id: string, strategy_name: string })[]
-  placementEcpmList?: ({ id: string, placement_name: string })[]
-  pkgNameList?: ({ id: string, pkg_name: string })[]
-  appKeyList?: ({ app_key: number, title: string })[]
+  placementEcpmList?: ({ accept_ecpm: string, placement_name: string, placement_id: string })[]
+  pkgNameList?: pkgName[]
+  appKeyList?: ({
+    alias_key: number,
+    app_id: string,
+    platform: 'android' | 'ios'
+    title: string
+  })[]
   creativeList?: ({ id: string, name: string })[]
 }
 

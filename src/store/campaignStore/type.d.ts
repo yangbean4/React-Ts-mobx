@@ -14,6 +14,7 @@ export interface ICampaignGroup {
     target_code?: string
     bid_type?: string
     bid?: number
+    s2s_bid?: number
     total_budget?: number
     daily_budget?: number
     start_time?: string

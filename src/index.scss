@@ -120,4 +120,18 @@
     float: left;
     height: 30px !important;
   }
+
+
+  .popover-overlay {
+    z-index: 99999!important;
+  }
+
+  // 限制 select 选择器已选择的项目显示的长度，避免 +1 显示到第二行
+  .select-option-max-width .ant-select-selection__choice {
+    max-width: 110px!important;
+  }
+  // 设置日期选择器弹窗顶部的 ~ 符号居中显示
+  .rangepicker-middle .ant-calendar-range-middle {
+    left: 42%!important;
+  }
 }

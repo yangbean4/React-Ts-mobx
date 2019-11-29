@@ -7,7 +7,7 @@
  */
 import { observable, action, runInAction } from 'mobx'
 import { StoreExt } from '@utils/reactExt'
-import { typeOf } from '@utils/index'
+import { typeOf, filterForKey } from '@utils/index'
 
 type getFun = (da: IChartStore.DataItem) => string
 
@@ -54,6 +54,20 @@ export class ChartStore extends StoreExt {
   @observable
   filters: IChartStore.SearchGroup = {}
 
+  temp: {
+    subsite: IChartStore.SearchGroup
+    source: IChartStore.SearchGroup
+  } = {
+      subsite: {
+        impression: '500',
+        pid: []
+      },
+      source: {
+        impression: '500',
+        pid: []
+      }
+    }
+
   @observable
   optionListDb: IChartStore.OptionListDb = {
     placementEcpmList: [],
@@ -72,6 +86,13 @@ export class ChartStore extends StoreExt {
   @action
   changeType = (type: IChartStore.modeltype) => {
     this.modelType = type
+    if (type === "1") {
+      this.temp.source = { ...this.filters };
+      this.filters = { ...this.temp.subsite };
+    } else {
+      this.temp.subsite = { ...this.filters };
+      this.filters = { ...this.temp.source };
+    }
     this.getData()
   }
 
@@ -84,11 +105,12 @@ export class ChartStore extends StoreExt {
       this.api.appsManage.senAppList({}),
       this.api.creativeFrequency.getCreatives()
     ]);
+
     runInAction('SET', () => {
       this.optionListDb = {
         placementEcpmList: placementEcpmList.data,
         strategyList: strategyList.data,
-        pkgNameList: pkgNameRes.data,
+        pkgNameList: filterForKey(pkgNameRes.data, 'pkg_name') as IChartStore.pkgName[],
         appKeyList: appKeyRes.data,
         creativeList: creativeRes.data
       }
@@ -102,7 +124,11 @@ export class ChartStore extends StoreExt {
       runInAction('SET_COMMENT_LIST', () => {
         this.detailData[this.modelType] = []
       })
-      const res = await this.api.chart.getData({ ...this.filters, type: this.modelType })
+      const fromData = { ...this.filters, type: this.modelType };
+      if (fromData.date) {
+        fromData.date = fromData.date.map(val => val.format('YYYYMMDD')).join(' - ')
+      }
+      const res = await this.api.chart.getData(fromData)
       const _data = formatData(res.data, this.modelType)
       runInAction('SET_COMMENT_LIST', () => {
         this.detailData[this.modelType] = _data

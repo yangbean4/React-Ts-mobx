@@ -370,3 +370,16 @@ export const testSize = (target: File, config, type: string = 'img') => {
 
     })
 }
+
+/**
+ * 根据数组对象中的某个key进行过滤
+ */
+export const filterForKey = (array: any[], key: string) => {
+    let hash = {};
+    array.forEach(v => {
+        if (!hash[v.pkg_name]) {
+            hash[v.pkg_name] = v
+        }
+    });
+    return Object.values(hash);
+}

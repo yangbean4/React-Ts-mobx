@@ -43,6 +43,10 @@ export const bidTypeOption = [
   {
     key: 'CPI',
     value: 'CPI'
+  },
+  {
+    key: 'CPE',
+    value: 'CPE'
   }
 ]
 

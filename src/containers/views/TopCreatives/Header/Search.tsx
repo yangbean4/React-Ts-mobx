@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action } from 'mobx'
-import { Form, Input, Select, Row, Col, Button, DatePicker } from 'antd'
+import { Form, Input, Select, Row, Col, Button, DatePicker, Popover } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { platformOption } from '@config/web'
 import { creativeOption } from '../config';
@@ -113,11 +113,17 @@ class TopCreativeSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   mode='multiple'
                   maxTagCount={1}
                   // getPopupContainer={trigger => trigger.parentElement}
-                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  filterOption={(input, option) => option.props.children.props.content.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {optionListDb.Creative.map(c => (
                     <Select.Option key={c.id} value={c.id}>
-                      {`${c.id}-${c.name}`}
+                      <Popover
+                        content={`${c.id}-${c.name}`}
+                        overlayClassName="popover-overlay"
+                        overlayStyle={{ maxWidth: 220 }}
+                        placement="left">
+                        {`${c.id}-${c.name}`}
+                      </Popover>
                     </Select.Option>
                   ))}
                 </Select>

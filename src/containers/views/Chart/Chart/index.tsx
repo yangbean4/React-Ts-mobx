@@ -32,7 +32,9 @@ class Chart extends React.Component<IDataProps> {
 
     dataSet.forEach((ele, index) => {
       const { x, y, count, legend, data, label } = ele
-      const symbolSize = (count - symbolMin) * (symbolRange[1] - symbolRange[0]) / (symbolMax - symbolMin) + symbolRange[0]
+      const symbolSize = symbolMax == count
+        ? symbolRange[1]
+        : (count - symbolMin) * (symbolRange[1] - symbolRange[0]) / (symbolMax - symbolMin) + symbolRange[0]
       dataTar[legend] = dataTar[legend] || []
       dataTar[legend].push([x, y, symbolSize, label, data])
     })

@@ -92,6 +92,9 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private _platform: string = ''
 
+    @observable
+    private _bidType: string = ''
+
 
     @computed
     get creativeId() {
@@ -160,6 +163,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
         const res = await this.api.campaigns.editBeforeCampaigns({ id: this.ID })
         runInAction('SET_APPManage', () => {
             this.CampaignGroup = { ...res.data }
+            this.setBidType(res.data.bid_type);
             this.props.form.setFieldsValue({
                 status: res.data.status
             })
@@ -252,6 +256,11 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     @action
+    setBidType = (value) => {
+        this._bidType = value;
+    }
+
+    @action
     setEndTime = (value) => {
         const initialValue = value ? moment(value) : ''
         this.props.form.setFieldsValue({
@@ -295,6 +304,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
             target_code = undefined,
             bid_type = 'CPI',
             bid = '',
+            s2s_bid = '',
             total_budget,
             daily_budget,
             start_time = Now,
@@ -458,7 +468,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                         })(
                             <Select
                                 showSearch
-                                onChange={(val) => this.setPlatform(val)}
+                                onChange={(val) => this.setBidType(val)}
                                 getPopupContainer={trigger => trigger.parentElement}
                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
@@ -470,6 +480,26 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                             </Select>
                         )}
                     </FormItem>
+
+                    {this._bidType == 'CPE' && <FormItem label="S2S Bid"  >
+                        <span style={{ marginRight: "5px" }}>$</span>
+                        {getFieldDecorator('s2s_bid', {
+                            initialValue: s2s_bid,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                },
+                                {
+                                    validator: (r, v, callback) => {
+                                        if (v <= 0) {
+                                            callback('The Exchange Rate should be a positive number!')
+                                        }
+                                        callback()
+                                    }
+                                }
+                            ]
+                        })(<InputNumber precision={2} formatter={this.limitDecimals} />)}
+                    </FormItem>}
 
                     <FormItem label="Bid"  >
                         <span style={{ marginRight: "5px" }}>$</span>
