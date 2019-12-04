@@ -68,7 +68,7 @@ class MaskTable extends ComponentExt<IProps> {
     modifyMask = (mask: IMaskSubsiteStore.IMask) => {
         this.currentMask = {
             ...mask,
-            subsite_ids: mask.subsite_ids.split(',')
+            subsite_ids: (mask.subsite_ids as string).split(',')
         }
         this.maskModalVisible = true
     }

@@ -3,7 +3,7 @@
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-12-03 09:57:00
  * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-12-03 18:56:17
+ * @LastEditTime: 2019-12-04 10:05:28
  */
 import { MaskSubsiteStore as MaskSubsiteModel } from './index'
 
@@ -18,7 +18,7 @@ export interface IMask {
   update_time?: string
   mask_id?: string
   pkg_name_num?: string
-  subsite_ids?: string
+  subsite_ids?: string[] | string
   pkg_name_list?: ({
     [key: string]: string
   })[]
