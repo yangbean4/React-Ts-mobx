@@ -303,7 +303,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(
                             <Radio.Group
-                                disabled={this.isTrueAdd || this.props.currency.reward_type !== undefined}
+                                disabled={this.isTrueAdd || (this.props.currency && this.props.currency.reward_type !== undefined)}
                                 onChange={this.rewardTypeChange}
                             >
                                 {rewardTypeOption.map(c => (

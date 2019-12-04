@@ -3,7 +3,7 @@
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-10-17 14:26:29
  * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-12-03 11:24:32
+ * @LastEditTime: 2019-12-04 14:51:38
  */
 
 import Loadable from 'react-loadable'
@@ -1189,7 +1189,15 @@ export const routerAndMenu: IRouter[] = [
     // authName: 'Offers-Comments-Comment Templates',
     component: 'Logs'
   },
-
+  {
+    id: 487,
+    pid: 48,
+    isMenu: true,
+    title: 'Mask Subsite',
+    path: '/log/maskSubsite',
+    // authName: 'Offers-Comments-Comment Templates',
+    component: 'Logs'
+  },
   // path: '/log/campaigns',
   // authName: 'Offers-Campaigns',
   // component: 'Logs'
@@ -1273,6 +1281,16 @@ export const routerAndMenu: IRouter[] = [
     isMenu: true,
     path: '/log/creativefrequency',
     title: 'Creative Frequency',
+    component: 'Logs',
+    exact: true,
+    // authName: 'Apps-Virtual Currency'
+  },
+  {
+    id: 415,
+    pid: 41,
+    isMenu: true,
+    path: '/log/Strategy',
+    title: 'Strategy Group',
     component: 'Logs',
     exact: true,
     // authName: 'Apps-Virtual Currency'
