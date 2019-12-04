@@ -51,6 +51,7 @@ export interface SearchParams {
     platform?: string[],
     status?: (number | string)[],
     app_name?: string[]
+    dev_id?: string
 }
 
 
@@ -125,5 +126,6 @@ export interface Placement {
     campaign_filter?: {
         geo: string;
         profit: string;
+        id?: string | number
     }[],
 }

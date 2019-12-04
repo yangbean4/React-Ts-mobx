@@ -100,6 +100,7 @@ class AppGroupTable extends ComponentExt<IProps> {
                 <Table.Column<IAppGroupStore.IAppGroupForList> key="app_name" title="App Name" dataIndex="app_name" width={200} />
                 <Table.Column<IAppGroupStore.IAppGroupForList> key="pkg_name" title="Pkg Name" dataIndex="pkg_name" width={200} />
                 <Table.Column<IAppGroupStore.IAppGroupForList> key="platform" title="Platform" dataIndex="platform" width={100} />
+                <Table.Column<IH5ExportStore.IitemForList> key="dev_id" title="Subsite ID" dataIndex="dev_id" width={100} />
                 <Table.Column<IAppGroupStore.IAppGroupForList> key="sdk_token" title="SDK Token" dataIndex="sdk_token" width={200} />
                 <Table.Column<IAccountStore.IAccount>
                     key="status"

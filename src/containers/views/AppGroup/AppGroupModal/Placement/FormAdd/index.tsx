@@ -75,17 +75,15 @@ interface IProps extends IStoreProps {
 
 @observer
 class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
+
+    @observable
+    private vcId: number | string
+
     @observable
     private loading: boolean = false
 
     @observable
     private pidType: number
-
-    @observable
-    private VcexRate: number | string
-
-    @observable
-    private rewardType: number
 
     @observable
     private VCShow: boolean = false
@@ -102,6 +100,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private Palcement: IAppGroupStore.Placement = {}
 
+
     @computed
     get useAppWall() {
         return [this.AppWall, this.Palcement.style_id, this.props.optionListDb.AppWall[0].id].find(ele => ele !== undefined)
@@ -109,6 +108,37 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
     @computed
     get useAppWallUrl() {
         return this.props.optionListDb.AppWall.find(ele => ele.id === this.useAppWall).url
+    }
+
+    @computed
+    get usePidtype() {
+        const prov = this.props.appGroup && this.props.appGroup.contains_native_s2s_pid_types === 1 ? 5 : undefined
+        const value = [this.pidType, this.Palcement.pid_type, prov].find(ele => ele !== undefined)
+        return value
+    }
+
+    get rewardType() {
+        return this.usePidtype === undefined ? this.usePidtype : this.usePidtype !== 1 ? 1 : 2
+    }
+
+    @computed
+    get isAdd() {
+        return this.props.placementID === undefined
+    }
+
+    @computed
+    get useVcId() {
+        return this.vcId || this.Palcement.vc_id
+    }
+
+    @computed
+    get useVc() {
+        return this.props.optionListDb.VC.find(ele => ele.id === this.useVcId) || {}
+    }
+
+    @computed
+    get useVcList() {
+        return this.props.optionListDb.VC.filter(vc => vc.reward_type === this.rewardType)
     }
 
     @action
@@ -128,17 +158,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
     // @observable
     // private pidTypeList: any[] = []
 
-    @computed
-    get usePidtype() {
-        const prov = this.props.appGroup && this.props.appGroup.contains_native_s2s_pid_types === 1 ? 5 : undefined
-        const value = [this.pidType, this.Palcement.pid_type, prov].find(ele => ele !== undefined)
-        return value
-    }
 
-    @computed
-    get isAdd() {
-        return this.props.placementID === undefined
-    }
 
     @action
     toggleLoading = () => {
@@ -156,24 +176,12 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
         runInAction('clear_image', () => {
             this.imageTarget = {}
         })
-        data.reward_type = type !== 1 ? 1 : 2
         this.props.form.setFieldsValue(data)
     }
 
     @action
     VcChange = (value) => {
-        const VcexRate = (this.props.optionListDb.VC.find(ele => ele.id === value) || {}).vc_exchange_rate
-        runInAction('VcexRate', () => {
-            this.VcexRate = VcexRate
-        })
-    }
-
-    @action
-    rewardTypeChange = (e) => {
-        const value = e.target.value
-        runInAction('set_STore', () => {
-            this.rewardType = value
-        })
+        this.vcId = value
     }
 
     Cancel = () => {
@@ -208,7 +216,6 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                             }
                         }
                         this.toggleLoading()
-                        debugger
                         if (this.isAdd) {
                             await this.api.appGroup.addPalcement({ ...values, dev_app_id: Id })
                         } else {
@@ -349,8 +356,6 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             offer_num,
             budget,
             vc_id,
-            reward_type,
-            reward_num,
             style_id,
             style_detail = {},
             campaign_filter = [{
@@ -486,7 +491,8 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                     visible={this.VCShow}
                     currency={{
                         platform: this.props.appGroup.platform,
-                        app_name: this.props.appGroup.app_name
+                        app_name: this.props.appGroup.app_name,
+                        reward_type: this.rewardType
                     }}
                     onOk={this.VCModelOk}
                     onCancel={() => this.toggleVCShow(false)}
@@ -645,7 +651,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={0} min={0} max={1000} />)}
+                        })(<InputNumber precision={2} min={0} max={1000} />)}
                     </FormItem>
 
                     <FormItem label="Offer Rate">
@@ -1032,7 +1038,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                                 onChange={this.VcChange}
                                                 filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                             >
-                                                {optionListDb.VC.map(c => (
+                                                {this.useVcList.map(c => (
                                                     <Select.Option key={c.id} value={c.id}>
                                                         {c.name}
                                                     </Select.Option>
@@ -1040,36 +1046,31 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                             </Select>
                                         )}
                                     {
-                                        (this.isAdd || !vc_id) && <MyIcon className={styles.uploadICON} onClick={() => this.toggleVCShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
+                                        (this.isAdd || !vc_id) && this.rewardType && <MyIcon className={styles.uploadICON} onClick={() => this.toggleVCShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
                                     }
-                                </FormItem>
-                                <FormItem label="Exchange Rate">
-                                    {this.VcexRate} = 1$
                                 </FormItem>
 
                                 <FormItem label="Reward Type">
-                                    {getFieldDecorator('reward_type', {
-                                        initialValue: reward_type,
-                                        rules: [
-                                            {
-                                                required: this.usePidtype === 2, message: "Required"
-                                            }
-                                        ]
-                                    })(
-                                        <Radio.Group
-                                            onChange={this.rewardTypeChange}
-                                        >
-                                            {/* {web.rewardOption.map(c => (
-                                                <Radio key={c.key} value={c.value}>
-                                                    {c.key}
-                                                </Radio>
-                                            ))} */}
-                                            <Radio disabled={this.usePidtype === 1} value={1}>Dynamic Reward</Radio>
-                                            <Radio disabled={this.usePidtype !== undefined && this.usePidtype !== 1} value={2}>Fix Reward</Radio>
-                                        </Radio.Group>
-                                    )}
+
+                                    <Radio.Group
+                                        value={this.rewardType}
+                                        disabled={true}
+                                    >
+                                        <Radio value={1}>Dynamic Reward</Radio>
+                                        <Radio value={2}>Fix Reward</Radio>
+                                    </Radio.Group>
                                 </FormItem>
                                 {
+                                    this.rewardType === 1 ? <FormItem label="Exchange Rate">
+                                        {this.useVc.vc_exchange_rate} = 1$
+                                </FormItem> : <FormItem label="Number Of Reward">
+                                            {this.useVc.reward_num}
+                                        </FormItem>
+                                }
+
+
+
+                                {/* {
                                     this.usePidtype === 1 && (
                                         <FormItem label="Number Of Reward">
                                             {getFieldDecorator('reward_num', {
@@ -1087,7 +1088,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                             })(<InputNumber precision={0} />)}
                                         </FormItem>
                                     )
-                                }
+                                } */}
 
                             </React.Fragment>
                         )

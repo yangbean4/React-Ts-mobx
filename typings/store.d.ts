@@ -3,7 +3,7 @@
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-10-24 09:57:29
  * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-11-01 15:12:35
+ * @LastEditTime: 2019-12-03 11:26:00
  */
 declare interface IStore {
   offerQueryStore: IOfferQueryStore.OfferQueryStore
@@ -41,4 +41,5 @@ declare interface IStore {
   creativeFrequencyStore: ICreativeFrequencyStore.CreativeFrequencyStore
   iosWhiteListStore: IIosWhiteListStore.IosWhiteListStore
   chartStore: IChartStore.ChartStore
+  maskStore: IMaskSubsiteStore.MaskSubsiteStore
 }

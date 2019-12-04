@@ -3,7 +3,7 @@
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-10-17 14:26:29
  * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-11-29 14:46:47
+ * @LastEditTime: 2019-12-03 11:24:32
  */
 
 import Loadable from 'react-loadable'
@@ -80,6 +80,7 @@ export const asynchronousComponents = {
   EndcardAdd: loadComponent(() => import(/* webpackChunkName: "EndcardAdd" */ '@views/Endcard/EndcardModal/Add')),
   EndcardEdit: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/Endcard/EndcardModal/Edit')),
   // endcardTemplate: loadComponent(() => import(/* webpackChunkName: "EndcardEdit" */ '@views/EndcardTemplate')),
+  Mask: loadComponent(() => import(/* webpackChunkName: "Mask" */ '@views/Mask')),
 
   Creative: loadComponent(() => import(/* webpackChunkName: "Creative" */ '@views/Creative')),
   CreativeAdd: loadComponent(() => import(/* webpackChunkName: "CreativeAdd" */ '@views/Creative/CreativeModal/Add')),
@@ -491,6 +492,7 @@ export const routerAndMenu: IRouter[] = [
     component: 'CommentGroupModel',
     isMenu: false
   },
+
   // ---------Campaigns--------------
   {
     id: 85,
@@ -578,6 +580,18 @@ export const routerAndMenu: IRouter[] = [
     title: 'Edit',
     component: 'BudgetAdd',
     path: '/budget/edit/:id'
+  },
+
+  {
+    id: 88,
+    pid: 8,
+    title: 'Mask Subsite',
+    isMenu: true,
+    hasBread: false,
+    exact: true,
+    authName: 'Offers-Mask Subsite',
+    component: 'Mask',
+    path: '/mask'
   },
   // --------Company---------------
   {

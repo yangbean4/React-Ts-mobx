@@ -3,7 +3,7 @@ import { observer, inject } from 'mobx-react'
 import { observable, action, runInAction } from 'mobx'
 import { Button, Table, Icon } from 'antd'
 import { ComponentExt } from '@utils/reactExt'
-import { statusOption } from '../../web.config'
+import { statusOption, rewardTypeOption } from '../../web.config'
 import FormAdd from '../Add'
 import * as style from './index.scss'
 
@@ -35,6 +35,15 @@ class VcTable extends ComponentExt<TableProps> {
           width={200}
         />
         <Table.Column<ICurrencyStore.ICurrency>
+          key="reward_type"
+          title="Reward Type"
+          dataIndex="reward_type"
+          render={(_) => (
+            (rewardTypeOption.find(item => item.value === _) || {}).key
+          )}
+          width={200}
+        />
+        <Table.Column<ICurrencyStore.ICurrency>
           key="vc_exchange_rate"
           title="VC Exchang Rate"
           dataIndex="vc_exchange_rate"
@@ -42,6 +51,7 @@ class VcTable extends ComponentExt<TableProps> {
             `${_}=1$`
           )}
           width={200} />
+        <Table.Column<ICurrencyStore.ICurrency> key="reward_num" title="Number Of Reward" dataIndex="reward_num" width={200} />
         <Table.Column<ICurrencyStore.ICurrency> key="vc_callback_url" title="VC Callback Url" dataIndex="vc_callback_url" width={200} />
         <Table.Column<ICurrencyStore.ICurrency>
           key="status"

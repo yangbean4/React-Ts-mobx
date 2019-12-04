@@ -1,40 +1,39 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action } from 'mobx'
-import { Form, Input, Select, Row, Col, Button } from 'antd'
+import { Form, Input, Row, Col, Button, Select, Popover } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
-import { platformOption, statusOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
-import * as styles from './index.scss'
+import * as styles from '../MaskModal/index.scss'
+
 
 const FormItem = Form.Item
 
 const span = 6
 const layout = {
   labelCol: {
-    span: 7,
+    span: 5,
   },
   wrapperCol: {
-    span: 17
+    span: 19
   }
 }
 
-
 interface IStoreProps {
-  changeFilter?: (params: IAppGroupStore.SearchParams) => void
-  filters?: IAppGroupStore.SearchParams
+  getMasks?: () => Promise<any>
+  changeFilter?: (params: IMaskSubsiteStore.SearchParams) => void
+  changepage?: (page: number) => void
+  optionListDb?: IMaskSubsiteStore.OptionListDb
 }
-
-
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { changeFilter, filters } = store.appGroupStore
-    return { changeFilter, filters }
+    const { getMasks, changepage, changeFilter, optionListDb } = store.maskStore
+    return { getMasks, changepage, changeFilter, optionListDb }
   }
 )
 @observer
-class AppGroupSearch extends ComponentExt<IStoreProps & FormComponentProps> {
+class MaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   @observable
   private loading: boolean = false
 
@@ -64,83 +63,71 @@ class AppGroupSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   }
 
   render() {
-    const { form, filters } = this.props
+    const { form, optionListDb } = this.props
     const { getFieldDecorator } = form
     return (
       <Form {...layout} >
         <Row>
           <Col span={span}>
-            <FormItem label="App Name" className={styles.searchInput}>
-              {getFieldDecorator('app_name', {
-                initialValue: filters.app_name
-              })(<Input autoComplete="off" />)}
-            </FormItem>
-          </Col>
-          <Col span={span}>
-            <FormItem label="Pkg Name" className={styles.searchInput}>
-              {getFieldDecorator('pkg_name', {
-                initialValue: filters.pkg_name
-              })(<Input autoComplete="off" />)}
-            </FormItem>
-          </Col>
-          <Col span={span}>
-            <FormItem label="Subsite ID">
-              {getFieldDecorator('dev_id', {
-                initialValue: filters.dev_id,
-              })(<Input autoComplete="off" />)}
-            </FormItem>
-          </Col>
-          <Col span={span}>
-            <FormItem label="Platform" className='minInput'>
-              {getFieldDecorator('platform')(
+            <FormItem label="App ID" >
+              {getFieldDecorator('app_key')(
                 <Select
-                  allowClear
-                  mode='multiple'
+                  allowClear={true}
                   showSearch
+                  mode='multiple'
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
-                  {platformOption.map(c => (
-                    <Select.Option {...c}>
-                      {c.key}
+                  {optionListDb.appIdData.map(c => (
+                    <Select.Option key={c.alias_key} value={c.alias_key}>
+                      <Popover content={c.alias_key + '-' + c.app_id} placement="right" overlayClassName={styles.popovers}>
+                        <div className={styles.textHidden}>
+                          {c.alias_key + '-' + c.app_id}
+                        </div>
+                      </Popover>
                     </Select.Option>
                   ))}
                 </Select>
               )}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="Pkg Name">
+              {getFieldDecorator('subsite_id')(
+                <Select
+                  showSearch
+                  mode='multiple'
+                  allowClear={true}
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {optionListDb.pkgNameData.map(c => (
+                    <Select.Option key={c.id} value={c.dev_id}>
+                      {c.dev_id} - {c.pkg_name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="Primary Name">
+              {getFieldDecorator('primary_name')(<Input autoComplete="off" />)}
             </FormItem>
           </Col>
 
-          <Col span={span}>
-            <FormItem label="Status" className='minInput'>
-              {getFieldDecorator('status', {
-                initialValue: filters.status
-              })(
-                <Select
-                  allowClear
-                  showSearch
-                  mode='multiple'
-                  getPopupContainer={trigger => trigger.parentElement}
-                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                >
-                  {statusOption.map(c => (
-                    <Select.Option {...c}>
-                      {c.key}
-                    </Select.Option>
-                  ))}
-                </Select>
-              )}
-            </FormItem>
-          </Col>
+
           <Col span={3} offset={1}>
             <Button type="primary" icon="search" onClick={this.submit} htmlType="submit">Search</Button>
           </Col>
           <Col span={3} offset={1}>
-            <span id='appGroupAddBtn'></span>
+            <span id='maskAddBtn'></span>
           </Col>
+
         </Row>
       </Form>
     )
   }
 }
 
-export default Form.create<IStoreProps>()(AppGroupSearch)
+export default Form.create<IStoreProps>()(MaskSearch)

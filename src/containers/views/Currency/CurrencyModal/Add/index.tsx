@@ -3,10 +3,9 @@ import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
 import { Form, Input, Select, Radio, Button, message, InputNumber } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
-import { statusOption, platformOption } from '../../web.config'
+import { statusOption, platformOption, rewardTypeOption } from '../../web.config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
-
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -67,6 +66,11 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
     @computed
     get isAdd() {
         return !this.props.currency
+    }
+
+    @computed
+    get isTrueAdd() {
+        return this.props.currency != undefined && this.props.currency.id != undefined
     }
 
     @computed
@@ -195,6 +199,7 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
             vc_desc = '',
             vc_secret_key = '',
             status = 1,
+            reward_num,
             reward_type = this.rewardType,
         } = currency || {}
         return (
@@ -298,16 +303,14 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                             ]
                         })(
                             <Radio.Group
-                                disabled={this.props.currency.id !== undefined}
+                                disabled={this.isTrueAdd || this.props.currency.reward_type !== undefined}
                                 onChange={this.rewardTypeChange}
                             >
-                                {/* {web.rewardOption.map(c => (
-                                                <Radio key={c.key} value={c.value}>
-                                                    {c.key}
-                                                </Radio>
-                                            ))} */}
-                                <Radio value={1}>Dynamic Reward</Radio>
-                                <Radio value={2}>Fix Reward</Radio>
+                                {rewardTypeOption.map(c => (
+                                    <Radio key={c.value} value={c.value}>
+                                        {c.key}
+                                    </Radio>
+                                ))}
                             </Radio.Group>
                         )}
                     </FormItem>
@@ -333,8 +336,8 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
                         <span>=1$</span>
                     </FormItem>
                     <FormItem label="Number Of Reward">
-                        {getFieldDecorator('number_of_reward', {
-                            // initialValue: number_of_reward,
+                        {getFieldDecorator('reward_num', {
+                            initialValue: reward_num,
                             rules: [
                                 {
                                     required: this.rewardType === 2, message: "Required",

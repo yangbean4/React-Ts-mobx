@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author:  bean^ <bean_4@163.com>
+ * @Date: 2019-10-24 09:57:07
+ * @LastEditors:  bean^ <bean_4@163.com>
+ * @LastEditTime: 2019-12-03 11:05:17
+ */
 import { AppManageStore as AppManageStoreModel } from './index'
 import { number } from 'prop-types';
 import { title } from '@views/AppGroup/AppGroupModal/Placement/index.scss';
@@ -8,10 +15,10 @@ export interface AppManageStore extends AppManageStoreModel { }
 
 export interface IAppMange {
     app_key?: number | string
+    app_id?: string
     status?: number
     platform?: string
     appstore_url?: string
-    app_id?: string
     account_id?: number
     screen_type?: string
     logo?: string
@@ -22,7 +29,7 @@ export interface IAppMange {
     frame_id?: number
     specs_id?: number
     style_id?: number,
-    
+
 }
 
 export interface IAppGplist {
@@ -39,8 +46,8 @@ export interface SearchParams {
     app_id?: string,
     platform?: string[],
     status?: (number | string)[]
-    category_id?:number[]
-    export?:number
+    category_id?: number[]
+    export?: number
 }
 
 
