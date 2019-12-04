@@ -45,6 +45,9 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
   @observable
   private categoryOption: any[] = [];
 
+  @observable
+  private accountList: any[] = [];
+
   @action
   toggleLoading = () => {
     this.loading = !this.loading
@@ -67,8 +70,17 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
       this.categoryOption = res.data;
     })
   }
+
+  getAccountList = async () => {
+    const res = await this.api.appGroup.getAccountSource();
+    runInAction('SET_ACCOUNT', () => {
+      this.accountList = res.data;
+    })
+  }
+
   componentWillMount() {
     this.getCategory();
+    this.getAccountList();
   }
   componentDidMount() {
     this.IReactionDisposer()
@@ -146,6 +158,27 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 >
                   {this.categoryOption.map(c => (
                     <Select.Option key={c.id} value={c.id}>
+                      {c.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="SEN Account" className='minInput'>
+              {getFieldDecorator('account_name', {
+                initialValue: filters.account_name
+              })(
+                <Select
+                  allowClear
+                  showSearch
+                  mode='multiple'
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {this.accountList.map(c => (
+                    <Select.Option key={c.id} value={c.name}>
                       {c.name}
                     </Select.Option>
                   ))}

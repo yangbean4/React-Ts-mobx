@@ -1,13 +1,15 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { observable, action, computed, runInAction } from 'mobx'
-import { Form, Input, Select, Radio, Button, message, Modal, Popover, Icon as AntIcon, Upload } from 'antd'
+import { Form, Input, Select, Radio, Button, message, Modal, Popover, Icon as AntIcon, Upload, Col } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
 import { statusOption, platformOption, screenOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import Icon from '@components/Icon'
 import AccountModel from './AccountModel'
+import KPI from './kpi';
+import EventConfig from './eventConfig'
 
 const FormItem = Form.Item
 
@@ -93,6 +95,11 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
 
     @observable
     private Id: number
+
+
+    private validKpi: Function;
+
+    private validEventConfig: Function;
 
     @computed
     get usePlatform() {
@@ -223,6 +230,12 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
         form.validateFields(
             async (err, values): Promise<any> => {
                 if (!err) {
+
+                    await this.validKpi();
+                    await this.validEventConfig((err) => {
+                        console.log(err)
+                    });
+
                     this.toggleLoading()
                     try {
                         let data = {
@@ -231,6 +244,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                 id: ''
                             }
                         }
+                        values.event_config = values.event_config.filter(v => v.source_name && v.event_type && v.event_name);
                         values = { ...values }
                         if (this.isAdd) {
                             data = await createAppManage(values)
@@ -302,6 +316,14 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
         })
     }
 
+    setValidKpi = (fn) => {
+        this.validKpi = fn;
+    }
+
+    setValidEventConfig = (fn) => {
+        this.validEventConfig = fn
+    }
+
     render() {
         const props = {
             showUploadList: false,
@@ -345,12 +367,14 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
             account_id = undefined,
             screen_type = '0',
             logo = '',
+            kpi = null,
             rating = '',
             downloads = '',
             category_id = undefined,
             frame_id = 201,
             specs_id = undefined,
-            style_id = 301
+            style_id = 301,
+            event_config = null,
         } = reData || {}
         return (
             <React.Fragment>
@@ -361,6 +385,11 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                 />
                 <div className='sb-form'>
                     <Form {...this.props.type ? miniLayout : formItemLayout} className={styles.currencyModal} >
+                        <Col span={4} className={styles.companyTag}>
+                            <div className={styles.tagWrapper}>
+                                <span>Basic Info</span>
+                            </div>
+                        </Col>
                         {
                             !this.isAdd && <FormItem label="Appkey">
                                 {getFieldDecorator('app_key', {
@@ -623,6 +652,16 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                             <Icon className={!this.isAdd ? styles.hidden : styles.uploadICON} onClick={() => this.toggleAppShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
                         </FormItem>
 
+
+                        {getFieldDecorator('kpi', {
+                            initialValue: kpi,
+                        })(<KPI valid={this.setValidKpi}></KPI>)}
+
+                        {getFieldDecorator('event_config', {
+                            initialValue: event_config,
+                        })(<EventConfig valid={this.setValidEventConfig}></EventConfig>)}
+
+
                         <FormItem className={this.props.type ? styles.vcMdoal : styles.btnBox} >
                             <Button type="primary" loading={this.loading} onClick={this.submit}>Submit</Button>
                             <Button onClick={this.goBack} style={{ marginLeft: 10 }}>Cancel</Button>
@@ -630,7 +669,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                     </Form>
 
                 </div>
-            </React.Fragment>
+            </React.Fragment >
         )
     }
 }

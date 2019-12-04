@@ -1,5 +1,5 @@
 /*
- * @Description: 
+ * @Description:
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-10-24 09:57:29
  * @LastEditors:  bean^ <bean_4@163.com>
@@ -41,5 +41,9 @@ declare interface IStore {
   creativeFrequencyStore: ICreativeFrequencyStore.CreativeFrequencyStore
   iosWhiteListStore: IIosWhiteListStore.IosWhiteListStore
   chartStore: IChartStore.ChartStore
+<<<<<<< HEAD
   maskStore: IMaskSubsiteStore.MaskSubsiteStore
+=======
+  StrategyGroupStore: IStrategyGroupStore.StrategyGroupStore
+>>>>>>> b7828e7782aebe1937bee0c544a04695a1e976ac
 }

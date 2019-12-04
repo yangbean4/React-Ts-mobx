@@ -3,7 +3,7 @@
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-10-24 09:57:29
  * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-12-03 15:21:26
+ * @LastEditTime: 2019-12-04 14:27:37
  */
 import { RouterStore } from 'mobx-react-router'
 
@@ -81,3 +81,4 @@ export { default as chartStore } from './ChartStore'
 
 export { default as maskStore } from './maskSubsiteStore'
 
+export { default as StrategyGroupStore } from './StrategyGroup'

@@ -3,7 +3,7 @@
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-10-24 09:57:07
  * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-12-03 11:05:17
+ * @LastEditTime: 2019-12-04 14:27:49
  */
 import { AppManageStore as AppManageStoreModel } from './index'
 import { number } from 'prop-types';
@@ -29,7 +29,8 @@ export interface IAppMange {
     frame_id?: number
     specs_id?: number
     style_id?: number,
-
+    kpi?: any,
+    event_config?: any,
 }
 
 export interface IAppGplist {
@@ -48,6 +49,7 @@ export interface SearchParams {
     status?: (number | string)[]
     category_id?: number[]
     export?: number
+    account_name?: number[]
 }
 
 
@@ -56,4 +58,5 @@ export interface OptionListDb {
     Frame?: any[],
     Spec?: any[],
     Style?: any[]
+    Account?: any[]
 }

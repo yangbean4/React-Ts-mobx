@@ -34,3 +34,14 @@ export const screenOption = [
     value: '2'
   }
 ]
+
+export const PlatformNameOption = [
+  { key: 'adjust', value: 'adjust' },
+  { key: 'appsflyer', value: 'appsflyer' }
+]
+
+export const EventTypeOption = [
+  { key: 'beginnertask', value: 'beginnertask' },
+  { key: 'open', value: 'open' },
+  { key: 'purchase', value: 'purchase' },
+]

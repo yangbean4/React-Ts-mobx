@@ -121,6 +121,9 @@ export const asynchronousComponents = {
 
   // Bubble Chart
   BubbleChart: loadComponent(() => import(/* webpackChunkName: "BubbleChart" */ '@views/Chart/bubbleChart')),
+
+  // Strategy Group
+  StrategyGroup: loadComponent(() => import(/* webpackChunkName: "BubbleChart" */ '@views/StrategyGroup')),
 }
 
 // 所有路由的key
@@ -264,6 +267,16 @@ export const routerAndMenu: IRouter[] = [
     title: 'Edit Creative Frequency',
     component: 'CreativeFrequencyModal',
   },
+  {
+    id: 55,
+    pid: 5,
+    isMenu: true,
+    exact: true,
+    path: '/StrategyGroup',
+    title: 'Strategy Group',
+    component: 'StrategyGroup',
+    authName: 'Apps-Strategy Group'
+  },
   // --------Offer-----------
   {
     id: 8,
@@ -312,7 +325,7 @@ export const routerAndMenu: IRouter[] = [
     path: '/offer'
   },
   {
-    id: 851,
+    id: 811,
     pid: 81,
     isMenu: false,
     path: '/offer/add',
@@ -320,7 +333,7 @@ export const routerAndMenu: IRouter[] = [
     component: 'AppManagesModel',
   },
   {
-    id: 851,
+    id: 812,
     pid: 81,
     isMenu: false,
     path: '/offer/edit/:id',

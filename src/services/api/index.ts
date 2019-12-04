@@ -1,9 +1,9 @@
 /*
- * @Description: 
+ * @Description:
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-10-24 09:57:29
  * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-12-03 10:19:46
+ * @LastEditTime: 2019-12-04 14:27:21
  */
 export { default as auth } from './auth'
 export { default as user } from './user'
@@ -40,5 +40,4 @@ export { default as creativeFrequency } from './creativeFrequency'
 export { default as ioswhitelist } from './ioswhitelist'
 export { default as chart } from './chart'
 export { default as mask } from './maskSubsite'
-
-
+export { default as strategyGroup } from './strategyGroup'

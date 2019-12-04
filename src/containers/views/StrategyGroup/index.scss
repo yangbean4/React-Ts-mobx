@@ -1,0 +1,30 @@
+@import "_base.scss";
+
+
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.tableBox {
+  flex: 1;
+  overflow-y: hidden;
+}
+
+.linkBtn {
+    border: none;
+    cursor: pointer;
+    background: none;
+    color: $primary-color;
+    outline: none;
+    &:disabled {
+        color: $gray-color;
+    }
+}
+
+
+.popoverContent {
+  max-height: 400px;
+  overflow-y: auto;
+}

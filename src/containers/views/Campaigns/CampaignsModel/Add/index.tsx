@@ -7,6 +7,7 @@ import { statusOption, platformOption, adTypeOption, bidTypeOption, trackingType
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import moment from 'moment'
+import { RouterProps } from 'react-router'
 
 const FormItem = Form.Item
 
@@ -62,7 +63,7 @@ interface IProps extends IStoreProps {
 )
 
 @observer
-class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
+class CampaignsModal extends ComponentExt<IProps & FormComponentProps & RouterProps> {
 
     @observable
     private loading: boolean = false
@@ -585,7 +586,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                 initialValue: moment(start_time),
                                 rules: [{ type: 'object', required: true, message: 'Please select time!' }]
                             }
-                        )(<DatePicker placeholder="Select Time" />)}
+                        )(<DatePicker placeholder="Select Time" format="YYYY-MM-DD HH:mm" showTime={{ format: 'HH:mm' }} />)}
                     </FormItem>
 
                     <FormItem label="End Time">
@@ -594,7 +595,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps> {
                                 initialValue: id && end_time ? moment(end_time) : undefined,
                                 rules: [{ type: 'object', required: false }],
                             }
-                        )(<DatePicker />)}
+                        )(<DatePicker format="YYYY-MM-DD HH:mm" showTime={{ format: 'HH:mm' }} />)}
                     </FormItem>
 
                     <FormItem label="Comment Group">

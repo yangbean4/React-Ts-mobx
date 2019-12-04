@@ -9,7 +9,7 @@ export interface ICampaignGroup {
     app_key?: string
     app_id?: string
     platform?: string
-    status?: number
+    status?: string
     campaign_name?: string
     target_code?: string
     bid_type?: string
