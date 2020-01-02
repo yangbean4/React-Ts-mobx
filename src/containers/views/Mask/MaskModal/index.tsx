@@ -211,7 +211,19 @@ class MaskModal extends ComponentExt<IProps & FormComponentProps> {
                                     required: true, message: "Required"
                                 }
                             ]
-                        })(<Input autoComplete="off" />)}
+                        })(
+                            <Select
+                                showSearch
+                                getPopupContainer={trigger => trigger.parentElement}
+                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                            >
+                                {this.pkgNameList.map(c => (
+                                    <Select.Option key={c.id} value={c.dev_id}>
+                                        {c.dev_id}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        )}
                     </FormItem>
 
                 </Form>
