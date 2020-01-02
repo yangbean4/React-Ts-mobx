@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Col, Form, InputNumber, DatePicker } from 'antd'
 import * as styles from './index.scss'
 import { FormComponentProps } from 'antd/lib/form'
-import { observable, action, computed, runInAction } from 'mobx'
+import { observable, action, computed, runInAction, when } from 'mobx'
 import { observer } from 'mobx-react'
 import moment from 'moment'
 
@@ -31,31 +31,61 @@ interface IProps {
 class KPI extends React.Component<IProps & FormComponentProps>{
 
     // @observable
-    // private isRequired = false;
+    private fromData = null;
+
+    @observable
+    private isRequired = false;
 
     componentDidMount() {
         // 添加效验方法
         this.props.valid(this.props.form.validateFields)
     }
 
-    @computed
-    get isRequired() {
-        if (this.props.value == null) return false;
-        const res = !!Object.values(this.props.value).find(v => v);
+    constructor(props) {
+        super(props);
+
+        when(
+            () => this.props.value,
+            () => this.setIsRequired()
+        );
+    }
+
+    @action
+    setIsRequired = () => {
+        const data = this.fromData || this.props.value;
+        if (data == null) return this.isRequired = false;
+        const res = !!Object.values(data).find(v => v);
+        this.isRequired = res;
+        console.log(this.isRequired);
         if (res == false) {
-            setImmediate(this.props.form.validateFields);
+            setImmediate(() => this.props.form.validateFields({
+                force: true
+            }));
         }
-        return res;
+    }
+
+    @computed
+    get value() {
+        if (this.props.value && !Array.isArray(this.props.value)) {
+            return this.props.value;
+        }
+        return null;
     }
 
 
     onchange = () => setImmediate(() => {
         const data = this.props.form.getFieldsValue();
-        this.props.onChange({
-            ...data,
-            start_time: data.start_time && data.start_time.format('YYYY-MM-DD'),
-            end_time: data.end_time && data.end_time.format('YYYY-MM-DD')
-        });
+        if (!Object.values(data).find(v => v)) {
+            this.props.onChange({});
+        } else {
+            this.props.onChange({
+                ...data,
+                start_time: data.start_time && data.start_time.format('YYYY-MM-DD'),
+                end_time: data.end_time && data.end_time.format('YYYY-MM-DD')
+            });
+        }
+        this.fromData = data;
+        this.setIsRequired();
     })
 
     render() {
@@ -64,7 +94,7 @@ class KPI extends React.Component<IProps & FormComponentProps>{
             rate = '',
             start_time = null,
             end_time = null
-        } = this.props.value || {};
+        } = this.value || {};
         return <div>
             <Col span={4} className={styles.companyTag} style={{ float: 'none' }}>
                 <div className={styles.tagWrapper}>
@@ -78,14 +108,15 @@ class KPI extends React.Component<IProps & FormComponentProps>{
                         { required: this.isRequired, message: "Required" },
                         {
                             validator: (r, v, callback) => {
+                                if (this.isRequired == false) return callback();
                                 if (v <= 0) {
-                                    callback('The Exchange Rate should be a positive number!')
+                                    return callback('The Exchange Rate should be a positive number!')
                                 }
                                 callback()
                             }
                         }
                     ]
-                })(<InputNumber precision={2} onChange={this.onchange} />)}
+                })(<InputNumber precision={0} onChange={this.onchange} />)}
                 <span style={{ marginLeft: "5px" }}>%</span>
             </FormItem>
             <FormItem label="Start Time" {...formItemLayout}>

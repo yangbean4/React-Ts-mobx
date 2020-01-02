@@ -1,5 +1,5 @@
 /*
- * @Description: 
+ * @Description:
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-12-03 09:56:50
  * @LastEditors:  bean^ <bean_4@163.com>
@@ -30,7 +30,8 @@ export class MaskSubsiteStore extends StoreExt {
   @observable
   optionListDb: IMaskSubsiteStore.OptionListDb = {
     appIdData: [],
-    pkgNameData: []
+    pkgNameData: [],
+    usedMask: {}
   }
 
   @observable
@@ -50,6 +51,13 @@ export class MaskSubsiteStore extends StoreExt {
         this.optionListDb = target
       })
     })
+  }
+
+  @action
+  getUsedMask = () => {
+    this.api.mask.getusedMask({}).then(res => runInAction('SET', () => {
+      this.optionListDb.usedMask = res.data;
+    }));
   }
 
   @action

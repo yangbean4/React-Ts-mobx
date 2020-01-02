@@ -87,7 +87,7 @@ class WhiteBlackTable extends ComponentExt<IProps> {
             />
             <Table.Column<IStrategyGroupStore.IitemForList>
               dataIndex="strategy_name"
-              title="Category  Whitelist"
+              title="Strategy Name"
               width="20%"
             />
             <Table.Column<IStrategyGroupStore.IitemForList>

@@ -232,8 +232,8 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                 if (!err) {
 
                     await this.validKpi();
-                    await this.validEventConfig((err) => {
-                        console.log(err)
+                    await this.validEventConfig((...args) => {
+                        console.error(args)
                     });
 
                     this.toggleLoading()
@@ -244,7 +244,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                                 id: ''
                             }
                         }
-                        values.event_config = values.event_config.filter(v => v.source_name && v.event_type && v.event_name);
+                        values.event_config = values.event_config && values.event_config.filter(v => v.source_name && v.event_type && v.event_name);
                         values = { ...values }
                         if (this.isAdd) {
                             data = await createAppManage(values)
@@ -274,7 +274,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                             this.props.form.resetFields()
                         }
                     } catch (error) {
-                        console.log(err)
+                        console.error(error)
                     }
                     this.toggleLoading()
                 }

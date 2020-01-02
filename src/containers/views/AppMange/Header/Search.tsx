@@ -145,7 +145,7 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
             </FormItem>
           </Col>
           <Col span={span}>
-            <FormItem label="Category" className='minInput'>
+            <FormItem label="Category" className={styles.labelWidth + ' minInput'} >
               {getFieldDecorator('category_id', {
                 initialValue: filters.category_id
               })(
@@ -153,6 +153,7 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode='multiple'
+                  maxTagCount={1}
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
@@ -166,7 +167,7 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
             </FormItem>
           </Col>
           <Col span={span}>
-            <FormItem label="SEN Account" className='minInput'>
+            <FormItem label="SEN Account" className={styles.labelWidth + ' minInput'}>
               {getFieldDecorator('account_name', {
                 initialValue: filters.account_name
               })(
@@ -174,6 +175,7 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear
                   showSearch
                   mode='multiple'
+                  maxTagCount={1}
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >

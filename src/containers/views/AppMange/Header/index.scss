@@ -4,5 +4,10 @@
         width: 160px !important;
     }
   }
-  
+}
+
+.labelWidth {
+  :global(.ant-select-selection__choice:not(.ant-select-selection__choice__disabled)) {
+    width: 80px;
+  }
 }

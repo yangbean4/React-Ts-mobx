@@ -11,8 +11,8 @@ import { RouterProps } from 'react-router'
 
 const FormItem = Form.Item
 
-const DateFormat = 'YYYY-MM-DD'
-const Now = moment().format(DateFormat)
+const DateFormat = 'YYYY-MM-DD HH:mm'
+const Now = moment.utc().format(DateFormat)
 // const IVE = 'IVE'
 
 const formItemLayout = {
@@ -586,7 +586,8 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps & RouterPr
                                 initialValue: moment(start_time),
                                 rules: [{ type: 'object', required: true, message: 'Please select time!' }]
                             }
-                        )(<DatePicker placeholder="Select Time" format="YYYY-MM-DD HH:mm" showTime={{ format: 'HH:mm' }} />)}
+                        )(<DatePicker placeholder="Select Time" format={DateFormat} showTime={{ format: 'HH:mm' }} />)}
+                        <span style={{ marginLeft: 5, color: '#999' }}>(UTC+0)</span>
                     </FormItem>
 
                     <FormItem label="End Time">
@@ -595,7 +596,8 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps & RouterPr
                                 initialValue: id && end_time ? moment(end_time) : undefined,
                                 rules: [{ type: 'object', required: false }],
                             }
-                        )(<DatePicker format="YYYY-MM-DD HH:mm" showTime={{ format: 'HH:mm' }} />)}
+                        )(<DatePicker format={DateFormat} showTime={{ format: 'HH:mm', defaultValue: moment.utc() }} />)}
+                        <span style={{ marginLeft: 5, color: '#999' }}>(UTC+0)</span>
                     </FormItem>
 
                     <FormItem label="Comment Group">

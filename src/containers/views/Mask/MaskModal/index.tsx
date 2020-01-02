@@ -27,7 +27,8 @@ interface IStoreProps {
     createMask?: (mask: IMaskSubsiteStore.IMask) => Promise<any>
     modifyMask?: (mask: IMaskSubsiteStore.IMask) => Promise<any>
     getMasks?: () => Promise<any>
-    optionListDb?: IMaskSubsiteStore.OptionListDb
+    optionListDb?: IMaskSubsiteStore.OptionListDb,
+    getUsedMask?: () => void
 }
 interface IProps extends IStoreProps {
     visible: boolean
@@ -37,8 +38,8 @@ interface IProps extends IStoreProps {
 @inject(
     (store: IStore): IStoreProps => {
         const { maskStore } = store
-        const { createMask, modifyMask, getMasks, optionListDb } = maskStore
-        return { createMask, modifyMask, getMasks, optionListDb }
+        const { createMask, modifyMask, getMasks, optionListDb, getUsedMask } = maskStore
+        return { createMask, modifyMask, getMasks, optionListDb, getUsedMask }
     }
 )
 
@@ -47,10 +48,18 @@ class MaskModal extends ComponentExt<IProps & FormComponentProps> {
     @observable
     private loading: boolean = false
 
+    @observable
+    private selectAppidPlatform;
+
+    @observable
+    private usedMask = [];
+
+
     @computed
     get typeIsAdd() {
         return !this.props.mask || !this.props.mask.id
     }
+
     @computed
     get title() {
         return this.typeIsAdd ? 'Add Mask Subsite' : 'Edit Mask Subsite'
@@ -60,6 +69,19 @@ class MaskModal extends ComponentExt<IProps & FormComponentProps> {
     @action
     toggleLoading = () => {
         this.loading = !this.loading
+    }
+
+    @action
+    setSelectAppidPlatform = (value) => {
+        let obj = (this.props.optionListDb.appIdData.find(v => v.alias_key === value) || {});
+        this.selectAppidPlatform = obj.platform;
+        this.usedMask = (this.props.optionListDb.usedMask[obj.alias_key] || '').split(',');
+    }
+
+    @computed
+    get pkgNameList() {
+        if (this.selectAppidPlatform == null) return this.props.optionListDb.pkgNameData;
+        return this.props.optionListDb.pkgNameData.filter(v => v.platform === this.selectAppidPlatform);
     }
 
 
@@ -83,7 +105,8 @@ class MaskModal extends ComponentExt<IProps & FormComponentProps> {
                                 app_key: `${values.app_key}`,
                                 app_id,
                             }
-                            data = await createMask(values)
+                            data = await createMask(values);
+                            this.props.getUsedMask();
                         } else {
                             data = await modifyMask({ mask_id: values.mask_id, subsite_ids: values.subsite_ids, id: mask.id })
                         }
@@ -96,14 +119,10 @@ class MaskModal extends ComponentExt<IProps & FormComponentProps> {
         )
     }
 
-
-
-
     onCancel = () => {
         this.props.onCancel()
         this.props.form.resetFields()
     }
-
 
     render() {
         const { mask, form, visible, optionListDb } = this.props
@@ -143,8 +162,9 @@ class MaskModal extends ComponentExt<IProps & FormComponentProps> {
                                 allowClear={true}
                                 showSearch
                                 disabled={!this.typeIsAdd}
+                                onChange={this.setSelectAppidPlatform}
                                 getPopupContainer={trigger => trigger.parentElement}
-                                filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                filterOption={(input, option) => (option.props.children as Popover).props.content.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             >
                                 {optionListDb.appIdData.map(c => (
                                     <Select.Option key={c.alias_key} value={c.alias_key}>
@@ -175,8 +195,8 @@ class MaskModal extends ComponentExt<IProps & FormComponentProps> {
                                     getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
-                                    {optionListDb.pkgNameData.map(c => (
-                                        <Select.Option key={c.id} value={c.dev_id}>
+                                    {this.pkgNameList.map(c => (
+                                        <Select.Option key={c.id} value={c.dev_id} disabled={this.usedMask.includes(c.dev_id)}>
                                             {c.dev_id} - {c.pkg_name}
                                         </Select.Option>
                                     ))}

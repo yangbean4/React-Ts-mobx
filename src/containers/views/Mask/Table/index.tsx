@@ -182,15 +182,11 @@ class MaskTable extends ComponentExt<IProps> {
                                         </a>
                                     ])
                                 }
-                                {
-                                    this.$checkAuth('Offers-Mask Subsite-Edit&Offers-Mask Subsite-Delete', (
-                                        <Divider key='Divider2' type="vertical" />
-                                    ))
-                                }
+                                &nbsp;&nbsp;
                                 {
                                     this.$checkAuth('Offers-Mask Subsite-Delete', (
                                         <a href="javascript:;" onClick={() => this.deleteModel(record)}>
-                                            <MyIcon type='iconshanchu' />
+                                            <Icon type='delete' />
                                         </a>
                                     ))
                                 }

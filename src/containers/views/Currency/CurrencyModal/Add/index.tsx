@@ -68,6 +68,13 @@ class CurrencyModal extends ComponentExt<IProps & FormComponentProps> {
         return !this.props.currency
     }
 
+    @action
+    componentDidMount() {
+        if (this.props.currency && this.props.currency.reward_type) {
+            this.rewardType = this.props.currency.reward_type;
+        }
+    }
+
     @computed
     get isTrueAdd() {
         return this.props.currency != undefined && this.props.currency.id != undefined

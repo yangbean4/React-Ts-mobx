@@ -39,17 +39,8 @@ class EventConfig extends React.Component<IProps & FormComponentProps>{
     }
 
     @computed
-    get isRequired() {
-        if (this.props.value == null) return false;
-        const res = !!Object.values(this.props.value).find(v => v);
-        if (res == false) {
-            setImmediate(this.props.form.validateFields);
-        }
-        return res;
-    }
-
-    @computed
     get dataList() {
+        console.log(this.props.value)
         if (this.props.value === null || this.props.value.length == 0) {
             return [
                 {
@@ -65,10 +56,12 @@ class EventConfig extends React.Component<IProps & FormComponentProps>{
 
     remove = (k) => {
         let data = this.props.form.getFieldValue('eventConfig').filter((v, i) => i !== k);
-        this.props.form.setFieldsValue({
-            eventConfig: data
-        })
         this.props.onChange(data);
+        setImmediate(() => {
+            this.props.form.setFieldsValue({
+                eventConfig: this.dataList
+            })
+        });
     }
 
     add = () => {
@@ -85,7 +78,7 @@ class EventConfig extends React.Component<IProps & FormComponentProps>{
 
     render() {
         const { getFieldDecorator } = this.props.form
-        return <div>
+        return <div style={{ marginBottom: 30 }}>
             <Col span={4} className={styles.companyTag} style={{ float: 'none' }}>
                 <div className={styles.tagWrapper}>
                     <span>Event Config</span>
@@ -93,7 +86,7 @@ class EventConfig extends React.Component<IProps & FormComponentProps>{
             </Col>
             <Row>
                 <Col xs={24} sm={5} lg={2}></Col>
-                <Col xs={24} sm={19} lg={9}>
+                <Col xs={24} sm={19} lg={13}>
                     <table className={styles.table}>
                         <thead>
                             <tr>

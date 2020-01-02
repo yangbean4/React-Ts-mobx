@@ -1,5 +1,5 @@
 /*
- * @Description: 
+ * @Description:
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-12-03 09:57:00
  * @LastEditors:  bean^ <bean_4@163.com>
@@ -28,8 +28,12 @@ export interface OptionListDb {
   appIdData?: ({
     app_id?: string
     alias_key?: string
+    platform?: string
   })[],
   pkgNameData?: any[],
+  usedMask?: {
+    [key: string]: string
+  }
 }
 
 export interface SearchParams {

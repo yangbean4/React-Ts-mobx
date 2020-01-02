@@ -1,5 +1,5 @@
 /*
- * @Description: 
+ * @Description:
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-12-03 10:16:31
  * @LastEditors:  bean^ <bean_4@163.com>
@@ -24,6 +24,11 @@ export default {
   deleteMask(data): Promise<any> {
     return http.post(`${basePath}del`, data || {})
   },
+
+  getusedMask(data): Promise<any> {
+    return http.post(`${basePath}disposeData`, data || {})
+  },
+
   getappIdData(data): Promise<any> {
     return http.post(`api/appsManage/senAppOnlineList`, data || {})
   },

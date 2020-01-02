@@ -14,6 +14,9 @@ export const pidTypes = [
   }, {
     key: 'Reward S2s',
     value: 5
+  }, {
+    key: 'Interstitial',
+    value: 6
   }
 ]
 

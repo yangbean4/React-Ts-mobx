@@ -600,7 +600,6 @@ export const routerAndMenu: IRouter[] = [
     pid: 8,
     title: 'Mask Subsite',
     isMenu: true,
-    hasBread: false,
     exact: true,
     authName: 'Offers-Mask Subsite',
     component: 'Mask',

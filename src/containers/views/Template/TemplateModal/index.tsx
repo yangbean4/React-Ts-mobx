@@ -73,8 +73,6 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
 
     @computed
     get title() {
-        // const template_pname = this.props.template_pname
-        // const str = (/ template$/).test(template_pname.toLowerCase()) ? template_pname : `${template_pname} Template`
         const str = this.props.template_pname
         return this.typeIsAdd ? `Add ${str}` : `Edit ${str}`
     }
@@ -173,7 +171,8 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
             version = '',
             template_type = undefined
         } = template || {}
-        const type = ".html, .mp4";
+        const typeArr = this.props.template_pname.toLowerCase() === 'js' ? ['.zip'] : [".html", ".mp4"]
+        const type = typeArr.join(",")
         const props = {
             showUploadList: false,
             accept: type,
@@ -183,13 +182,13 @@ class TemplateModal extends ComponentExt<IProps & FormComponentProps> {
                 const houz = file.name.split('.').pop()
                 const isHtml = type.includes(houz)
                 if (!isHtml) {
-                    message.error('Upload failed! The file must be in HTML or MP4 format.');
+                    message.error('Upload failed! The file must be in HTML or MP4 format.')
                 }
-                const isLt2M = file.size / 1024 / 1024 < 3;
+                const isLt2M = file.size / 1024 / 1024 < 3
                 if (!isLt2M) {
-                    message.error('Image must smaller than 2MB!');
+                    message.error('Image must smaller than 2MB!')
                 }
-                return isHtml && isLt2M;
+                return isHtml && isLt2M
             },
             customRequest: (data) => {
                 this.setTemplate({})

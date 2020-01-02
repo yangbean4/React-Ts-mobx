@@ -651,7 +651,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 }
                             ]
-                        })(<InputNumber precision={2} min={0} max={1000} />)}
+                        })(<InputNumber precision={0} min={0} max={1000} />)}
                     </FormItem>
 
                     <FormItem label="Offer Rate">

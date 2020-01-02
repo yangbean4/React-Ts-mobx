@@ -5,8 +5,10 @@ import Search from './Search'
 import { observable, action } from 'mobx'
 import MaskModal from './../MaskModal'
 import PortalsBtn from '@components/portalsBtn'
+import { ComponentExt } from '@utils/reactExt'
+
 @observer
-class Header extends React.Component {
+class Header extends ComponentExt {
     @observable
     private userModalVisible: boolean = false
 
@@ -19,11 +21,15 @@ class Header extends React.Component {
         return (
             <div className='searchForm'>
                 <Search />
-                <PortalsBtn querySelector='#maskAddBtn'>
-                    <Button icon='plus' type="primary" onClick={this.toggleMaskModalVisible}>
-                        Add
-                </Button>
-                </PortalsBtn>
+                {
+                    this.$checkAuth('Offers-Mask Subsite-Add', (
+                        <PortalsBtn querySelector='#maskAddBtn'>
+                            <Button icon='plus' type="primary" onClick={this.toggleMaskModalVisible}>
+                                Add
+                            </Button>
+                        </PortalsBtn>
+                    ))
+                }
 
                 <MaskModal visible={this.userModalVisible} onCancel={this.toggleMaskModalVisible} />
             </div>

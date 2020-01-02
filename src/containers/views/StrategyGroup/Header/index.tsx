@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
-import { Button, Modal, Input } from 'antd'
+import { Button, Modal, Input, Row, Col } from 'antd'
 import Search from './Search'
 import { ComponentExt } from '@utils/reactExt'
 import PortalsBtn from '@components/portalsBtn'
@@ -83,7 +83,11 @@ class Header extends ComponentExt<IStoreProps> {
                     destroyOnClose={true}
                     width={400}
                 >
-                    <Input placeholder="Please input strategy name" onInput={this.setName}></Input>
+                    <Row>
+                        <Col span={7} style={{ textAlign: "right", lineHeight: '30px', paddingRight: 10 }}>Strategy Name: </Col>
+                        <Col span={17}><Input placeholder="Please input strategy name" onInput={this.setName}></Input></Col>
+                    </Row>
+
                 </Modal>
             </div>
         )

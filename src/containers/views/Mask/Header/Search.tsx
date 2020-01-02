@@ -75,8 +75,9 @@ class MaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   allowClear={true}
                   showSearch
                   mode='multiple'
+                  maxTagCount={1}
                   getPopupContainer={trigger => trigger.parentElement}
-                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  filterOption={(input, option) => (option.props.children as Popover).props.content.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {optionListDb.appIdData.map(c => (
                     <Select.Option key={c.alias_key} value={c.alias_key}>
@@ -99,6 +100,7 @@ class MaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   mode='multiple'
                   allowClear={true}
                   getPopupContainer={trigger => trigger.parentElement}
+                  maxTagCount={1}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {optionListDb.pkgNameData.map(c => (
@@ -111,8 +113,8 @@ class MaskSearch extends ComponentExt<IStoreProps & FormComponentProps> {
             </FormItem>
           </Col>
           <Col span={span}>
-            <FormItem label="Primary Name">
-              {getFieldDecorator('primary_name')(<Input autoComplete="off" />)}
+            <FormItem label="Mask Subsite">
+              {getFieldDecorator('mask_id')(<Input autoComplete="off" />)}
             </FormItem>
           </Col>
 
