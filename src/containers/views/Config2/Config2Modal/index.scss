@@ -1,0 +1,400 @@
+@import "_base.scss";
+
+:global {
+  .ant-tabs .ant-tabs-top-content,
+  .ant-tabs .ant-tabs-bottom-content {
+    overflow-x: scroll;
+  }
+  .dropZone > .itemBox {
+    & > .haveChild > .ant-form-item-label > label {
+      height: 40px;
+      display: block;
+      width: max-content;
+      margin-left: 30px;
+      padding-left: 14px;
+      background: #f2f4fe;
+      color: #667ffd;
+      &::after {
+        content: " ";
+        display: inline-block;
+        width: 0;
+        border-color: transparent;
+        border-left-color: #f2f4fe;
+        border-width: 20px;
+        border-style: solid;
+        height: 0;
+        margin: unset;
+        position: absolute;
+      }
+    }
+    & > .ggg {
+      // margin-left: 80px;
+      .ggg {
+        margin-left: 80px;
+      }
+    }
+  }
+}
+
+.configModal {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  height: max-content;
+
+  :global(.cancelBtn) {
+    margin-left: 40px;
+  }
+  :global(.submitBtn) {
+    margin: 20px 0 40px 260px;
+  }
+  :global(.ant-input-number) {
+    width: auto;
+  }
+  // ?-----------
+  :global(.POP) {
+    :global(.ant-input) {
+      text-align: center;
+    }
+    :global(.ant-form-item-control) {
+      line-height: 1.5;
+    }
+
+    :global(.title) {
+      width: max-content;
+      height: 40px;
+      line-height: 40px;
+      padding-left: 10px;
+      font-size: 14px;
+      font-family: Montserrat-Light;
+      font-weight: 300;
+      color: rgba(102, 127, 253, 1);
+      background: rgba(242, 244, 254, 1);
+      margin-bottom: 20px;
+      :global(span) {
+        float: left;
+      }
+      :global(.sanjiao) {
+        display: inline-block;
+        width: 0;
+        border-color: #fff;
+        border-left-color: #f2f4fe;
+        border-width: 20px;
+        border-style: solid;
+        height: 0;
+      }
+    }
+    :global(.popBox2 .card .li) {
+      margin: 0 auto 18px;
+    }
+
+    :global(.popBox3 .card) {
+      background: rgba(255, 255, 255, 1);
+      :global(.li) {
+        width: 275px;
+        height: 48px;
+        background: rgba(247, 248, 252, 1);
+        border: 1px solid rgba(228, 237, 240, 1);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        :global(.fl) {
+          width: 40px;
+          height: 40px;
+          font-size: 10px;
+          line-height: 40px;
+          background: rgba(255, 255, 255, 1);
+          border: 1px solid rgba(228, 237, 240, 1);
+          border-radius: 4px;
+          text-align: center;
+        }
+        :global(.fr) {
+          flex: 1;
+          :global(.top) {
+            float: left;
+            font-size: 13px;
+            margin-left: 8px;
+          }
+          :global(.bottom) {
+            float: right;
+            width: 90px;
+            height: 30px;
+            background: rgba(255, 255, 255, 1);
+            border: 1px solid rgba(228, 237, 240, 1);
+            border-radius: 2px;
+            :global(.ant-input) {
+              height: 30px;
+            }
+          }
+        }
+      }
+    }
+    :global(.card) {
+      width: 100%;
+      height: 270px;
+      background: rgba(247, 248, 252, 1);
+      border: 1px solid rgba(228, 237, 240, 1);
+      border-radius: 4px;
+      padding-top: 30px;
+      margin-bottom: 40px;
+
+      :global(.star) {
+        color: #ffd800;
+      }
+      :global(.li) {
+        width: 260px;
+        height: 30px;
+        background: rgba(255, 255, 255, 1);
+        border: 1px solid rgba(228, 237, 240, 1);
+        border-radius: 4px;
+        margin: 0 auto 20px;
+      }
+      :global(.bigLi) {
+        height: 80px;
+        background: rgba(247, 248, 252, 1);
+        border: 0;
+        display: flex;
+        :global(.fl) {
+          width: 80px;
+          height: 80px;
+          line-height: 80px;
+          text-align: center;
+          background: rgba(255, 255, 255, 1);
+          border: 1px solid rgba(228, 237, 240, 1);
+          border-radius: 4px;
+          margin-right: 20px;
+        }
+        :global(.fr) {
+          flex: 1;
+          :global(.top) {
+            width: 140px;
+            height: 14px;
+            font-size: 14px;
+            font-family: Montserrat-Light;
+            font-weight: 300;
+            color: rgba(62, 54, 100, 1);
+          }
+          :global(.bottom) {
+            width: 90px;
+            height: 30px;
+            margin-top: 4px;
+            background: rgba(255, 255, 255, 1);
+            border: 1px solid rgba(228, 237, 240, 1);
+            border-radius: 4px;
+          }
+        }
+      }
+      :global(.xiaoLi) {
+        height: 60px;
+        :global(.fl) {
+          width: 60px;
+          height: 60px;
+          line-height: 60px;
+        }
+        :global(.fr) {
+          :global(.top) {
+            width: 120px;
+            height: 11px;
+            font-size: 12px;
+            font-family: Montserrat-Light;
+            font-weight: 300;
+            color: rgba(62, 54, 100, 1);
+          }
+          :global(.bottom) {
+            width: 86px;
+            height: 26px;
+            margin-top: 1px;
+            background: rgba(255, 255, 255, 1);
+            border: 1px solid rgba(228, 237, 240, 1);
+            border-radius: 4px;
+            :global(.ant-input) {
+              height: 26px;
+              font-size: 12px;
+            }
+          }
+        }
+      }
+
+      :global(.btnGroup) {
+        display: flex;
+        // justify-content: center;
+        align-items: center;
+        background: rgba(247, 248, 252, 1);
+        border: 0;
+        :global(.btn) {
+          width: 88px;
+          height: 30px;
+          background: rgba(255, 255, 255, 1);
+          border: 1px solid rgba(228, 237, 240, 1);
+          border-radius: 4px;
+        }
+        :global(.flbtn) {
+          margin-right: 20px;
+        }
+      }
+    }
+  }
+  // ---------------------------------
+}
+
+.head {
+  margin-bottom: 20px;
+  .row {
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+    .title {
+      text-align: right;
+      width: 30%;
+      max-width: 200px;
+      color: rgba(62, 55, 100, 1);
+      margin-right: 20px;
+    }
+    .value {
+      font-weight: 300;
+      flex: 1;
+      color: rgba(154, 151, 174, 1);
+    }
+  }
+}
+
+:global(.Basic) {
+  min-width: 960px;
+  :global(.additemGroup) {
+    margin-left: 110px;
+    :global(.ggg) {
+      margin-left: 80px;
+    }
+  }
+  :global(.dropZone > .addItemHasChildren) {
+    margin-left: -90px;
+  }
+
+  :global(.ant-form-item-label) {
+    font-size: 14px;
+    font-family: Montserrat-Light;
+    color: #3e3664;
+  }
+  :global(.addConfigItem) {
+    width: 900px;
+    min-height: 70px;
+    padding-top: 15px;
+  }
+  :global(.gouSelect .ant-select) {
+    display: inline-block;
+    margin-left: 14px;
+    // width: calc(100% - );
+  }
+  :global(.redioGroup) {
+    float: left;
+    display: inline-block;
+    height: 100%;
+    line-height: 30px;
+    width: max-content;
+    :global(.ant-input) {
+      width: 140px;
+    }
+  }
+
+  // :global(.addItem) {
+  // }
+
+  :global(.work.ant-form-item) {
+    width: 900px;
+    min-height: 70px;
+    margin-bottom: 0;
+    display: flex;
+    // justify-content: center;
+    align-items: center;
+    &:global(.hasWork:hover) {
+      background-color: rgba(248, 249, 254, 1);
+      :global(.workBox) {
+        display: block !important;
+      }
+    }
+
+    :global(.ant-form-item-control-wrapper) {
+      width: 560px;
+      height: auto;
+      :global(.box) {
+        width: 100%;
+        :global(.mainBox) {
+          width: 50%;
+          float: left;
+          :global(.hasUnit) {
+            width: 50%;
+            margin-right: 10px;
+          }
+        }
+
+        :global(.workBox) {
+          width: 40%;
+          float: right;
+          display: none;
+          :global(.anticon) {
+            margin-right: 10px;
+            color: rgba(186, 193, 229, 1);
+            &:hover {
+              color: #667ffd;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  :global(.workBtn) {
+    position: absolute;
+    top: 60px;
+    right: 30px;
+  }
+}
+
+:global(.PID) {
+  width: 100%;
+  overflow-x: scroll;
+  :global(.Basic) {
+    :global(.dropZone > .addItemHasChildren) {
+      margin-left: 0;
+    }
+    :global(.additemGroup) {
+      margin-left: 120px;
+    }
+  }
+  :global {
+    .formBox {
+      min-width: 960px;
+    }
+
+    .dropZone > .itemBox {
+      & > .haveChild > .ant-form-item-label > label {
+        margin-right: 28px;
+        float: right;
+      }
+      & > .ggg {
+        margin-left: 220px;
+        .ant-col-6.ant-form-item-label {
+          width: 20%;
+        }
+        .ggg {
+          margin-left: 200px;
+        }
+        .ant-form-item-label {
+          text-align: left;
+        }
+        .addConfigItem {
+          .ant-col-offset-3:first-child {
+            margin-left: 0;
+            margin-right: 8.9%;
+          }
+        }
+      }
+    }
+  }
+}
+
+:global(.number-no-handle) {
+  :global(.ant-input-number-handler-wrap) {
+    display: none;
+  }
+}

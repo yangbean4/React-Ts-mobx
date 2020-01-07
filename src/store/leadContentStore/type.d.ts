@@ -10,7 +10,7 @@ export interface ILeadContent {
     platform?: string
     // app_id?: string
     // app_name?: string
-
+    content_filesize?: string | number
     status?: int
     app_key?: string
     version?: string

@@ -1,0 +1,77 @@
+.tree {
+  :global {
+    .ant-form-item-control {
+      height: unset;
+    }
+    .ant-form-item-children {
+      width: 240px;
+      height: 173px;
+      border: 1px solid rgba(228, 237, 240, 1);
+      border-radius: 4px;
+      overflow: auto;
+      display: block;
+    }
+  }
+}
+.errmsg {
+  color: #f5222d;
+  height: 16px;
+  line-height: 14px;
+}
+.dynamic {
+  width: 18px;
+  height: 18px;
+  color: #fff;
+  text-align: center;
+  line-height: 18px;
+  margin-right: 12px;
+  background: rgba(186, 193, 229, 1);
+}
+
+.xia {
+  margin-top: -20px;
+  padding-left: 25%;
+}
+
+.help {
+  width: 343px;
+  height: 34px;
+  font-size: 14px;
+  font-family: MicrosoftYaHei;
+  font-weight: 400;
+  color: rgba(154, 151, 174, 1);
+  line-height: 22px;
+}
+
+.minInput {
+  width: 80% !important;
+  margin-right: 16px;
+}
+
+.workBtn {
+  width: 40px;
+  height: 40px;
+  background: rgba(237, 240, 255, 1);
+  border-radius: 4px;
+  color: #667ffd;
+  position: absolute;
+  line-height: 40px;
+}
+
+.box {
+  display: flex;
+  flex-direction: row;
+}
+.redio {
+  width: 16px;
+  margin: 0 10px;
+}
+
+.inputBox {
+  flex: 1;
+}
+.radio {
+  height: 40px;
+  line-height: 40px;
+  margin-bottom: 24.5px;
+}

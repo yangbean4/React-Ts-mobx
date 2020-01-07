@@ -35,4 +35,7 @@ export default {
   uploadIosWhite(data): Promise<any> {
     return http.post(`${basePath}uploadIosWhite`, data || {})
   },
+  uploadLoadVideo(data): Promise<any> {
+    return http.post(`${basePath}uploadLoadVideo`, data || {})
+  }
 }

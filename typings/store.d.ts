@@ -40,7 +40,9 @@ declare interface IStore {
   topCreativeStore: ITopCreativeStore.topCreativeStore
   creativeFrequencyStore: ICreativeFrequencyStore.CreativeFrequencyStore
   iosWhiteListStore: IIosWhiteListStore.IosWhiteListStore
+  loadVideoStore: ILoadVideoStore.LoadVideoStore
   chartStore: IChartStore.ChartStore
+  config2Store: IConfigStore.Config2Store
   maskStore: IMaskSubsiteStore.MaskSubsiteStore
   StrategyGroupStore: IStrategyGroupStore.StrategyGroupStore
 }

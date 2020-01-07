@@ -119,9 +119,16 @@ export const asynchronousComponents = {
   IosWhiteList: loadComponent(() => import(/* webpackChunkName: "IosWhitelist" */ '@views/IosWhiteList')),
   IosWhiteListEdit: loadComponent(() => import(/* webpackChunkName: "IosWhitelistEdit" */ '@views/IosWhiteList/IosWhiteListModal/Edit')),
 
+  // Load Video 2.0
+  LoadVideo: loadComponent(() => import(/* webpackChunkName: "LoadVideo" */ '@views/LoadVideo')),
+  LoadVideoEdit: loadComponent(() => import(/* webpackChunkName: "LoadVideoEdit" */ '@views/LoadVideo/LoadVideoModal/Edit')),
+
   // Bubble Chart
   BubbleChart: loadComponent(() => import(/* webpackChunkName: "BubbleChart" */ '@views/Chart/bubbleChart')),
 
+  // config 2.0
+  Config2: loadComponent(() => import(/* webpackChunkName: "Config" */ '@views/Config2')),
+  Config2Model: loadComponent(() => import(/* webpackChunkName: "ConfigModel" */ '@views/Config2/Config2Modal')),
   // Strategy Group
   StrategyGroup: loadComponent(() => import(/* webpackChunkName: "BubbleChart" */ '@views/StrategyGroup')),
 }
@@ -761,6 +768,33 @@ export const routerAndMenu: IRouter[] = [
     component: 'ConfigModel',
     isMenu: false
   },
+  // config 2.0
+  {
+    pid: 1,
+    id: 13,
+    title: 'Config2.0 Manage',
+    path: '/config2',
+    component: 'Config2',
+    exact: true,
+    isMenu: true,
+    authName: 'Config Manage-Config Manage'
+  },
+  {
+    id: 13001,
+    pid: 13,
+    path: '/config2/edit/:id',
+    title: 'Edit Config2.0',
+    component: 'Config2Model',
+    isMenu: false
+  },
+  {
+    id: 13002,
+    pid: 13,
+    path: '/config2/add',
+    title: 'Add Config2.0',
+    component: 'Config2Model',
+    isMenu: false
+  },
   {
     pid: 1,
     id: templateId,
@@ -778,6 +812,22 @@ export const routerAndMenu: IRouter[] = [
     path: '/custom'
   },
   {
+    id: 21,
+    pid: 2,
+    isMenu: true,
+    exact: true,
+    component: 'LoadVideo',
+    title: 'Load Video2.0',
+    path: '/loadVideo'
+  },
+  {
+    pid: 21,
+    id: 211,
+    title: 'Edit Load Video2.0',
+    path: '/loadVideo/edit',
+    component: 'LoadVideoEdit',
+  },
+  {
     id: 3302,
     path: '/template/:id',
     title: '',
@@ -785,8 +835,8 @@ export const routerAndMenu: IRouter[] = [
     isMenu: false
   },
   {
-    pid: 1,
-    id: 13,
+    pid: 2,
+    id: 23,
     title: 'IOS Whitelist',
     path: '/iosWhitelist',
     component: 'IosWhiteList',
@@ -795,8 +845,8 @@ export const routerAndMenu: IRouter[] = [
     authName: 'Config Manage-IOS Whitelist'
   },
   {
-    pid: 13,
-    id: 131,
+    pid: 23,
+    id: 231,
     title: 'Edit IOS Whitelist',
     path: '/iosWhitelist/edit/:bundle_id',
     component: 'IosWhiteListEdit',

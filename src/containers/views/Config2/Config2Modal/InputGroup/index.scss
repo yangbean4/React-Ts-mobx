@@ -1,0 +1,26 @@
+.box {
+  display: flex;
+  flex-direction: row;
+}
+.redio {
+  width: 16px;
+  margin: 0 10px;
+}
+
+.inputBox {
+  flex: 1;
+}
+
+.dynamic {
+  width: 18px;
+  height: 18px;
+  color: #fff;
+  text-align: center;
+  line-height: 18px;
+  margin-right: 12px;
+  background: rgba(186, 193, 229, 1);
+}
+
+.input {
+  margin-bottom: 6px;
+}

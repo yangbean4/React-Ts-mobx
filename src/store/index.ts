@@ -77,8 +77,11 @@ export { default as creativeFrequencyStore } from './creativeFrequencyStore'
 
 export { default as iosWhiteListStore } from './iosWhiteListStore'
 
+export { default as loadVideoStore } from './loadVideoStore'
+
 export { default as chartStore } from './ChartStore'
 
+export { default as config2Store } from './config2Store'
 export { default as maskStore } from './maskSubsiteStore'
 
 export { default as StrategyGroupStore } from './StrategyGroup'

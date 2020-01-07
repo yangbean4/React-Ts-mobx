@@ -37,6 +37,10 @@ export default {
     return http.post(`${basePath}checkConfig`, data)
   },
 
+  editServer(data): Promise<any> {
+    return http.post(`${basePath}editServer`, data)
+  },
+
   editBasic1(data): Promise<any> {
     return http.post(`${basePath}editBasic1`, data)
   },

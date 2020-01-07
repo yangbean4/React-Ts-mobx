@@ -8,6 +8,7 @@ import { ComponentExt } from '@utils/reactExt'
 import UploadFile from '@components/UploadFile'
 import Icon from '@components/Icon'
 import * as styles from './index.scss'
+import { formatFileSize } from '@utils/index'
 
 const FormItem = Form.Item
 
@@ -92,6 +93,9 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
   @observable
   private fileTarget: any = {}
 
+  @observable
+  private fileSize: any = {}
+
   @computed
   get isAdd() {
     return !this.props.leadContentId
@@ -162,6 +166,9 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
           try {
             const md5 = this.md5 || leadContent.content_md5
             values = md5 ? { ...values, content_md5: md5 } : values
+            if (this.fileSize.content) {
+              values.content_filesize = this.fileSize.content;
+            }
             if (values.status === undefined) {
               values.status = 1
             }
@@ -228,11 +235,15 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
     })
     runInAction('clear_Image', () => {
       this.fileTarget[key] = ''
+      this.fileSize[key] = null
     })
   }
 
   componentWillMount() {
-    this.props.getOptionListDb()
+    this.props.getOptionListDb();
+    if (this.leadContentTarget.content_filesize) {
+      this.fileSize.content = this.leadContentTarget.content_filesize
+    }
   }
 
   getUploadprops = (fun: Function, key: string, type = '.png, .jpg, .jpeg, .gif', size?: number, cb?: Function, libao?: boolean) => {
@@ -273,6 +284,7 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
           })
           runInAction('set_File', () => {
             this.fileTarget[key] = file.name
+            this.fileSize[key] = data.file_size
           })
           cb && cb(data)
         }, errorCb).catch(errorCb)
@@ -461,8 +473,12 @@ class LeadContentModal extends ComponentExt<IProps & FormComponentProps> {
                   }
                 </Upload>
               </Spin>
-              ) : (<div>
-                <span style={{ marginRight: 10 }}>{urlName}</span>
+              ) : (<div style={{ display: 'flex', alignItems: 'center', lineHeight: 1.5 }}>
+                <div style={{ marginRight: 10 }}>{urlName}
+                  <br />
+                  {this.fileSize.content &&
+                    <small style={{ color: '#aaa' }}>{formatFileSize(this.fileSize.content)}</small>}
+                </div>
                 <Icon type="iconguanbi" onClick={() => this.removeFile('content')} />
               </div>)
             )

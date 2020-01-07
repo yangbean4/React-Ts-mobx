@@ -1,0 +1,35 @@
+@import "_base.scss";
+
+.formPid {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+
+  .cancelBtn {
+    position: absolute;
+    bottom: 40px;
+    left: 400px;
+  }
+
+  .minitem {
+    width: 900px;
+    height: 70px;
+    margin-bottom: 0;
+    display: flex;
+    // justify-content: center;
+    // align-items: center;
+    :global(.ant-form-item-label) {
+      width: 225px;
+    }
+    :global(.ant-form-item-control-wrapper) {
+      width: 280px;
+      height: auto;
+      :global(.ant-select) {
+        width: 280px;
+      }
+    }
+    :global(.ant-form-item-children) {
+      width: 280px;
+    }
+  }
+}

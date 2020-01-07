@@ -46,6 +46,8 @@ export interface UploadFileProps {
   noDel?: boolean
   /// 上传后显示PreviewUrl字段
   showPreviewUrl?: boolean
+  // 上传的文件，当做zip文件处理
+  isZip?: boolean
 }
 
 @observer
@@ -186,7 +188,7 @@ class UploadFile extends React.Component<UploadFileProps> {
     };
     const isVideo = type === 'video'
     // json文件当成zip处理
-    const isZip = type === '.zip' || type === '.json'
+    const isZip = this.props.isZip || type === '.zip' || type === '.json'
     const fileName = isVideo ? 'Video' : 'Image'
 
     return {
@@ -300,7 +302,7 @@ class UploadFile extends React.Component<UploadFileProps> {
       (<video style={{ width: '100%' }} src={this.useUrl} />)
       : (<div className={styles.imgBox} style={{ backgroundImage: 'url(' + this.useUrl + ')' }} />)
 
-    const isZip = fileType === '.zip' || fileType === '.json'
+    const isZip = this.props.isZip || fileType === '.zip' || fileType === '.json'
     const isVideo = fileType === 'video' ? true : false
 
     const uploadButton = (

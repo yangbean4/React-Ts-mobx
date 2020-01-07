@@ -383,3 +383,11 @@ export const filterForKey = (array: any[], key: string) => {
     });
     return Object.values(hash);
 }
+/**
+ * 格式化显示文件大小
+ * @param fileSize 文件大小 字节
+ */
+export const formatFileSize = (fileSize: number) => {
+    if (fileSize > 1048576) return (fileSize / 1048576).toFixed(2) + 'Mb';
+    else return Math.round(fileSize / 1024) + 'kb';
+}
