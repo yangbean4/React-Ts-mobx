@@ -47,6 +47,8 @@ interface IStoreProps {
     modifyAppManage?: (appManage: IAppManageStore.IAppMange) => Promise<any>
     setAppManage?: (Apps: IAppManageStore.IAppMange) => void
     routerStore?: RouterStore
+    userOption?: IAppGroupStore.UserOption
+    getUserList?: () => Promise<any>
 }
 
 interface IProps extends IStoreProps {
@@ -56,9 +58,11 @@ interface IProps extends IStoreProps {
 }
 @inject(
     (store: IStore): IProps => {
-        const { appManageStore, routerStore } = store
+        const { appManageStore, routerStore, appGroupStore } = store
+        const { getUserList, userOption } = appGroupStore
+
         const { createAppManage, modifyAppManage, getOptionListDb, optionListDb, setAppManage, appManage } = appManageStore
-        return { routerStore, createAppManage, modifyAppManage, getOptionListDb, optionListDb, setAppManage, appManage }
+        return { getUserList, userOption, routerStore, createAppManage, modifyAppManage, getOptionListDb, optionListDb, setAppManage, appManage }
     }
 )
 @observer
@@ -298,6 +302,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
     componentWillMount() {
         this.runInit()
         this.getSourceAccount()
+        this.props.getUserList()
         this.props.getOptionListDb(this.Id)
         if (this.Id) {
             this.getDetail()
@@ -353,7 +358,7 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                 }, this.removeFile).catch(this.removeFile)
             }
         }
-        const { form, optionListDb } = this.props
+        const { form, optionListDb, userOption } = this.props
         const data = this.manageGroup
         const reData = this.manageStore ? { ...data, ...this.manageStore } : data
         const { getFieldDecorator } = form
@@ -375,6 +380,8 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
             specs_id = undefined,
             style_id = 301,
             event_config = null,
+            BD = '',
+            AM = '',
         } = reData || {}
         return (
             <React.Fragment>
@@ -652,6 +659,50 @@ class AppsManageModal extends ComponentExt<IProps & FormComponentProps> {
                             <Icon className={!this.isAdd ? styles.hidden : styles.uploadICON} onClick={() => this.toggleAppShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
                         </FormItem>
 
+                        <FormItem label="BD">
+                            {getFieldDecorator('BD', {
+                                initialValue: BD,
+                                // rules: [
+                                //   {
+                                //     required: true, message: "Required"
+                                //   }
+                                // ]
+                            })(
+                                <Select
+                                    showSearch
+                                    getPopupContainer={trigger => trigger.parentElement}
+                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    {userOption.BD.map(c => (
+                                        <Select.Option key={c.id} value={c.id}>
+                                            {c.name}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            )}
+                        </FormItem>
+                        <FormItem label="AM">
+                            {getFieldDecorator('AM', {
+                                initialValue: AM,
+                                // rules: [
+                                //   {
+                                //     required: true, message: "Required"
+                                //   }
+                                // ]
+                            })(
+                                <Select
+                                    showSearch
+                                    getPopupContainer={trigger => trigger.parentElement}
+                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    {userOption.AMSource.map(c => (
+                                        <Select.Option key={c.id} value={c.id}>
+                                            {c.name}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            )}
+                        </FormItem>
 
                         {getFieldDecorator('kpi', {
                             initialValue: kpi,

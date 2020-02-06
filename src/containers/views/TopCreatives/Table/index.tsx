@@ -127,7 +127,7 @@ class TopCreativesTable extends ComponentExt<IProps> {
 
                 <Table<ITopCreativeStore.ITopCreativeForList>
                     className="center-table"
-                    style={{ width: '100%' }}
+                    style={{ width: '120%' }}
                     bordered
                     // size="middle"
                     rowKey={(record) => ('campaign_id_name' in record) ? JSON.stringify(record) : `${record.rank}`}
@@ -136,7 +136,7 @@ class TopCreativesTable extends ComponentExt<IProps> {
                     dataSource={topCreativeList}
                     scroll={{ y: scrollY, x: 1800 }}
                     expandIconAsCell={false}
-                    expandIconColumnIndex={9}
+                    expandIconColumnIndex={12}
                     childrenColumnName="campaign"
                     expandIcon={this.CustomExpandIcon}
                     pagination={{
@@ -163,6 +163,9 @@ class TopCreativesTable extends ComponentExt<IProps> {
                     }} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="App ID" dataIndex="app_id" width={280} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Platform" dataIndex="platform" width={100} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> key="BD" title="BD" dataIndex="BD" width={100} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> key="AM" title="AM" dataIndex="AM" width={100} />
+                    <Table.Column<ITopCreativeStore.ITopCreativeForList> key="UI" title="UI" dataIndex="UI" width={100} />
                     <Table.Column<ITopCreativeStore.ITopCreativeForList> title="Data Duration" dataIndex="data_duration" width={200} render={(_, record) => {
                         if ('campaign_id_name' in record) {
                             return {

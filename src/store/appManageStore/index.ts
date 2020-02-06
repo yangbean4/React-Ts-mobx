@@ -69,6 +69,7 @@ export class AppManageStore extends StoreExt {
         })
     }
 
+
     @action
     getOptionListDb = async (id: number) => {
         const keys = Object.keys(this.optionListDb)

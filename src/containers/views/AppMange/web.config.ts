@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author:  bean^ <bean_4@163.com>
+ * @Date: 2020-01-07 11:23:34
+ * @LastEditors  :  bean^ <bean_4@163.com>
+ * @LastEditTime : 2020-01-17 18:49:31
+ */
 export const statusOption = [
   {
     key: 'Enable',
@@ -44,4 +51,9 @@ export const EventTypeOption = [
   { key: 'beginnertask', value: 'beginnertask' },
   { key: 'open', value: 'open' },
   { key: 'purchase', value: 'purchase' },
+  { key: 'first_purchase', value: 'first_purchase' },
+  { key: 'level_20', value: 'level_20' },
+  { key: 'login', value: 'login' },
+  { key: 'install', value: 'install' },
+
 ]

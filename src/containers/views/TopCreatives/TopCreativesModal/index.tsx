@@ -404,6 +404,31 @@ class TopCreativesModal extends React.Component<IProp> {
                   {preview.campaign_num}
                 </div>
               </div>
+
+              <div className={style.msg}>
+                <div className={style.label}>
+                  BD
+                </div>
+                <div className={style.value}>
+                  {preview.BD}
+                </div>
+              </div> <div className={style.msg}>
+                <div className={style.label}>
+                  AM
+                </div>
+                <div className={style.value}>
+                  {preview.AM}
+                </div>
+              </div> <div className={style.msg}>
+                <div className={style.label}>
+                  UI
+                </div>
+                <div className={style.value}>
+                  {preview.UI}
+                </div>
+              </div>
+
+
             </div>
           </div>
           <div className={style.right}>

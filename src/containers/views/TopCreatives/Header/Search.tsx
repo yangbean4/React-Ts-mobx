@@ -27,14 +27,18 @@ interface IStoreProps {
   changeFilter?: (params: ITopCreativeStore.SearchParams) => void
   filters?: ITopCreativeStore.SearchParams,
   optionListDb?: ITopCreativeStore.OptionListDb
+  userOption?: IAppGroupStore.UserOption
+  getUserList?: () => Promise<any>
 }
 
 
 
 @inject(
   (store: IStore): IStoreProps => {
+    const { getUserList, userOption } = store.appGroupStore
+
     const { changeFilter, filters, getOptionListDb, optionListDb } = store.topCreativeStore
-    return { changeFilter, filters, getOptionListDb, optionListDb }
+    return { getUserList, userOption, changeFilter, filters, getOptionListDb, optionListDb }
   }
 )
 @observer
@@ -75,7 +79,7 @@ class TopCreativeSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   }
 
   render() {
-    const { form, filters, optionListDb } = this.props
+    const { form, filters, optionListDb, userOption } = this.props
     const { getFieldDecorator } = form
     return (
       <Form {...layout} >
@@ -174,6 +178,84 @@ class TopCreativeSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   {platformOption.map(c => (
                     <Select.Option {...c}>
                       {c.key}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="BD">
+              {getFieldDecorator('BD', {
+                initialValue: filters.BD,
+                // rules: [
+                //   {
+                //     required: true, message: "Required"
+                //   }
+                // ]
+              })(
+                <Select
+                  showSearch
+                  mode='multiple'
+
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {userOption.BD.map(c => (
+                    <Select.Option key={c.id} value={c.id}>
+                      {c.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="AM">
+              {getFieldDecorator('AM', {
+                initialValue: filters.AM,
+                // rules: [
+                //   {
+                //     required: true, message: "Required"
+                //   }
+                // ]
+              })(
+                <Select
+                  showSearch
+                  mode='multiple'
+
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {userOption.AMSource.map(c => (
+                    <Select.Option key={c.id} value={c.id}>
+                      {c.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="UI">
+              {getFieldDecorator('UI', {
+                initialValue: filters.UI,
+                // rules: [
+                //   {
+                //     required: true, message: "Required"
+                //   }
+                // ]
+              })(
+                <Select
+                  showSearch
+                  mode='multiple'
+
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {userOption.UI.map(c => (
+                    <Select.Option key={c.id} value={c.id}>
+                      {c.name}
                     </Select.Option>
                   ))}
                 </Select>

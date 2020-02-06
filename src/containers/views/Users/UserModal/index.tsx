@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react'
 import { observable, action, computed } from 'mobx'
 import { Form, Input, Select, Radio, Button, message } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
-import { statusOption } from '../web.config'
+import { statusOption, departmeOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
 import * as styles from './index.scss'
 import FirstScene, { formItemClassName, firstSceneValidator } from '@components/FirstScene'
@@ -90,7 +90,8 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                         let data = { message: '' }
                         values = {
                             ...values,
-                            role: values.role.join(',')
+                            role: values.role.join(','),
+                            department: values.department.join(','),
                         }
                         if (this.typeIsAdd) {
                             data = await createUser(values)
@@ -112,17 +113,22 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
         const { user, form, allRole } = this.props
         const { getFieldDecorator } = form
         let roleValue: (string | number)[] = []
+        let departmentValue: (string | number)[] = []
+
         const {
             role = undefined,
             user_name = '',
             owner = '',
             status = 1,
+            department = ''
         } = user || {}
         if (role && user) {
             roleValue = role.split(',').map(ele => {
                 return (allRole.find(role => role.role_name === ele) || {}).id
             }).filter(ele => ele !== undefined)
         }
+
+        departmentValue = (department || '').toString().split(',').filter(ele => !!ele)
         return (
             <div className='sb-form'>
                 <Form className={styles.userModal} >
@@ -179,6 +185,30 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                                 ))}
                             </Select>
                         )}
+                    </FormItem>
+                    <FormItem {...formItemLayout} label='Department'>
+                        {getFieldDecorator('department',
+                            {
+                                initialValue: departmentValue,
+                                rules: [
+                                    {
+                                        required: true, message: "Required"
+                                    }
+                                ]
+                            })(
+                                <Select
+                                    showSearch
+                                    mode='multiple'
+                                    getPopupContainer={trigger => trigger.parentElement}
+                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    {departmeOption.map(c => (
+                                        <Select.Option key={c.value} value={c.value}>
+                                            {c.key}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            )}
                     </FormItem>
                     <FormItem {...formItemLayout} label="Status">
                         {getFieldDecorator('status', {

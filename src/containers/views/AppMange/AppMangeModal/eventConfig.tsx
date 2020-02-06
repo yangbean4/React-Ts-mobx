@@ -46,7 +46,8 @@ class EventConfig extends React.Component<IProps & FormComponentProps>{
                 {
                     source_name: '',
                     event_type: '',
-                    event_name: ''
+                    event_name: '',
+                    event_desc: ''
                 }
             ]
         } else {
@@ -93,6 +94,7 @@ class EventConfig extends React.Component<IProps & FormComponentProps>{
                                 <td style={{ width: 100 }}>Platform Name</td>
                                 <td style={{ width: 100 }}>Event Type</td>
                                 <td style={{ width: 100 }}>Evnet Key</td>
+                                <td style={{ width: 100 }}>Evnet Desc</td>
                                 <td style={{ width: 80 }}>Operate</td>
                             </tr>
                         </thead>
@@ -140,6 +142,13 @@ class EventConfig extends React.Component<IProps & FormComponentProps>{
                                             {getFieldDecorator(`eventConfig[${k}].event_name`, {
                                                 initialValue: v.event_name,
                                                 rules: [{ required: this.checkRequired(v), message: "Required" }]
+                                            })(<Input></Input>)}
+                                        </FormItem>
+                                    </td>
+                                    <td>
+                                        <FormItem>
+                                            {getFieldDecorator(`eventConfig[${k}].event_desc`, {
+                                                initialValue: v.event_desc,
                                             })(<Input></Input>)}
                                         </FormItem>
                                     </td>

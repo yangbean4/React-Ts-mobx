@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author:  bean^ <bean_4@163.com>
+ * @Date: 2019-10-24 09:57:07
+ * @LastEditors  :  bean^ <bean_4@163.com>
+ * @LastEditTime : 2020-02-06 16:52:32
+ */
 
 import http from '@services/http'
 const basePath = '/api/appsManage/'
@@ -34,5 +41,8 @@ export default {
    */
   getAppInfo(data): Promise<any> {
     return http.post(`${basePath}grapAppInfo`, data)
-  }
+  },
+  getUserList(): Promise<any> {
+    return http.post(`api/user/userList`)
+  },
 }

@@ -2,8 +2,8 @@
  * @Description: 
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-10-24 09:57:07
- * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-12-04 14:27:49
+ * @LastEditors  :  bean^ <bean_4@163.com>
+ * @LastEditTime : 2020-02-06 16:42:54
  */
 import { AppManageStore as AppManageStoreModel } from './index'
 import { number } from 'prop-types';
@@ -31,6 +31,8 @@ export interface IAppMange {
     style_id?: number,
     kpi?: any,
     event_config?: any,
+    BD?: String
+    AM?: String
 }
 
 export interface IAppGplist {
@@ -41,6 +43,8 @@ export interface IAppGplist {
     os_version?: string
     category?: string
     appstore_url?: string
+    BD?: String
+    AM?: String
 }
 
 export interface SearchParams {
@@ -50,6 +54,8 @@ export interface SearchParams {
     category_id?: number[]
     export?: number
     account_name?: number[]
+    BD?: String
+    AM?: String
 }
 
 

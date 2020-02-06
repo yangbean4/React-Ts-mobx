@@ -56,6 +56,8 @@ interface IStoreProps {
   getOptionListDb?: () => Promise<any>
   getContentList?: () => Promise<any>
   optionListDb?: ICreativeStore.OptionListDb
+  userOption?: IAppGroupStore.UserOption
+  getUserList?: () => Promise<any>
 }
 
 interface IProps extends IStoreProps {
@@ -69,9 +71,10 @@ interface IProps extends IStoreProps {
 }
 @inject(
   (store: IStore): IProps => {
-    const { creativeStore, routerStore } = store
+    const { creativeStore, routerStore, appGroupStore } = store
+    const { getUserList, userOption } = appGroupStore
     const { createCreative, modifyCreative, getOptionListDb, optionListDb, getContentList } = creativeStore
-    return { routerStore, createCreative, modifyCreative, getOptionListDb, optionListDb, getContentList }
+    return { getUserList, userOption, routerStore, createCreative, modifyCreative, getOptionListDb, optionListDb, getContentList }
   }
 )
 @observer
@@ -501,13 +504,15 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
 
   componentWillMount() {
     this.props.getOptionListDb()
+    this.props.getUserList()
+
     if (this.props.creativeId) {
       this.getDetail()
     }
   }
 
   render() {
-    const { form, optionListDb } = this.props
+    const { form, optionListDb, userOption } = this.props
     const { getFieldDecorator } = form
     const {
       platform = 'android',
@@ -542,6 +547,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
       ige_portrait_video_cover_url = '',
       ige_landscape_video_cover_url = '',
       ige_prefail = 0,
+      UI = '',
       image = ''
     } = this.creativeTarget
     const getScale = (width: string | number, height?: number) => {
@@ -1835,6 +1841,28 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                   }
                 ]
               })(<Input.TextArea autosize={{ minRows: 2, maxRows: 6 }} />)}
+            </FormItem>
+            <FormItem label="UI">
+              {getFieldDecorator('UI', {
+                initialValue: UI,
+                // rules: [
+                //   {
+                //     required: true, message: "Required"
+                //   }
+                // ]
+              })(
+                <Select
+                  showSearch
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {userOption.UI.map(c => (
+                    <Select.Option key={c.id} value={c.id}>
+                      {c.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
             </FormItem>
 
             <FormItem className={this.props.type ? styles.vcMdoal : styles.btnBox} >

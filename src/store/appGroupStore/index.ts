@@ -54,6 +54,14 @@ export class AppGroupStore extends StoreExt {
     filters: IAppGroupStore.SearchParams = {}
 
     @observable
+    userOption: IAppGroupStore.UserOption = {
+        AM: [],
+        BD: [],
+        UI: [],
+        AMSource: []
+    }
+
+    @observable
     optionListDb: IAppGroupStore.OptionListDb = {
         Category: [],
         Frame: [],
@@ -80,6 +88,43 @@ export class AppGroupStore extends StoreExt {
         const res = await this.api.appGroup.getCountry()
         runInAction('SET', () => {
             this.optionListDb.Country = res.data;
+        })
+    }
+    @action
+    getUserList = async () => {
+        const res = await this.api.appsManage.getUserList()
+        const AM = []
+        const BD = []
+        const UI = []
+        const AMSource = []
+        res.data.map(ele => ({
+            ...ele,
+            id: ele.name
+        })).forEach(ele => {
+            //    key: 'AM-Subsite',
+            if ((ele.department + '').includes('3')) {
+                AM.push(ele)
+            }
+            //   key: 'BD',
+            if ((ele.department + '').includes('1')) {
+                AM.push(ele)
+            }
+            //   key: 'BD',
+            if ((ele.department + '').includes('4')) {
+                UI.push(ele)
+            }
+            //   key: 'AM-Source',
+            if ((ele.department + '').includes('2')) {
+                AMSource.push(ele)
+            }
+        })
+        runInAction('SET', () => {
+            this.userOption = {
+                AM,
+                BD,
+                UI,
+                AMSource
+            }
         })
     }
 

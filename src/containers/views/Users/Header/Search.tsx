@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react'
 import { observable, action } from 'mobx'
 import { Form, Input, Select, Row, Col, Button } from 'antd'
 import { FormComponentProps } from 'antd/lib/form'
-import { statusOption } from '../web.config'
+import { statusOption, departmeOption } from '../web.config'
 import { ComponentExt } from '@utils/reactExt'
 
 const FormItem = Form.Item
@@ -51,6 +51,10 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
     const { changeFilter, form } = this.props
     form.validateFields(
       async (err, values): Promise<any> => {
+        // values = {
+        //   ...values,
+        //   department: values.department.join(','),
+        // }
         if (!err) {
           this.toggleLoading()
           try {
@@ -94,6 +98,27 @@ class UserSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                   {statusOption.map(c => (
+                    <Select.Option {...c}>
+                      {c.key}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="Department" className='minInput'>
+              {getFieldDecorator('department', {
+                initialValue: filters.department
+              })(
+                <Select
+                  allowClear
+                  showSearch
+                  mode='multiple'
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {departmeOption.map(c => (
                     <Select.Option {...c}>
                       {c.key}
                     </Select.Option>

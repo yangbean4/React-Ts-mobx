@@ -100,8 +100,12 @@ class AppGroupTable extends ComponentExt<IProps> {
                 <Table.Column<IAppGroupStore.IAppGroupForList> key="app_name" title="App Name" dataIndex="app_name" width={200} />
                 <Table.Column<IAppGroupStore.IAppGroupForList> key="pkg_name" title="Pkg Name" dataIndex="pkg_name" width={200} />
                 <Table.Column<IAppGroupStore.IAppGroupForList> key="platform" title="Platform" dataIndex="platform" width={100} />
-                <Table.Column<IH5ExportStore.IitemForList> key="dev_id" title="Subsite ID" dataIndex="dev_id" width={100} />
+
                 <Table.Column<IAppGroupStore.IAppGroupForList> key="sdk_token" title="SDK Token" dataIndex="sdk_token" width={200} />
+                <Table.Column<IAppGroupStore.IAppGroupForList> key="sen_account" title="SEN Account" dataIndex="sen_account" width={200} />
+                <Table.Column<IAppGroupStore.IAppGroupForList> key="BD" title="BD" dataIndex="BD" width={100} />
+                <Table.Column<IAppGroupStore.IAppGroupForList> key="AM" title="AM" dataIndex="AM" width={100} />
+
                 <Table.Column<IAccountStore.IAccount>
                     key="status"
                     title="Status"
@@ -114,7 +118,7 @@ class AppGroupTable extends ComponentExt<IProps> {
                 <Table.Column<IAppGroupStore.IAppGroupForList>
                     key="action"
                     title="Operate"
-                    width={120}
+                    width={100}
                     render={(_, record) => (
                         <span>
                             {

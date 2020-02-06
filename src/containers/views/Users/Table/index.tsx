@@ -5,7 +5,7 @@ import { inject, observer } from 'mobx-react'
 import { observable, action } from 'mobx'
 import PageConfig from '@components/Pagination'
 import { ComponentExt } from '@utils/reactExt'
-import { statusOption } from '../web.config'
+import { statusOption, departmeOption } from '../web.config'
 import MyIcon from '@components/Icon'
 
 interface IStoreProps {
@@ -128,6 +128,15 @@ class UserTable extends ComponentExt<IProps> {
                         title="Roles"
                         dataIndex="role"
                         width={200}
+                    />
+                    <Table.Column<IUserStore.IUser>
+                        key="department"
+                        title="Department"
+                        dataIndex="department"
+                        width={200}
+                        render={(_) => (
+                            departmeOption.filter(item => (_ || '').toString().includes(item.value)).map(ele => ele.key).join(',')
+                        )}
                     />
                     <Table.Column<IUserStore.IUser>
                         key="status"

@@ -24,15 +24,19 @@ interface IStoreProps {
   changeFilter?: (params: IAppManageStore.SearchParams, n?: number) => void
   filters?: IAppManageStore.SearchParams,
   routerStore?: RouterStore
+  userOption?: IAppGroupStore.UserOption
+  getUserList?: () => Promise<any>
+
 }
 
 
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { routerStore } = store
+    const { routerStore, appGroupStore } = store
     const { changeFilter, filters } = store.appManageStore
-    return { changeFilter, filters, routerStore }
+    const { getUserList, userOption } = appGroupStore
+    return { changeFilter, filters, routerStore, getUserList, userOption }
   }
 )
 @observer
@@ -81,6 +85,7 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
   componentWillMount() {
     this.getCategory();
     this.getAccountList();
+    this.props.getUserList()
   }
   componentDidMount() {
     this.IReactionDisposer()
@@ -110,7 +115,7 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
   }
 
   render() {
-    const { form, filters } = this.props
+    const { form, filters, userOption } = this.props
     const { getFieldDecorator } = form
     return (
 
@@ -181,6 +186,58 @@ class CurrencySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 >
                   {this.accountList.map(c => (
                     <Select.Option key={c.id} value={c.name}>
+                      {c.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="BD">
+              {getFieldDecorator('BD', {
+                initialValue: filters.BD,
+                // rules: [
+                //   {
+                //     required: true, message: "Required"
+                //   }
+                // ]
+              })(
+                <Select
+                  showSearch
+                  mode='multiple'
+
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {userOption.BD.map(c => (
+                    <Select.Option key={c.id} value={c.id}>
+                      {c.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="AM">
+              {getFieldDecorator('AM', {
+                initialValue: filters.AM,
+                // rules: [
+                //   {
+                //     required: true, message: "Required"
+                //   }
+                // ]
+              })(
+                <Select
+                  showSearch
+                  mode='multiple'
+
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {userOption.AMSource.map(c => (
+                    <Select.Option key={c.id} value={c.id}>
                       {c.name}
                     </Select.Option>
                   ))}

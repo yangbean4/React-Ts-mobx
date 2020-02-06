@@ -147,6 +147,9 @@ class QueryTable extends ComponentExt<IProps> {
             </span>
           )}
         />
+        <Table.Column<IOfferQueryStore.IQuery> key="BD" title="BD" dataIndex="BD" width={100} />
+        <Table.Column<IOfferQueryStore.IQuery> key="AM" title="AM" dataIndex="AM" width={100} />
+        <Table.Column<IOfferQueryStore.IQuery> key="UI" title="UI" dataIndex="UI" width={100} />
         <Table.Column<IOfferQueryStore.IQuery> key="update_time" title="Update Time" dataIndex="update_time" width={170} />
         <Table.Column<IOfferQueryStore.IQuery> key="offer_status" fixed="right" title="Offer Status" dataIndex="offer_status" width={130} />
       </Table>

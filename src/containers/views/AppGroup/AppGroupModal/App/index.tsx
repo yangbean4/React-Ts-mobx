@@ -48,6 +48,8 @@ interface IStoreProps {
     getAccount?: () => Promise<any>
     optionListDb?: IAppGroupStore.OptionListDb
     routerStore?: RouterStore
+    getUserList?: () => Promise<any>
+    userOption?: IAppGroupStore.UserOption
     type?: string
     setAppGroup?: (Apps: IAppGroupStore.IAppGroup) => void
 }
@@ -61,8 +63,8 @@ interface IProps extends IStoreProps {
 @inject(
     (store: IStore): IStoreProps => {
         const { appGroupStore, routerStore } = store
-        const { createAppGroup, getAccount, getOptionListDb, optionListDb, modifyAppGroup, setAppGroup } = appGroupStore
-        return { routerStore, getAccount, createAppGroup, getOptionListDb, optionListDb, modifyAppGroup, setAppGroup }
+        const { getUserList, userOption, createAppGroup, getAccount, getOptionListDb, optionListDb, modifyAppGroup, setAppGroup } = appGroupStore
+        return { getUserList, userOption, routerStore, getAccount, createAppGroup, getOptionListDb, optionListDb, modifyAppGroup, setAppGroup }
     }
 )
 @observer
@@ -272,6 +274,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
 
     componentWillMount() {
         this.props.getOptionListDb(this.props.Id)
+        this.props.getUserList()
         if (this.props.Id) {
             this.getDetail()
         }
@@ -279,7 +282,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
 
 
     render() {
-        const { form, optionListDb } = this.props
+        const { form, optionListDb, userOption } = this.props
         const { getFieldDecorator } = form
 
 
@@ -352,6 +355,8 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
             ad_type = 0,
             offer_limit = '',
             nations = [],
+            BD = '',
+            AM = '',
             imp_cap = ''
         } = reData
         return (
@@ -654,6 +659,50 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                             )}
                             <Icon className={!this.isAdd ? styles.hidden : styles.uploadICON} onClick={() => this.toggleAppShow(true)} type="iconxinzeng1" key="iconxinzeng1" />
                         </FormItem>
+                        <FormItem label="BD">
+                            {getFieldDecorator('BD', {
+                                initialValue: BD,
+                                // rules: [
+                                //   {
+                                //     required: true, message: "Required"
+                                //   }
+                                // ]
+                            })(
+                                <Select
+                                    showSearch
+                                    getPopupContainer={trigger => trigger.parentElement}
+                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    {userOption.BD.map(c => (
+                                        <Select.Option key={c.id} value={c.id}>
+                                            {c.name}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            )}
+                        </FormItem>
+                        <FormItem label="AM">
+                            {getFieldDecorator('AM', {
+                                initialValue: AM,
+                                // rules: [
+                                //   {
+                                //     required: true, message: "Required"
+                                //   }
+                                // ]
+                            })(
+                                <Select
+                                    showSearch
+                                    getPopupContainer={trigger => trigger.parentElement}
+                                    filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    {userOption.AM.map(c => (
+                                        <Select.Option key={c.id} value={c.id}>
+                                            {c.name}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            )}
+                        </FormItem>
                         <FormItem label='Preload Number'>
                             {
                                 ['IVE', 'IGE', 'Video', 'Playicon', 'Recover Offer'].map(key => {
@@ -877,7 +926,7 @@ class AppGroupModal extends ComponentExt<IProps & FormComponentProps> {
                                     }
                                 ]
                             })(
-                                <InputNumber min={0} max={9999999999} precision={0}/>
+                                <InputNumber min={0} max={9999999999} precision={0} />
                             )}
                         </FormItem>
                         <FormItem className={styles.btnBox}>

@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author:  bean^ <bean_4@163.com>
+ * @Date: 2019-10-12 16:15:28
+ * @LastEditors  :  bean^ <bean_4@163.com>
+ * @LastEditTime : 2020-02-06 17:35:59
+ */
 import { CreativeStore as CreativeStoreModel } from './index'
 
 export as namespace ICreativeStore
@@ -54,6 +61,7 @@ export interface ICreative {
     skip_to?: string
     image?: string
     playicon_creative_offline_url?: string | number
+    UI?: String
 }
 
 export interface ICreativeForList {
@@ -70,6 +78,7 @@ export interface ICreativeForList {
 export interface SearchParams {
     app_id?: string,
     platform?: string,
+    UI?: string,
 }
 
 

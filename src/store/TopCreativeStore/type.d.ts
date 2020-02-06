@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author:  bean^ <bean_4@163.com>
+ * @Date: 2019-10-12 16:15:28
+ * @LastEditors  :  bean^ <bean_4@163.com>
+ * @LastEditTime : 2020-02-06 18:10:41
+ */
 
 import { TopCreativeStore as TopCreativeStoreModel } from './index'
 
@@ -24,6 +31,9 @@ export interface ITopCreativeForList {
     campaign_num?: number,
     campaign?: ICampaignForList[],
     preview: IPreview
+    BD?: String
+    AM?: String
+    UI?: String
 }
 
 export interface ICampaignForList {
@@ -62,6 +72,9 @@ export interface IPreview {
     offline_url?: string,
     creative_url?: string,
     template_url?: string,
+    BD?: String
+    AM?: String
+    UI?: String
 }
 
 export interface OptionListDb {
@@ -83,4 +96,7 @@ export interface SearchParams {
     ipm?: number,
     order_by?: string,
     sort?: string
+    BD?: String
+    AM?: String
+    UI?: String
 }

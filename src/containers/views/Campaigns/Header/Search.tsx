@@ -26,13 +26,16 @@ interface IStoreProps {
   setCampaignType?: (str: string) => void,
   getBudgetGroup?: () => void
   optionListDb?: ICampaignStore.OptionListDb
+  userOption?: IAppGroupStore.UserOption
+  getUserList?: () => Promise<any>
 }
 
 @inject(
   (store: IStore): IStoreProps => {
-    const { routerStore, campaignStore } = store
+    const { routerStore, campaignStore, appGroupStore } = store
+    const { getUserList, userOption } = appGroupStore
     const { changeFilter, filters, setCampaignType, getTargetCode, optionListDb, getBudgetGroup } = campaignStore
-    return { changeFilter, filters, routerStore, setCampaignType, getTargetCode, optionListDb, getBudgetGroup }
+    return { getUserList, userOption, changeFilter, filters, routerStore, setCampaignType, getTargetCode, optionListDb, getBudgetGroup }
   }
 )
 @observer
@@ -59,6 +62,8 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
     this.getSourceAccount()
     this.props.getTargetCode()
     this.props.getBudgetGroup()
+    this.props.getUserList()
+
   }
 
   submit = (e?: React.FormEvent<any>): void => {
@@ -80,7 +85,7 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
   }
 
   render() {
-    const { form, filters, optionListDb } = this.props
+    const { form, filters, optionListDb, userOption } = this.props
     const { getFieldDecorator } = form
     return (
       <Form {...layout} >
@@ -178,6 +183,85 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
               </Select>)}
             </FormItem>
           </Col>
+
+          <Col span={span}>
+            <FormItem label="BD">
+              {getFieldDecorator('BD', {
+                initialValue: filters.BD,
+                // rules: [
+                //   {
+                //     required: true, message: "Required"
+                //   }
+                // ]
+              })(
+                <Select
+                  showSearch
+                  mode='multiple'
+
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {userOption.BD.map(c => (
+                    <Select.Option key={c.id} value={c.id}>
+                      {c.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="AM">
+              {getFieldDecorator('AM', {
+                initialValue: filters.AM,
+                // rules: [
+                //   {
+                //     required: true, message: "Required"
+                //   }
+                // ]
+              })(
+                <Select
+                  showSearch
+                  mode='multiple'
+
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {userOption.AMSource.map(c => (
+                    <Select.Option key={c.id} value={c.id}>
+                      {c.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={span}>
+            <FormItem label="UI">
+              {getFieldDecorator('UI', {
+                initialValue: filters.UI,
+                // rules: [
+                //   {
+                //     required: true, message: "Required"
+                //   }
+                // ]
+              })(
+                <Select
+                  showSearch
+                  mode='multiple'
+
+                  getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {userOption.UI.map(c => (
+                    <Select.Option key={c.id} value={c.id}>
+                      {c.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
+          </Col>
           <Col span={span}>
             <FormItem label="Status">
               {getFieldDecorator('status', {
@@ -226,20 +310,20 @@ class CampaignsSearch extends ComponentExt<IStoreProps & FormComponentProps> {
               {getFieldDecorator('budget_group', {
                 initialValue: filters.budget_group
               })(
-                  <Select
-                      allowClear
-                      showSearch
-                      mode="multiple"
-                      maxTagCount={1}
-                      // getPopupContainer={trigger => trigger.parentElement}
-                      filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                  >
-                    {optionListDb.BudgetGroup.map(c => (
-                        <Select.Option key={c.sen_group_id} value={c.sen_group_id}>
-                          {c.group_name}
-                        </Select.Option>
-                    ))}
-                  </Select>
+                <Select
+                  allowClear
+                  showSearch
+                  mode="multiple"
+                  maxTagCount={1}
+                  // getPopupContainer={trigger => trigger.parentElement}
+                  filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                  {optionListDb.BudgetGroup.map(c => (
+                    <Select.Option key={c.sen_group_id} value={c.sen_group_id}>
+                      {c.group_name}
+                    </Select.Option>
+                  ))}
+                </Select>
               )}
             </FormItem>
           </Col>

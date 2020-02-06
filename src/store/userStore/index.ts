@@ -87,8 +87,8 @@ export class UserStore extends StoreExt {
 
     @action
     modifyUser = async (user: IUserStore.IUser) => {
-        const { id, role, status, pwd } = user
-        return await this.api.user.modifyUser({ id, role, status, pwd })
+        const { id, role, status, pwd, department } = user
+        return await this.api.user.modifyUser({ id, role, status, pwd, department })
     }
 
     deleteUser = async (id: number) => {

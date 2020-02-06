@@ -34,7 +34,9 @@ export interface IAppGroup {
     ad_type?: string
     offer_limit?: string
     nations?: string[],
-    imp_cap?: number
+    imp_cap?: number,
+    BD?: String
+    AM?: String
 }
 
 export interface IAppGroupForList {
@@ -44,6 +46,8 @@ export interface IAppGroupForList {
     status?: number
     app_name?: string
     sdk_token?: string
+    BD?: String
+    AM?: String
 }
 
 export interface SearchParams {
@@ -52,6 +56,9 @@ export interface SearchParams {
     status?: (number | string)[],
     app_name?: string[]
     dev_id?: string
+    BD?: String[]
+    AM?: String[]
+    sen_account?: String[]
 }
 
 
@@ -128,4 +135,11 @@ export interface Placement {
         profit: string;
         id?: string | number
     }[],
+}
+
+export interface UserOption {
+    BD?: IUserStore.IUser[]
+    AM?: IUserStore.IUser[]
+    UI?: IUserStore.IUser[]
+    AMSource?: IUserStore.IUser[]
 }

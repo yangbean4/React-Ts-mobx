@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author:  bean^ <bean_4@163.com>
+ * @Date: 2020-01-07 11:23:34
+ * @LastEditors:  bean^ <bean_4@163.com>
+ * @LastEditTime: 2020-02-06 17:45:38
+ */
 import { CampaignStore as CampaignStoreModel } from './index'
 
 export as namespace ICampaignStore
@@ -47,6 +54,9 @@ export interface SearchParams {
     platform?: string[],
     tracking_url_type?: string[],
     budget_group?: string[]
+    UI?: String
+    BD?: String
+    AM?: String
 }
 
 export interface ICampainginForList {
