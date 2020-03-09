@@ -60,7 +60,11 @@ class VcTable extends ComponentExt<TableProps> {
           title="Creative Language"
           dataIndex="language"
           width={100} />
-
+        <Table.Column<ICreativeStore.ICreative>
+          key="UI"
+          title="UI"
+          dataIndex="UI"
+          width={100} />
         <Table.Column<ICreativeStore.ICreative>
           key="status"
           title="Status"

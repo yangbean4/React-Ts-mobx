@@ -410,21 +410,21 @@ class TopCreativesModal extends React.Component<IProp> {
                   BD
                 </div>
                 <div className={style.value}>
-                  {preview.BD}
+                  {data.BD}
                 </div>
               </div> <div className={style.msg}>
                 <div className={style.label}>
                   AM
                 </div>
                 <div className={style.value}>
-                  {preview.AM}
+                  {data.AM}
                 </div>
               </div> <div className={style.msg}>
                 <div className={style.label}>
                   UI
                 </div>
                 <div className={style.value}>
-                  {preview.UI}
+                  {data.UI}
                 </div>
               </div>
 

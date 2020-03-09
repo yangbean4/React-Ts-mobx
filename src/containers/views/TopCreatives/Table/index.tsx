@@ -127,14 +127,14 @@ class TopCreativesTable extends ComponentExt<IProps> {
 
                 <Table<ITopCreativeStore.ITopCreativeForList>
                     className="center-table"
-                    style={{ width: '120%' }}
+                    style={{ width: '100%' }}
                     bordered
                     // size="middle"
                     rowKey={(record) => ('campaign_id_name' in record) ? JSON.stringify(record) : `${record.rank}`}
                     locale={{ emptyText: 'No Data' }}
                     loading={getTopCreativeLoading}
                     dataSource={topCreativeList}
-                    scroll={{ y: scrollY, x: 1800 }}
+                    scroll={{ y: scrollY, x: 2100 }}
                     expandIconAsCell={false}
                     expandIconColumnIndex={12}
                     childrenColumnName="campaign"

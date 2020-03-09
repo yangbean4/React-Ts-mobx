@@ -181,7 +181,7 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
             </FormItem>
           </Col>
           <Col span={span}>
-            <FormItem label="Account">
+            <FormItem label="SEN Account">
               {getFieldDecorator('account_id', {
                 initialValue: filters.account_id
               })(
@@ -215,6 +215,8 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   showSearch
                   mode='multiple'
+                  allowClear
+                  maxTagCount={1}
 
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
@@ -241,6 +243,8 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   showSearch
                   mode='multiple'
+                  allowClear
+                  maxTagCount={1}
 
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
@@ -267,6 +271,8 @@ class OfferQuerySearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   showSearch
                   mode='multiple'
+                  allowClear
+                  maxTagCount={1}
 
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}

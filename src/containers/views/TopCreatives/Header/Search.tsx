@@ -197,6 +197,8 @@ class TopCreativeSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   showSearch
                   mode='multiple'
+                  allowClear
+                  maxTagCount={1}
 
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
@@ -223,6 +225,8 @@ class TopCreativeSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   showSearch
                   mode='multiple'
+                  allowClear
+                  maxTagCount={1}
 
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
@@ -249,6 +253,8 @@ class TopCreativeSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                 <Select
                   showSearch
                   mode='multiple'
+                  allowClear
+                  maxTagCount={1}
 
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}

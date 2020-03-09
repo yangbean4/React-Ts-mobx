@@ -1852,6 +1852,7 @@ class CreativeModal extends ComponentExt<IProps & FormComponentProps> {
                 // ]
               })(
                 <Select
+                  allowClear
                   showSearch
                   getPopupContainer={trigger => trigger.parentElement}
                   filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}

@@ -135,6 +135,7 @@ class BudgetSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                                 initialValue: filter.source_account
                             })(<Select
                                 allowClear
+                                maxTagCount={1}
                                 showSearch
                                 mode='multiple'
                                 getPopupContainer={trigger => trigger.parentElement}
@@ -162,6 +163,7 @@ class BudgetSearch extends ComponentExt<IStoreProps & FormComponentProps> {
                             })(
                                 <Select
                                     allowClear
+                                    maxTagCount={1}
                                     showSearch
                                     mode='multiple'
                                     getPopupContainer={trigger => trigger.parentElement}

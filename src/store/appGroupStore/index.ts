@@ -107,7 +107,7 @@ export class AppGroupStore extends StoreExt {
             }
             //   key: 'BD',
             if ((ele.department + '').includes('1')) {
-                AM.push(ele)
+                BD.push(ele)
             }
             //   key: 'BD',
             if ((ele.department + '').includes('4')) {

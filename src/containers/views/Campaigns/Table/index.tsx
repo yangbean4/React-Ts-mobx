@@ -129,6 +129,10 @@ class CampaignsTable extends ComponentExt<IProps> {
                     />
 
                     <Table.Column<ICampaignStore.ICampainginForList> key="user_name" title="SEN Account" dataIndex="user_name" width={200} />
+                    <Table.Column<ICampaignStore.ICampainginForList> key="BD" title="BD" dataIndex="BD" width={200} />
+                    <Table.Column<ICampaignStore.ICampainginForList> key="AM" title="AM" dataIndex="AM" width={200} />
+                    <Table.Column<ICampaignStore.ICampainginForList> key="UI" title="UI" dataIndex="UI" width={200} />
+
                     <Table.Column<ICampaignStore.ICampainginForList> key="start_time" title="Start Time" dataIndex="start_time" width={200} />
                     <Table.Column<ICampaignStore.ICampainginForList> key="end_time" title="End Time" dataIndex="end_time" width={200} />
                     <Table.Column<ICampaignStore.ICampainginForList> key="status" title="Status" dataIndex="status"

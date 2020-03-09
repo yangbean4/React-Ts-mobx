@@ -93,8 +93,8 @@ class EventConfig extends React.Component<IProps & FormComponentProps>{
                             <tr>
                                 <td style={{ width: 100 }}>Platform Name</td>
                                 <td style={{ width: 100 }}>Event Type</td>
-                                <td style={{ width: 100 }}>Evnet Key</td>
-                                <td style={{ width: 100 }}>Evnet Desc</td>
+                                <td style={{ width: 100 }}>Event Key</td>
+                                <td style={{ width: 100 }}>Event Desc.</td>
                                 <td style={{ width: 80 }}>Operate</td>
                             </tr>
                         </thead>

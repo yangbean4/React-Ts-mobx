@@ -190,14 +190,15 @@ class UserModal extends ComponentExt<IProps & FormComponentProps> {
                         {getFieldDecorator('department',
                             {
                                 initialValue: departmentValue,
-                                rules: [
-                                    {
-                                        required: true, message: "Required"
-                                    }
-                                ]
+                                // rules: [
+                                //     {
+                                //         required: true, message: "Required"
+                                //     }
+                                // ]
                             })(
                                 <Select
                                     showSearch
+                                    allowClear
                                     mode='multiple'
                                     getPopupContainer={trigger => trigger.parentElement}
                                     filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
