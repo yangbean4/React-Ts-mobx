@@ -319,6 +319,7 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps & RouterPr
             endcard_id = '',
             default_cpm = '0.01',
             kpi = '',
+            campaign_third_name = '',
             budget_group = undefined
         } = reData || {}
         if (target_code && reData) {
@@ -422,6 +423,11 @@ class CampaignsModal extends ComponentExt<IProps & FormComponentProps & RouterPr
                                     required: true, message: "Required"
                                 }
                             ]
+                        })(<Input autoComplete="off" />)}
+                    </FormItem>
+                    <FormItem label="Campaign Third Name">
+                        {getFieldDecorator('campaign_third_name', {
+                            initialValue: campaign_third_name,
                         })(<Input autoComplete="off" />)}
                     </FormItem>
 

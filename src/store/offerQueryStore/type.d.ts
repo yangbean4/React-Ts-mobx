@@ -2,8 +2,8 @@
  * @Description: 
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-09-09 18:02:04
- * @LastEditors  :  bean^ <bean_4@163.com>
- * @LastEditTime : 2020-02-06 18:00:24
+ * @LastEditors:  bean^ <bean_4@163.com>
+ * @LastEditTime: 2020-03-09 16:55:08
  */
 import { OfferQueryStore as OfferQueryStoreModel } from './index'
 
@@ -28,8 +28,9 @@ export interface IQuery {
   UI?: String
 }
 export interface OptionListDb {
-  geo?: string[]
-  account_id?: string[]
+  geo?: { id?: string, code2?: string }[]
+  account_id?: { id?: string, name?: string }[]
+  // account_id?: string[]
 }
 
 export interface SearchParams {

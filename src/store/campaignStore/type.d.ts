@@ -3,7 +3,7 @@
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2020-01-07 11:23:34
  * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2020-02-06 17:45:38
+ * @LastEditTime: 2020-03-09 16:51:29
  */
 import { CampaignStore as CampaignStoreModel } from './index'
 
@@ -36,6 +36,7 @@ export interface ICampaignGroup {
     kpi?: string
     tracking_url_type?: any
     budget_group?: number
+    campaign_third_name?: String
 }
 
 export interface IAppInfo {
