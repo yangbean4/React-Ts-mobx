@@ -9,8 +9,8 @@ import { statusOption, trackingTypeOption } from '../web.config'
 
 interface IStoreProps {
     getCampaignsLoading?: boolean
-    campaigns?: ICampaignStore.ICampainginForList[]
-    setCampaingn?: (campaign: ICampaignStore.ICampainginForList) => void
+    campaigns?: ICampaignStore.ICampaignGroup[]
+    setCampaingn?: (campaign: ICampaignStore.ICampaignGroup) => void
     getCampaigns?: () => Promise<any>
     setCampaignType?: (string) => void
     handleTableChange?: (pagination: PaginationConfig) => void
@@ -48,7 +48,7 @@ class CampaignsTable extends ComponentExt<IProps> {
     private commentType: string = ''
 
     @action
-    modifyComment = (campaign: ICampaignStore.ICampainginForList) => {
+    modifyComment = (campaign: ICampaignStore.ICampaignGroup) => {
         this.props.setCampaingn(campaign)
         // const {
         //     app_id,
@@ -96,14 +96,14 @@ class CampaignsTable extends ComponentExt<IProps> {
         } = this.props
         return (
             <React.Fragment>
-                <Table<ICampaignStore.ICampainginForList>
+                <Table<ICampaignStore.ICampaignGroup>
                     className="center-table"
                     style={{ width: '100%', wordBreak: 'break-all' }}
                     bordered
                     rowKey="id"
                     loading={getCampaignsLoading}
                     dataSource={campaigns}
-                    scroll={{ y: scrollY, x: 2180 }}
+                    scroll={{ y: scrollY, x: 3100 }}
                     pagination={{
                         current: page,
                         pageSize,
@@ -112,15 +112,15 @@ class CampaignsTable extends ComponentExt<IProps> {
                     }}
                     onChange={handleTableChange}
                 >
-                    <Table.Column<ICampaignStore.ICampainginForList> key="app_key" title="Appkey" dataIndex="app_key" width={120} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="app_id" title="App ID" dataIndex="app_id" width={250} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="platform" title="Platform" dataIndex="platform" width={100} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="id" title="Campaign ID" dataIndex="id" width={150} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="campaign_name" title="Campaign Name" dataIndex="campaign_name" width={200} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="target_code" title="Target Code" dataIndex="target_code" width={200} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="ad_type" title="Ad Type" dataIndex="ad_type" width={100} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="app_key" title="Appkey" dataIndex="app_key" width={120} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="app_id" title="App ID" dataIndex="app_id" width={250} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="platform" title="Platform" dataIndex="platform" width={100} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="id" title="Campaign ID" dataIndex="id" width={150} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="campaign_name" title="Campaign Name" dataIndex="campaign_name" width={200} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="target_code" title="Target Code" dataIndex="target_code" width={200} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="ad_type" title="Ad Type" dataIndex="ad_type" width={100} />
 
-                    <Table.Column<ICampaignStore.ICampainginForList>
+                    <Table.Column<ICampaignStore.ICampaignGroup>
                         key="tracking_url_type"
                         title="Tracking Type"
                         dataIndex="tracking_type"
@@ -128,33 +128,33 @@ class CampaignsTable extends ComponentExt<IProps> {
                         render={(_, record) => (trackingTypeOption.find(v => v.value === record.tracking_url_type) || { key: '--' }).key}
                     />
 
-                    <Table.Column<ICampaignStore.ICampainginForList> key="user_name" title="SEN Account" dataIndex="user_name" width={200} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="BD" title="BD" dataIndex="BD" width={200} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="AM" title="AM" dataIndex="AM" width={200} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="UI" title="UI" dataIndex="UI" width={200} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="user_name" title="SEN Account" dataIndex="user_name" width={200} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="BD" title="BD" dataIndex="BD" width={200} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="AM" title="AM" dataIndex="AM" width={200} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="UI" title="UI" dataIndex="UI" width={200} />
 
-                    <Table.Column<ICampaignStore.ICampainginForList> key="start_time" title="Start Time" dataIndex="start_time" width={200} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="end_time" title="End Time" dataIndex="end_time" width={200} />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="status" title="Status" dataIndex="status"
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="start_time" title="Start Time" dataIndex="start_time" width={240} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="end_time" title="End Time" dataIndex="end_time" width={240} />
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="status" title="Status" dataIndex="status"
                         render={(_) => (
                             statusOption.find(item => item.value === _) === undefined ? {} : statusOption.find(item => item.value === _).key
                         )}
-                        width={110} />
+                        width={120} />
 
-                    <Table.Column<ICampaignStore.ICampainginForList> key="last_pending_time" title="Last Pending Time(UTC+0)" dataIndex="last_pending_time"
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="last_pending_time" title="Last Pending Time(UTC+0)" dataIndex="last_pending_time"
 
                         width={220}
                         render={_ =>
                             !_ ? '--' : _
                         }
                     />
-                    <Table.Column<ICampaignStore.ICampainginForList> key="wb_list" title="In White/Black" dataIndex="wb_list"
+                    <Table.Column<ICampaignStore.ICampaignGroup> key="wb_list" title="In White/Black" dataIndex="wb_list"
                         render={(_, record) => (
                             _ === 0 ? 'No' : <a onClick={() => this.goWhiteBlackList(record.id)}>Yes</a>
                         )}
                         width={150} />
 
-                    <Table.Column<ICampaignStore.ICampainginForList>
+                    <Table.Column<ICampaignStore.ICampaignGroup>
                         key="action"
                         title="Operate"
                         fixed='right'
