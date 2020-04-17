@@ -41,6 +41,8 @@ class VcTable extends ComponentExt<TableProps> {
           // )}
           width={200} />
         <Table.Column<IAppGroupStore.PlacementForList> key="placement_id" title="PID" dataIndex="placement_id" width={200} />
+        <Table.Column<IAppGroupStore.PlacementForList> key="geo" title="GEO" dataIndex="geo" width={200} />
+
         <Table.Column<IAppGroupStore.PlacementForList>
           key="status"
           title="Status"

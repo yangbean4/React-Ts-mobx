@@ -339,6 +339,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
 
     render() {
         const { form, optionListDb } = this.props
+        debugger
         const { getFieldDecorator, getFieldValue } = form
         const {
             status = 1,
@@ -349,6 +350,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             frequency_time,
             offer_rate,
             creative_type,
+            geo,
             accept_ecpm, // 新增
             // pid_type = this.props.appGroup && this.props.appGroup.contains_native_s2s_pid_types === 1 ? 5 : undefined,
             pid_type = this.usePidtype,
@@ -546,6 +548,23 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
                         })(<Input autoComplete="off" />)}
                     </FormItem>
 
+                    <FormItem label="GEO">
+                        {getFieldDecorator('geo', {
+                            initialValue: geo
+                        })(<Select
+                            showSearch
+                            mode="multiple"
+                            maxTagCount={2}
+                            // getPopupContainer={trigger => trigger.parentElement}
+                            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                        >
+
+                            {this.props.optionListDb.Country.map(v => (
+                                <Option key={v.id} value={v.code2}>{v.code2}</Option>
+                            ))}
+                        </Select>)}
+                    </FormItem>
+
                     <FormItem label="IGE Carrier">
                         {getFieldDecorator('ige_carrier_support',
                             {
@@ -637,21 +656,21 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
 
                     <FormItem label="Lowest eCPM">
                         $&nbsp;{getFieldDecorator('accept_ecpm', {
-                            initialValue: accept_ecpm,
-                            rules: [
-                                {
-                                    required: true, message: "Required"
-                                },
-                                {
-                                    validator: (r, v, callback) => {
-                                        if (v < 0) {
-                                            callback('The Lowest eCPM cannot be negative number!')
-                                        }
-                                        callback()
+                        initialValue: accept_ecpm,
+                        rules: [
+                            {
+                                required: true, message: "Required"
+                            },
+                            {
+                                validator: (r, v, callback) => {
+                                    if (v < 0) {
+                                        callback('The Lowest eCPM cannot be negative number!')
                                     }
+                                    callback()
                                 }
-                            ]
-                        })(<InputNumber precision={0} min={0} max={1000} />)}
+                            }
+                        ]
+                    })(<InputNumber precision={0} min={0} max={1000} />)}
                     </FormItem>
 
                     <FormItem label="Offer Rate">

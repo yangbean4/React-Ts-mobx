@@ -204,7 +204,17 @@ class MaskModal extends ComponentExt<IProps & FormComponentProps> {
                             )}
                     </FormItem>
                     <FormItem {...formItemLayout} label="Mask Subsite">
+
                         {getFieldDecorator('mask_id', {
+                            initialValue: mask_id,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
+                        })(<Input autoComplete="off" />)}
+
+                        {/* {getFieldDecorator('mask_id', {
                             initialValue: mask_id,
                             rules: [
                                 {
@@ -223,7 +233,7 @@ class MaskModal extends ComponentExt<IProps & FormComponentProps> {
                                     </Select.Option>
                                 ))}
                             </Select>
-                        )}
+                        )} */}
                     </FormItem>
 
                 </Form>

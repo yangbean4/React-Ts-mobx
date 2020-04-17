@@ -122,7 +122,7 @@ export interface Placement {
     offer_num?: number
     budget?: number
     creative_type?: string[]
-
+    geo?: []
     // appwall add
     style_id?: number
     style_detail?: styleDetail
