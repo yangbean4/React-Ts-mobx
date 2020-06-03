@@ -11,6 +11,7 @@ interface IProps {
   placementList: Placement[]
   campaignList: Campaign[]
   value?: PlacementCampaign[]
+  blacklist: String[]
   onChange?: (data: PlacementCampaign[]) => void
   disabled?: boolean
   childTest: boolean
@@ -117,7 +118,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
 
   render() {
-    const { value, placementList, campaignList, disabled, childTest } = this.props
+    const { value, placementList, campaignList, disabled, childTest, blacklist } = this.props
     return (
       <div>
         {
@@ -128,6 +129,7 @@ class PlacementCampaignGroup extends React.Component<IProps> {
                   hasSelect={this.hasSelect}
                   placementList={placementList}
                   campaignList={campaignList}
+                  blacklist={blacklist}
                   value={item}
                   test={childTest}
                   index={index}

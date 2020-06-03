@@ -11,7 +11,7 @@
   border: none;
   &:hover,
   &:focus,
-  &:active{
+  &:active {
     background-color: rgb(215, 221, 248);
   }
   &:nth-child(2) {
@@ -46,4 +46,9 @@
       width: 80%;
     }
   }
+}
+.workBtn {
+  margin-left: 10px;
+  border-radius: 4px;
+  color: #667ffd;
 }

@@ -17,9 +17,9 @@ interface IProps {
 @observer
 class TableModal extends ComponentExt<IProps> {
 
-    addWhiteBlack = () => {
-        this.props.routerStore.push('/whiteBlackList/add')
-    }
+    // addWhiteBlack = () => {
+    //     this.props.routerStore.push('/whiteBlackList/add')
+    // }
 
     render() {
         const { onCancel } = this.props;
@@ -43,7 +43,7 @@ class TableModal extends ComponentExt<IProps> {
                             <div className={style.left}>Pkg Name </div>
                             <div className={style.right}>{this.props.pkgname}</div>
                         </div>
-                        
+
                         <Table<IWhiteBlackListStore.TableModalList>
                             className="center-table"
                             bordered
@@ -62,8 +62,30 @@ class TableModal extends ComponentExt<IProps> {
                                 render={(_, record) => record.placement_name_id ? record.placement_name_id : '--'}
                             />
                             <Table.Column<IWhiteBlackListStore.TableModalList>
+                                key="placement_app_id_list"
+                                title="App ID Blacklist"
+                                dataIndex="placement_app_id_list"
+                                width="33%"
+                                render={(_, record) => {
+                                    if (!record.placement_app_id_list) return '--';
+
+                                    let appids = record.placement_app_id_list.split(',')
+                                    return appids.length > 1 ? (
+                                        <Popover placement="left" content={(
+                                            <div className={styles.popoverContent}>
+                                                {appids.map((c) => (
+                                                    <div>{c}</div>
+                                                ))}
+                                            </div>
+                                        )}>
+                                            {appids[0]},...
+                                        </Popover>
+                                    ) : appids[0]
+                                }}
+                            />
+                            <Table.Column<IWhiteBlackListStore.TableModalList>
                                 key="type"
-                                title="White/Black Type"
+                                title="Campaign White/Blacklist"
                                 dataIndex="type"
                                 width="33%"
                                 render={(_, record) => record.type ? record.type : '--'

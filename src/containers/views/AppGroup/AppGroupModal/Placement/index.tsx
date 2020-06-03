@@ -25,6 +25,7 @@ class VcTable extends ComponentExt<TableProps> {
         rowKey='id'
         dataSource={data}
         scroll={{ y: scrollY }}
+        pagination={false}
       >
         <Table.Column<IAppGroupStore.PlacementForList>
           key="pid_type_name"

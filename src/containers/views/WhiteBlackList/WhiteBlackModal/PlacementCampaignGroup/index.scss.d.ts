@@ -4,3 +4,4 @@ export const btngroup: string;
 export const dynamic: string;
 export const group: string;
 export const item: string;
+export const workBtn: string;

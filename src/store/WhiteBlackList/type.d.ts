@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author:  bean^ <bean_4@163.com>
+ * @Date: 2019-10-23 18:01:48
+ * @LastEditors:  bean^ <bean_4@163.com>
+ * @LastEditTime: 2020-05-11 18:19:22
+ */
 import { WhiteBlackListStore as WhiteBlackListStoreModel } from './index'
 import { number } from 'prop-types';
 
@@ -52,5 +59,5 @@ export interface TableModalList {
     campaign_id_name: string
     type: string
     placement_name_id: string
-
+    placement_app_id_list: string
 }

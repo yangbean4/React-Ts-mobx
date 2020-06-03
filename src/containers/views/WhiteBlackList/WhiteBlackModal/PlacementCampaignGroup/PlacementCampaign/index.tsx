@@ -1,12 +1,14 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import { Placement, Campaign, PlacementCampaign } from '../type'
-import { Select, Radio, Form } from 'antd'
+import { Select, Radio, Form, Popover, Icon as AntIcon, } from 'antd'
 import { computed, runInAction, observable, autorun, _allowStateChangesInsideComputed } from 'mobx'
+import * as styles from '../index.scss'
 
 interface IProps {
   placementList: Placement[]
   campaignList: Campaign[]
+  blacklist: String[]
   value: PlacementCampaign
   onChange?: (data: PlacementCampaign) => void
   disabled?: boolean
@@ -52,11 +54,13 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   @observable
   private errorTarget = {
     campaign_id: false,
-    placement_id: false
+    placement_id: false,
+    placement_app_id_list: false
   }
 
   @observable
   private _campaignL = [] as Campaign[]
+
 
 
   @computed
@@ -73,23 +77,26 @@ class PlacementCampaignGroup extends React.Component<IProps> {
         value
       } = this.props
       const {
-        placement_id, campaign_id
+        placement_id, campaign_id, placement_app_id_list = []
       } = value
-      const hasError = Number(!!placement_id) + Number(!!campaign_id.length)
+      const hasError = Number(!!placement_id) === 1 && (0 === Number(!!campaign_id.length) + Number(!!placement_app_id_list.length))
       let errorTarget;
       if (test) {
-        errorTarget = hasError === 1 ? {
+        errorTarget = hasError ? {
           campaign_id: !campaign_id.length,
-          placement_id: !placement_id
+          placement_id: !placement_id,
+          placement_app_id_list: !placement_app_id_list.length
         } : {
             campaign_id: false,
-            placement_id: false
+            placement_id: false,
+            placement_app_id_list: false
           }
       } else {
         const error = this.errorTarget
         errorTarget = {
           campaign_id: error.campaign_id && !campaign_id.length,
-          placement_id: error.placement_id && !placement_id
+          placement_id: error.placement_id && !placement_id,
+          placement_app_id_list: error.placement_app_id_list && !placement_app_id_list.length
         }
       }
 
@@ -128,8 +135,8 @@ class PlacementCampaignGroup extends React.Component<IProps> {
   }
 
   render() {
-    const { value, placementList = [], disabled, hasSelect, form, } = this.props
-    const { placement_id, type, campaign_id = [] } = value
+    const { value, placementList = [], disabled, hasSelect, form, blacklist } = this.props
+    const { placement_id, type, campaign_id = [], placement_app_id_list = [] } = value
     const getMsg = (type: string): { help?: string, validateStatus?: 'error' } => this.errorTarget[type] ? {
       help: 'Required',
       validateStatus: 'error'
@@ -163,7 +170,31 @@ class PlacementCampaignGroup extends React.Component<IProps> {
           </Select>
 
         </Form.Item>
-        <Form.Item {...formItemLayout} label="White/Black Type">
+        <Form.Item {...formItemLayout} {...getMsg('placement_app_id_list')} label="App ID Blacklist">
+          <Select
+            style={{ display: 'inline-block', width: '90%' }}
+            allowClear
+            showSearch
+            mode="multiple"
+            getPopupContainer={trigger => trigger.parentElement}
+            value={placement_app_id_list}
+            onChange={(val: string[]) => this.onChange({ placement_app_id_list: val })}
+            disabled={disabled}
+            filterOption={(input, option) => option.props.children.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0}
+          >
+            {(blacklist).map(e => e.toString()).map(c => (
+              <Select.Option value={c} key={c}>
+                {c}
+              </Select.Option>
+            ))}
+          </Select>
+          <Popover content={(<p>Placement-App ID 粒度的黑名单为
+          后期追加功能，这里的 App ID 和其他原 Category,App ID,Campaign 字段无任何
+数据联动效果，注意可能会存在逻辑互斥或数据冗余</p>)}>
+            <AntIcon style={{ display: 'inline-block' }} className={styles.workBtn} type="question-circle" />
+          </Popover>
+        </Form.Item>
+        <Form.Item {...formItemLayout} label="Campaign White/Blacklist">
           {/* {
             getFieldDecorator(`placement_campaign[${index}].type`, {
               initialValue: type

@@ -338,9 +338,8 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
     }
 
     render() {
-        const { form, optionListDb } = this.props
-        debugger
-        const { getFieldDecorator, getFieldValue } = form
+        const { form, optionListDb } = this.props;
+        const { getFieldDecorator, getFieldValue } = form;
         const {
             status = 1,
             placement_id = '',
@@ -350,7 +349,7 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
             frequency_time,
             offer_rate,
             creative_type,
-            geo,
+            geo = ['CN', 'US'],
             accept_ecpm, // 新增
             // pid_type = this.props.appGroup && this.props.appGroup.contains_native_s2s_pid_types === 1 ? 5 : undefined,
             pid_type = this.usePidtype,
@@ -550,7 +549,12 @@ class PlacementModal extends ComponentExt<IProps & FormComponentProps> {
 
                     <FormItem label="GEO">
                         {getFieldDecorator('geo', {
-                            initialValue: geo
+                            initialValue: geo,
+                            rules: [
+                                {
+                                    required: true, message: "Required"
+                                }
+                            ]
                         })(<Select
                             showSearch
                             mode="multiple"

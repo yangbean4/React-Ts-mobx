@@ -3,7 +3,7 @@
  * @Author:  bean^ <bean_4@163.com>
  * @Date: 2019-10-08 12:00:35
  * @LastEditors:  bean^ <bean_4@163.com>
- * @LastEditTime: 2019-10-08 16:12:22
+ * @LastEditTime: 2020-05-11 16:10:37
  */
 export interface Placement {
   platform: 'ios' | 'android'
@@ -20,4 +20,5 @@ export interface PlacementCampaign {
   placement_id: string
   type: 0 | 1
   campaign_id: Array<string | number>
+  placement_app_id_list: String[]
 }

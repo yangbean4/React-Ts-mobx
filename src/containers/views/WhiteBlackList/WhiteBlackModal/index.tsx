@@ -79,13 +79,16 @@ interface IProps {
   optionListDb?: IWhiteBlackListStore.OptionListDb
   routerStore?: RouterStore
   match?: match
+  pkgNameAndBundleId: IConfigStore.iosAndAnd
+  getAllConfig?: () => void
 }
 
 @inject(
   (store: IStore): IProps => {
-    const { whiteBlackListStore, routerStore } = store
+    const { whiteBlackListStore, routerStore, configStore } = store
+    const { pkgNameAndBundleId, getAllConfig } = configStore;
     const { item, create, getPkgname, optionListDb, getCategory, getItem, update, clearItem, getAppidCampaign, getPkgNamePlacement } = whiteBlackListStore
-    return { routerStore, item, create, getPkgname, optionListDb, getCategory, getItem, update, clearItem, getAppidCampaign, getPkgNamePlacement }
+    return { routerStore, item, create, getPkgname, optionListDb, getCategory, getItem, update, clearItem, getAppidCampaign, getPkgNamePlacement, pkgNameAndBundleId, getAllConfig }
   }
 )
 @observer
@@ -107,6 +110,10 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
 
   @observable
   private disabledAll: boolean = true
+
+  @observable
+  private blacklist: String[] = []
+
 
   @observable
   private currentLimited: number = 0
@@ -156,6 +163,7 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
       this.selectPlatformAppids = appids;
       this.appids = this.getAppids(item.limited, item.category_whitelist)
       this.placementList = item.placement;
+      this.blacklist = this.props.pkgNameAndBundleId[item.platform]
       this.campaignList = [].concat(...this.appids.filter(v => !item.app_id_blacklist.includes(v.app_id)).map(v => v.campaign));
     })
   }
@@ -386,6 +394,7 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
     this.appids = this.getAppids(this.currentLimited, this.currentCategory);
     this.placementList = selectPkgname.placement;
     this.campaignList = [].concat(...this.appids.map(v => v.campaign));
+    this.blacklist = this.props.pkgNameAndBundleId[selectPkgname.platform]
   }
 
   /**
@@ -417,9 +426,13 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
 
           let hasError = false;
           values.placement_campaign.forEach(ele => {
-            hasError = hasError || (~~!!ele.placement_id + ~~!!ele.campaign_id.length) === 1
+            const {
+              placement_id, campaign_id, placement_app_id_list = []
+            } = ele
+            const hasErr = Number(!!placement_id) === 1 && (0 === Number(!!campaign_id.length) + Number(!!placement_app_id_list.length))
+            hasError = hasError || hasErr
           })
-          debugger
+
           if (hasError) {
             this.childTestChange(true)
             setImmediate(() => {
@@ -477,9 +490,12 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
   componentWillUnmount() {
     this.props.clearItem();
   }
+  componentWillMount() {
+    this.props.getAllConfig();
+  }
 
   render() {
-    const { item, form, optionListDb } = this.props
+    const { item, form, optionListDb, pkgNameAndBundleId } = this.props
     const { getFieldDecorator } = form
     return (
       <div className='sb-form'>
@@ -597,6 +613,7 @@ class whiteBlackModal extends ComponentExt<IProps & FormComponentProps> {
               })(<PlacementCampaignGroup
                 disabled={this.disabledAll}
                 form={form}
+                blacklist={this.blacklist}
                 childTest={this.childTest}
                 // onChange={() => this.childTestChange(false)}
                 campaignList={this.campaignList}
